@@ -1,8 +1,17 @@
 <template>
   <div class="space-y-8">
-    <StatusBar :value="calculatedStates.health" color="#FF3333" />
-    <StatusBar :value="calculatedStates.magicka" color="#3366FF" />
-    <StatusBar :value="calculatedStates.stamina" color="#007F00" />
+    <StatusBar
+      :value="calculatedStates.health"
+      color="#FF3333"
+    />
+    <StatusBar
+      :value="calculatedStates.magicka"
+      color="#3366FF"
+    />
+    <StatusBar
+      :value="calculatedStates.stamina"
+      color="#007F00"
+    />
   </div>
 </template>
 

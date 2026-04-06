@@ -14,10 +14,10 @@
           backgroundColor: barColor,
         }"
         class="h-full transition-all duration-300 ease-out shadow-lg"
-      ></div>
+      />
 
       <!-- Inner Border Effect -->
-      <div class="absolute inset-0 border border-gray-800 pointer-events-none"></div>
+      <div class="absolute inset-0 border border-gray-800 pointer-events-none" />
 
       <!-- Glow Effect (optional) -->
       <div
@@ -28,7 +28,7 @@
           opacity: 0.3,
         }"
         class="absolute inset-0 blur-md pointer-events-none"
-      ></div>
+      />
     </div>
 
     <!-- Right Arrow -->
@@ -38,7 +38,10 @@
   </div>
 
   <!-- Value Display (optional) -->
-  <div v-if="showValue" class="text-center text-xs text-gray-500 mt-1">
+  <div
+    v-if="showValue"
+    class="text-center text-xs text-gray-500 mt-1"
+  >
     {{ normalizedValue }}%
   </div>
 </template>
