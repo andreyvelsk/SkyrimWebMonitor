@@ -1,0 +1,10 @@
+/**
+ * WebSocket Connection Status Constants
+ */
+export const CONNECTION_STATUS = {
+  DISCONNECTED: 'DISCONNECTED',
+  CONNECTING: 'CONNECTING',
+  CONNECTED: 'CONNECTED',
+  CLOSING: 'CLOSING',
+  RECONNECTING: 'RECONNECTING',
+}

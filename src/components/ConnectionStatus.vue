@@ -28,31 +28,26 @@
         {{ wsStore.error }}
       </p>
     </div>
-
-    <!-- Close Button (optional) -->
-    <button
-      v-if="wsStore.isConnected"
-      @click="disconnect"
-      class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded bg-opacity-20 hover:bg-opacity-30 transition-all"
-    >
-      Disconnect
-    </button>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useWebSocketStore } from '@/stores/websocket'
+import { CONNECTION_STATUS } from '@/constants/connection'
 
 const wsStore = useWebSocketStore()
 
 const statusText = computed(() => {
-  if (wsStore.isConnected) return 'Connected to server'
-  if (wsStore.isConnecting) return 'Connecting to server...'
-  return 'Disconnected from server'
+  if (wsStore.status === CONNECTION_STATUS.CONNECTED) {
+    return `Connected to server`
+  }
+  if (wsStore.status === CONNECTION_STATUS.CONNECTING) {
+    return `Connecting to server...`
+  }
+  if (wsStore.status === CONNECTION_STATUS.RECONNECTING) {
+    return `Reconnecting to server...`
+  }
+  return `Disconnected from server`
 })
-
-const disconnect = () => {
-  wsStore.disconnect()
-}
 </script>
