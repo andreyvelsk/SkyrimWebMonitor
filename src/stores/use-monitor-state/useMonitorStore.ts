@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { GeneralState } from './types/types.ts'
 
@@ -12,10 +12,18 @@ const useMonitorStore = defineStore('monitor', () => {
         maxStamina: 0
     })
 
+    const calculatedStates = computed(() => ({
+        health: generalState.value.health / generalState.value.maxHealth,
+        magicka: generalState.value.magicka / generalState.value.maxMagicka,
+        stamina: generalState.value.stamina / generalState.value.maxStamina
+    }))
+
     function setGeneralState(state: GeneralState) {
         generalState.value = state
     }
+
     return {    
+        calculatedStates,
         generalState,
         setGeneralState
     }
