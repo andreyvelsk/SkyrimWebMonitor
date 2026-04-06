@@ -5,6 +5,7 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/SkyrimWebMonitor/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
