@@ -1,12 +1,11 @@
 <template>
-  <div class="text-white bg-gray-800 p-4 rounded-lg text-center">
-    {{ serverResponse }}
+  <div class="space-y-8">
+    <StatusBar :value="healthValue" color="#FF3333" />
+    <StatusBar :value="manaValue" color="#3366FF" />
+    <StatusBar :value="staminaValue" color="#007F00" />
   </div>
 </template>
 
 <script setup>
-import { useWebSocketStore } from '@/stores/websocket'
-
-const wsStore = useWebSocketStore()
-const { serverResponse } = wsStore
+import StatusBar from '@/components/StatusBar.vue'
 </script>
