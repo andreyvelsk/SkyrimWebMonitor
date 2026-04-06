@@ -1,0 +1,29 @@
+{
+  "name": "skyrimwebmonitor",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\""
+  },
+  "dependencies": {
+    "pinia": "^3.0.4",
+    "vite-plugin-pwa": "^1.2.0",
+    "vue": "^3.5.32"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2",
+    "@vitejs/plugin-vue": "^6.0.5",
+    "autoprefixer": "^10.4.27",
+    "eslint": "^10.2.0",
+    "eslint-plugin-vue": "^10.8.0",
+    "postcss": "^8.5.8",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.2.2",
+    "vite": "^8.0.4"
+  }
+}
