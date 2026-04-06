@@ -2,11 +2,13 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import getWebSocketClient from '@/services/websocket'
 import { CONNECTION_STATUS } from '@/constants/connection'
+import useMonitorStore from './use-monitor-state/useMonitorStore'
 
 export const useWebSocketStore = defineStore('websocket', () => {
+  const monitorStore = useMonitorStore()
+  const { setGeneralState } = monitorStore
   // State
   const status = ref(CONNECTION_STATUS.DISCONNECTED)
-  const serverResponse = ref('')
   const error = ref(null)
 
   // Get WebSocket client instance
@@ -36,7 +38,6 @@ export const useWebSocketStore = defineStore('websocket', () => {
   const disconnect = () => {
     wsClient.disconnect()
     status.value = CONNECTION_STATUS.DISCONNECTED
-    serverResponse.value = ''
     error.value = null
   }
 
@@ -60,14 +61,13 @@ export const useWebSocketStore = defineStore('websocket', () => {
   })
 
   wsClient.on('onMessage', (data) => {
-    serverResponse.value = data
+    setGeneralState(data);
   })
 
   return {
     // State
     status,
     error,
-    serverResponse,
 
     // Computed
     isConnected,
