@@ -61,7 +61,11 @@ export const useWebSocketStore = defineStore('websocket', () => {
   })
 
   wsClient.on('onMessage', (data) => {
-    setGeneralState(data);
+    try {
+      setGeneralState(JSON.parse(data))
+    } catch (err) {
+      console.error('Failed to parse message:', err)
+    }
   })
 
   return {

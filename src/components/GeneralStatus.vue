@@ -1,15 +1,15 @@
 <template>
   <div class="space-y-8">
     <StatusBar
-      :value="calculatedStates.health"
+      :value="monitorStore.calculatedStates.health"
       color="#FF3333"
     />
     <StatusBar
-      :value="calculatedStates.magicka"
+      :value="monitorStore.calculatedStates.magicka"
       color="#3366FF"
     />
     <StatusBar
-      :value="calculatedStates.stamina"
+      :value="monitorStore.calculatedStates.stamina"
       color="#007F00"
     />
   </div>
@@ -20,5 +20,4 @@ import StatusBar from '@/components/StatusBar.vue'
 import { useMonitorStore } from '@/stores/use-monitor-state/useMonitorStore'
 
 const monitorStore = useMonitorStore()
-const { calculatedStates } = monitorStore
 </script>

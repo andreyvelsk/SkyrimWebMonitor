@@ -32,7 +32,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useWebSocketStore } from '@/stores/websocket'
+import { useWebSocketStore } from '@/stores/useWebsocketStore'
 import { CONNECTION_STATUS } from '@/constants/connection'
 
 const wsStore = useWebSocketStore()
