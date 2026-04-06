@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import getWebSocketClient from '@/services/websocket'
 import { CONNECTION_STATUS } from '@/constants/connection'
-import useMonitorStore from './use-monitor-state/useMonitorStore'
+import { useMonitorStore } from './use-monitor-state/useMonitorStore'
 
 export const useWebSocketStore = defineStore('websocket', () => {
   const monitorStore = useMonitorStore()
