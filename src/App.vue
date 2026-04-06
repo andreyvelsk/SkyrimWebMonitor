@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-black flex items-center justify-center">
     <main class="max-w-7xl grow mx-auto p-4 sm:p-6 lg:p-8">
-      <ConnectionStatus v-if="isConnected" />
+      <ConnectionStatus v-if="!isConnected" />
       <GeneralStatus v-else />
     </main>
   </div>
