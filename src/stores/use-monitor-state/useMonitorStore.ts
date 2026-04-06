@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { GeneralState } from './types/types.ts'
 
-const useMonitorStore = defineStore('monitor', () => {
+export const useMonitorStore = defineStore('monitor', () => {
     const generalState = ref<GeneralState>({
         health: 0,
         maxHealth: 0,
@@ -28,5 +28,3 @@ const useMonitorStore = defineStore('monitor', () => {
         setGeneralState
     }
 });
-
-export default useMonitorStore
