@@ -1,19 +1,31 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/SkyrimWebMonitor/',
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    base: '/SkyrimWebMonitor/',
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src'),
+      },
     },
-  },
-  plugins: [
-    vue(),
-    VitePWA({
+    server: {
+      proxy: {
+        '/ws': {
+          target: env.VITE_WS_SERVER_URL || 'ws://192.168.46.190:8765',
+          ws: true,
+          rewriteWsOrigin: true,
+        },
+      },
+    },
+    plugins: [
+      vue(),
+      VitePWA({
       registerType: 'autoUpdate',
       manifest: {
         name: 'SkyrimWebMonitor',
@@ -39,4 +51,6 @@ export default defineConfig({
       },
     }),
   ],
+  }
 })
+
