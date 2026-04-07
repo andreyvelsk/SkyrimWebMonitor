@@ -10,7 +10,6 @@ import type {
   UnsubscribeMessage,
   QueryMessage,
 } from './protocol'
-import { createReverseFieldMapping } from './protocol'
 
 type MessageHandler = (message: ServerMessage) => void
 type EventCallback = (data?: any) => void
@@ -121,7 +120,7 @@ class WebSocketClient {
   subscribe(
     fields: Record<string, string>,
     frequency: number = 500,
-    sendOnChange: boolean = false
+    sendOnChange: boolean = true
   ): boolean {
     const message: SubscribeMessage = {
       type: 'subscribe',

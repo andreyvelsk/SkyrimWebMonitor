@@ -55,7 +55,7 @@ const props = defineProps({
    */
   value: {
     type: Number,
-    default: 50,
+    default: 0,
     validator: (v) => v >= 0 && v <= 100,
   },
 

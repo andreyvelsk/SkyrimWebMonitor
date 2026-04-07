@@ -6,7 +6,7 @@ import { useMonitorStore } from './use-monitor-state/useMonitorStore'
 import { FIELD_MAPPING } from '@/services/protocol'
 import type { DataMessage, ServerMessage } from '@/services/protocol'
 
-const WS_UPDATE_FREQUENCY = 200 // milliseconds
+const WS_UPDATE_FREQUENCY = 100 // milliseconds
 
 export const useWebSocketStore = defineStore('websocket', () => {
   const monitorStore = useMonitorStore()
