@@ -73,6 +73,9 @@ export const FIELD_MAPPING: Record<string, string> = {
   health: 'ActorValue::kHealth',
   magicka: 'ActorValue::kMagicka',
   stamina: 'ActorValue::kStamina',
+  healthBase: 'ActorValue::kHealth::Base',
+  magickaBase: 'ActorValue::kMagicka::Base',
+  staminaBase: 'ActorValue::kStamina::Base',
 }
 
 /**

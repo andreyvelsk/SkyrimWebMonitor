@@ -70,7 +70,6 @@ export const useWebSocketStore = defineStore('websocket', () => {
    */
   const handleDataMessage = (message: DataMessage): void => {
     try {
-      // @ts-expect-error - debug while we transition to new protocol
       setGeneralState(message.fields)
     } catch (err) {
       console.error('Failed to update state from data message:', err)
