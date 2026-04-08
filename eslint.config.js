@@ -19,7 +19,9 @@ export default [
       }
     },
     rules: {
-      'vue/multi-word-component-names': 'off'
+      'semi': ['error', 'always'],
+      'vue/multi-word-component-names': 'off',
+      'vue/component-name-in-template-casing': ['error', 'kebab-case']
     }
   }
 ];

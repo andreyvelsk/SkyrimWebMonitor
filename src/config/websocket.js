@@ -12,4 +12,4 @@ export const WS_CONFIG = {
   // Message settings
   HEARTBEAT_INTERVAL: 30000, // ms
   MESSAGE_TIMEOUT: 5000, // ms
-}
+};

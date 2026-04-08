@@ -31,22 +31,22 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useWebSocketStore } from '@/stores/useWebsocketStore'
-import { CONNECTION_STATUS } from '@/constants/connection'
+import { computed } from 'vue';
+import { useWebSocketStore } from '@/stores/useWebsocketStore';
+import { CONNECTION_STATUS } from '@/constants/connection';
 
-const wsStore = useWebSocketStore()
+const wsStore = useWebSocketStore();
 
 const statusText = computed(() => {
   if (wsStore.status === CONNECTION_STATUS.CONNECTED) {
-    return `Connected to server`
+    return `Connected to server`;
   }
   if (wsStore.status === CONNECTION_STATUS.CONNECTING) {
-    return `Connecting to server...`
+    return `Connecting to server...`;
   }
   if (wsStore.status === CONNECTION_STATUS.RECONNECTING) {
-    return `Reconnecting to server...`
+    return `Reconnecting to server...`;
   }
-  return `Disconnected from server`
-})
+  return `Disconnected from server`;
+});
 </script>

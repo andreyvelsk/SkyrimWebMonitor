@@ -1,13 +1,13 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import './style.css'
-import App from './App.vue'
-import { registerSW } from 'virtual:pwa-register'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import './style.css';
+import App from './App.vue';
+import { registerSW } from 'virtual:pwa-register';
 
 // Register service worker for PWA
-registerSW()
+registerSW();
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.mount('#app')
+app.use(createPinia());
+app.mount('#app');

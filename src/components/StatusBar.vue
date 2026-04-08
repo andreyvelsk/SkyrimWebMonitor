@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from 'vue';
 
 const props = defineProps({
   /**
@@ -75,17 +75,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-})
+});
 
 // Ensure value is between 0 and 100
 const normalizedValue = computed(() => {
-  return Math.max(0, Math.min(100, props.value))
-})
+  return Math.max(0, Math.min(100, props.value));
+});
 
 // Ensure color is properly formatted
 const barColor = computed(() => {
-  const color = props.color.toUpperCase()
-  return /^#[0-9A-F]{6}$/.test(color) ? color : '#FF3333'
-})
+  const color = props.color.toUpperCase();
+  return /^#[0-9A-F]{6}$/.test(color) ? color : '#FF3333';
+});
 </script>
 
