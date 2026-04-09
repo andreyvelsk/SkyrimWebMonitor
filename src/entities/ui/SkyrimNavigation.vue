@@ -47,16 +47,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-
-interface SubTab {
-  id: string;
-  label: string;
-}
-interface Tab {
-  id: string;
-  label: string;
-  subTabs: SubTab[];
-}
+import type { Tab } from '@/stores/use-navigation-store/types/types';
 
 const props = defineProps<{
   tabs: Tab[];

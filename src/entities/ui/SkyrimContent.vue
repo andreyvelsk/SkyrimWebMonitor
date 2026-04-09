@@ -12,8 +12,34 @@
       {{ formatTitle(tab) }} — {{ formatTitle(subTab) }}
     </h2>
 
+    <!-- character / skills -->
+    <template v-if="tab === 'character' && subTab === 'skills'">
+      <div class="list">
+        <skill-item
+          name="One-Handed"
+          :level="45"
+        />
+        <skill-item
+          name="Destruction"
+          :level="38"
+        />
+        <skill-item
+          name="Heavy Armor"
+          :level="52"
+        />
+        <skill-item
+          name="Smithing"
+          :level="67"
+        />
+        <skill-item
+          name="Enchanting"
+          :level="41"
+        />
+      </div>
+    </template>
+
     <!-- character / stats -->
-    <template v-if="tab === 'character' && subTab === 'stats'">
+    <template v-else-if="tab === 'character'">
       <div class="stats-grid">
         <stat-bar
           label="Health"
@@ -50,32 +76,6 @@
         <attribute-row
           label="Gold"
           value="4,567"
-        />
-      </div>
-    </template>
-
-    <!-- character / skills -->
-    <template v-else-if="tab === 'character' && subTab === 'skills'">
-      <div class="list">
-        <skill-item
-          name="One-Handed"
-          :level="45"
-        />
-        <skill-item
-          name="Destruction"
-          :level="38"
-        />
-        <skill-item
-          name="Heavy Armor"
-          :level="52"
-        />
-        <skill-item
-          name="Smithing"
-          :level="67"
-        />
-        <skill-item
-          name="Enchanting"
-          :level="41"
         />
       </div>
     </template>
