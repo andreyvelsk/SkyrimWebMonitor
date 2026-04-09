@@ -35,6 +35,13 @@ const currentComponent = computed(() => {
 </script>
 
 <style scoped>
+.skyrim-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
 .empty-state {
   display: flex;
   align-items: center;

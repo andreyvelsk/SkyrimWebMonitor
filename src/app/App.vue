@@ -1,10 +1,5 @@
 <template>
   <div class="handheld-device">
-    <div class="ornament-corner top-left" />
-    <div class="ornament-corner top-right" />
-    <div class="ornament-corner bottom-left" />
-    <div class="ornament-corner bottom-right" />
-
     <skyrim-navigation
       :tabs="tabs"
       :active-tab="activeTab"
@@ -33,8 +28,18 @@ const { tabs, activeTab, activeSubTab } = storeToRefs(navigationStore);
 </script>
 
 <style scoped>
+.handheld-device {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .content-area {
   flex: 1;
-  overflow-y: auto;
+  padding: var(--spacing-sm);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 </style>

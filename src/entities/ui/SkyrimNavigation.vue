@@ -18,12 +18,6 @@
       </button>
     </nav>
 
-    <div class="ornament-divider">
-      <span class="ornament-line" />
-      <span class="ornament-diamond" />
-      <span class="ornament-line" />
-    </div>
-
     <nav
       v-if="currentSubTabs.length > 1"
       class="skyrim-subtabs animate-fade-in"

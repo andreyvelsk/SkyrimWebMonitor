@@ -1,41 +1,40 @@
 <template>
-  <div class="stats-grid">
-    <stat-bar
-      label="Health"
-      :value="85"
-      :max="100"
-      color="health"
-    />
-    <stat-bar
-      label="Magicka"
-      :value="60"
-      :max="100"
-      color="magicka"
-    />
-    <stat-bar
-      label="Stamina"
-      :value="72"
-      :max="100"
-      color="stamina"
-    />
-  </div>
-  <div class="list">
-    <attribute-row
-      label="Level"
-      value="24"
-    />
-    <attribute-row
-      label="Experience"
-      value="1,250 / 2,000"
-    />
-    <attribute-row
-      label="Carry Weight"
-      value="285 / 300"
-    />
-    <attribute-row
-      label="Gold"
-      value="4,567"
-    />
+  <div class="flex flex-1 flex-col justify-between">
+    <div class="list">
+      <attribute-row
+        label="Level"
+        value="24"
+      />
+      <attribute-row
+        label="Experience"
+        value="1,250 / 2,000"
+      />
+      <attribute-row
+        label="Carry Weight"
+        value="285 / 300"
+      />
+      <attribute-row
+        label="Gold"
+        value="4,567"
+      />
+    </div>
+    <div class="stats-grid">
+      <stat-bar
+        :value="85"
+        :max="100"
+        color="health"
+      />
+      <stat-bar
+        :value="60"
+        :max="100"
+        color="magicka"
+      />
+      <stat-bar
+        :value="72"
+        :max="100"
+        color="stamina"
+      />
+    </div>
   </div>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
   <div class="attribute-row">
     <span class="attr-label">{{ label }}</span>
-    <span class="attr-divider" />
     <span class="attr-value">{{ value }}</span>
   </div>
 </template>
@@ -12,15 +11,17 @@ defineProps<{ label: string; value: string }>();
 
 <style scoped>
 .attribute-row {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xl);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-sm);
   padding: var(--spacing-sm) 0;
   border-bottom: 1px solid var(--skyrim-border-dark);
 }
 
 .attr-label {
-  font-size: var(--font-size-sm);
   color: var(--skyrim-text-secondary);
   min-width: 120px;
 }
@@ -32,8 +33,6 @@ defineProps<{ label: string; value: string }>();
 }
 
 .attr-value {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
   color: var(--skyrim-text-accent);
 }
 </style>

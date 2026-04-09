@@ -1,8 +1,12 @@
 <template>
   <div class="stat-bar">
     <div class="stat-header">
-      <span class="stat-label">{{ label }}</span>
-      <span class="stat-value">{{ value }} / {{ max }}</span>
+      <span
+        v-if="label"
+        class="stat-label"
+      >
+        {{ label }}
+      </span>
     </div>
     <div class="stat-track">
       <div
@@ -18,7 +22,7 @@
 import { computed } from 'vue';
 
 const props = defineProps<{
-  label: string;
+  label?: string;
   value: number;
   max: number;
   color: 'health' | 'magicka' | 'stamina';
@@ -53,7 +57,7 @@ const pct = computed(() => (props.value / props.max) * 100);
 }
 
 .stat-track {
-  height: 8px;
+  height: 1.5rem;
   background-color: var(--skyrim-bg-dark);
   border: 1px solid var(--skyrim-border-dark);
   border-radius: var(--radius-sm);
