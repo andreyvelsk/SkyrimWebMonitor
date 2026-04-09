@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { getWebSocketClient } from '@/services/websocket';
-import { CONNECTION_STATUS } from '@/constants/connection';
+import { getWebSocketClient, FIELD_MAPPING } from '@/api/websocket';
+import { CONNECTION_STATUS } from '@/shared/lib/constants/connection.js';
+import type { DataMessage, ServerMessage } from '@/api/websocket';
 import { useMonitorStore } from './use-monitor-state/useMonitorStore';
-import { FIELD_MAPPING } from '@/services/protocol';
-import type { DataMessage, ServerMessage } from '@/services/protocol';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
 

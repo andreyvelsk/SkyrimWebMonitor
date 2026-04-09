@@ -24,8 +24,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import SkyrimNavigation from './components/SkyrimNavigation.vue';
-import SkyrimContent from './components/SkyrimContent.vue';
+import { SkyrimNavigation, SkyrimContent } from '@/entities/ui';
 
 interface SubTab {
   id: string;

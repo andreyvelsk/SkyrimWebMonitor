@@ -226,12 +226,14 @@
 </template>
 
 <script setup lang="ts">
-import StatBar from './StatBar.vue';
-import AttributeRow from './AttributeRow.vue';
-import SkillItem from './SkillItem.vue';
-import InventoryItem from './InventoryItem.vue';
-import MagicItem from './MagicItem.vue';
-import QuestItem from './QuestItem.vue';
+import {
+  StatBar,
+  AttributeRow,
+  SkillItem,
+  InventoryItem,
+  MagicItem,
+  QuestItem,
+} from '@/shared/ui';
 
 defineProps<{ tab: string; subTab: string }>();
 
