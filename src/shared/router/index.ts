@@ -1,0 +1,1 @@
+export { usePageRouter } from './usePageRouter';

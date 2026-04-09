@@ -1,4 +1,3 @@
-
 export interface SubTab {
   id: string;
   label: string;
@@ -7,5 +6,5 @@ export interface SubTab {
 export interface Tab {
   id: string;
   label: string;
-  subTabs?: SubTab[];
+  subTabs: SubTab[];
 }

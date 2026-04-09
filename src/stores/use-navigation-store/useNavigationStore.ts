@@ -8,6 +8,9 @@ export const useNavigationStore = defineStore('navigation', () => {
     {
       id: 'character',
       label: 'Character',
+      subTabs: [
+        { id: 'stats', label: 'Stats' },
+      ],
     },
     {
       id: 'inventory',

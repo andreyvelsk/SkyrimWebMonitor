@@ -25,7 +25,7 @@
     </div>
 
     <nav
-      v-if="currentSubTabs.length"
+      v-if="currentSubTabs.length > 1"
       class="skyrim-subtabs animate-fade-in"
       role="tablist"
       aria-label="Sub navigation"
