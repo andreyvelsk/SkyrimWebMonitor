@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex items-center justify-center"
-  >
+  <div class="flex items-center justify-center">
     <div class="flex items-center gap-2">
       <!-- Status Icon -->
       <div class="flex-shrink-0">
@@ -13,7 +11,7 @@
           }"
         />
       </div>
-    
+
       <!-- Status Text -->
       <div class="flex-1 text-gray-200">
         <p class="text-sm font-semibold">
@@ -30,10 +28,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useWebSocketStore } from '@/stores/useWebsocketStore';
-import { CONNECTION_STATUS } from '@/constants/connection';
+import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 
 const wsStore = useWebSocketStore();
 

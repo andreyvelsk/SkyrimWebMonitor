@@ -1,0 +1,574 @@
+/*
+ * ============================================
+ * SKYRIM HANDHELD INTERFACE - THEME CONFIG
+ * ============================================
+ * 
+ * Easy configuration: Change these CSS variables
+ * to customize the entire interface appearance
+ */
+
+:root {
+  /* ===========================================
+   * PRIMARY COLORS - Main interface colors
+   * =========================================== */
+  --skyrim-bg-dark: #0d0d0d; /* Deepest background */
+  --skyrim-bg-medium: #1a1a1a; /* Card/panel background */
+  --skyrim-bg-light: #252525; /* Elevated surfaces */
+
+  /* ===========================================
+   * TEXT COLORS - Typography hierarchy
+   * =========================================== */
+  --skyrim-text-primary: #d4c4a8; /* Main text - parchment gold */
+  --skyrim-text-secondary: #9a8b70; /* Muted text */
+  --skyrim-text-accent: #f5e6c8; /* Highlighted/active text */
+  --skyrim-text-dim: #5a5040; /* Disabled/inactive text */
+
+  /* ===========================================
+   * ACCENT COLORS - Interactive elements
+   * =========================================== */
+  --skyrim-accent-gold: #c9a227; /* Primary accent - Nordic gold */
+  --skyrim-accent-gold-light: #e5c44d; /* Hover state gold */
+  --skyrim-accent-gold-dim: #8b7220; /* Subtle gold accents */
+
+  /* ===========================================
+   * BORDER & DIVIDER COLORS
+   * =========================================== */
+  --skyrim-border-dark: #2a2a2a; /* Subtle borders */
+  --skyrim-border-medium: #3d3d3d; /* Standard borders */
+  --skyrim-border-accent: #c9a227; /* Active/highlighted borders */
+  --skyrim-border-glow: rgb(201 162 39 / 30%); /* Border glow effect */
+
+  /* ===========================================
+   * TAB SPECIFIC COLORS
+   * =========================================== */
+  --tab-bg-inactive: transparent;
+  --tab-bg-hover: rgb(201 162 39 / 8%);
+  --tab-bg-active: rgb(201 162 39 / 15%);
+  --tab-text-inactive: var(--skyrim-text-secondary);
+  --tab-text-hover: var(--skyrim-text-primary);
+  --tab-text-active: var(--skyrim-accent-gold);
+  --tab-border-active: var(--skyrim-accent-gold);
+
+  /* ===========================================
+   * SUB-TAB SPECIFIC COLORS
+   * =========================================== */
+  --subtab-bg-inactive: transparent;
+  --subtab-bg-hover: rgb(212 196 168 / 5%);
+  --subtab-bg-active: rgb(212 196 168 / 10%);
+  --subtab-text-inactive: var(--skyrim-text-dim);
+  --subtab-text-hover: var(--skyrim-text-secondary);
+  --subtab-text-active: var(--skyrim-text-primary);
+  --subtab-indicator-active: var(--skyrim-accent-gold-dim);
+
+  /* ===========================================
+   * ORNAMENT & DECORATION
+   * =========================================== */
+  --ornament-color: var(--skyrim-accent-gold-dim);
+  --ornament-glow: rgb(201 162 39 / 20%);
+
+  /* ===========================================
+   * SHADOW & EFFECTS
+   * =========================================== */
+  --shadow-soft: 0 2px 8px rgb(0 0 0 / 40%);
+  --shadow-medium: 0 4px 16px rgb(0 0 0 / 50%);
+  --shadow-strong: 0 8px 32px rgb(0 0 0 / 60%);
+  --glow-accent: 0 0 20px var(--skyrim-border-glow);
+
+  /* ===========================================
+   * TYPOGRAPHY
+   * =========================================== */
+  --font-heading: 'Cinzel', serif;
+  --font-body: 'Cormorant Garamond', serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+
+  /* ===========================================
+   * SPACING & SIZING
+   * =========================================== */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --tab-height: 3rem;
+  --subtab-height: 2.5rem;
+  --tab-gap: 0.25rem;
+
+  /* ===========================================
+   * TRANSITIONS
+   * =========================================== */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* ===========================================
+   * BORDER RADIUS
+   * =========================================== */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+}
+
+/* ===========================================
+ * BASE STYLES
+ * =========================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: var(--skyrim-bg-dark);
+  color: var(--skyrim-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===========================================
+ * UTILITY CLASSES
+ * =========================================== */
+
+/* Text colors */
+.text-primary {
+  color: var(--skyrim-text-primary);
+}
+.text-secondary {
+  color: var(--skyrim-text-secondary);
+}
+.text-accent {
+  color: var(--skyrim-text-accent);
+}
+.text-dim {
+  color: var(--skyrim-text-dim);
+}
+.text-gold {
+  color: var(--skyrim-accent-gold);
+}
+
+/* Background colors */
+.bg-dark {
+  background-color: var(--skyrim-bg-dark);
+}
+.bg-medium {
+  background-color: var(--skyrim-bg-medium);
+}
+.bg-light {
+  background-color: var(--skyrim-bg-light);
+}
+
+/* Typography */
+.font-heading {
+  font-family: var(--font-heading);
+}
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* Shadows */
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+.shadow-medium {
+  box-shadow: var(--shadow-medium);
+}
+.shadow-strong {
+  box-shadow: var(--shadow-strong);
+}
+
+/* Transitions */
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+.transition-normal {
+  transition: all var(--transition-normal);
+}
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+/* ===========================================
+ * FLEXBOX UTILITIES
+ * =========================================== */
+
+/* Display Flex */
+.flex {
+  display: flex;
+}
+
+/* Flex Direction */
+.flex-row {
+  flex-direction: row;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+.flex-col-reverse {
+  flex-direction: column-reverse;
+}
+
+/* Justify Content */
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+/* Align Items */
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.items-end {
+  align-items: flex-end;
+}
+.items-stretch {
+  align-items: stretch;
+}
+.items-baseline {
+  align-items: baseline;
+}
+
+/* Flex Wrap */
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+/* Flex Growth/Shrinking */
+.flex-1 {
+  flex: 1;
+}
+.flex-auto {
+  flex: auto;
+}
+.flex-initial {
+  flex: initial;
+}
+.flex-none {
+  flex: none;
+}
+
+/* Gap */
+.gap-xs {
+  gap: var(--spacing-xs);
+}
+.gap-sm {
+  gap: var(--spacing-sm);
+}
+.gap-md {
+  gap: var(--spacing-md);
+}
+.gap-lg {
+  gap: var(--spacing-lg);
+}
+.gap-xl {
+  gap: var(--spacing-xl);
+}
+
+/* ===========================================
+ * TAB COMPONENT CLASSES
+ * =========================================== */
+
+/* Tab container */
+.skyrim-tabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tab-gap);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--skyrim-bg-dark);
+  border-bottom: 1px solid var(--skyrim-border-dark);
+}
+
+/* Individual tab */
+.skyrim-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--tab-height);
+  padding: 0 var(--spacing-lg);
+  background-color: var(--tab-bg-inactive);
+  color: var(--tab-text-inactive);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.skyrim-tab:hover {
+  background-color: var(--tab-bg-hover);
+  color: var(--tab-text-hover);
+}
+
+.skyrim-tab.active {
+  background-color: var(--tab-bg-active);
+  color: var(--tab-text-active);
+}
+
+/* Sub-tab container */
+.skyrim-subtabs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-md);
+  background-color: var(--skyrim-bg-dark);
+  border-bottom: 1px solid var(--skyrim-border-dark);
+}
+
+/* Individual sub-tab */
+.skyrim-subtab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--subtab-height);
+  padding: 0 var(--spacing-md);
+  background-color: var(--subtab-bg-inactive);
+  color: var(--subtab-text-inactive);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.skyrim-subtab:hover {
+  background-color: var(--subtab-bg-hover);
+  color: var(--subtab-text-hover);
+}
+
+.skyrim-subtab.active {
+  background-color: var(--subtab-bg-active);
+  color: var(--subtab-text-active);
+}
+
+/* ===========================================
+ * ORNAMENTAL DECORATIONS
+ * =========================================== */
+
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) 0;
+  background-color: --var(--skyrim-bg-dark);
+}
+
+.ornament-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ornament-color) 20%,
+    var(--ornament-color) 80%,
+    transparent
+  );
+}
+
+.ornament-diamond {
+  width: 8px;
+  height: 8px;
+  background-color: var(--ornament-color);
+  transform: rotate(45deg);
+  box-shadow: 0 0 6px var(--ornament-glow);
+}
+
+/* Corner ornaments */
+.ornament-corner {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: var(--ornament-color);
+  border-style: solid;
+  border-width: 0;
+}
+
+.ornament-corner.top-left {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+
+.ornament-corner.top-right {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+
+.ornament-corner.bottom-left {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+
+.ornament-corner.bottom-right {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+
+/* ===========================================
+ * CONTENT PANEL
+ * =========================================== */
+
+.skyrim-panel {
+  position: relative;
+  background-color: var(--skyrim-bg-medium);
+  border: 1px solid var(--skyrim-border-dark);
+  padding: var(--spacing-lg);
+  height: 100%;
+  overflow-y: auto;
+}
+
+.skyrim-panel-header {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  color: var(--skyrim-text-accent);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--skyrim-border-dark);
+}
+
+/* ===========================================
+ * HANDHELD DEVICE FRAME
+ * =========================================== */
+
+.handheld-device {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+  background-color: var(--skyrim-bg-dark);
+  border: 2px solid var(--skyrim-border-medium);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.handheld-device::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at top, transparent 60%, rgb(0 0 0 / 30%) 100%),
+    radial-gradient(ellipse at bottom, transparent 60%, rgb(0 0 0 / 40%) 100%);
+}
+
+/* ===========================================
+ * SCROLLBAR STYLING
+ * =========================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--skyrim-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--skyrim-border-medium);
+  border-radius: var(--radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--skyrim-accent-gold-dim);
+}
+
+/* ===========================================
+ * ANIMATIONS
+ * =========================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--skyrim-border-glow);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--skyrim-border-glow);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-normal) ease-out;
+}
+
+.animate-slide-down {
+  animation: slideDown var(--transition-normal) ease-out;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}

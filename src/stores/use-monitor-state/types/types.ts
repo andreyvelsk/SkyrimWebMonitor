@@ -9,4 +9,4 @@ interface GeneralState {
 
 export type {
     GeneralState
-}
+};

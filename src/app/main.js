@@ -1,8 +1,8 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import '@/shared/lib/styles/skyrim-theme.css';
-import './style.css';
-import App from './app/App.vue';
+import '../style.css';
+import App from './App.vue';
 import { registerSW } from 'virtual:pwa-register';
 
 // Register service worker for PWA
