@@ -1,4 +1,4 @@
-import { WS_CONFIG } from '@/shared/lib/config/websocket.js';
+import { WS_CONFIG } from '@/shared/lib/config/websocket';
 import type {
   ClientMessage,
   ServerMessage,

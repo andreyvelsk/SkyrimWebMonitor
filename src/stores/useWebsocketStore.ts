@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { getWebSocketClient, FIELD_MAPPING } from '@/api/websocket';
-import { CONNECTION_STATUS } from '@/shared/lib/constants/connection.js';
+import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import type { DataMessage, ServerMessage } from '@/api/websocket';
 import { useMonitorStore } from './use-monitor-state/useMonitorStore';
 
