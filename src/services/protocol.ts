@@ -76,11 +76,11 @@ export const FIELD_MAPPING: Record<string, string> = {
   healthBase: 'ActorValue::kHealth::Base',
   magickaBase: 'ActorValue::kMagicka::Base',
   staminaBase: 'ActorValue::kStamina::Base',
-}
+};
 
 /**
  * Create reverse mapping for parsing server responses
  */
 export function createReverseFieldMapping(mapping: Record<string, string>): Record<string, string> {
-  return Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k]))
+  return Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k]));
 }
