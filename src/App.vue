@@ -27,52 +27,63 @@ import { ref } from 'vue';
 import SkyrimNavigation from './components/SkyrimNavigation.vue';
 import SkyrimContent from './components/SkyrimContent.vue';
 
-interface SubTab { id: string; label: string }
-interface Tab    { id: string; label: string; subTabs: SubTab[] }
+interface SubTab {
+  id: string;
+  label: string;
+}
+interface Tab {
+  id: string;
+  label: string;
+  subTabs: SubTab[];
+}
 
 const tabs = ref<Tab[]>([
   {
-    id: 'character', label: 'Character',
+    id: 'character',
+    label: 'Character',
     subTabs: [
-      { id: 'stats',   label: 'Stats'   },
-      { id: 'skills',  label: 'Skills'  },
-      { id: 'perks',   label: 'Perks'   },
-      { id: 'status',  label: 'Status'  }
-    ]
+      { id: 'stats', label: 'Stats' },
+      { id: 'skills', label: 'Skills' },
+      { id: 'perks', label: 'Perks' },
+      { id: 'status', label: 'Status' },
+    ],
   },
   {
-    id: 'inventory', label: 'Inventory',
+    id: 'inventory',
+    label: 'Inventory',
     subTabs: [
       { id: 'weapons', label: 'Weapons' },
-      { id: 'armor',   label: 'Armor'   },
+      { id: 'armor', label: 'Armor' },
       { id: 'potions', label: 'Potions' },
-      { id: 'misc',    label: 'Misc'    }
-    ]
+      { id: 'misc', label: 'Misc' },
+    ],
   },
   {
-    id: 'magic', label: 'Magic',
+    id: 'magic',
+    label: 'Magic',
     subTabs: [
-      { id: 'spells',  label: 'Spells'  },
-      { id: 'powers',  label: 'Powers'  },
-      { id: 'shouts',  label: 'Shouts'  }
-    ]
+      { id: 'spells', label: 'Spells' },
+      { id: 'powers', label: 'Powers' },
+      { id: 'shouts', label: 'Shouts' },
+    ],
   },
   {
-    id: 'map', label: 'Map',
+    id: 'map',
+    label: 'Map',
     subTabs: [
-      { id: 'local',   label: 'Local'   },
-      { id: 'world',   label: 'World'   },
-      { id: 'quests',  label: 'Quests'  }
-    ]
-  }
+      { id: 'local', label: 'Local' },
+      { id: 'world', label: 'World' },
+      { id: 'quests', label: 'Quests' },
+    ],
+  },
 ]);
 
-const activeTab    = ref('character');
+const activeTab = ref('character');
 const activeSubTab = ref('stats');
 
 const handleTabChange = (tabId: string) => {
   activeTab.value = tabId;
-  const tab = tabs.value.find(t => t.id === tabId);
+  const tab = tabs.value.find((t) => t.id === tabId);
   if (tab?.subTabs.length) activeSubTab.value = tab.subTabs[0].id;
 };
 

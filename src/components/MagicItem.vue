@@ -40,25 +40,92 @@
 
 <script setup lang="ts">
 defineProps<{
-  name: string
-  school: string
-  cost: number
-  isShout?: boolean
+  name: string;
+  school: string;
+  cost: number;
+  isShout?: boolean;
 }>();
 </script>
 
 <style scoped>
-.magic-item                    { display: flex; align-items: center; gap: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); background-color: var(--skyrim-bg-light); border: 1px solid var(--skyrim-border-dark); cursor: pointer; transition: all var(--transition-fast); }
-.magic-item:hover              { background-color: rgba(50,100,168,0.08); border-color: #3264a8; }
-.magic-item.is-shout           { border-left: 3px solid var(--skyrim-accent-gold); }
-.magic-item.is-shout:hover     { background-color: rgba(201,162,39,0.08); border-color: var(--skyrim-accent-gold-dim); }
-.magic-icon                    { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
-.magic-icon svg                { width: 20px; height: 20px; color: #5080c0; }
-.magic-item.is-shout .magic-icon svg { color: var(--skyrim-accent-gold); }
-.magic-info                    { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.magic-name                    { font-family: var(--font-heading); font-size: var(--font-size-sm); color: var(--skyrim-text-primary); }
-.magic-school                  { font-size: var(--font-size-xs); color: var(--skyrim-text-secondary); }
-.magic-cost                    { font-family: var(--font-heading); font-size: var(--font-size-sm); color: #7090d0; }
-.cost-label                    { font-size: var(--font-size-xs); color: var(--skyrim-text-dim); }
-.shout-ready                   { font-family: var(--font-heading); font-size: var(--font-size-xs); color: var(--skyrim-accent-gold); padding: 2px 8px; border: 1px solid var(--skyrim-border-accent); border-radius: var(--radius-sm); }
+.magic-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--skyrim-bg-light);
+  border: 1px solid var(--skyrim-border-dark);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.magic-item:hover {
+  background-color: rgb(50 100 168 / 8%);
+  border-color: #3264a8;
+}
+
+.magic-item.is-shout {
+  border-left: 3px solid var(--skyrim-accent-gold);
+}
+
+.magic-item.is-shout:hover {
+  background-color: rgb(201 162 39 / 8%);
+  border-color: var(--skyrim-accent-gold-dim);
+}
+
+.magic-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.magic-icon svg {
+  width: 20px;
+  height: 20px;
+  color: #5080c0;
+}
+
+.magic-item.is-shout .magic-icon svg {
+  color: var(--skyrim-accent-gold);
+}
+
+.magic-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.magic-name {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  color: var(--skyrim-text-primary);
+}
+
+.magic-school {
+  font-size: var(--font-size-xs);
+  color: var(--skyrim-text-secondary);
+}
+
+.magic-cost {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  color: #7090d0;
+}
+
+.cost-label {
+  font-size: var(--font-size-xs);
+  color: var(--skyrim-text-dim);
+}
+
+.shout-ready {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-xs);
+  color: var(--skyrim-accent-gold);
+  padding: 2px 8px;
+  border: 1px solid var(--skyrim-border-accent);
+  border-radius: var(--radius-sm);
+}
 </style>

@@ -48,22 +48,29 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-interface SubTab { id: string; label: string }
-interface Tab    { id: string; label: string; subTabs: SubTab[] }
+interface SubTab {
+  id: string;
+  label: string;
+}
+interface Tab {
+  id: string;
+  label: string;
+  subTabs: SubTab[];
+}
 
 const props = defineProps<{
-  tabs: Tab[]
-  activeTab: string
-  activeSubTab: string
+  tabs: Tab[];
+  activeTab: string;
+  activeSubTab: string;
 }>();
 
 defineEmits<{
-  'tab-change':    [tabId: string]
-  'subtab-change': [subTabId: string]
+  'tab-change': [tabId: string];
+  'subtab-change': [subTabId: string];
 }>();
 
-const currentSubTabs = computed(() =>
-  props.tabs.find(t => t.id === props.activeTab)?.subTabs ?? []
+const currentSubTabs = computed(
+  () => props.tabs.find((t) => t.id === props.activeTab)?.subTabs ?? []
 );
 </script>
 

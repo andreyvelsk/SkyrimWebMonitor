@@ -11,69 +11,69 @@
   /* ===========================================
    * PRIMARY COLORS - Main interface colors
    * =========================================== */
-  --skyrim-bg-dark: #0d0d0d;              /* Deepest background */
-  --skyrim-bg-medium: #1a1a1a;            /* Card/panel background */
-  --skyrim-bg-light: #252525;             /* Elevated surfaces */
-  
+  --skyrim-bg-dark: #0d0d0d; /* Deepest background */
+  --skyrim-bg-medium: #1a1a1a; /* Card/panel background */
+  --skyrim-bg-light: #252525; /* Elevated surfaces */
+
   /* ===========================================
    * TEXT COLORS - Typography hierarchy
    * =========================================== */
-  --skyrim-text-primary: #d4c4a8;         /* Main text - parchment gold */
-  --skyrim-text-secondary: #9a8b70;       /* Muted text */
-  --skyrim-text-accent: #f5e6c8;          /* Highlighted/active text */
-  --skyrim-text-dim: #5a5040;             /* Disabled/inactive text */
-  
+  --skyrim-text-primary: #d4c4a8; /* Main text - parchment gold */
+  --skyrim-text-secondary: #9a8b70; /* Muted text */
+  --skyrim-text-accent: #f5e6c8; /* Highlighted/active text */
+  --skyrim-text-dim: #5a5040; /* Disabled/inactive text */
+
   /* ===========================================
    * ACCENT COLORS - Interactive elements
    * =========================================== */
-  --skyrim-accent-gold: #c9a227;          /* Primary accent - Nordic gold */
-  --skyrim-accent-gold-light: #e5c44d;    /* Hover state gold */
-  --skyrim-accent-gold-dim: #8b7220;      /* Subtle gold accents */
-  
+  --skyrim-accent-gold: #c9a227; /* Primary accent - Nordic gold */
+  --skyrim-accent-gold-light: #e5c44d; /* Hover state gold */
+  --skyrim-accent-gold-dim: #8b7220; /* Subtle gold accents */
+
   /* ===========================================
    * BORDER & DIVIDER COLORS
    * =========================================== */
-  --skyrim-border-dark: #2a2a2a;          /* Subtle borders */
-  --skyrim-border-medium: #3d3d3d;        /* Standard borders */
-  --skyrim-border-accent: #c9a227;        /* Active/highlighted borders */
-  --skyrim-border-glow: rgba(201, 162, 39, 0.3); /* Border glow effect */
-  
+  --skyrim-border-dark: #2a2a2a; /* Subtle borders */
+  --skyrim-border-medium: #3d3d3d; /* Standard borders */
+  --skyrim-border-accent: #c9a227; /* Active/highlighted borders */
+  --skyrim-border-glow: rgb(201 162 39 / 30%); /* Border glow effect */
+
   /* ===========================================
    * TAB SPECIFIC COLORS
    * =========================================== */
   --tab-bg-inactive: transparent;
-  --tab-bg-hover: rgba(201, 162, 39, 0.08);
-  --tab-bg-active: rgba(201, 162, 39, 0.15);
+  --tab-bg-hover: rgb(201 162 39 / 8%);
+  --tab-bg-active: rgb(201 162 39 / 15%);
   --tab-text-inactive: var(--skyrim-text-secondary);
   --tab-text-hover: var(--skyrim-text-primary);
   --tab-text-active: var(--skyrim-accent-gold);
   --tab-border-active: var(--skyrim-accent-gold);
-  
+
   /* ===========================================
    * SUB-TAB SPECIFIC COLORS
    * =========================================== */
   --subtab-bg-inactive: transparent;
-  --subtab-bg-hover: rgba(212, 196, 168, 0.05);
-  --subtab-bg-active: rgba(212, 196, 168, 0.1);
+  --subtab-bg-hover: rgb(212 196 168 / 5%);
+  --subtab-bg-active: rgb(212 196 168 / 10%);
   --subtab-text-inactive: var(--skyrim-text-dim);
   --subtab-text-hover: var(--skyrim-text-secondary);
   --subtab-text-active: var(--skyrim-text-primary);
   --subtab-indicator-active: var(--skyrim-accent-gold-dim);
-  
+
   /* ===========================================
    * ORNAMENT & DECORATION
    * =========================================== */
   --ornament-color: var(--skyrim-accent-gold-dim);
-  --ornament-glow: rgba(201, 162, 39, 0.2);
-  
+  --ornament-glow: rgb(201 162 39 / 20%);
+
   /* ===========================================
    * SHADOW & EFFECTS
    * =========================================== */
-  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.5);
-  --shadow-strong: 0 8px 32px rgba(0, 0, 0, 0.6);
+  --shadow-soft: 0 2px 8px rgb(0 0 0 / 40%);
+  --shadow-medium: 0 4px 16px rgb(0 0 0 / 50%);
+  --shadow-strong: 0 8px 32px rgb(0 0 0 / 60%);
   --glow-accent: 0 0 20px var(--skyrim-border-glow);
-  
+
   /* ===========================================
    * TYPOGRAPHY
    * =========================================== */
@@ -84,7 +84,7 @@
   --font-size-base: 1rem;
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
-  
+
   /* ===========================================
    * SPACING & SIZING
    * =========================================== */
@@ -93,18 +93,17 @@
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
-  
   --tab-height: 3rem;
   --subtab-height: 2.5rem;
   --tab-gap: 0.25rem;
-  
+
   /* ===========================================
    * TRANSITIONS
    * =========================================== */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
   --transition-slow: 400ms ease;
-  
+
   /* ===========================================
    * BORDER RADIUS
    * =========================================== */
@@ -122,7 +121,8 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   width: 100%;
 }
@@ -142,30 +142,62 @@ body {
  * =========================================== */
 
 /* Text colors */
-.text-primary { color: var(--skyrim-text-primary); }
-.text-secondary { color: var(--skyrim-text-secondary); }
-.text-accent { color: var(--skyrim-text-accent); }
-.text-dim { color: var(--skyrim-text-dim); }
-.text-gold { color: var(--skyrim-accent-gold); }
+.text-primary {
+  color: var(--skyrim-text-primary);
+}
+.text-secondary {
+  color: var(--skyrim-text-secondary);
+}
+.text-accent {
+  color: var(--skyrim-text-accent);
+}
+.text-dim {
+  color: var(--skyrim-text-dim);
+}
+.text-gold {
+  color: var(--skyrim-accent-gold);
+}
 
 /* Background colors */
-.bg-dark { background-color: var(--skyrim-bg-dark); }
-.bg-medium { background-color: var(--skyrim-bg-medium); }
-.bg-light { background-color: var(--skyrim-bg-light); }
+.bg-dark {
+  background-color: var(--skyrim-bg-dark);
+}
+.bg-medium {
+  background-color: var(--skyrim-bg-medium);
+}
+.bg-light {
+  background-color: var(--skyrim-bg-light);
+}
 
 /* Typography */
-.font-heading { font-family: var(--font-heading); }
-.font-body { font-family: var(--font-body); }
+.font-heading {
+  font-family: var(--font-heading);
+}
+.font-body {
+  font-family: var(--font-body);
+}
 
 /* Shadows */
-.shadow-soft { box-shadow: var(--shadow-soft); }
-.shadow-medium { box-shadow: var(--shadow-medium); }
-.shadow-strong { box-shadow: var(--shadow-strong); }
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+.shadow-medium {
+  box-shadow: var(--shadow-medium);
+}
+.shadow-strong {
+  box-shadow: var(--shadow-strong);
+}
 
 /* Transitions */
-.transition-fast { transition: all var(--transition-fast); }
-.transition-normal { transition: all var(--transition-normal); }
-.transition-slow { transition: all var(--transition-slow); }
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+.transition-normal {
+  transition: all var(--transition-normal);
+}
+.transition-slow {
+  transition: all var(--transition-slow);
+}
 
 /* ===========================================
  * TAB COMPONENT CLASSES
@@ -387,9 +419,9 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: 
-    radial-gradient(ellipse at top, transparent 60%, rgba(0, 0, 0, 0.3) 100%),
-    radial-gradient(ellipse at bottom, transparent 60%, rgba(0, 0, 0, 0.4) 100%);
+  background:
+    radial-gradient(ellipse at top, transparent 60%, rgb(0 0 0 / 30%) 100%),
+    radial-gradient(ellipse at bottom, transparent 60%, rgb(0 0 0 / 40%) 100%);
 }
 
 /* ===========================================
@@ -418,24 +450,34 @@ body {
  * =========================================== */
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideDown {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(-10px);
   }
-  to { 
+
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 8px var(--skyrim-border-glow); }
-  50% { box-shadow: 0 0 16px var(--skyrim-border-glow); }
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--skyrim-border-glow);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--skyrim-border-glow);
+  }
 }
 
 .animate-fade-in {

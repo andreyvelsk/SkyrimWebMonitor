@@ -6,7 +6,9 @@
     </div>
 
     <!-- Bar Container -->
-    <div class="flex-1 relative h-8 border-2 border-gray-700 bg-gray-900 overflow-hidden">
+    <div
+      class="flex-1 relative h-8 border-2 border-gray-700 bg-gray-900 overflow-hidden"
+    >
       <!-- Fill -->
       <div
         :style="{
@@ -17,7 +19,9 @@
       />
 
       <!-- Inner Border Effect -->
-      <div class="absolute inset-0 border border-gray-800 pointer-events-none" />
+      <div
+        class="absolute inset-0 border border-gray-800 pointer-events-none"
+      />
 
       <!-- Glow Effect (optional) -->
       <div
@@ -88,4 +92,3 @@ const barColor = computed(() => {
   return /^#[0-9A-F]{6}$/.test(color) ? color : '#FF3333';
 });
 </script>
-

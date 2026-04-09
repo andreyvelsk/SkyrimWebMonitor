@@ -239,7 +239,23 @@ const formatTitle = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 </script>
 
 <style scoped>
-.stats-grid { display: flex; flex-direction: column; gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
-.list       { display: flex; flex-direction: column; gap: var(--spacing-sm); }
-.empty-state { display: flex; align-items: center; justify-content: center; min-height: 200px; }
+.stats-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
 </style>
