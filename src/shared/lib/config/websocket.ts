@@ -1,11 +1,17 @@
 // WebSocket Configuration
+
+function getWsUrl(): string {
+  if (import.meta.env.PROD) {
+    // Production: connect directly using env variable
+    return import.meta.env.VITE_WS_URL || 'ws://localhost:8765';
+  }
+  // Development: route through Vite proxy (/ws path) to avoid CORS origin issues
+  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+  return `${proto}://${location.host}/ws`;
+}
+
 export const WS_CONFIG = {
-  // WebSocket server URL
-  // In development: uses Vite proxy (/ws) to reach the real server
-  // Production: uses VITE_WS_URL or defaults to localhost
-  URL: import.meta.env.DEV
-    ? 'ws://localhost:5173/ws'
-    : import.meta.env.VITE_WS_URL || 'ws://127.0.0.1:8765',
+  URL: getWsUrl(),
 
   // Reconnection settings
   RECONNECT_INTERVAL: 3000, // ms
