@@ -19,12 +19,25 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import { watch } from 'vue';
 import { SkyrimNavigation, SkyrimContent } from '@/entities/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
+import { useWebSocketStore } from '@/stores/useWebsocketStore';
+import { getPageFields } from '@/shared/lib/config/pageRegistry';
 
 const navigationStore = useNavigationStore();
 const { setActiveTab, setActiveSubTab } = navigationStore;
 const { tabs, activeTab, activeSubTab } = storeToRefs(navigationStore);
+
+const websocketStore = useWebSocketStore();
+const { changePageSubscription } = websocketStore;
+
+// Watch for page changes and update subscription
+watch([activeTab, activeSubTab], ([newTab, newSubTab]) => {
+  console.log(`Page changed to: ${newTab} - ${newSubTab}`);
+  const pageFields = getPageFields(newTab, newSubTab);
+  changePageSubscription(pageFields);
+});
 </script>
 
 <style scoped lang="scss">
