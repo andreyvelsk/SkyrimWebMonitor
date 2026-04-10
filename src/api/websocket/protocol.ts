@@ -28,11 +28,11 @@ export interface QueryMessage extends BaseMessage {
   fields: Record<string, string> // alias -> registry key mapping
 }
 
-export interface DescribeMessage extends BaseMessage {
-  type: 'describe'
+export interface HeartbeatMessage extends BaseMessage {
+  type: 'heartbeat'
 }
 
-export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage | DescribeMessage
+export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage | HeartbeatMessage
 
 // ============================================================================
 // Server → Client Messages
@@ -44,14 +44,9 @@ export interface DataMessage extends BaseMessage {
   fields: Record<string, number> // alias -> float value
 }
 
-export interface FieldDescription {
-  valueType: string // e.g., "float"
-  description: string
-}
-
-export interface DescribeResponseMessage extends BaseMessage {
-  type: 'describe'
-  fields: Record<string, FieldDescription>
+export interface HeartbeatResponseMessage extends BaseMessage {
+  type: 'heartbeat'
+  ts: number // Unix timestamp in milliseconds (server time)
 }
 
 export interface ErrorMessage extends BaseMessage {
@@ -59,7 +54,7 @@ export interface ErrorMessage extends BaseMessage {
   message: string
 }
 
-export type ServerMessage = DataMessage | DescribeResponseMessage | ErrorMessage
+export type ServerMessage = DataMessage | HeartbeatResponseMessage | ErrorMessage
 
 // ============================================================================
 // Field Aliases and Registry Keys

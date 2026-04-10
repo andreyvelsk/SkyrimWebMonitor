@@ -4,8 +4,7 @@ import type {
   ServerMessage,
   DataMessage,
   ErrorMessage,
-  DescribeResponseMessage,
-  DescribeMessage,
+  HeartbeatMessage,
   SubscribeMessage,
   UnsubscribeMessage,
   QueryMessage,
@@ -23,6 +22,8 @@ class WebSocketClient {
   private url: string = WS_CONFIG.URL;
   private reconnectAttempts: number = 0;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
+  private heartbeatTimer: ReturnType<typeof setInterval> | null = null;
+  private lastHeartbeatAckTime: number = Date.now();
   private messageHandlers: MessageHandler[] = [];
   private eventCallbacks: Map<string, EventCallback[]> = new Map();
 
@@ -50,22 +51,27 @@ class WebSocketClient {
         this.ws.onopen = () => {
           console.log('WebSocket connected');
           this.reconnectAttempts = 0;
+          this.lastHeartbeatAckTime = Date.now();
+          this.startHeartbeat();
           this.emit('onOpen');
           resolve();
         };
 
         this.ws.onmessage = (event) => {
-          console.log('WebSocket message received:', event.data);
+          // Update heartbeat ack time on any message from server
+          this.lastHeartbeatAckTime = Date.now();
           this.handleMessage(event.data);
         };
 
         this.ws.onerror = (error) => {
           console.error('WebSocket error:', error);
+          this.stopHeartbeat();
           this.emit('onError', error);
         };
 
         this.ws.onclose = () => {
           console.log('WebSocket closed');
+          this.stopHeartbeat();
           this.emit('onClose');
           this.ws = null;
           this.attemptReconnect();
@@ -81,6 +87,8 @@ class WebSocketClient {
    * Disconnect from WebSocket server
    */
   disconnect(): void {
+    this.stopHeartbeat();
+
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
@@ -155,16 +163,6 @@ class WebSocketClient {
   }
 
   /**
-   * Request description of available fields
-   */
-  describe(): boolean {
-    const message: DescribeMessage = {
-      type: 'describe',
-    };
-    return this.send(message);
-  }
-
-  /**
    * Handle incoming message from server
    */
   private handleMessage(rawData: string): void {
@@ -186,8 +184,8 @@ class WebSocketClient {
           this.handleErrorMessage(message as ErrorMessage);
           break;
 
-        case 'describe':
-          this.handleDescribeMessage(message as DescribeResponseMessage);
+        case 'heartbeat':
+          this.handleHeartbeatMessage();
           break;
 
         default:
@@ -217,10 +215,11 @@ class WebSocketClient {
   }
 
   /**
-   * Handle describe message from server
+   * Handle heartbeat response from server
+   * Just update the last heartbeat acknowledgment time
    */
-  private handleDescribeMessage(message: DescribeResponseMessage): void {
-    console.log('Available fields:', message.fields);
+  private handleHeartbeatMessage(): void {
+    this.lastHeartbeatAckTime = Date.now();
   }
 
   /**
@@ -291,6 +290,56 @@ class WebSocketClient {
         console.error('Reconnection failed:', error);
       });
     }, WS_CONFIG.RECONNECT_INTERVAL);
+  }
+
+  /**
+   * Start heartbeat to detect connection loss quickly
+   * Sends periodic pings and checks for server responses
+   */
+  private startHeartbeat(): void {
+    // Clear any existing heartbeat timer
+    this.stopHeartbeat();
+
+    this.heartbeatTimer = setInterval(() => {
+      // Check if we haven't received a message for too long
+      const timeSinceLastAck = Date.now() - this.lastHeartbeatAckTime;
+
+      if (timeSinceLastAck > WS_CONFIG.HEARTBEAT_INTERVAL * 2) {
+        console.warn('Heartbeat timeout - server not responding, closing connection');
+        this.stopHeartbeat();
+        
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+          this.ws.close();
+        }
+        
+        // Emit close event immediately (don't wait for onClose callback)
+        this.ws = null;
+        this.emit('onClose');
+        this.attemptReconnect();
+        return;
+      }
+
+      // Try to send a heartbeat message as a ping
+      // The server's response will update lastHeartbeatAckTime
+      if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+        try {
+          const heartbeatMsg: HeartbeatMessage = { type: 'heartbeat' };
+          this.ws.send(JSON.stringify(heartbeatMsg));
+        } catch (error) {
+          console.error('Failed to send heartbeat:', error);
+        }
+      }
+    }, WS_CONFIG.HEARTBEAT_INTERVAL);
+  }
+
+  /**
+   * Stop heartbeat timer
+   */
+  private stopHeartbeat(): void {
+    if (this.heartbeatTimer) {
+      clearInterval(this.heartbeatTimer);
+      this.heartbeatTimer = null;
+    }
   }
 }
 

@@ -17,7 +17,7 @@ export const WS_CONFIG = {
   RECONNECT_INTERVAL: 3000, // ms
   MAX_RECONNECT_ATTEMPTS: 10,
 
-  // Message settings
-  HEARTBEAT_INTERVAL: 30000, // ms
-  MESSAGE_TIMEOUT: 5000, // ms
+  // Heartbeat settings - detects connection loss within ~10-15 seconds
+  HEARTBEAT_INTERVAL: 1000, // ms (1 sec between heartbeat pings)
+  // Timeout = 2x heartbeat interval (if no response in 10 sec, close connection)
 };

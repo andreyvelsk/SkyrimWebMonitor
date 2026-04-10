@@ -2,9 +2,7 @@
   <div class="handheld-device">
     <!-- Show connection status when not connected -->
     <connection-status v-if="!isConnected" />
-
-    <!-- Show main app only when connected -->
-    <template v-if="isConnected">
+    <template v-else>
       <skyrim-navigation
         :tabs="tabs"
         :active-tab="activeTab"
