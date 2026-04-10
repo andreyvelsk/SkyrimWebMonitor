@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import { getWebSocketClient, FIELD_MAPPING } from '@/api/websocket';
+import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import type { DataMessage, ServerMessage } from '@/api/websocket';
 import { useMonitorStore } from './use-monitor-state/useMonitorStore';
+import { getDefaultFields } from '@/shared/lib/config/pageRegistry';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
 
@@ -15,6 +16,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
   const status = ref<string>(CONNECTION_STATUS.DISCONNECTED);
   const error = ref<string | null>(null);
   const isSubscribed = ref(false);
+  const currentFieldMapping = ref<Record<string, string>>(getDefaultFields());
 
   // Get WebSocket client instance
   const wsClient = getWebSocketClient();
@@ -35,20 +37,43 @@ export const useWebSocketStore = defineStore('websocket', () => {
 
   /**
    * Start subscription to monitor data
+   * @param fieldMapping - Optional field mapping for the subscription. If not provided, uses current mapping.
    */
-  const startSubscription = (): void => {
+  const startSubscription = (fieldMapping?: Record<string, string>): void => {
     if (!wsClient.isConnected()) {
       console.warn('WebSocket is not connected, cannot subscribe');
       return;
     }
 
-    const success = wsClient.subscribe(FIELD_MAPPING, WS_UPDATE_FREQUENCY);
+    // Update field mapping if provided
+    if (fieldMapping) {
+      currentFieldMapping.value = fieldMapping;
+    }
+
+    const success = wsClient.subscribe(currentFieldMapping.value, WS_UPDATE_FREQUENCY);
     if (success) {
       isSubscribed.value = true;
-      console.log('Subscribed to monitor data updates');
+      console.log('Subscribed to monitor data updates', currentFieldMapping.value);
     } else {
       console.error('Failed to subscribe to monitor data');
     }
+  };
+
+  /**
+   * Change page subscription
+   * Resubscribes with new field mapping when page changes
+   */
+  const changePageSubscription = (fieldMapping: Record<string, string>): void => {
+    if (!wsClient.isConnected()) {
+      console.warn('WebSocket is not connected, cannot change subscription');
+      return;
+    }
+
+    // Stop current subscription
+    stopSubscription();
+
+    // Start new subscription with new field mapping
+    startSubscription(fieldMapping);
   };
 
   /**
@@ -69,6 +94,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
    */
   const handleDataMessage = (message: DataMessage): void => {
     try {
+      console.log('Received data message:', message);
       setGeneralState(message.fields);
     } catch (err) {
       console.error('Failed to update state from data message:', err);
@@ -100,7 +126,8 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromOpen = wsClient.on('onOpen', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
-      startSubscription();
+      // Note: Don't auto-subscribe here - let App.vue handle subscription updates via watch
+      console.log('WebSocket connected, ready for subscriptions');
     });
 
     unsubscribeFromClose = wsClient.on('onClose', () => {
@@ -139,6 +166,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     status,
     error,
     isSubscribed,
+    currentFieldMapping,
 
     // Computed
     isConnected,
@@ -149,6 +177,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     disconnect,
     startSubscription,
     stopSubscription,
+    changePageSubscription,
 
     // Cleanup
     $dispose: cleanup,

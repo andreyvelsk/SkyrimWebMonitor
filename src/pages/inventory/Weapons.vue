@@ -82,7 +82,7 @@
 import { InventoryItem } from '@/shared/ui';
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .skyrim-weapons {
   display: flex;
   flex-direction: column;
@@ -99,15 +99,21 @@ import { InventoryItem } from '@/shared/ui';
   min-height: 0;
 }
 
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-
 .drop-button {
   flex-shrink: 0;
   padding: var(--spacing-md);
   margin: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  color: var(--skyrim-text-primary);
+  background-color: var(--skyrim-bg-light);
+  border: 1px solid var(--skyrim-border-dark);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    background-color: rgb(201 162 39 / 8%);
+    border-color: var(--skyrim-accent-gold-dim);
+  }
 }
 </style>

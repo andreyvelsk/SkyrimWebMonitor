@@ -3,7 +3,8 @@ import { ref } from 'vue';
 import type { Tab } from './types/types';
 
 export const useNavigationStore = defineStore('navigation', () => {
-  // State
+  // State - Navigation structure (independent from pageRegistry)
+  // This can be updated/filtered separately from available pages
   const tabs = ref<Tab[]>([
     {
       id: 'character',
@@ -17,27 +18,7 @@ export const useNavigationStore = defineStore('navigation', () => {
       label: 'Inventory',
       subTabs: [
         { id: 'weapons', label: 'Weapons' },
-        { id: 'armor', label: 'Armor' },
-        { id: 'potions', label: 'Potions' },
-        { id: 'misc', label: 'Misc' },
-      ],
-    },
-    {
-      id: 'magic',
-      label: 'Magic',
-      subTabs: [
-        { id: 'spells', label: 'Spells' },
-        { id: 'powers', label: 'Powers' },
-        { id: 'shouts', label: 'Shouts' },
-      ],
-    },
-    {
-      id: 'map',
-      label: 'Map',
-      subTabs: [
-        { id: 'local', label: 'Local' },
-        { id: 'world', label: 'World' },
-        { id: 'quests', label: 'Quests' },
+        { id: 'apparel', label: 'Apparel' },
       ],
     },
   ]);

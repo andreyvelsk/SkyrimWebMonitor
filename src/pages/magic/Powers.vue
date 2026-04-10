@@ -9,11 +9,3 @@
 <script setup lang="ts">
 </script>
 
-<style scoped>
-.empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-}
-</style>

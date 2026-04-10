@@ -1,0 +1,50 @@
+/* ============================================
+ * BASE STYLES
+ * ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: var(--skyrim-bg-dark);
+  color: var(--skyrim-text-primary);
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  #app {
+    height: 100%;
+  }
+}
+
+// ============================================
+// SCROLLBAR STYLING
+// ============================================
+
+::-webkit-scrollbar {
+  width: 6px;
+
+  &-track {
+    background: var(--skyrim-bg-dark);
+  }
+
+  &-thumb {
+    background: var(--skyrim-border-medium);
+    border-radius: var(--radius-sm);
+
+    &:hover {
+      background: var(--skyrim-accent-gold-dim);
+    }
+  }
+}

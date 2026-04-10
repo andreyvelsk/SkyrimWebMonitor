@@ -7,8 +7,8 @@
  * components, and animations
  */
 
-@import './variables.css';
-@import './base.css';
-@import './utilities.css';
-@import './components.css';
-@import './animations.css';
+@use './variables';
+@use './base';
+@use './utilities';
+@use './components';
+@use './animations';

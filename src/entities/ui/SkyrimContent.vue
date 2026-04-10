@@ -34,18 +34,56 @@ const currentComponent = computed(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .skyrim-panel {
+  position: relative;
+  background-color: var(--skyrim-bg-medium);
+  border: 1px solid var(--skyrim-border-dark);
+  padding: var(--spacing-md);
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  height: 100%;
   max-height: 100%;
   overflow: hidden;
-}
-.empty-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
+
+  & div {
+    &.ornament-corner {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: var(--ornament-color);
+      border-style: solid;
+      border-width: 0;
+
+      &.top-left {
+        top: 0;
+        left: 0;
+        border-top-width: 2px;
+        border-left-width: 2px;
+      }
+
+      &.top-right {
+        top: 0;
+        right: 0;
+        border-top-width: 2px;
+        border-right-width: 2px;
+      }
+
+      &.bottom-left {
+        bottom: 0;
+        left: 0;
+        border-bottom-width: 2px;
+        border-left-width: 2px;
+      }
+
+      &.bottom-right {
+        bottom: 0;
+        right: 0;
+        border-bottom-width: 2px;
+        border-right-width: 2px;
+      }
+    }
+  }
 }
 </style>

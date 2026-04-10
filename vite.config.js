@@ -17,40 +17,42 @@ export default defineConfig(({ mode }) => {
     server: {
       proxy: {
         '/ws': {
-          target: env.VITE_WS_SERVER_URL || 'ws://192.168.46.190:8765',
+          // target must be http://, not ws:// — Vite handles the WS upgrade internally
+          target: env.VITE_WS_SERVER_URL,
           ws: true,
           rewriteWsOrigin: true,
+          changeOrigin: true,
         },
       },
     },
     plugins: [
       vue(),
       VitePWA({
-      registerType: 'autoUpdate',
-      manifest: {
-        name: 'SkyrimWebMonitor',
-        short_name: 'Skyrim Monitor',
-        description: 'Web Monitor for Skyrim',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
-        display: 'standalone',
-        scope: '/SkyrimWebMonitor/',
-        start_url: '/SkyrimWebMonitor/',
-        icons: [
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-        ],
-      },
-    }),
-  ],
+        registerType: 'autoUpdate',
+        manifest: {
+          name: 'SkyrimWebMonitor',
+          short_name: 'Skyrim Monitor',
+          description: 'Web Monitor for Skyrim',
+          theme_color: '#ffffff',
+          background_color: '#ffffff',
+          display: 'standalone',
+          scope: '/SkyrimWebMonitor/',
+          start_url: '/SkyrimWebMonitor/',
+          icons: [
+            {
+              src: 'pwa-192x192.png',
+              sizes: '192x192',
+              type: 'image/png',
+            },
+            {
+              src: 'pwa-512x512.png',
+              sizes: '512x512',
+              type: 'image/png',
+            },
+          ],
+        },
+      }),
+    ],
   };
 });
 
