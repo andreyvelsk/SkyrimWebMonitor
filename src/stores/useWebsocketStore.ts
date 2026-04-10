@@ -94,6 +94,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
    */
   const handleDataMessage = (message: DataMessage): void => {
     try {
+      console.log('Received data message:', message);
       setGeneralState(message.fields);
     } catch (err) {
       console.error('Failed to update state from data message:', err);
@@ -125,7 +126,8 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromOpen = wsClient.on('onOpen', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
-      startSubscription();
+      // Note: Don't auto-subscribe here - let App.vue handle subscription updates via watch
+      console.log('WebSocket connected, ready for subscriptions');
     });
 
     unsubscribeFromClose = wsClient.on('onClose', () => {
