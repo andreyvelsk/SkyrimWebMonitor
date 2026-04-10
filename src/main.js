@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import '@/shared/lib/styles/skyrim-theme.css';
+import '@/shared/lib/styles/skyrim-theme.scss';
 import './style.css';
 import App from './app/App.vue';
 import { registerSW } from 'virtual:pwa-register';

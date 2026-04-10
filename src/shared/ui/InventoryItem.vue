@@ -36,7 +36,7 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .inv-item {
   display: flex;
   align-items: center;
@@ -46,15 +46,15 @@ defineProps<{
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;
   transition: all var(--transition-fast);
-}
 
-.inv-item:hover {
-  background-color: rgb(201 162 39 / 8%);
-  border-color: var(--skyrim-accent-gold-dim);
-}
+  &:hover {
+    background-color: rgb(201 162 39 / 8%);
+    border-color: var(--skyrim-accent-gold-dim);
+  }
 
-.inv-item.equipped {
-  border-left: 3px solid var(--skyrim-accent-gold);
+  &.equipped {
+    border-left: 3px solid var(--skyrim-accent-gold);
+  }
 }
 
 .inv-icon {
@@ -63,12 +63,12 @@ defineProps<{
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.inv-icon svg {
-  width: 16px;
-  height: 16px;
-  color: var(--skyrim-accent-gold);
+  & svg {
+    width: 16px;
+    height: 16px;
+    color: var(--skyrim-accent-gold);
+  }
 }
 
 .inv-info {

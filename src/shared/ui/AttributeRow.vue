@@ -9,10 +9,10 @@
 defineProps<{ label: string; value: string }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .attribute-row {
   font-family: var(--font-heading);
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   display: flex;
   align-items: center;
   justify-content: space-between;

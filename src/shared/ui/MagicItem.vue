@@ -47,7 +47,7 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .magic-item {
   display: flex;
   align-items: center;
@@ -57,20 +57,24 @@ defineProps<{
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;
   transition: all var(--transition-fast);
-}
 
-.magic-item:hover {
-  background-color: rgb(50 100 168 / 8%);
-  border-color: #3264a8;
-}
+  &:hover {
+    background-color: rgb(50 100 168 / 8%);
+    border-color: #3264a8;
+  }
 
-.magic-item.is-shout {
-  border-left: 3px solid var(--skyrim-accent-gold);
-}
+  &.is-shout {
+    border-left: 3px solid var(--skyrim-accent-gold);
 
-.magic-item.is-shout:hover {
-  background-color: rgb(201 162 39 / 8%);
-  border-color: var(--skyrim-accent-gold-dim);
+    &:hover {
+      background-color: rgb(201 162 39 / 8%);
+      border-color: var(--skyrim-accent-gold-dim);
+    }
+
+    .magic-icon svg {
+      color: var(--skyrim-accent-gold);
+    }
+  }
 }
 
 .magic-icon {
@@ -79,16 +83,12 @@ defineProps<{
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.magic-icon svg {
-  width: 20px;
-  height: 20px;
-  color: #5080c0;
-}
-
-.magic-item.is-shout .magic-icon svg {
-  color: var(--skyrim-accent-gold);
+  & svg {
+    width: 20px;
+    height: 20px;
+    color: #5080c0;
+  }
 }
 
 .magic-info {
@@ -112,20 +112,19 @@ defineProps<{
 .magic-cost {
   font-family: var(--font-heading);
   font-size: var(--font-size-sm);
-  color: #7090d0;
+  color: #5080c0;
 }
 
 .cost-label {
   font-size: var(--font-size-xs);
-  color: var(--skyrim-text-dim);
 }
 
 .shout-ready {
   font-family: var(--font-heading);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--skyrim-accent-gold);
-  padding: 2px 8px;
-  border: 1px solid var(--skyrim-border-accent);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--skyrim-bg-dark);
   border-radius: var(--radius-sm);
 }
 </style>

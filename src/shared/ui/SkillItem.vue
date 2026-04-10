@@ -17,16 +17,16 @@
 defineProps<{ name: string; level: number }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .skill-item {
   padding: var(--spacing-sm);
   background-color: var(--skyrim-bg-light);
   border: 1px solid var(--skyrim-border-dark);
   transition: all var(--transition-fast);
-}
 
-.skill-item:hover {
-  border-color: var(--skyrim-accent-gold-dim);
+  &:hover {
+    border-color: var(--skyrim-accent-gold-dim);
+  }
 }
 
 .skill-info {

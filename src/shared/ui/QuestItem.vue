@@ -58,7 +58,7 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .quest-item {
   display: flex;
   align-items: center;
@@ -68,20 +68,20 @@ defineProps<{
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;
   transition: all var(--transition-fast);
-}
 
-.quest-item:hover {
-  background-color: rgb(201 162 39 / 8%);
-  border-color: var(--skyrim-accent-gold-dim);
-}
+  &:hover {
+    background-color: rgb(201 162 39 / 8%);
+    border-color: var(--skyrim-accent-gold-dim);
+  }
 
-.quest-item.active {
-  border-left: 3px solid var(--skyrim-accent-gold);
-  background-color: rgb(201 162 39 / 5%);
-}
+  &.active {
+    border-left: 3px solid var(--skyrim-accent-gold);
+    background-color: rgb(201 162 39 / 5%);
+  }
 
-.quest-item.completed {
-  opacity: 0.6;
+  &.completed {
+    opacity: 0.6;
+  }
 }
 
 .quest-marker {
@@ -90,27 +90,19 @@ defineProps<{
   display: flex;
   align-items: center;
   justify-content: center;
-}
 
-.quest-marker svg {
-  width: 16px;
-  height: 16px;
-  color: var(--skyrim-text-secondary);
-}
-
-.quest-item.active .quest-marker svg {
-  color: var(--skyrim-accent-gold);
-}
-
-.quest-item.completed .quest-marker svg {
-  color: var(--skyrim-accent-gold-dim);
+  & svg {
+    width: 16px;
+    height: 16px;
+    color: var(--skyrim-text-secondary);
+  }
 }
 
 .quest-info {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .quest-name {
@@ -126,10 +118,10 @@ defineProps<{
 
 .quest-badge {
   font-family: var(--font-heading);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
   color: var(--skyrim-accent-gold);
-  padding: 2px 8px;
-  border: 1px solid var(--skyrim-border-accent);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--skyrim-bg-dark);
   border-radius: var(--radius-sm);
 }
 </style>

@@ -42,17 +42,10 @@
 import { StatBar, AttributeRow } from '@/shared/ui';
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .stats-grid {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
 }
 </style>

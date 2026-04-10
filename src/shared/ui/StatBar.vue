@@ -31,7 +31,7 @@ const props = defineProps<{
 const pct = computed(() => (props.value / props.max) * 100);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .stat-bar {
   display: flex;
   flex-direction: column;
@@ -57,7 +57,7 @@ const pct = computed(() => (props.value / props.max) * 100);
 }
 
 .stat-track {
-  height: 1.5rem;
+  height: 1rem;
   background-color: var(--skyrim-bg-dark);
   border: 1px solid var(--skyrim-border-dark);
   border-radius: var(--radius-sm);
@@ -67,20 +67,20 @@ const pct = computed(() => (props.value / props.max) * 100);
 .stat-fill {
   height: 100%;
   transition: width var(--transition-normal);
-}
 
-.stat-fill--health {
-  background: linear-gradient(90deg, #6b1f1f, #a83232);
-  box-shadow: 0 0 8px rgb(168 50 50 / 40%);
-}
+  &--health {
+    background: linear-gradient(90deg, #6b1f1f, #a83232);
+    box-shadow: 0 0 8px rgb(168 50 50 / 40%);
+  }
 
-.stat-fill--magicka {
-  background: linear-gradient(90deg, #1f3a6b, #3264a8);
-  box-shadow: 0 0 8px rgb(50 100 168 / 40%);
-}
+  &--magicka {
+    background: linear-gradient(90deg, #1f3a6b, #3264a8);
+    box-shadow: 0 0 8px rgb(50 100 168 / 40%);
+  }
 
-.stat-fill--stamina {
-  background: linear-gradient(90deg, #4a6b1f, #72a832);
-  box-shadow: 0 0 8px rgb(114 168 50 / 40%);
+  &--stamina {
+    background: linear-gradient(90deg, #4a6b1f, #72a832);
+    box-shadow: 0 0 8px rgb(114 168 50 / 40%);
+  }
 }
 </style>

@@ -21,10 +21,3 @@
 import { QuestItem } from '@/shared/ui';
 </script>
 
-<style scoped>
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
-}
-</style>
