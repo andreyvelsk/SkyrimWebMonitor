@@ -39,7 +39,17 @@ export interface HeartbeatMessage extends BaseMessage {
   type: 'heartbeat'
 }
 
-export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage
+export interface CommandMessage extends BaseMessage {
+  type: 'command'
+  id: string
+  action: 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
+  formId: string
+  hand?: 'right' | 'left'
+  count?: number
+  favorite?: boolean
+}
+
+export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage | CommandMessage
 
 // ============================================================================
 // Server → Client Messages
@@ -62,4 +72,11 @@ export interface ErrorMessage extends BaseMessage {
   message: string
 }
 
-export type ServerMessage = DataMessage | HeartbeatResponseMessage | ErrorMessage
+export interface CommandResultMessage extends BaseMessage {
+  type: 'commandResult'
+  id: string
+  success: boolean
+  error?: string
+}
+
+export type ServerMessage = DataMessage | HeartbeatResponseMessage | ErrorMessage | CommandResultMessage

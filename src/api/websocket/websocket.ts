@@ -2,13 +2,12 @@ import { WS_CONFIG } from '@/shared/lib/config/websocket';
 import type {
   ClientMessage,
   ServerMessage,
-  DataMessage,
-  ErrorMessage,
   HeartbeatMessage,
   SubscribeMessage,
   UnsubscribeMessage,
   UnsubscribeAllMessage,
   QueryMessage,
+  CommandMessage,
 } from './protocol';
 import type { MessageHandler, EventCallback, RegistrationCleanup } from './types';
 
@@ -186,22 +185,9 @@ class WebSocketClient {
         return;
       }
 
-      // Process message based on type
-      switch (message.type) {
-        case 'data':
-          this.handleDataMessage(message as DataMessage);
-          break;
-
-        case 'error':
-          this.handleErrorMessage(message as ErrorMessage);
-          break;
-
-        case 'heartbeat':
-          this.handleHeartbeatMessage();
-          break;
-
-        default:
-          console.warn('Unknown message type:', (message as any).type);
+      // Update heartbeat acknowledgment time for heartbeat messages
+      if (message.type === 'heartbeat') {
+        this.lastHeartbeatAckTime = Date.now();
       }
 
       // Notify all registered handlers
@@ -213,25 +199,26 @@ class WebSocketClient {
   }
 
   /**
-   * Handle data message from server
+   * Send an inventory command to the game
+   * @param id – Unique request identifier
+   * @param action – Action to perform
+   * @param formId – Item formId (hex string or unsigned integer)
+   * @param options – Action-specific parameters
    */
-  private handleDataMessage(message: DataMessage): void {
-    console.log(`Data received at ${new Date(message.ts).toISOString()}:`, message.fields);
-  }
-
-  /**
-   * Handle error message from server
-   */
-  private handleErrorMessage(message: ErrorMessage): void {
-    console.error('Server error:', message.message);
-  }
-
-  /**
-   * Handle heartbeat response from server
-   * Just update the last heartbeat acknowledgment time
-   */
-  private handleHeartbeatMessage(): void {
-    this.lastHeartbeatAckTime = Date.now();
+  command(
+    id: string,
+    action: CommandMessage['action'],
+    formId: string,
+    options?: { hand?: 'right' | 'left'; count?: number; favorite?: boolean }
+  ): boolean {
+    const message: CommandMessage = {
+      type: 'command',
+      id,
+      action,
+      formId,
+      ...options,
+    };
+    return this.send(message);
   }
 
   /**

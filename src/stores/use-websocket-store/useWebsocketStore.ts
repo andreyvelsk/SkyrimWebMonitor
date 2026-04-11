@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
-import type { DataMessage, ServerMessage } from '@/api/websocket';
+import type { DataMessage, ServerMessage, CommandMessage, CommandResultMessage } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './types';
 import { LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse } from '@/stores/adapters/localeAdapter';
@@ -115,6 +115,25 @@ export const useWebSocketStore = defineStore('websocket', () => {
     }
   };
 
+  const handleCommandResultMessage = (message: CommandResultMessage): void => {
+    if (!message.success) {
+      console.error(`[WebSocket] Command [${message.id}] failed:`, message.error);
+    }
+  };
+
+  const sendCommand = (
+    action: CommandMessage['action'],
+    formId: string,
+    options?: { hand?: 'right' | 'left'; count?: number; favorite?: boolean }
+  ): void => {
+    if (!wsClient.isConnected()) {
+      console.warn('WebSocket is not connected, cannot send command');
+      return;
+    }
+    const commandId = `cmd-${action}-${formId}-${Date.now()}`;
+    wsClient.command(commandId, action, formId, options);
+  };
+
   const connect = async (): Promise<void> => {
     try {
       status.value = CONNECTION_STATUS.CONNECTING;
@@ -158,6 +177,8 @@ export const useWebSocketStore = defineStore('websocket', () => {
         handleDataMessage(message as DataMessage);
       } else if (message.type === 'error') {
         console.error('Server error:', (message as { message?: string }).message);
+      } else if (message.type === 'commandResult') {
+        handleCommandResultMessage(message as CommandResultMessage);
       }
     });
   };
@@ -182,6 +203,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     startSubscription,
     stopSubscription,
     sendQuery,
+    sendCommand,
     $dispose: cleanup,
   };
 });

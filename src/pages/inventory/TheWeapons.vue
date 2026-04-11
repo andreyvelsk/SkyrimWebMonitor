@@ -33,20 +33,26 @@ import { ref }  from 'vue';
 import { storeToRefs } from 'pinia';
 import { InventoryItem } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 
 const inventoryStore = useInventoryStore();
 const { weapons } = storeToRefs(inventoryStore);
+const wsStore = useWebSocketStore();
+
 const activeItem = ref<string | null>(null);
 
 function setActiveItem(formId: string) {
-  if(activeItem.value !== formId) {
+  if (activeItem.value !== formId) {
     activeItem.value = formId;
     return;
   }
-  
-  console.log('here logic for equipping/unequipping item with formId:', formId);
-}
 
+  const item = weapons.value.items?.find(w => w.formId === formId);
+  if (!item) return;
+
+  const action = item.isEquipped ? 'unequip' : 'equip';
+  wsStore.sendCommand(action, formId);
+}
 </script>
 
 <style scoped lang="scss">

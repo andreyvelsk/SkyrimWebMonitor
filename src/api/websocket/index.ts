@@ -13,6 +13,8 @@ export {
   type UnsubscribeMessage,
   type UnsubscribeAllMessage,
   type QueryMessage,
+  type CommandMessage,
+  type CommandResultMessage,
 } from './protocol';
 export {
   type MessageHandler,
