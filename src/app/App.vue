@@ -118,7 +118,6 @@ watch(
   height: 100vh;
   margin: 0 auto;
   background-color: var(--skyrim-bg-dark);
-  border: 2px solid var(--skyrim-border-medium);
   overflow: hidden;
   display: flex;
   flex-direction: column;
