@@ -1,7 +1,7 @@
 <template>
   <div class="empty-state">
     <p style="color: var(--skyrim-text-secondary)">
-      Powers information to be implemented
+      {{ $t('pages.magic.powers.placeholder') }}
     </p>
   </div>
 </template>

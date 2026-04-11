@@ -44,7 +44,7 @@
       v-if="active"
       class="quest-badge"
     >
-      Active
+      {{ $t('shared.ui.questItem.active') }}
     </div>
   </div>
 </template>

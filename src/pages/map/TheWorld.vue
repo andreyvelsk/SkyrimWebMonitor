@@ -1,7 +1,7 @@
 <template>
   <div class="empty-state">
     <p style="color: var(--skyrim-text-secondary)">
-      World map to be implemented
+      {{ $t('pages.map.world.placeholder') }}
     </p>
   </div>
 </template>

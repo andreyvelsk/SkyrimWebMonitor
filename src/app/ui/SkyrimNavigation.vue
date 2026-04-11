@@ -3,7 +3,7 @@
     <nav
       class="skyrim-tabs"
       role="tablist"
-      aria-label="Main navigation"
+      :aria-label="$t('app.navigation.mainAriaLabel')"
     >
       <button
         v-for="tab in tabs"
@@ -23,7 +23,7 @@
       ref="subtabsRef"
       class="skyrim-subtabs animate-fade-in"
       role="tablist"
-      aria-label="Sub navigation"
+      :aria-label="$t('app.navigation.subAriaLabel')"
     >
       <button
         v-for="sub in currentSubTabs"

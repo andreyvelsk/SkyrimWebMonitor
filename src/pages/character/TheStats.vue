@@ -2,19 +2,19 @@
   <div class="flex flex-1 flex-col justify-between">
     <div class="list">
       <attribute-row
-        label="Level"
+        :label="$t('pages.character.stats.level')"
         :value="displayLevel"
       />
       <attribute-row
-        label="Experience"
+        :label="$t('pages.character.stats.experience')"
         :value="displayExperience"
       />
       <attribute-row
-        label="Carry Weight"
+        :label="$t('pages.character.stats.carryWeight')"
         :value="displayCarryWeight"
       />
       <attribute-row
-        label="Gold"
+        :label="$t('pages.character.stats.gold')"
         :value="displayGold"
       />
     </div>

@@ -1,7 +1,7 @@
 <template>
   <div class="empty-state">
     <p style="color: var(--skyrim-text-secondary)">
-      Miscellaneous items to be implemented
+      {{ $t('pages.inventory.misc.placeholder') }}
     </p>
   </div>
 </template>

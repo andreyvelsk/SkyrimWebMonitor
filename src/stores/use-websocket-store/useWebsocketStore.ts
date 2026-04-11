@@ -5,6 +5,7 @@ import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import type { DataMessage, ServerMessage } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './types';
+import { LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse } from '@/stores/adapters/localeAdapter';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
 
@@ -13,6 +14,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
   const status = ref<string>(CONNECTION_STATUS.DISCONNECTED);
   const error = ref<string | null>(null);
   const activeSubscriptions = ref<Map<string, Subscription>>(new Map());
+  const pendingQueries = new Map<string, (fields: Record<string, unknown>) => void>();
 
   // Get WebSocket client instance
   const wsClient = getWebSocketClient();
@@ -75,9 +77,30 @@ export const useWebSocketStore = defineStore('websocket', () => {
     }
   };
 
+  const sendQuery = (
+    queryId: string,
+    fieldMapping: Record<string, string>,
+    callback: (fields: Record<string, unknown>) => void
+  ): void => {
+    if (!wsClient.isConnected()) {
+      console.warn('WebSocket is not connected, cannot send query');
+      return;
+    }
+    pendingQueries.set(queryId, callback);
+    wsClient.query(queryId, fieldMapping);
+    console.log(`Query sent [${queryId}]`, fieldMapping);
+  };
+
   const handleDataMessage = (message: DataMessage): void => {
     try {
       console.log(`[WebSocket] Received data [${message.id}] at ${new Date(message.ts).toISOString()}:`, message.fields);
+
+      const queryCallback = pendingQueries.get(message.id);
+      if (queryCallback) {
+        pendingQueries.delete(message.id);
+        queryCallback(message.fields);
+        return;
+      }
 
       if (!activeSubscriptions.value.has(message.id)) {
         console.warn(`[WebSocket] Received data for unknown subscription [${message.id}]`);
@@ -116,6 +139,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
       console.log('WebSocket connected, ready for subscriptions');
+      sendQuery(LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse);
     });
 
     unsubscribeFromClose = wsClient.on('onClose', () => {
@@ -157,6 +181,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     disconnect,
     startSubscription,
     stopSubscription,
+    sendQuery,
     $dispose: cleanup,
   };
 });

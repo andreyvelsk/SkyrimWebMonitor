@@ -27,13 +27,13 @@
       v-if="!isShout"
       class="magic-cost"
     >
-      <span>{{ cost }}</span><span class="cost-label"> MP</span>
+      <span>{{ cost }}</span><span class="cost-label"> {{ $t('shared.ui.magicItem.mp') }}</span>
     </div>
     <div
       v-else
       class="shout-ready"
     >
-      Ready
+      {{ $t('shared.ui.magicItem.ready') }}
     </div>
   </div>
 </template>

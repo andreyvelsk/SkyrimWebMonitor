@@ -17,7 +17,7 @@
       class="empty-state"
     >
       <p style="color: var(--skyrim-text-secondary)">
-        Select an option to view details
+        {{ $t('app.content.emptyState') }}
       </p>
     </div>
   </div>

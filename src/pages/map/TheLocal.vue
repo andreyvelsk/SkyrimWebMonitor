@@ -1,7 +1,7 @@
 <template>
   <div class="empty-state">
     <p style="color: var(--skyrim-text-secondary)">
-      Local map to be implemented
+      {{ $t('pages.map.local.placeholder') }}
     </p>
   </div>
 </template>

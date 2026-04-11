@@ -1,0 +1,99 @@
+{
+  "app": {
+    "navigation": {
+      "mainAriaLabel": "Main navigation",
+      "subAriaLabel": "Sub navigation"
+    },
+    "tabs": {
+      "character": "Character",
+      "inventory": "Inventory",
+      "magic": "Magic",
+      "map": "Map"
+    },
+    "content": {
+      "emptyState": "Select an option to view details"
+    }
+  },
+  "pages": {
+    "character": {
+      "stats": {
+        "tab": "Stats",
+        "level": "Level",
+        "experience": "Experience",
+        "carryWeight": "Carry Weight",
+        "gold": "Gold"
+      },
+      "skills": {
+        "tab": "Skills"
+      }
+    },
+    "inventory": {
+      "weapons": {
+        "tab": "Weapons",
+        "waitingForData": "Waiting for weapon data...",
+        "drop": "Drop",
+        "unknown": "Unknown",
+        "noDescription": "No description"
+      },
+      "apparel": {
+        "tab": "Apparel",
+        "waitingForData": "Waiting for apparel data...",
+        "unknown": "Unknown",
+        "noDescription": "No description"
+      },
+      "misc": {
+        "tab": "Misc",
+        "placeholder": "Miscellaneous items to be implemented"
+      },
+      "potions": {
+        "tab": "Potions"
+      }
+    },
+    "magic": {
+      "spells": {
+        "tab": "Spells"
+      },
+      "shouts": {
+        "tab": "Shouts"
+      },
+      "powers": {
+        "tab": "Powers",
+        "placeholder": "Powers information to be implemented"
+      }
+    },
+    "map": {
+      "world": {
+        "tab": "World",
+        "placeholder": "World map to be implemented"
+      },
+      "local": {
+        "tab": "Local",
+        "placeholder": "Local map to be implemented"
+      },
+      "quests": {
+        "tab": "Quests"
+      }
+    }
+  },
+  "shared": {
+    "ui": {
+      "connectionStatus": {
+        "connected": "Connected to server",
+        "connecting": "Connecting to server...",
+        "reconnecting": "Reconnecting to server...",
+        "disconnected": "Disconnected from server"
+      },
+      "magicItem": {
+        "ready": "Ready",
+        "mp": "MP"
+      },
+      "questItem": {
+        "active": "Active"
+      },
+      "inventoryItem": {
+        "unknown": "Unknown",
+        "noDescription": "No description"
+      }
+    }
+  }
+}
