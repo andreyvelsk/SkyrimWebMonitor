@@ -28,7 +28,7 @@ import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import { ConnectionStatus } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
-import { getPageFields, getPageSubscriptionId } from '@/app/config/pageRegistry';
+import { getPageFields, getPageSubscriptionId, getTabCategorySubscription } from '@/app/config/pageRegistry';
 
 const navigationStore = useNavigationStore();
 const { setActiveTab, setActiveSubTab } = navigationStore;
@@ -37,6 +37,20 @@ const { tabs, activeTab, activeSubTab } = storeToRefs(navigationStore);
 const websocketStore = useWebSocketStore();
 const { connect, startSubscription, stopSubscription } = websocketStore;
 const { isConnected } = storeToRefs(websocketStore);
+
+const startCategorySubscription = (tabId: string): void => {
+  const config = getTabCategorySubscription(tabId);
+  if (config) {
+    startSubscription(config.subscriptionId, config.fields);
+  }
+};
+
+const stopCategorySubscription = (tabId: string): void => {
+  const config = getTabCategorySubscription(tabId);
+  if (config) {
+    stopSubscription(config.subscriptionId);
+  }
+};
 
 // Initialize WebSocket connection on app mount
 onMounted(async () => {
@@ -50,6 +64,7 @@ onMounted(async () => {
     if (subscriptionId) {
       startSubscription(subscriptionId, pageFields);
     }
+    startCategorySubscription(activeTab.value);
   }
 });
 
@@ -58,7 +73,7 @@ onMounted(async () => {
 watch(
   [activeTab, activeSubTab, isConnected],
   (
-    [, newSubTab, connected],
+    [newTab, newSubTab, connected],
     [oldTab, oldSubTab]
   ) => {
     // Only handle subscription changes when connected
@@ -67,7 +82,13 @@ watch(
       return;
     }
 
-    const subscriptionId = getPageSubscriptionId(activeTab.value, newSubTab);
+    // Handle category subscription lifecycle when main tab changes
+    if (oldTab !== newTab) {
+      stopCategorySubscription(oldTab);
+      startCategorySubscription(newTab);
+    }
+
+    const subscriptionId = getPageSubscriptionId(newTab, newSubTab);
     const oldSubscriptionId = getPageSubscriptionId(oldTab, oldSubTab);
 
     if (!newSubTab) {
@@ -81,8 +102,8 @@ watch(
       stopSubscription(oldSubscriptionId); // Unsubscribe from old page
     }
 
-    console.log(`Subscription update: ${activeTab.value} - ${newSubTab}`);
-    const pageFields = getPageFields(activeTab.value, newSubTab);
+    console.log(`Subscription update: ${newTab} - ${newSubTab}`);
+    const pageFields = getPageFields(newTab, newSubTab);
     if (subscriptionId) startSubscription(subscriptionId, pageFields);
   },
   { immediate: false } // Don't run immediately on mount, connect() handles initial subscription

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Tab } from './types/types';
+import type { Tab, SubTab } from './types/types';
 
 export const useNavigationStore = defineStore('navigation', () => {
   // State - Navigation structure (independent from pageRegistry)
@@ -46,11 +46,27 @@ export const useNavigationStore = defineStore('navigation', () => {
     activeSubTab.value = subTabId;
   };
 
+  /**
+   * Update subTabs for a specific tab (e.g. populated dynamically from a server subscription)
+   * If the affected tab is currently active, the first subTab is selected automatically.
+   */
+  const setTabSubTabs = (tabId: string, newSubTabs: SubTab[]): void => {
+    const tab = tabs.value.find((t) => t.id === tabId);
+    if (!tab) return;
+
+    tab.subTabs = newSubTabs;
+
+    if (activeTab.value === tabId && newSubTabs.length > 0) {
+      setActiveSubTab(newSubTabs[0].id);
+    }
+  };
+
   return {
     tabs,
     activeTab,
     activeSubTab,
     setActiveTab,
     setActiveSubTab,
+    setTabSubTabs,
   };
 });

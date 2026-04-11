@@ -1,5 +1,6 @@
 import type { CharacterStats } from '@/stores/character/types';
 import type { WeaponsState, ApparelState } from '@/stores/inventory/types';
+import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -11,4 +12,14 @@ export function isWeaponsData(data: unknown, id: string): data is WeaponsState {
 
 export function isApparelData(data: unknown, id: string): data is ApparelState {
   return id === 'inventory.apparel' && typeof data === 'object' && data !== null;
+}
+
+export function isInventoryCategories(data: unknown, id: string): data is CategoriesData {
+  return (
+    id === 'inventory.categories' &&
+    typeof data === 'object' &&
+    data !== null &&
+    'categories' in data &&
+    Array.isArray((data as CategoriesData).categories)
+  );
 }

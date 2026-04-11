@@ -1,12 +1,12 @@
 import type { Component } from 'vue';
-import type { PageConfig, PagesRegistry } from './types';
+import type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 import {
   Stats,
   Weapons,
   Armor,
 } from '@/pages';
 
-export type { PageConfig, PagesRegistry } from './types';
+export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 
 export const pagesRegistry: PagesRegistry = {
   character: {
@@ -37,7 +37,6 @@ export const pagesRegistry: PagesRegistry = {
       component: Weapons,
       label: 'Weapons',
       fields: {
-        categories: 'Inventory::Categories',
         items: 'Inventory::Items::Weapons',
       },
     },
@@ -46,12 +45,28 @@ export const pagesRegistry: PagesRegistry = {
       component: Armor,
       label: 'Apparel',
       fields: {
-        categories: 'Inventory::Categories',
         items: 'Inventory::Items::Apparel',
       },
     },
   },
 };
+
+/**
+ * Tabs that require a separate category subscription to populate their subTabs dynamically.
+ * Key is the tab id, value is the subscription configuration.
+ */
+export const TAB_CATEGORY_SUBSCRIPTIONS: Record<string, CategorySubscriptionConfig> = {
+  inventory: {
+    subscriptionId: 'inventory.categories',
+    fields: {
+      categories: 'Inventory::Categories',
+    },
+  },
+};
+
+export function getTabCategorySubscription(tabId: string): CategorySubscriptionConfig | null {
+  return TAB_CATEGORY_SUBSCRIPTIONS[tabId] ?? null;
+}
 
 export function getPageConfig(tab: string, subTab: string): PageConfig | null {
   return pagesRegistry[tab]?.[subTab] ?? null;

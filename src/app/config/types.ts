@@ -8,3 +8,8 @@ export interface PageConfig {
 }
 
 export type PagesRegistry = Record<string, Record<string, PageConfig>>;
+
+export interface CategorySubscriptionConfig {
+  subscriptionId: string;
+  fields: Record<string, string>;
+}
