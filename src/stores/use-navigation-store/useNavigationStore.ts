@@ -16,10 +16,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     {
       id: 'inventory',
       label: 'Inventory',
-      subTabs: [
-        { id: 'weapons', label: 'Weapons' },
-        { id: 'apparel', label: 'Apparel' },
-      ],
+      subTabs: [],
     },
   ]);
 
@@ -34,8 +31,11 @@ export const useNavigationStore = defineStore('navigation', () => {
     if (!tab) return;
 
     activeTab.value = tabId;
+    activeSubTab.value = ''; // Reset sub-tab when changing main tab
+
+    // Set first sub-tab as active if available
     if (tab.subTabs?.length) {
-      activeSubTab.value = tab.subTabs[0].id;
+      setActiveSubTab(tab.subTabs[0].id);
     }
   };
 

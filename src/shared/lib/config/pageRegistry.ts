@@ -61,7 +61,7 @@ export const pagesRegistry: PagesRegistry = {
       component: Armor,
       label: 'Apparel',
       fields: {
-        categories: 'Inventory::Categories::Apparel',
+        categories: 'Inventory::Categories',
         items: 'Inventory::Items::Apparel',
       },
     },

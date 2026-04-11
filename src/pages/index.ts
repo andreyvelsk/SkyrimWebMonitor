@@ -1,8 +1,6 @@
 // Character pages
 export { default as Stats } from './character/Stats.vue';
 export { default as Skills } from './character/Skills.vue';
-export { default as Perks } from './character/Perks.vue';
-export { default as Status } from './character/Status.vue';
 
 // Inventory pages
 export { default as Weapons } from './inventory/Weapons.vue';
