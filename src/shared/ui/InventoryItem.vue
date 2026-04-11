@@ -77,7 +77,7 @@ defineProps<{
 
 .inv-name {
   font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   color: var(--skyrim-text-primary);
 }
 

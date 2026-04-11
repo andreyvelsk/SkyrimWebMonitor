@@ -84,7 +84,7 @@ watch(
       align-items: center;
       justify-content: center;
       gap: var(--tab-gap);
-      padding: 0;
+      padding: var(--spacing-sm);
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
     }
@@ -93,7 +93,7 @@ watch(
       display: flex;
       align-items: center;
       gap: var(--spacing-xs);
-      padding: 0;
+      padding: var(--spacing-xs);
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
       overflow-x: auto;
@@ -117,7 +117,7 @@ watch(
       background-color: var(--tab-bg-inactive);
       color: var(--tab-text-inactive);
       font-family: var(--font-heading);
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-lg);
       font-weight: 500;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -146,7 +146,7 @@ watch(
       background-color: var(--subtab-bg-inactive);
       color: var(--subtab-text-inactive);
       font-family: var(--font-body);
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-base);
       font-weight: 500;
       border: none;
       cursor: pointer;
