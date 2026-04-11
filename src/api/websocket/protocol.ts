@@ -2,8 +2,6 @@
  * WebSocket Protocol Types and Interfaces
  */
 
-import type { PageData } from './dataTypes';
-
 // ============================================================================
 // Client → Server Messages
 // ============================================================================
@@ -51,7 +49,7 @@ export interface DataMessage extends BaseMessage {
   type: 'data'
   id: string // subscription id or query id
   ts: number // Unix timestamp in milliseconds
-  fields: PageData // Typed fields: CharacterStats | WeaponsInventoryData | ApparelInventoryData
+  fields: Record<string, unknown>
 }
 
 export interface HeartbeatResponseMessage extends BaseMessage {

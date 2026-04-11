@@ -1,31 +1,12 @@
-/**
- * Unified Pages Registry
- *
- * Single source of truth for page components and data subscriptions.
- * Combines page components, field mappings, and metadata in one structure.
- *
- * NOTE: This is the registry of AVAILABLE pages and their configurations.
- * Navigation structure (which pages are shown and in what order) is defined separately
- * in useNavigationStore for flexibility (pages can be hidden, reordered, renamed, etc).
- *
- * Structure: { [tab]: { [subTab]: { component, fields, label } } }
- */
-
 import type { Component } from 'vue';
+import type { PageConfig, PagesRegistry } from './types';
 import {
   Stats,
   Weapons,
   Armor,
 } from '@/pages';
 
-export interface PageConfig {
-  id: string; // subscription id in format: tab.subtab
-  component: Component;
-  fields: Record<string, string>;
-  label: string;
-}
-
-export type PagesRegistry = Record<string, Record<string, PageConfig>>;
+export type { PageConfig, PagesRegistry } from './types';
 
 export const pagesRegistry: PagesRegistry = {
   character: {
@@ -72,37 +53,18 @@ export const pagesRegistry: PagesRegistry = {
   },
 };
 
-/**
- * Get page configuration by tab and subTab
- */
 export function getPageConfig(tab: string, subTab: string): PageConfig | null {
   return pagesRegistry[tab]?.[subTab] ?? null;
 }
 
-/**
- * Get subscription ID for a page
- */
 export function getPageSubscriptionId(tab: string, subTab: string): string | null {
   return getPageConfig(tab, subTab)?.id ?? null;
 }
 
-/**
- * Get page component by tab and subTab
- */
 export function getPageComponent(tab: string, subTab: string): Component | null {
   return getPageConfig(tab, subTab)?.component ?? null;
 }
 
-/**
- * Get field mapping for a specific page
- */
 export function getPageFields(tab: string, subTab: string): Record<string, string> {
   return getPageConfig(tab, subTab)?.fields ?? {};
-}
-
-/**
- * Get default fields (when no page is selected)
- */
-export function getDefaultFields(): Record<string, string> {
-  return getPageFields('character', 'stats');
 }

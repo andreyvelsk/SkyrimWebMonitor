@@ -42,48 +42,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     groupItemsByCategory(apparel.value.items, apparel.value.categories)
   );
 
-  /**
-   * Update weapons state
-   * Accepts partial weapons data to merge with existing state
-   */
   const setWeapons = (newWeapons: Partial<WeaponsState>) => {
     weapons.value = { ...weapons.value, ...newWeapons };
   };
 
-  /**
-   * Update apparel state
-   * Accepts partial apparel data to merge with existing state
-   */
   const setApparel = (newApparel: Partial<ApparelState>) => {
     apparel.value = { ...apparel.value, ...newApparel };
-  };
-
-  /**
-   * Reset weapons to initial state
-   */
-  const resetWeapons = () => {
-    weapons.value = {
-      categories: undefined,
-      items: undefined,
-    };
-  };
-
-  /**
-   * Reset apparel to initial state
-   */
-  const resetApparel = () => {
-    apparel.value = {
-      categories: undefined,
-      items: undefined,
-    };
-  };
-
-  /**
-   * Reset all inventory data
-   */
-  const resetInventory = () => {
-    resetWeapons();
-    resetApparel();
   };
 
   return {
@@ -93,8 +57,5 @@ export const useInventoryStore = defineStore('inventory', () => {
     apparelByCategory,
     setWeapons,
     setApparel,
-    resetWeapons,
-    resetApparel,
-    resetInventory,
   };
 });

@@ -1,23 +1,7 @@
-/**
- * Character Stats Display Composable
- *
- * Handles all data transformations and computations for character stats display.
- * Separates presentation logic from template.
- */
-
-import { computed, type ComputedRef } from 'vue';
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useCharacterStore } from '@/stores/character/useCharacterStore';
-
-export interface CharacterStatsDisplay {
-  displayLevel: ComputedRef<string>;
-  displayExperience: ComputedRef<string>;
-  displayCarryWeight: ComputedRef<string>;
-  displayGold: ComputedRef<string>;
-  healthPercentage: ComputedRef<number>;
-  magickaPercentage: ComputedRef<number>;
-  staminaPercentage: ComputedRef<number>;
-}
+import type { CharacterStatsDisplay } from './types';
 
 /**
  * Use character stats display

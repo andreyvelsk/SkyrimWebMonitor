@@ -24,11 +24,11 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { watch, onMounted } from 'vue';
-import { SkyrimNavigation, SkyrimContent } from '@/entities/ui';
+import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import { ConnectionStatus } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
-import { useWebSocketStore } from '@/stores/useWebsocketStore';
-import { getPageFields, getPageSubscriptionId } from '@/shared/lib/config/pageRegistry';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
+import { getPageFields, getPageSubscriptionId } from '@/app/config/pageRegistry';
 
 const navigationStore = useNavigationStore();
 const { setActiveTab, setActiveSubTab } = navigationStore;

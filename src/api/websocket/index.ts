@@ -15,14 +15,7 @@ export {
   type QueryMessage,
 } from './protocol';
 export {
-  isCharacterStats,
-  isWeaponsData,
-  isApparelData,
-  isCharacterStatsId,
-  isWeaponsDataId,
-  isApparelDataId,
-  type CharacterStats,
-  type WeaponsState,
-  type ApparelState,
-  type PageData,
-} from './dataTypes';
+  type MessageHandler,
+  type EventCallback,
+  type RegistrationCleanup,
+} from './types';

@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { usePageRouter } from '@/shared/router/usePageRouter';
+import { usePageRouter } from '@/app/router/usePageRouter';
 
 const props = defineProps<{ tab: string; subTab: string }>();
 

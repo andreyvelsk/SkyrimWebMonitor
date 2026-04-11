@@ -56,31 +56,10 @@ export const useCharacterStore = defineStore('character', () => {
     stats.value = { ...stats.value, ...newStats };
   };
 
-  /**
-   * Reset stats to initial state
-   */
-  const resetStats = () => {
-    stats.value = {
-      health: undefined,
-      magicka: undefined,
-      stamina: undefined,
-      healthBase: undefined,
-      magickaBase: undefined,
-      staminaBase: undefined,
-      level: undefined,
-      xp: undefined,
-      xpNext: undefined,
-      inventoryWeight: undefined,
-      carryWeight: undefined,
-      gold: undefined,
-    };
-  };
-
   return {
     stats,
     statsPercentage,
     xpProgress,
     setStats,
-    resetStats,
   };
 });

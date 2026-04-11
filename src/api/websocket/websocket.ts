@@ -10,13 +10,7 @@ import type {
   UnsubscribeAllMessage,
   QueryMessage,
 } from './protocol';
-
-type MessageHandler = (_message: ServerMessage) => void
-type EventCallback = (_data?: any) => void
-
-interface RegistrationCleanup {
-  (): void
-}
+import type { MessageHandler, EventCallback, RegistrationCleanup } from './types';
 
 class WebSocketClient {
   private ws: WebSocket | null = null;
@@ -372,4 +366,3 @@ export function getWebSocketClient(): WebSocketClient {
 }
 
 export { WebSocketClient };
-export type { MessageHandler, EventCallback, RegistrationCleanup };
