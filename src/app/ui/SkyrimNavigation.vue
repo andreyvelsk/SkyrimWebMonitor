@@ -41,10 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import type { Tab } from '@/stores/use-navigation-store/types/types';
 
 const subtabsRef = ref<HTMLElement | null>(null);
+let touchStartX = 0;
+let touchEndX = 0;
 
 const props = defineProps<{
   tabs: Tab[];
@@ -52,7 +54,7 @@ const props = defineProps<{
   activeSubTab: string;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   'tab-change': [tabId: string];
   'subtab-change': [subTabId: string];
 }>();
@@ -60,6 +62,60 @@ defineEmits<{
 const currentSubTabs = computed(
   () => props.tabs.find((t) => t.id === props.activeTab)?.subTabs ?? []
 );
+
+const handleTouchStart = (e: TouchEvent) => {
+  touchStartX = e.changedTouches[0].screenX;
+};
+
+const handleTouchEnd = (e: TouchEvent) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+};
+
+const handleSwipe = () => {
+  const threshold = 50; // Minimum swipe distance
+  const diff = touchStartX - touchEndX;
+
+  if (Math.abs(diff) < threshold) return;
+
+  const currentIndex = currentSubTabs.value.findIndex(
+    (sub) => sub.id === props.activeSubTab
+  );
+
+  if (diff > 0) {
+    // Swiped left - go to next subtab
+    if (currentIndex < currentSubTabs.value.length - 1) {
+      emit('subtab-change', currentSubTabs.value[currentIndex + 1].id);
+    }
+  } else {
+    // Swiped right - go to previous subtab
+    if (currentIndex > 0) {
+      emit('subtab-change', currentSubTabs.value[currentIndex - 1].id);
+    }
+  }
+};
+
+const setupSwipeListeners = () => {
+  if (subtabsRef.value) {
+    subtabsRef.value.addEventListener('touchstart', handleTouchStart);
+    subtabsRef.value.addEventListener('touchend', handleTouchEnd);
+  }
+};
+
+const removeSwipeListeners = () => {
+  if (subtabsRef.value) {
+    subtabsRef.value.removeEventListener('touchstart', handleTouchStart);
+    subtabsRef.value.removeEventListener('touchend', handleTouchEnd);
+  }
+};
+
+onMounted(() => {
+  setupSwipeListeners();
+});
+
+onUnmounted(() => {
+  removeSwipeListeners();
+});
 
 watch(
   () => props.activeTab,
@@ -99,6 +155,8 @@ watch(
       overflow-x: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      /* Allow horizontal touch scrolling and swiping */
+      touch-action: pan-x;
 
       &::-webkit-scrollbar {
         display: none;
