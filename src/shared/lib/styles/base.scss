@@ -6,12 +6,20 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  /* Disable text selection and context menu interactions */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  /* Remove tap highlight on mobile */
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 html,
 body {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -22,9 +30,16 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Disable callout menu on long tap */
+  -webkit-user-select: none;
+  user-select: none;
+  /* Remove default touch highlight */
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 
   #app {
     height: 100%;
+    width: 100%;
   }
 }
 
