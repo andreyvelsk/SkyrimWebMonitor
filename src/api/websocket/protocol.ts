@@ -2,6 +2,8 @@
  * WebSocket Protocol Types and Interfaces
  */
 
+import type { PageData } from './dataTypes';
+
 // ============================================================================
 // Client → Server Messages
 // ============================================================================
@@ -41,7 +43,7 @@ export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage
 export interface DataMessage extends BaseMessage {
   type: 'data'
   ts: number // Unix timestamp in milliseconds
-  fields: Record<string, number> // alias -> float value
+  fields: PageData // Typed fields: CharacterStats | WeaponsInventoryData | ApparelInventoryData
 }
 
 export interface HeartbeatResponseMessage extends BaseMessage {
@@ -55,27 +57,3 @@ export interface ErrorMessage extends BaseMessage {
 }
 
 export type ServerMessage = DataMessage | HeartbeatResponseMessage | ErrorMessage
-
-// ============================================================================
-// Field Aliases and Registry Keys
-// ============================================================================
-
-/**
- * Map of our internal field names to SkyrimWebSocket registry keys
- * Only includes fields that are actually available in the protocol
- */
-export const FIELD_MAPPING: Record<string, string> = {
-  health: 'ActorValue::kHealth',
-  magicka: 'ActorValue::kMagicka',
-  stamina: 'ActorValue::kStamina',
-  healthBase: 'ActorValue::kHealth::Base',
-  magickaBase: 'ActorValue::kMagicka::Base',
-  staminaBase: 'ActorValue::kStamina::Base',
-};
-
-/**
- * Create reverse mapping for parsing server responses
- */
-export function createReverseFieldMapping(mapping: Record<string, string>): Record<string, string> {
-  return Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k]));
-}

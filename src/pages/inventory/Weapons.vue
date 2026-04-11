@@ -2,74 +2,23 @@
   <div class="skyrim-weapons">
     <div class="list-wrapper">
       <div class="list">
-        <inventory-item
-          name="Daedric Sword"
-          description="Damage: 48"
-          :equipped="true"
-        />
-        <inventory-item
-          name="Elven Bow"
-          description="Damage: 32"
-        />
-        <inventory-item
-          name="Glass Dagger"
-          description="Damage: 18"
-        />
-        <inventory-item
-          name="Steel Greatsword"
-          description="Damage: 26"
-        />
-        <inventory-item
-          name="Daedric Sword"
-          description="Damage: 48"
-          :equipped="true"
-        />
-        <inventory-item
-          name="Elven Bow"
-          description="Damage: 32"
-        />
-        <inventory-item
-          name="Glass Dagger"
-          description="Damage: 18"
-        />
-        <inventory-item
-          name="Steel Greatsword"
-          description="Damage: 26"
-        />
-        <inventory-item
-          name="Daedric Sword"
-          description="Damage: 48"
-          :equipped="true"
-        />
-        <inventory-item
-          name="Elven Bow"
-          description="Damage: 32"
-        />
-        <inventory-item
-          name="Glass Dagger"
-          description="Damage: 18"
-        />
-        <inventory-item
-          name="Steel Greatsword"
-          description="Damage: 26"
-        />
-        <inventory-item
-          name="Daedric Sword"
-          description="Damage: 48"
-          :equipped="true"
-        />
-        <inventory-item
-          name="Elven Bow"
-          description="Damage: 32"
-        />
-        <inventory-item
-          name="Glass Dagger"
-          description="Damage: 18"
-        />
-        <inventory-item
-          name="Steel Greatsword"
-          description="Damage: 26"
-        />
+        <!-- Show weapons if data is available -->
+        <template v-if="weapons.items && weapons.items.length > 0">
+          <inventory-item
+            v-for="(item, index) in weapons.items"
+            :key="(item as Record<string, any>).id || (item as Record<string, any>).formId || index"
+            :name="(item as Record<string, any>).name || 'Unknown'"
+            :description="(item as Record<string, any>).description || 'No description'"
+            :equipped="(item as Record<string, any>).equipped || false"
+          />
+        </template>
+        <!-- Fallback to placeholder when no data -->
+        <div
+          v-else
+          class="no-data"
+        >
+          Waiting for weapon data...
+        </div>
       </div>
     </div>
     <button class="drop-button">
@@ -79,7 +28,12 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { InventoryItem } from '@/shared/ui';
+import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
+
+const inventoryStore = useInventoryStore();
+const { weapons } = storeToRefs(inventoryStore);
 </script>
 
 <style scoped lang="scss">
@@ -97,6 +51,13 @@ import { InventoryItem } from '@/shared/ui';
   overflow-y: auto;
   overflow-x: hidden;
   min-height: 0;
+}
+
+.no-data {
+  padding: var(--spacing-md);
+  text-align: center;
+  color: var(--skyrim-text-muted);
+  font-size: 0.9rem;
 }
 
 .drop-button {

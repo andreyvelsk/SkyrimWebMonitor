@@ -3,34 +3,34 @@
     <div class="list">
       <attribute-row
         label="Level"
-        value="24"
+        :value="displayLevel"
       />
       <attribute-row
         label="Experience"
-        value="1,250 / 2,000"
+        :value="displayExperience"
       />
       <attribute-row
         label="Carry Weight"
-        value="285 / 300"
+        :value="displayCarryWeight"
       />
       <attribute-row
         label="Gold"
-        value="4,567"
+        :value="displayGold"
       />
     </div>
     <div class="stats-grid">
       <stat-bar
-        :value="85"
+        :value="healthPercentage"
         :max="100"
         color="health"
       />
       <stat-bar
-        :value="60"
+        :value="magickaPercentage"
         :max="100"
         color="magicka"
       />
       <stat-bar
-        :value="72"
+        :value="staminaPercentage"
         :max="100"
         color="stamina"
       />
@@ -40,6 +40,17 @@
 
 <script setup lang="ts">
 import { StatBar, AttributeRow } from '@/shared/ui';
+import { useCharacterStatsDisplay } from './composables/useCharacterStatsDisplay';
+
+const {
+  displayLevel,
+  displayExperience,
+  displayCarryWeight,
+  displayGold,
+  healthPercentage,
+  magickaPercentage,
+  staminaPercentage,
+} = useCharacterStatsDisplay();
 </script>
 
 <style scoped lang="scss">

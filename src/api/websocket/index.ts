@@ -3,7 +3,6 @@ export {
   getWebSocketClient,
 } from './websocket';
 export {
-  FIELD_MAPPING,
   type ClientMessage,
   type ServerMessage,
   type DataMessage,
@@ -14,3 +13,12 @@ export {
   type UnsubscribeMessage,
   type QueryMessage,
 } from './protocol';
+export {
+  isCharacterStats,
+  isWeaponsData,
+  isApparelData,
+  type CharacterStats,
+  type WeaponsState,
+  type ApparelState,
+  type PageData,
+} from './dataTypes';

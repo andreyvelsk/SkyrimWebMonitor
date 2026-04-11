@@ -1,23 +1,40 @@
 <template>
   <div class="list">
-    <inventory-item
-      name="Dragonscale Armor"
-      description="Armor: 82"
-      :equipped="true"
-    />
-    <inventory-item
-      name="Ebony Helmet"
-      description="Armor: 24"
-      :equipped="true"
-    />
-    <inventory-item
-      name="Glass Boots"
-      description="Armor: 18"
-    />
+    <!-- Show apparel if data is available -->
+    <template v-if="apparel.items && apparel.items.length > 0">
+      <inventory-item
+        v-for="(item, index) in apparel.items"
+        :key="(item as Record<string, any>).id || (item as Record<string, any>).formId || index"
+        :name="(item as Record<string, any>).name || 'Unknown'"
+        :description="(item as Record<string, any>).description || 'No description'"
+        :equipped="(item as Record<string, any>).equipped || false"
+      />
+    </template>
+    <!-- Fallback to placeholder when no data -->
+    <div
+      v-else
+      class="no-data"
+    >
+      Waiting for apparel data...
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { InventoryItem } from '@/shared/ui';
+import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
+
+const inventoryStore = useInventoryStore();
+const { apparel } = storeToRefs(inventoryStore);
 </script>
+
+<style scoped lang="scss">
+.no-data {
+  padding: var(--spacing-md);
+  text-align: center;
+  color: var(--skyrim-text-muted);
+  font-size: 0.9rem;
+}
+</style>
 

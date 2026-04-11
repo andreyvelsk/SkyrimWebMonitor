@@ -3,14 +3,13 @@ import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import type { DataMessage, ServerMessage } from '@/api/websocket';
-import { useMonitorStore } from './use-monitor-state/useMonitorStore';
+import type { PageData } from '@/api/websocket/dataTypes';
 import { getDefaultFields } from '@/shared/lib/config/pageRegistry';
+import { DataRouter } from './adapters/dataRouter';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
 
 export const useWebSocketStore = defineStore('websocket', () => {
-  const monitorStore = useMonitorStore();
-  const { setGeneralState } = monitorStore;
 
   // State
   const status = ref<string>(CONNECTION_STATUS.DISCONNECTED);
@@ -90,14 +89,31 @@ export const useWebSocketStore = defineStore('websocket', () => {
   };
 
   /**
+   * Route incoming data to appropriate store
+   * Delegates to DataRouter adapter which handles type detection and routing
+   *
+   * @param data - Typed data: CharacterStats | WeaponsState | ApparelState
+   */
+  const routeDataToStore = (data: PageData): void => {
+    const result = DataRouter.routeData(data);
+
+    if (!result.success) {
+      console.warn(`[WebSocket] Routing failed: ${result.message}`);
+    }
+  };
+
+  /**
    * Handle data message from server
+   * Automatically routes to appropriate store based on data type
+   *
+   * @param message - Server data message with typed fields
    */
   const handleDataMessage = (message: DataMessage): void => {
     try {
-      console.log('Received data message:', message);
-      setGeneralState(message.fields);
+      console.log('[WebSocket] Received data message:', message);
+      routeDataToStore(message.fields);
     } catch (err) {
-      console.error('Failed to update state from data message:', err);
+      console.error('[WebSocket] Failed to handle data message:', err);
     }
   };
 
