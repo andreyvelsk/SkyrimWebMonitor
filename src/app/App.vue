@@ -28,14 +28,14 @@ import { SkyrimNavigation, SkyrimContent } from '@/entities/ui';
 import { ConnectionStatus } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/useWebsocketStore';
-import { getPageFields } from '@/shared/lib/config/pageRegistry';
+import { getPageFields, getPageSubscriptionId } from '@/shared/lib/config/pageRegistry';
 
 const navigationStore = useNavigationStore();
 const { setActiveTab, setActiveSubTab } = navigationStore;
 const { tabs, activeTab, activeSubTab } = storeToRefs(navigationStore);
 
 const websocketStore = useWebSocketStore();
-const { connect, changePageSubscription } = websocketStore;
+const { connect, startSubscription, stopSubscription } = websocketStore;
 const { isConnected } = storeToRefs(websocketStore);
 
 // Initialize WebSocket connection on app mount
@@ -46,7 +46,10 @@ onMounted(async () => {
   if (isConnected.value) {
     console.log('Connected on mount, subscribing to current page...');
     const pageFields = getPageFields(activeTab.value, activeSubTab.value);
-    changePageSubscription(pageFields);
+    const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
+    if (subscriptionId) {
+      startSubscription(subscriptionId, pageFields);
+    }
   }
 });
 
@@ -54,16 +57,33 @@ onMounted(async () => {
 // Also handles reconnection by re-subscribing to current page
 watch(
   [activeTab, activeSubTab, isConnected],
-  ([newTab, newSubTab, connected]) => {
+  (
+    [, newSubTab, connected],
+    [oldTab, oldSubTab]
+  ) => {
     // Only handle subscription changes when connected
     if (!connected) {
       console.log('WebSocket not connected, skipping subscription update');
       return;
     }
 
-    console.log(`Subscription update: ${newTab} - ${newSubTab}`);
-    const pageFields = getPageFields(newTab, newSubTab);
-    changePageSubscription(pageFields);
+    const subscriptionId = getPageSubscriptionId(activeTab.value, newSubTab);
+    const oldSubscriptionId = getPageSubscriptionId(oldTab, oldSubTab);
+
+    if (!newSubTab) {
+      console.log('No sub-tab selected, skipping subscription update');
+      if (oldSubscriptionId) stopSubscription(oldSubscriptionId); // Unsubscribe from old page
+      return;
+    }
+
+    if (oldSubscriptionId && oldSubscriptionId !== subscriptionId) {
+      console.log(`Unsubscribing from old page: ${oldSubscriptionId}`);
+      stopSubscription(oldSubscriptionId); // Unsubscribe from old page
+    }
+
+    console.log(`Subscription update: ${activeTab.value} - ${newSubTab}`);
+    const pageFields = getPageFields(activeTab.value, newSubTab);
+    if (subscriptionId) startSubscription(subscriptionId, pageFields);
   },
   { immediate: false } // Don't run immediately on mount, connect() handles initial subscription
 );

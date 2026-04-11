@@ -19,6 +19,7 @@ import {
 } from '@/pages';
 
 export interface PageConfig {
+  id: string; // subscription id in format: tab.subtab
   component: Component;
   fields: Record<string, string>;
   label: string;
@@ -29,6 +30,7 @@ export type PagesRegistry = Record<string, Record<string, PageConfig>>;
 export const pagesRegistry: PagesRegistry = {
   character: {
     stats: {
+      id: 'character.stats',
       component: Stats,
       label: 'Stats',
       fields: {
@@ -50,6 +52,7 @@ export const pagesRegistry: PagesRegistry = {
 
   inventory: {
     weapons: {
+      id: 'inventory.weapons',
       component: Weapons,
       label: 'Weapons',
       fields: {
@@ -58,6 +61,7 @@ export const pagesRegistry: PagesRegistry = {
       },
     },
     apparel: {
+      id: 'inventory.apparel',
       component: Armor,
       label: 'Apparel',
       fields: {
@@ -73,6 +77,13 @@ export const pagesRegistry: PagesRegistry = {
  */
 export function getPageConfig(tab: string, subTab: string): PageConfig | null {
   return pagesRegistry[tab]?.[subTab] ?? null;
+}
+
+/**
+ * Get subscription ID for a page
+ */
+export function getPageSubscriptionId(tab: string, subTab: string): string | null {
+  return getPageConfig(tab, subTab)?.id ?? null;
 }
 
 /**

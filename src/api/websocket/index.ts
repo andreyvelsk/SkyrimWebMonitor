@@ -11,12 +11,16 @@ export {
   type HeartbeatMessage,
   type SubscribeMessage,
   type UnsubscribeMessage,
+  type UnsubscribeAllMessage,
   type QueryMessage,
 } from './protocol';
 export {
   isCharacterStats,
   isWeaponsData,
   isApparelData,
+  isCharacterStatsId,
+  isWeaponsDataId,
+  isApparelDataId,
   type CharacterStats,
   type WeaponsState,
   type ApparelState,

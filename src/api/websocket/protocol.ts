@@ -14,6 +14,7 @@ interface BaseMessage {
 
 export interface SubscribeMessage extends BaseMessage {
   type: 'subscribe'
+  id: string // unique subscription identifier
   settings?: {
     frequency?: number // push interval in milliseconds (min: 50, default: 500)
     sendOnChange?: boolean // only send if values changed (default: false)
@@ -23,18 +24,24 @@ export interface SubscribeMessage extends BaseMessage {
 
 export interface UnsubscribeMessage extends BaseMessage {
   type: 'unsubscribe'
+  id?: string // subscription id; if omitted, all subscriptions are cancelled
 }
 
 export interface QueryMessage extends BaseMessage {
   type: 'query'
+  id: string // unique request identifier
   fields: Record<string, string> // alias -> registry key mapping
+}
+
+export interface UnsubscribeAllMessage extends BaseMessage {
+  type: 'unsubscribe_all'
 }
 
 export interface HeartbeatMessage extends BaseMessage {
   type: 'heartbeat'
 }
 
-export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage | HeartbeatMessage
+export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage
 
 // ============================================================================
 // Server → Client Messages
@@ -42,6 +49,7 @@ export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage
 
 export interface DataMessage extends BaseMessage {
   type: 'data'
+  id: string // subscription id or query id
   ts: number // Unix timestamp in milliseconds
   fields: PageData // Typed fields: CharacterStats | WeaponsInventoryData | ApparelInventoryData
 }

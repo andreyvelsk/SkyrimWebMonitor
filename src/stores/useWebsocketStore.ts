@@ -3,19 +3,23 @@ import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import type { DataMessage, ServerMessage } from '@/api/websocket';
-import type { PageData } from '@/api/websocket/dataTypes';
-import { getDefaultFields } from '@/shared/lib/config/pageRegistry';
 import { DataRouter } from './adapters/dataRouter';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
+
+// Subscription tracking
+interface Subscription {
+  id: string
+  fieldMapping: Record<string, string>
+  frequency: number
+}
 
 export const useWebSocketStore = defineStore('websocket', () => {
 
   // State
   const status = ref<string>(CONNECTION_STATUS.DISCONNECTED);
   const error = ref<string | null>(null);
-  const isSubscribed = ref(false);
-  const currentFieldMapping = ref<Record<string, string>>(getDefaultFields());
+  const activeSubscriptions = ref<Map<string, Subscription>>(new Map());
 
   // Get WebSocket client instance
   const wsClient = getWebSocketClient();
@@ -33,85 +37,111 @@ export const useWebSocketStore = defineStore('websocket', () => {
       status.value === CONNECTION_STATUS.CONNECTING ||
       status.value === CONNECTION_STATUS.RECONNECTING
   );
+  
+  const hasActiveSubscriptions = computed(() => activeSubscriptions.value.size > 0);
 
   /**
-   * Start subscription to monitor data
-   * @param fieldMapping - Optional field mapping for the subscription. If not provided, uses current mapping.
+   * Start subscription with unique ID
+   * @param subscriptionId - Unique subscription identifier
+   * @param fieldMapping - Field mapping for the subscription
+   * @param frequency - Update frequency in milliseconds
+   * @param sendOnChange - Whether to send updates only on change 
    */
-  const startSubscription = (fieldMapping?: Record<string, string>): void => {
+  const startSubscription = (
+    subscriptionId: string,
+    fieldMapping: Record<string, string>,
+    frequency: number = WS_UPDATE_FREQUENCY,
+    sendOnChange: boolean = true
+  ): void => {
     if (!wsClient.isConnected()) {
       console.warn('WebSocket is not connected, cannot subscribe');
       return;
     }
 
-    // Update field mapping if provided
-    if (fieldMapping) {
-      currentFieldMapping.value = fieldMapping;
+    const success = wsClient.subscribe(subscriptionId, fieldMapping, frequency, sendOnChange);
+    if (success) {
+      activeSubscriptions.value.set(subscriptionId, {
+        id: subscriptionId,
+        fieldMapping,
+        frequency,
+      });
+      console.log(`Subscribed [${subscriptionId}]`, fieldMapping);
+    } else {
+      console.error(`Failed to subscribe [${subscriptionId}]`);
+    }
+  };
+
+  /**
+   * Stop specific subscription by ID
+   * @param subscriptionId - Subscription identifier to stop
+   */
+  const stopSubscription = (subscriptionId: string): void => {
+    if (!wsClient.isConnected()) {
+      return;
     }
 
-    const success = wsClient.subscribe(currentFieldMapping.value, WS_UPDATE_FREQUENCY);
+    const success = wsClient.unsubscribe(subscriptionId);
     if (success) {
-      isSubscribed.value = true;
-      console.log('Subscribed to monitor data updates', currentFieldMapping.value);
-    } else {
-      console.error('Failed to subscribe to monitor data');
+      activeSubscriptions.value.delete(subscriptionId);
+      console.log(`Unsubscribed [${subscriptionId}]`);
+    }
+  };
+
+  /**
+   * Stop all active subscriptions
+   */
+  const stopAllSubscriptions = (): void => {
+    if (!wsClient.isConnected()) {
+      return;
+    }
+
+    const success = wsClient.unsubscribeAll();
+    if (success) {
+      activeSubscriptions.value.clear();
+      console.log('Unsubscribed from all subscriptions');
     }
   };
 
   /**
    * Change page subscription
-   * Resubscribes with new field mapping when page changes
+   * Replaces subscription with the same ID with new field mapping
+   * @param subscriptionId - Subscription identifier
+   * @param fieldMapping - New field mapping
    */
-  const changePageSubscription = (fieldMapping: Record<string, string>): void => {
+  const addPageSubscription = (
+    subscriptionId: string,
+    fieldMapping: Record<string, string>
+  ): void => {
     if (!wsClient.isConnected()) {
       console.warn('WebSocket is not connected, cannot change subscription');
       return;
     }
 
-    // Stop current subscription
-    stopSubscription();
-
-    // Start new subscription with new field mapping
-    startSubscription(fieldMapping);
-  };
-
-  /**
-   * Stop subscription
-   */
-  const stopSubscription = (): void => {
-    if (!wsClient.isConnected()) {
-      return;
-    }
-
-    wsClient.unsubscribe();
-    isSubscribed.value = false;
-    console.log('Unsubscribed from monitor data updates');
-  };
-
-  /**
-   * Route incoming data to appropriate store
-   * Delegates to DataRouter adapter which handles type detection and routing
-   *
-   * @param data - Typed data: CharacterStats | WeaponsState | ApparelState
-   */
-  const routeDataToStore = (data: PageData): void => {
-    const result = DataRouter.routeData(data);
-
-    if (!result.success) {
-      console.warn(`[WebSocket] Routing failed: ${result.message}`);
-    }
+    // Send new subscription with same ID (protocol: replaces if exists)
+    startSubscription(subscriptionId, fieldMapping);
   };
 
   /**
    * Handle data message from server
-   * Automatically routes to appropriate store based on data type
+   * Automatically routes to appropriate store based on subscription ID
    *
-   * @param message - Server data message with typed fields
+   * @param message - Server data message with typed fields and subscription id
    */
   const handleDataMessage = (message: DataMessage): void => {
     try {
-      console.log('[WebSocket] Received data message:', message);
-      routeDataToStore(message.fields);
+      console.log(`[WebSocket] Received data [${message.id}] at ${new Date(message.ts).toISOString()}:`, message.fields);
+      
+      // Get subscription info for logging
+      const subscription = activeSubscriptions.value.get(message.id);
+      if (!subscription) {
+        console.warn(`[WebSocket] Received data for unknown subscription [${message.id}]`);
+      }
+      
+      // Route data to store using subscription ID (primary method)
+      const result = DataRouter.routeDataById(message.id, message.fields);
+      if (!result.success) {
+        console.warn(`[WebSocket] Routing failed: ${result.message}`);
+      }
     } catch (err) {
       console.error('[WebSocket] Failed to handle data message:', err);
     }
@@ -131,7 +161,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
   };
 
   const disconnect = (): void => {
-    stopSubscription();
+    stopAllSubscriptions();
     wsClient.disconnect();
     status.value = CONNECTION_STATUS.DISCONNECTED;
     error.value = null;
@@ -142,19 +172,18 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromOpen = wsClient.on('onOpen', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
-      // Note: Don't auto-subscribe here - let App.vue handle subscription updates via watch
       console.log('WebSocket connected, ready for subscriptions');
     });
 
     unsubscribeFromClose = wsClient.on('onClose', () => {
       status.value = CONNECTION_STATUS.DISCONNECTED;
-      isSubscribed.value = false;
+      activeSubscriptions.value.clear();
     });
 
     unsubscribeFromError = wsClient.on('onError', (err: any) => {
       status.value = CONNECTION_STATUS.DISCONNECTED;
       error.value = err?.message || 'Connection error';
-      isSubscribed.value = false;
+      activeSubscriptions.value.clear();
     });
 
     unsubscribeFromMessage = wsClient.onMessage((message: ServerMessage) => {
@@ -181,19 +210,20 @@ export const useWebSocketStore = defineStore('websocket', () => {
     // State
     status,
     error,
-    isSubscribed,
-    currentFieldMapping,
+    activeSubscriptions,
 
     // Computed
     isConnected,
     isConnecting,
+    hasActiveSubscriptions,
 
     // Methods
     connect,
     disconnect,
     startSubscription,
     stopSubscription,
-    changePageSubscription,
+    stopAllSubscriptions,
+    addPageSubscription,
 
     // Cleanup
     $dispose: cleanup,
