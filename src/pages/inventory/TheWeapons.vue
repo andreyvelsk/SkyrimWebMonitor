@@ -22,9 +22,6 @@
         </div>
       </div>
     </div>
-    <button class="drop-button">
-      {{ $t('pages.inventory.weapons.drop') }}
-    </button>
   </div>
 </template>
 
@@ -51,7 +48,7 @@ function setActiveItem(formId: string) {
   if (!item) return;
 
   const action = item.isEquipped ? 'unequip' : 'equip';
-  wsStore.sendCommand(action, formId);
+  wsStore.sendCommand(action, formId, { hand: 'right' });
 }
 </script>
 
