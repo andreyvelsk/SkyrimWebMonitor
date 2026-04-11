@@ -16,7 +16,6 @@
     </div>
     <div class="inv-info">
       <span class="inv-name">{{ name }}</span>
-      <span class="inv-desc">{{ description }}</span>
     </div>
     <div
       v-if="quantity"
@@ -30,7 +29,6 @@
 <script setup lang="ts">
 defineProps<{
   name: string;
-  description: string;
   equipped?: boolean;
   quantity?: number;
 }>();
@@ -40,8 +38,7 @@ defineProps<{
 .inv-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) var(--spacing-md);
+  gap: var(--spacing-sm);
   background-color: var(--skyrim-bg-light);
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;

@@ -3,14 +3,19 @@ export {
   getWebSocketClient,
 } from './websocket';
 export {
-  FIELD_MAPPING,
   type ClientMessage,
   type ServerMessage,
   type DataMessage,
   type ErrorMessage,
-  type DescribeResponseMessage,
-  type DescribeMessage,
+  type HeartbeatResponseMessage,
+  type HeartbeatMessage,
   type SubscribeMessage,
   type UnsubscribeMessage,
+  type UnsubscribeAllMessage,
   type QueryMessage,
 } from './protocol';
+export {
+  type MessageHandler,
+  type EventCallback,
+  type RegistrationCleanup,
+} from './types';

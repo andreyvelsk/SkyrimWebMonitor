@@ -1,4 +1,2 @@
-export { default as Stats } from './Stats.vue';
-export { default as Skills } from './Skills.vue';
-export { default as Perks } from './Perks.vue';
-export { default as Status } from './Status.vue';
+export { default as TheStats } from './TheStats.vue';
+export { default as TheSkills } from './TheSkills.vue';

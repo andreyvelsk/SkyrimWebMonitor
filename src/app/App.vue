@@ -2,9 +2,7 @@
   <div class="handheld-device">
     <!-- Show connection status when not connected -->
     <connection-status v-if="!isConnected" />
-
-    <!-- Show main app only when connected -->
-    <template v-if="isConnected">
+    <template v-else>
       <skyrim-navigation
         :tabs="tabs"
         :active-tab="activeTab"
@@ -26,19 +24,33 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { watch, onMounted } from 'vue';
-import { SkyrimNavigation, SkyrimContent } from '@/entities/ui';
+import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import { ConnectionStatus } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
-import { useWebSocketStore } from '@/stores/useWebsocketStore';
-import { getPageFields } from '@/shared/lib/config/pageRegistry';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
+import { getPageFields, getPageSubscriptionId, getTabCategorySubscription } from '@/app/config/pageRegistry';
 
 const navigationStore = useNavigationStore();
 const { setActiveTab, setActiveSubTab } = navigationStore;
 const { tabs, activeTab, activeSubTab } = storeToRefs(navigationStore);
 
 const websocketStore = useWebSocketStore();
-const { connect, changePageSubscription } = websocketStore;
+const { connect, startSubscription, stopSubscription } = websocketStore;
 const { isConnected } = storeToRefs(websocketStore);
+
+const startCategorySubscription = (tabId: string): void => {
+  const config = getTabCategorySubscription(tabId);
+  if (config) {
+    startSubscription(config.subscriptionId, config.fields);
+  }
+};
+
+const stopCategorySubscription = (tabId: string): void => {
+  const config = getTabCategorySubscription(tabId);
+  if (config) {
+    stopSubscription(config.subscriptionId);
+  }
+};
 
 // Initialize WebSocket connection on app mount
 onMounted(async () => {
@@ -48,7 +60,11 @@ onMounted(async () => {
   if (isConnected.value) {
     console.log('Connected on mount, subscribing to current page...');
     const pageFields = getPageFields(activeTab.value, activeSubTab.value);
-    changePageSubscription(pageFields);
+    const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
+    if (subscriptionId) {
+      startSubscription(subscriptionId, pageFields);
+    }
+    startCategorySubscription(activeTab.value);
   }
 });
 
@@ -56,16 +72,39 @@ onMounted(async () => {
 // Also handles reconnection by re-subscribing to current page
 watch(
   [activeTab, activeSubTab, isConnected],
-  ([newTab, newSubTab, connected]) => {
+  (
+    [newTab, newSubTab, connected],
+    [oldTab, oldSubTab]
+  ) => {
     // Only handle subscription changes when connected
     if (!connected) {
       console.log('WebSocket not connected, skipping subscription update');
       return;
     }
 
+    // Handle category subscription lifecycle when main tab changes
+    if (oldTab !== newTab) {
+      stopCategorySubscription(oldTab);
+      startCategorySubscription(newTab);
+    }
+
+    const subscriptionId = getPageSubscriptionId(newTab, newSubTab);
+    const oldSubscriptionId = getPageSubscriptionId(oldTab, oldSubTab);
+
+    if (!newSubTab) {
+      console.log('No sub-tab selected, skipping subscription update');
+      if (oldSubscriptionId) stopSubscription(oldSubscriptionId); // Unsubscribe from old page
+      return;
+    }
+
+    if (oldSubscriptionId && oldSubscriptionId !== subscriptionId) {
+      console.log(`Unsubscribing from old page: ${oldSubscriptionId}`);
+      stopSubscription(oldSubscriptionId); // Unsubscribe from old page
+    }
+
     console.log(`Subscription update: ${newTab} - ${newSubTab}`);
     const pageFields = getPageFields(newTab, newSubTab);
-    changePageSubscription(pageFields);
+    if (subscriptionId) startSubscription(subscriptionId, pageFields);
   },
   { immediate: false } // Don't run immediately on mount, connect() handles initial subscription
 );

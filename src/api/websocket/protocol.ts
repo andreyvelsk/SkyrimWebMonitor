@@ -12,6 +12,7 @@ interface BaseMessage {
 
 export interface SubscribeMessage extends BaseMessage {
   type: 'subscribe'
+  id: string // unique subscription identifier
   settings?: {
     frequency?: number // push interval in milliseconds (min: 50, default: 500)
     sendOnChange?: boolean // only send if values changed (default: false)
@@ -21,18 +22,24 @@ export interface SubscribeMessage extends BaseMessage {
 
 export interface UnsubscribeMessage extends BaseMessage {
   type: 'unsubscribe'
+  id?: string // subscription id; if omitted, all subscriptions are cancelled
 }
 
 export interface QueryMessage extends BaseMessage {
   type: 'query'
+  id: string // unique request identifier
   fields: Record<string, string> // alias -> registry key mapping
 }
 
-export interface DescribeMessage extends BaseMessage {
-  type: 'describe'
+export interface UnsubscribeAllMessage extends BaseMessage {
+  type: 'unsubscribe_all'
 }
 
-export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage | DescribeMessage
+export interface HeartbeatMessage extends BaseMessage {
+  type: 'heartbeat'
+}
+
+export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage
 
 // ============================================================================
 // Server → Client Messages
@@ -40,18 +47,14 @@ export type ClientMessage = SubscribeMessage | UnsubscribeMessage | QueryMessage
 
 export interface DataMessage extends BaseMessage {
   type: 'data'
+  id: string // subscription id or query id
   ts: number // Unix timestamp in milliseconds
-  fields: Record<string, number> // alias -> float value
+  fields: Record<string, unknown>
 }
 
-export interface FieldDescription {
-  valueType: string // e.g., "float"
-  description: string
-}
-
-export interface DescribeResponseMessage extends BaseMessage {
-  type: 'describe'
-  fields: Record<string, FieldDescription>
+export interface HeartbeatResponseMessage extends BaseMessage {
+  type: 'heartbeat'
+  ts: number // Unix timestamp in milliseconds (server time)
 }
 
 export interface ErrorMessage extends BaseMessage {
@@ -59,28 +62,4 @@ export interface ErrorMessage extends BaseMessage {
   message: string
 }
 
-export type ServerMessage = DataMessage | DescribeResponseMessage | ErrorMessage
-
-// ============================================================================
-// Field Aliases and Registry Keys
-// ============================================================================
-
-/**
- * Map of our internal field names to SkyrimWebSocket registry keys
- * Only includes fields that are actually available in the protocol
- */
-export const FIELD_MAPPING: Record<string, string> = {
-  health: 'ActorValue::kHealth',
-  magicka: 'ActorValue::kMagicka',
-  stamina: 'ActorValue::kStamina',
-  healthBase: 'ActorValue::kHealth::Base',
-  magickaBase: 'ActorValue::kMagicka::Base',
-  staminaBase: 'ActorValue::kStamina::Base',
-};
-
-/**
- * Create reverse mapping for parsing server responses
- */
-export function createReverseFieldMapping(mapping: Record<string, string>): Record<string, string> {
-  return Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k]));
-}
+export type ServerMessage = DataMessage | HeartbeatResponseMessage | ErrorMessage

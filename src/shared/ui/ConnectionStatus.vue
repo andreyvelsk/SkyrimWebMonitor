@@ -30,21 +30,23 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useWebSocketStore } from '@/stores/useWebsocketStore';
+import { useI18n } from 'vue-i18n';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 
+const { t } = useI18n();
 const wsStore = useWebSocketStore();
 
 const statusText = computed(() => {
   if (wsStore.status === CONNECTION_STATUS.CONNECTED) {
-    return `Connected to server`;
+    return t('shared.ui.connectionStatus.connected');
   }
   if (wsStore.status === CONNECTION_STATUS.CONNECTING) {
-    return `Connecting to server...`;
+    return t('shared.ui.connectionStatus.connecting');
   }
   if (wsStore.status === CONNECTION_STATUS.RECONNECTING) {
-    return `Reconnecting to server...`;
+    return t('shared.ui.connectionStatus.reconnecting');
   }
-  return `Disconnected from server`;
+  return t('shared.ui.connectionStatus.disconnected');
 });
 </script>

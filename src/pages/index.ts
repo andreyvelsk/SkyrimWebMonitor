@@ -1,21 +1,19 @@
 // Character pages
-export { default as Stats } from './character/Stats.vue';
-export { default as Skills } from './character/Skills.vue';
-export { default as Perks } from './character/Perks.vue';
-export { default as Status } from './character/Status.vue';
+export { default as TheStats } from './character/TheStats.vue';
+export { default as TheSkills } from './character/TheSkills.vue';
 
 // Inventory pages
-export { default as Weapons } from './inventory/Weapons.vue';
-export { default as Armor } from './inventory/Armor.vue';
-export { default as Potions } from './inventory/Potions.vue';
-export { default as Misc } from './inventory/Misc.vue';
+export { default as TheWeapons } from './inventory/TheWeapons.vue';
+export { default as TheArmor } from './inventory/TheArmor.vue';
+export { default as ThePotions } from './inventory/ThePotions.vue';
+export { default as TheMisc } from './inventory/TheMisc.vue';
 
 // Magic pages
-export { default as Spells } from './magic/Spells.vue';
-export { default as Powers } from './magic/Powers.vue';
-export { default as Shouts } from './magic/Shouts.vue';
+export { default as TheSpells } from './magic/TheSpells.vue';
+export { default as ThePowers } from './magic/ThePowers.vue';
+export { default as TheShouts } from './magic/TheShouts.vue';
 
 // Map pages
-export { default as Local } from './map/Local.vue';
-export { default as World } from './map/World.vue';
-export { default as Quests } from './map/Quests.vue';
+export { default as TheLocal } from './map/TheLocal.vue';
+export { default as TheWorld } from './map/TheWorld.vue';
+export { default as TheQuests } from './map/TheQuests.vue';

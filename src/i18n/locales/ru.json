@@ -1,0 +1,99 @@
+{
+  "app": {
+    "navigation": {
+      "mainAriaLabel": "Главная навигация",
+      "subAriaLabel": "Вспомогательная навигация"
+    },
+    "tabs": {
+      "character": "Персонаж",
+      "inventory": "Инвентарь",
+      "magic": "Магия",
+      "map": "Карта"
+    },
+    "content": {
+      "emptyState": "Выберите раздел для просмотра"
+    }
+  },
+  "pages": {
+    "character": {
+      "stats": {
+        "tab": "Характеристики",
+        "level": "Уровень",
+        "experience": "Опыт",
+        "carryWeight": "Грузоподъёмность",
+        "gold": "Золото"
+      },
+      "skills": {
+        "tab": "Навыки"
+      }
+    },
+    "inventory": {
+      "weapons": {
+        "tab": "Оружие",
+        "waitingForData": "Ожидание данных оружия...",
+        "drop": "Выбросить",
+        "unknown": "Неизвестно",
+        "noDescription": "Нет описания"
+      },
+      "apparel": {
+        "tab": "Одежда",
+        "waitingForData": "Ожидание данных одежды...",
+        "unknown": "Неизвестно",
+        "noDescription": "Нет описания"
+      },
+      "misc": {
+        "tab": "Разное",
+        "placeholder": "Раздел разного в разработке"
+      },
+      "potions": {
+        "tab": "Зелья"
+      }
+    },
+    "magic": {
+      "spells": {
+        "tab": "Заклинания"
+      },
+      "shouts": {
+        "tab": "Боевые крики"
+      },
+      "powers": {
+        "tab": "Силы",
+        "placeholder": "Раздел сил в разработке"
+      }
+    },
+    "map": {
+      "world": {
+        "tab": "Мир",
+        "placeholder": "Карта мира в разработке"
+      },
+      "local": {
+        "tab": "Локация",
+        "placeholder": "Карта локации в разработке"
+      },
+      "quests": {
+        "tab": "Задания"
+      }
+    }
+  },
+  "shared": {
+    "ui": {
+      "connectionStatus": {
+        "connected": "Подключено к серверу",
+        "connecting": "Подключение к серверу...",
+        "reconnecting": "Переподключение к серверу...",
+        "disconnected": "Отключено от сервера"
+      },
+      "magicItem": {
+        "ready": "Готово",
+        "mp": "МП"
+      },
+      "questItem": {
+        "active": "Активно"
+      },
+      "inventoryItem": {
+        "unknown": "Неизвестно",
+        "noDescription": "Нет описания"
+      }
+    }
+  }
+}
