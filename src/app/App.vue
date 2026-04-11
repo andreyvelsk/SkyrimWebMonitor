@@ -18,6 +18,7 @@
         />
       </main>
     </template>
+    <skyrim-modal />
   </div>
 </template>
 
@@ -25,7 +26,7 @@
 import { storeToRefs } from 'pinia';
 import { watch, onMounted } from 'vue';
 import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
-import { ConnectionStatus } from '@/shared/ui';
+import { ConnectionStatus, SkyrimModal } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { getPageFields, getPageSubscriptionId, getTabCategorySubscription } from '@/app/config/pageRegistry';

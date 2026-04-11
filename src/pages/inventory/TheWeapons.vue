@@ -6,9 +6,11 @@
         <template v-if="weapons.items && weapons.items.length > 0">
           <inventory-item
             v-for="(item, index) in weapons.items"
-            :key="(item as Record<string, any>).formId || index"
-            :name="(item as Record<string, any>).name || $t('pages.inventory.weapons.unknown')"
-            :equipped="(item as Record<string, any>).equipped || false"
+            :key="item.formId || index"
+            :name="item.name || $t('pages.inventory.weapons.unknown')"
+            :equipped="item.isEquipped || false"
+            :class="{ active: activeItem === item.formId }"
+            @click="setActiveItem(item.formId)"
           />
         </template>
         <!-- Fallback to placeholder when no data -->
@@ -27,12 +29,30 @@
 </template>
 
 <script setup lang="ts">
+import { ref }  from 'vue';
 import { storeToRefs } from 'pinia';
 import { InventoryItem } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 
 const inventoryStore = useInventoryStore();
 const { weapons } = storeToRefs(inventoryStore);
+const wsStore = useWebSocketStore();
+
+const activeItem = ref<string | null>(null);
+
+function setActiveItem(formId: string) {
+  if (activeItem.value !== formId) {
+    activeItem.value = formId;
+    return;
+  }
+
+  const item = weapons.value.items?.find(w => w.formId === formId);
+  if (!item) return;
+
+  const action = item.isEquipped ? 'unequip' : 'equip';
+  wsStore.sendCommand(action, formId);
+}
 </script>
 
 <style scoped lang="scss">
