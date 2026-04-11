@@ -20,6 +20,7 @@
 
     <nav
       v-if="currentSubTabs.length > 1"
+      ref="subtabsRef"
       class="skyrim-subtabs animate-fade-in"
       role="tablist"
       aria-label="Sub navigation"
@@ -40,8 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { Tab } from '@/stores/use-navigation-store/types/types';
+
+const subtabsRef = ref<HTMLElement | null>(null);
 
 const props = defineProps<{
   tabs: Tab[];
@@ -56,6 +59,15 @@ defineEmits<{
 
 const currentSubTabs = computed(
   () => props.tabs.find((t) => t.id === props.activeTab)?.subTabs ?? []
+);
+
+watch(
+  () => props.activeTab,
+  () => {
+    if (subtabsRef.value) {
+      subtabsRef.value.scrollLeft = 0;
+    }
+  }
 );
 </script>
 
@@ -80,11 +92,17 @@ const currentSubTabs = computed(
     &.skyrim-subtabs {
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: var(--spacing-xs);
       padding: var(--spacing-xs) var(--spacing-md);
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 
