@@ -44,7 +44,7 @@ defineProps<{
   cursor: pointer;
   transition: all var(--transition-fast);
 
-  &:hover {
+  &.active {
     background-color: rgb(201 162 39 / 8%);
     border-color: var(--skyrim-accent-gold-dim);
   }
