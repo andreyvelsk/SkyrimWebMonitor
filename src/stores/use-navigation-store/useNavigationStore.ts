@@ -1,22 +1,29 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Tab, SubTab } from './types/types';
 
 export const useNavigationStore = defineStore('navigation', () => {
-  // State - Navigation structure (independent from pageRegistry)
-  // This can be updated/filtered separately from available pages
-  const tabs = ref<Tab[]>([
+  const { t } = useI18n();
+
+  const subTabsMap = ref<Record<string, SubTab[]>>({
+    character: [{ id: 'stats', label: t('pages.character.stats.tab') }],
+    inventory: [],
+  });
+
+  const tabs = computed<Tab[]>(() => [
     {
       id: 'character',
-      label: 'Character',
-      subTabs: [
-        { id: 'stats', label: 'Stats' },
-      ],
+      label: t('app.tabs.character'),
+      subTabs: subTabsMap.value.character.map((s) => ({
+        ...s,
+        label: s.label ?? t(`pages.character.${s.id}.tab`),
+      })),
     },
     {
       id: 'inventory',
-      label: 'Inventory',
-      subTabs: [],
+      label: t('app.tabs.inventory'),
+      subTabs: subTabsMap.value.inventory,
     },
   ]);
 
@@ -51,10 +58,9 @@ export const useNavigationStore = defineStore('navigation', () => {
    * If the affected tab is currently active, the first subTab is selected automatically.
    */
   const setTabSubTabs = (tabId: string, newSubTabs: SubTab[]): void => {
-    const tab = tabs.value.find((t) => t.id === tabId);
-    if (!tab) return;
+    if (!(tabId in subTabsMap.value)) return;
 
-    tab.subTabs = newSubTabs;
+    subTabsMap.value[tabId] = newSubTabs;
 
     if (activeTab.value === tabId && newSubTabs.length > 0) {
       setActiveSubTab(newSubTabs[0].id);

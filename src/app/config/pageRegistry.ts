@@ -13,7 +13,6 @@ export const pagesRegistry: PagesRegistry = {
     stats: {
       id: 'character.stats',
       component: TheStats,
-      label: 'Stats',
       fields: {
         health: 'ActorValue::kHealth',
         magicka: 'ActorValue::kMagicka',
@@ -35,7 +34,6 @@ export const pagesRegistry: PagesRegistry = {
     weapons: {
       id: 'inventory.weapons',
       component: TheWeapons,
-      label: 'Weapons',
       fields: {
         items: 'Inventory::Items::Weapons',
       },
@@ -43,7 +41,6 @@ export const pagesRegistry: PagesRegistry = {
     apparel: {
       id: 'inventory.apparel',
       component: TheArmor,
-      label: 'Apparel',
       fields: {
         items: 'Inventory::Items::Apparel',
       },
