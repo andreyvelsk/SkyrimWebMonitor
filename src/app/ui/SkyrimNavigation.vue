@@ -84,7 +84,7 @@ watch(
       align-items: center;
       justify-content: center;
       gap: var(--tab-gap);
-      padding: var(--spacing-sm) var(--spacing-md);
+      padding: 0;
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
     }
@@ -93,7 +93,7 @@ watch(
       display: flex;
       align-items: center;
       gap: var(--spacing-xs);
-      padding: var(--spacing-xs) var(--spacing-md);
+      padding: 0;
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
       overflow-x: auto;
@@ -113,7 +113,7 @@ watch(
       align-items: center;
       justify-content: center;
       height: var(--tab-height);
-      padding: 0 var(--spacing-lg);
+      padding: 0 var(--spacing-sm);
       background-color: var(--tab-bg-inactive);
       color: var(--tab-text-inactive);
       font-family: var(--font-heading);

@@ -6,9 +6,8 @@
         <template v-if="weapons.items && weapons.items.length > 0">
           <inventory-item
             v-for="(item, index) in weapons.items"
-            :key="(item as Record<string, any>).id || (item as Record<string, any>).formId || index"
+            :key="(item as Record<string, any>).formId || index"
             :name="(item as Record<string, any>).name || $t('pages.inventory.weapons.unknown')"
-            :description="(item as Record<string, any>).description || $t('pages.inventory.weapons.noDescription')"
             :equipped="(item as Record<string, any>).equipped || false"
           />
         </template>
