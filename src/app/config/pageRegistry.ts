@@ -1,9 +1,9 @@
 import type { Component } from 'vue';
 import type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 import {
-  Stats,
-  Weapons,
-  Armor,
+  TheStats,
+  TheWeapons,
+  TheArmor,
 } from '@/pages';
 
 export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
@@ -12,7 +12,7 @@ export const pagesRegistry: PagesRegistry = {
   character: {
     stats: {
       id: 'character.stats',
-      component: Stats,
+      component: TheStats,
       label: 'Stats',
       fields: {
         health: 'ActorValue::kHealth',
@@ -34,7 +34,7 @@ export const pagesRegistry: PagesRegistry = {
   inventory: {
     weapons: {
       id: 'inventory.weapons',
-      component: Weapons,
+      component: TheWeapons,
       label: 'Weapons',
       fields: {
         items: 'Inventory::Items::Weapons',
@@ -42,7 +42,7 @@ export const pagesRegistry: PagesRegistry = {
     },
     apparel: {
       id: 'inventory.apparel',
-      component: Armor,
+      component: TheArmor,
       label: 'Apparel',
       fields: {
         items: 'Inventory::Items::Apparel',

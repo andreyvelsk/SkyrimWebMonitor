@@ -1,3 +1,3 @@
-export { default as Local } from './Local.vue';
-export { default as World } from './World.vue';
-export { default as Quests } from './Quests.vue';
+export { default as TheLocal } from './TheLocal.vue';
+export { default as TheWorld } from './TheWorld.vue';
+export { default as TheQuests } from './TheQuests.vue';

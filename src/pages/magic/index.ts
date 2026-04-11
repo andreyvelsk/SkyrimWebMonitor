@@ -1,3 +1,3 @@
-export { default as Spells } from './Spells.vue';
-export { default as Powers } from './Powers.vue';
-export { default as Shouts } from './Shouts.vue';
+export { default as TheSpells } from './TheSpells.vue';
+export { default as ThePowers } from './ThePowers.vue';
+export { default as TheShouts } from './TheShouts.vue';
