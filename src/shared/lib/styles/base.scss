@@ -13,6 +13,9 @@
   /* Remove tap highlight on mobile */
   -webkit-tap-highlight-color: transparent;
   outline: none;
+  /* Disable pull-to-refresh and overscroll effects */
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 html,
@@ -20,6 +23,7 @@ body {
   height: 100%;
   width: 100%;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -36,10 +40,20 @@ body {
   /* Remove default touch highlight */
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+  /* Disable pull-to-refresh gesture and prevent scrolling */
+  overscroll-behavior: none;
+  -webkit-user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+  /* Prevent scrolling on iOS */
+  position: fixed;
+  width: 100%;
+  height: 100vh;
 
   #app {
     height: 100%;
     width: 100%;
+    overflow: hidden;
   }
 }
 
