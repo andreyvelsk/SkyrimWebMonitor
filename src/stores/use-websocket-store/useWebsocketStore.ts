@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
-import type { DataMessage, ServerMessage, CommandMessage, CommandResultMessage } from '@/api/websocket';
+import type { DataMessage, ServerMessage, CommandMessage, CommandResultMessage, CommandPayload } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './types';
 import { LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse } from '@/stores/adapters/localeAdapter';
@@ -124,14 +124,14 @@ export const useWebSocketStore = defineStore('websocket', () => {
   const sendCommand = (
     action: CommandMessage['action'],
     formId: string,
-    options?: { hand?: 'right' | 'left'; count?: number; favorite?: boolean }
+    payload?: CommandPayload
   ): void => {
     if (!wsClient.isConnected()) {
       console.warn('WebSocket is not connected, cannot send command');
       return;
     }
     const commandId = `cmd-${action}-${formId}-${Date.now()}`;
-    wsClient.command(commandId, action, formId, options);
+    wsClient.command(commandId, action, formId, payload);
   };
 
   const connect = async (): Promise<void> => {

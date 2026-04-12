@@ -3,6 +3,16 @@
  */
 
 // ============================================================================
+// Shared Types
+// ============================================================================
+
+export interface CommandPayload {
+  hand?: 'right' | 'left'
+  count?: number
+  favorite?: boolean
+}
+
+// ============================================================================
 // Client → Server Messages
 // ============================================================================
 
@@ -44,9 +54,7 @@ export interface CommandMessage extends BaseMessage {
   id: string
   action: 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
   formId: string
-  hand?: 'right' | 'left'
-  count?: number
-  favorite?: boolean
+  payload?: CommandPayload
 }
 
 export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage | CommandMessage

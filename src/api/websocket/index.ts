@@ -14,6 +14,7 @@ export {
   type UnsubscribeAllMessage,
   type QueryMessage,
   type CommandMessage,
+  type CommandPayload,
   type CommandResultMessage,
 } from './protocol';
 export {

@@ -8,6 +8,7 @@ import type {
   UnsubscribeAllMessage,
   QueryMessage,
   CommandMessage,
+  CommandPayload,
 } from './protocol';
 import type { MessageHandler, EventCallback, RegistrationCleanup } from './types';
 
@@ -203,20 +204,20 @@ class WebSocketClient {
    * @param id – Unique request identifier
    * @param action – Action to perform
    * @param formId – Item formId (hex string or unsigned integer)
-   * @param options – Action-specific parameters
+   * @param payload – Action-specific parameters
    */
   command(
     id: string,
     action: CommandMessage['action'],
     formId: string,
-    options?: { hand?: 'right' | 'left'; count?: number; favorite?: boolean }
+    payload?: CommandPayload
   ): boolean {
     const message: CommandMessage = {
       type: 'command',
       id,
       action,
       formId,
-      ...options,
+      payload: payload || {},
     };
     return this.send(message);
   }
