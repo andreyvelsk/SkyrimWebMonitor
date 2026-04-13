@@ -24,7 +24,9 @@
       />
     </div>
 
-    {{ quantity }}
+    <div class="font-heading">
+      {{ quantity }}
+    </div>
   </div>
 </template>
 
