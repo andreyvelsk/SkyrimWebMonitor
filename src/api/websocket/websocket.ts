@@ -202,22 +202,22 @@ class WebSocketClient {
   /**
    * Send an inventory command to the game
    * @param id – Unique request identifier
-   * @param action – Action to perform
+   * @param command – Action to perform
    * @param formId – Item formId (hex string or unsigned integer)
    * @param payload – Action-specific parameters
    */
   command(
     id: string,
-    action: CommandMessage['action'],
+    command: CommandMessage['command'],
     formId: string,
     payload?: CommandPayload
   ): boolean {
     const message: CommandMessage = {
       type: 'command',
       id,
-      action,
+      command,
       formId,
-      payload: payload || {},
+      ...payload ?? {},
     };
     return this.send(message);
   }

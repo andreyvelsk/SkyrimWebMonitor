@@ -52,7 +52,7 @@ export interface HeartbeatMessage extends BaseMessage {
 export interface CommandMessage extends BaseMessage {
   type: 'command'
   id: string
-  action: 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
+  command: 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
   formId: string
   payload?: CommandPayload
 }
