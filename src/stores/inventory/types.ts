@@ -1,4 +1,3 @@
-// Weapon type constants
 export const WEAPON_TYPES = {
   ONE_HAND_SWORD: "OneHandSword",
   ONE_HAND_DAGGER: "OneHandDagger",
@@ -13,6 +12,17 @@ export const WEAPON_TYPES = {
 } as const;
 
 export type WeaponType = (typeof WEAPON_TYPES)[keyof typeof WEAPON_TYPES] | null;
+
+// Apparel type constants
+export const APPAREL_TYPES = {
+  CLOTHING: "Clothing",
+  LIGHT_ARMOR: "LightArmor",
+  HEAVY_ARMOR: "HeavyArmor",
+  JEWELRY: "Jewelry",
+  ACCESSORIES: "Accessories",
+} as const;
+
+export type ApparelType = (typeof APPAREL_TYPES)[keyof typeof APPAREL_TYPES] | null;
 
 // Equip slot constants
 export const EQUIP_SLOTS = {
@@ -67,6 +77,20 @@ export interface WeaponsState {
   items?: WeaponItem[] | null;
 }
 
+export interface ApparelItem {
+  count: number;
+  enchantment: WeaponEnchantment | null;
+  equipSlots: EquipSlot[];
+  formId: string;
+  isEquipped: boolean;
+  isFavorite: boolean;
+  isStolen: boolean;
+  name: string;
+  value: number;
+  apparelType: ApparelType;
+  weight: number;
+}
+
 export interface ApparelState {
-  items?: unknown[] | null;
+  items?: ApparelItem[] | null;
 }

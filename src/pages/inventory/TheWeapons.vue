@@ -4,15 +4,15 @@
       <div class="list">
         <!-- Show weapons if data is available -->
         <template v-if="weapons.items && weapons.items.length > 0">
-          <inventory-item
+          <weapon-item
             v-for="(item, index) in weapons.items"
             :key="item.formId || index"
             :name="item.name || $t('pages.inventory.weapons.unknown')"
+            :weapon-type="item.weaponType"
             :is-equipped="item.isEquipped || false"
             :equipped-hand="item.equippedHand"
             :class="{ active: activeItem === item.formId }"
             :quantity="item.count"
-            :weapon-type="item.weaponType"
             @click="setActiveItem(item.formId)"
           />
         </template>
@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { ref }  from 'vue';
 import { storeToRefs } from 'pinia';
-import { InventoryItem, HandPicker } from '@/shared/ui';
+import { WeaponItem, HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';

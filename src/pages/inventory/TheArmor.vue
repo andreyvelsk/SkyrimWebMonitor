@@ -2,12 +2,13 @@
   <div class="list">
     <!-- Show apparel if data is available -->
     <template v-if="apparel.items && apparel.items.length > 0">
-      <inventory-item
+      <apparel-item
         v-for="(item, index) in apparel.items"
-        :key="(item as Record<string, any>).id || (item as Record<string, any>).formId || index"
-        :name="(item as Record<string, any>).name || $t('pages.inventory.apparel.unknown')"
-        :description="(item as Record<string, any>).description || $t('pages.inventory.apparel.noDescription')"
-        :is-equipped="(item as Record<string, any>).equipped || false"
+        :key="item.formId || index"
+        :name="item.name || $t('pages.inventory.apparel.unknown')"
+        :apparel-type="item.apparelType"
+        :quantity="item.count"
+        :is-equipped="item.isEquipped || false"
       />
     </template>
     <!-- Fallback to placeholder when no data -->
@@ -22,7 +23,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { InventoryItem } from '@/shared/ui';
+import { ApparelItem } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 
 const inventoryStore = useInventoryStore();
