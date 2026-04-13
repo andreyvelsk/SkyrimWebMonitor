@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import BaseIcon from './BaseIcon.vue';
+import { BaseIcon } from '@/shared/ui';
 import { getWeaponIconPath } from '@/shared/lib/constants/weaponIcons';
 import type { WeaponType } from '@/stores/inventory/types';
 

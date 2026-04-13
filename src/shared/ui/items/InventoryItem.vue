@@ -25,8 +25,8 @@
 </template>
 
 <script setup lang="ts">
-import WeaponIcon from '../icons/WeaponIcon.vue';
-import EquippedHandIcon from '../icons/EquippedHandIcon.vue';
+import { WeaponIcon } from '@/entities/ui';
+import { EquippedHandIcon } from '@/features/ui';
 import type { WeaponType, EquippedHand } from '@/stores/inventory/types';
 
 defineProps<{

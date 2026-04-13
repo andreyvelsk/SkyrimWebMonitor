@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseIcon from './BaseIcon.vue';
+import { BaseIcon } from '@/shared/ui';
 import type { EquippedHand } from '@/stores/inventory/types';
 
 interface Props {

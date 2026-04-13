@@ -1,4 +1,4 @@
-// Icons
+// Base icons
 export * from './icons/index';
 
 // Display components

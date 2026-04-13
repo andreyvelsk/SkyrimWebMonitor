@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import BaseIcon from './BaseIcon.vue';
+import { BaseIcon } from '@/shared/ui';
 
 interface Props {
   spellSchool?: string | null;
