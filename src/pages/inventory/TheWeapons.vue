@@ -57,8 +57,33 @@ function equipItem(formId: string) {
   const item = weapons.value.items?.find(w => w.formId === formId);
   if (!item) return;
 
-  // If already equipped, unequip immediately
+  // If already equipped
   if (item.isEquipped) {
+    // If one-handed and count > 1, show hand picker to switch hand or unequip
+    if (!item.isTwoHanded && item.count > 1) {
+      openModal({
+        component: HandPicker,
+        props: {
+          equippedHand: item.equippedHand,
+          mode: 'equipped',
+        },
+        on: {
+          selectHand: (hand: EquipSlot) => {
+            if (hand === item.equippedHand || item.equippedHand === 'both') {
+              // Unequip from current hand (or unequip if both hands)
+              wsStore.sendCommand('unequip', formId, {});
+            } else {
+              // Equip to other hand
+              wsStore.sendCommand('equip', formId, { hand });
+            }
+            closeModal();
+          },
+        },
+      });
+      return;
+    }
+
+    // If two-handed or single copy, just unequip
     wsStore.sendCommand('unequip', formId, {});
     return;
   }
@@ -72,6 +97,9 @@ function equipItem(formId: string) {
   // If one-handed weapon, show hand picker modal
   openModal({
     component: HandPicker,
+    props: {
+      mode: 'equip',
+    },
     on: {
       selectHand: (hand: EquipSlot) => {
         wsStore.sendCommand('equip', formId, { hand });

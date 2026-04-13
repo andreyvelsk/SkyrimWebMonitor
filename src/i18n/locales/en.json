@@ -96,6 +96,9 @@
       "inventoryItem": {
         "unknown": "Unknown",
         "noDescription": "No description"
+      },
+      "handPicker": {
+        "equipped": "Equipped"
       }
     }
   }

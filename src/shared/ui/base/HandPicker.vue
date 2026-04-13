@@ -3,6 +3,7 @@
     <div class="buttons">
       <button
         class="hand-button left"
+        :class="{ 'hand-button--occupied': equippedHand === 'left' || equippedHand === 'both' }"
         @click="onSelectHand('left')"
       >
         <base-icon
@@ -13,6 +14,7 @@
       </button>
       <button
         class="hand-button right"
+        :class="{ 'hand-button--occupied': equippedHand === 'right' || equippedHand === 'both' }"
         @click="onSelectHand('right')"
       >
         <base-icon
@@ -26,7 +28,17 @@
 
 <script setup lang="ts">
 import BaseIcon from '../icons/BaseIcon.vue';
-import type { EquipSlot } from '@/stores/inventory/types';
+import type { EquipSlot, EquippedHand } from '@/stores/inventory/types';
+
+interface Props {
+  mode?: 'equip' | 'equipped';
+  equippedHand?: EquippedHand;
+}
+
+withDefaults(defineProps<Props>(), {
+  mode: 'equip',
+  equippedHand: null,
+});
 
 const emit = defineEmits<{
   selectHand: [hand: EquipSlot];
@@ -47,7 +59,7 @@ function onSelectHand(hand: EquipSlot) {
 }
 
 .title {
-  margin: 0 0 var(--spacing-md) 0;
+  margin: 0;
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);
   color: var(--skyrim-text-primary);
@@ -60,6 +72,7 @@ function onSelectHand(hand: EquipSlot) {
 }
 
 .hand-button {
+  position: relative;
   flex: 1;
   padding: var(--spacing-md) var(--spacing-lg);
   font-family: var(--font-heading);
@@ -87,6 +100,28 @@ function onSelectHand(hand: EquipSlot) {
     border-color: var(--skyrim-accent-gold);
     background-color: rgb(201 162 39 / 20%);
   }
+
+  &--occupied {
+    background-color: rgb(201 162 39 / 20%);
+    border-color: var(--skyrim-accent-gold-dim);
+
+    &:hover {
+      background-color: rgb(201 162 39 / 30%);
+      border-color: var(--skyrim-accent-gold);
+    }
+  }
+}
+
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: var(--font-size-xs);
+  background-color: var(--skyrim-accent-gold);
+  color: var(--skyrim-bg-dark);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
 }
 
 .hand-icon--flipped {

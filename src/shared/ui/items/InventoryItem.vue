@@ -1,7 +1,6 @@
 <template>
   <div
     class="inv-item"
-    :class="{ equipped: isEquipped }"
   >
     <div class="inv-icon">
       <equipped-hand-icon
