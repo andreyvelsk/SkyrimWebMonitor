@@ -1,31 +1,39 @@
 <template>
   <div class="weapon-hand-picker">
-    <p class="title">
-      {{ $t('pages.inventory.weapons.selectHand') }}
-    </p>
     <div class="buttons">
       <button
         class="hand-button left"
         @click="onSelectHand('left')"
       >
-        {{ $t('pages.inventory.weapons.leftHand') }}
+        <div
+          class="hand-icon hand-icon--flipped"
+          :style="{ '--icon-src': `url('${leftHandIconPath}')` }"
+        />
       </button>
       <button
         class="hand-button right"
         @click="onSelectHand('right')"
       >
-        {{ $t('pages.inventory.weapons.rightHand') }}
+        <div
+          class="hand-icon"
+          :style="{ '--icon-src': `url('${rightHandIconPath}')` }"
+        />
       </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { buildIconPath } from '@/shared/lib/utils/iconPath';
 import type { EquipSlot } from '@/stores/inventory/types';
 
 const emit = defineEmits<{
   selectHand: [hand: EquipSlot];
 }>();
+
+const leftHandIconPath = computed(() => buildIconPath('sbed/hand.svg'));
+const rightHandIconPath = computed(() => buildIconPath('sbed/hand.svg'));
 
 function onSelectHand(hand: EquipSlot) {
   emit('selectHand', hand);
@@ -67,6 +75,9 @@ function onSelectHand(hand: EquipSlot) {
   transition: all var(--transition-fast);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background-color: rgb(201 162 39 / 12%);
@@ -78,6 +89,24 @@ function onSelectHand(hand: EquipSlot) {
     transform: translateY(0);
     border-color: var(--skyrim-accent-gold);
     background-color: rgb(201 162 39 / 20%);
+  }
+}
+
+.hand-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--skyrim-text-accent);
+  -webkit-mask-image: var(--icon-src);
+  mask-image: var(--icon-src);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  &--flipped {
+    transform: scaleX(-1);
   }
 }
 </style>

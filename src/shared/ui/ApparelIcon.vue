@@ -1,11 +1,8 @@
 <template>
-  <img
-    :src="iconPath"
-    :alt="apparelType || 'apparel'"
-    :width="size"
-    :height="size"
+  <div
     class="apparel-icon"
-  >
+    :style="{ '--icon-src': `url('${iconPath}')`, '--icon-size': `${size}px` }"
+  />
 </template>
 
 <script setup lang="ts">
@@ -44,7 +41,16 @@ const iconPath = computed(() => {
 <style scoped lang="scss">
 .apparel-icon {
   display: block;
-  object-fit: contain;
-  image-rendering: crisp-edges;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  background-color: var(--skyrim-text-accent);
+  -webkit-mask-image: var(--icon-src);
+  mask-image: var(--icon-src);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
 }
 </style>
