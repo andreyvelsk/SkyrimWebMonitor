@@ -1,14 +1,12 @@
-export { default as StatBar } from './StatBar.vue';
-export { default as AttributeRow } from './AttributeRow.vue';
-export { default as SkillItem } from './SkillItem.vue';
-export { default as InventoryItem } from './InventoryItem.vue';
-export { default as MagicItem } from './MagicItem.vue';
-export { default as QuestItem } from './QuestItem.vue';
-export { default as ConnectionStatus } from './ConnectionStatus.vue';
-export { default as SkyrimModal } from './SkyrimModal.vue';
-export { default as HandPicker } from './HandPicker.vue';
-export { default as WeaponIcon } from './WeaponIcon.vue';
-export { default as ApparelIcon } from './ApparelIcon.vue';
-export { default as MagicIcon } from './MagicIcon.vue';
-export { default as BaseIcon } from './BaseIcon.vue';
-export { default as EquippedHandIcon } from './EquippedHandIcon.vue';
+// Icons
+export * from './icons/index';
+
+// Display components
+export * from './display/index';
+
+// Items
+export * from './items/index';
+
+// Base components
+export * from './base/index';
+

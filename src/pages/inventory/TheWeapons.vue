@@ -31,11 +31,10 @@
 <script setup lang="ts">
 import { ref }  from 'vue';
 import { storeToRefs } from 'pinia';
-import { InventoryItem } from '@/shared/ui';
+import { InventoryItem, HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
-import HandPicker from '@/shared/ui/HandPicker.vue';
 import type { EquipSlot } from '@/stores/inventory/types';
 
 const inventoryStore = useInventoryStore();

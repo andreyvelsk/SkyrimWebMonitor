@@ -97,34 +97,4 @@ defineProps<{
   flex-direction: column;
   gap: 2px;
 }
-
-.magic-name {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
-  color: var(--skyrim-text-primary);
-}
-
-.magic-school {
-  font-size: var(--font-size-xs);
-  color: var(--skyrim-text-secondary);
-}
-
-.magic-cost {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
-  color: #5080c0;
-}
-
-.cost-label {
-  font-size: var(--font-size-xs);
-}
-
-.shout-ready {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
-  color: var(--skyrim-accent-gold);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--skyrim-bg-dark);
-  border-radius: var(--radius-sm);
-}
 </style>

@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import WeaponIcon from './WeaponIcon.vue';
-import EquippedHandIcon from './EquippedHandIcon.vue';
+import WeaponIcon from '../icons/WeaponIcon.vue';
+import EquippedHandIcon from '../icons/EquippedHandIcon.vue';
 import type { WeaponType, EquippedHand } from '@/stores/inventory/types';
 
 defineProps<{
@@ -95,8 +95,5 @@ defineProps<{
   font-family: var(--font-heading);
   font-size: var(--font-size-sm);
   color: var(--skyrim-accent-gold);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  background-color: var(--skyrim-bg-dark);
-  border-radius: var(--radius-sm);
 }
 </style>
