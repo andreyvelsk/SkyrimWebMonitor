@@ -31,7 +31,8 @@
 <script setup lang="ts">
 import { ref }  from 'vue';
 import { storeToRefs } from 'pinia';
-import { WeaponItem, HandPicker } from '@/shared/ui';
+import { WeaponItem } from '@/entities/ui';
+import { HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';

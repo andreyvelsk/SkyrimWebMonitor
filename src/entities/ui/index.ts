@@ -1,3 +1,6 @@
-export { default as WeaponIcon } from './WeaponIcon.vue';
-export { default as ApparelIcon } from './ApparelIcon.vue';
-export { default as MagicIcon } from './MagicIcon.vue';
+// Icons
+export { WeaponIcon, ApparelIcon, MagicIcon } from './icons';
+
+// Items
+export { WeaponItem } from './weapon';
+export { ApparelItem } from './apparel';

@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import InventoryItem from './InventoryItem.vue';
+import { InventoryItem } from '@/shared/ui/items';
 import { ApparelIcon } from '@/entities/ui';
 import type { ApparelType } from '@/stores/inventory/types';
 

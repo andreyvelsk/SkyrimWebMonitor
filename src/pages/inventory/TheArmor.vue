@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ApparelItem } from '@/shared/ui';
+import { ApparelItem } from '@/entities/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 
 const inventoryStore = useInventoryStore();
