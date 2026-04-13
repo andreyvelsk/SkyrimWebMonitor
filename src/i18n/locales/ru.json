@@ -30,6 +30,9 @@
     "inventory": {
       "weapons": {
         "tab": "Оружие",
+        "selectHand": "Выберите руку",
+        "leftHand": "L",
+        "rightHand": "R",
         "waitingForData": "Ожидание данных оружия...",
         "drop": "Выбросить",
         "unknown": "Неизвестно",

@@ -49,7 +49,8 @@ export default [
       'semi': ['error', 'always'],
       'vue/multi-word-component-names': 'off',
       'vue/component-name-in-template-casing': ['error', 'kebab-case'],
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
     }
   },
   {

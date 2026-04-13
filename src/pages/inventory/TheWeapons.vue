@@ -31,10 +31,14 @@ import { storeToRefs } from 'pinia';
 import { InventoryItem } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
+import { useModal } from '@/shared/lib/composables/useModal';
+import HandPicker from '@/shared/ui/HandPicker.vue';
+import type { EquipSlot } from '@/stores/inventory/types';
 
 const inventoryStore = useInventoryStore();
 const { weapons } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
+const { closeModal, openModal } = useModal();
 
 const activeItem = ref<string | null>(null);
 
@@ -44,11 +48,35 @@ function setActiveItem(formId: string) {
     return;
   }
 
+  equipItem(formId);
+}
+
+function equipItem(formId: string) {
   const item = weapons.value.items?.find(w => w.formId === formId);
   if (!item) return;
 
-  const action = item.isEquipped ? 'unequip' : 'equip';
-  wsStore.sendCommand(action, formId, { hand: 'right' });
+  // If already equipped, unequip immediately
+  if (item.isEquipped) {
+    wsStore.sendCommand('unequip', formId, {});
+    return;
+  }
+
+  // If two-handed weapon, equip directly without hand selection
+  if (item.isTwoHanded) {
+    wsStore.sendCommand('equip', formId, {});
+    return;
+  }
+
+  // If one-handed weapon, show hand picker modal
+  openModal({
+    component: HandPicker,
+    on: {
+      selectHand: (hand: EquipSlot) => {
+        wsStore.sendCommand('equip', formId, { hand });
+        closeModal();
+      },
+    },
+  });
 }
 </script>
 

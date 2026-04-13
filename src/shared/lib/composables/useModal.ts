@@ -3,13 +3,13 @@ import { shallowRef, ref, type Component } from 'vue';
 export interface ModalOptions {
   component: Component;
   props?: Record<string, unknown>;
-  on?: Record<string, (...args: unknown[]) => void>;
+  on?: Record<string, (...args: any[]) => any>;
 }
 
 const isOpen = ref(false);
 const modalComponent = shallowRef<Component | null>(null);
 const modalProps = ref<Record<string, unknown>>({});
-const modalHandlers = ref<Record<string, (...args: unknown[]) => void>>({});
+const modalHandlers = ref<Record<string, (...args: any[]) => any>>({});
 
 function openModal(options: ModalOptions) {
   modalComponent.value = options.component;

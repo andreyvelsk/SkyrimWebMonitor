@@ -30,6 +30,9 @@
     "inventory": {
       "weapons": {
         "tab": "Weapons",
+        "selectHand": "Select hand",
+        "leftHand": "L",
+        "rightHand": "R",
         "waitingForData": "Waiting for weapon data...",
         "drop": "Drop",
         "unknown": "Unknown",
