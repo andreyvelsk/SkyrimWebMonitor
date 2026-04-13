@@ -7,3 +7,6 @@ export { default as QuestItem } from './QuestItem.vue';
 export { default as ConnectionStatus } from './ConnectionStatus.vue';
 export { default as SkyrimModal } from './SkyrimModal.vue';
 export { default as HandPicker } from './HandPicker.vue';
+export { default as WeaponIcon } from './WeaponIcon.vue';
+export { default as ApparelIcon } from './ApparelIcon.vue';
+export { default as MagicIcon } from './MagicIcon.vue';

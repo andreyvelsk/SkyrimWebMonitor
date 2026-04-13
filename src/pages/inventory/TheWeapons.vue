@@ -10,6 +10,8 @@
             :name="item.name || $t('pages.inventory.weapons.unknown')"
             :equipped="item.isEquipped || false"
             :class="{ active: activeItem === item.formId }"
+            :quantity="item.count"
+            :weapon-type="item.weaponType"
             @click="setActiveItem(item.formId)"
           />
         </template>

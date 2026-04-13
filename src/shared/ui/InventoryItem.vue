@@ -17,20 +17,26 @@
     <div class="inv-info">
       <span class="inv-name">{{ name }}</span>
     </div>
-    <div
-      v-if="quantity"
-      class="inv-qty"
-    >
-      x{{ quantity }}
+    <div>
+      <weapon-icon
+        v-if="weaponType"
+        :weapon-type="weaponType"
+      />
     </div>
+
+    {{ quantity }}
   </div>
 </template>
 
 <script setup lang="ts">
+import WeaponIcon from './WeaponIcon.vue';
+import type { WeaponType } from '@/stores/inventory/types';
+
 defineProps<{
   name: string;
   equipped?: boolean;
   quantity?: number;
+  weaponType?: WeaponType;
 }>();
 </script>
 
