@@ -1,13 +1,13 @@
 <template>
-  <div
-    class="magic-icon"
-    :style="{ '--icon-src': `url('${iconSrc}')`, '--icon-size': `${size}px` }"
+  <base-icon
+    :icon-path="iconPath"
+    :size="size"
   />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import { buildIconPath } from '@/shared/lib/utils/iconPath';
+import BaseIcon from './BaseIcon.vue';
 
 interface Props {
   spellSchool?: string | null;
@@ -29,27 +29,10 @@ const MAGIC_SCHOOL_ICON_PATHS: Record<string, string> = {
   Mysticism: 'lorc/spinning-sword.svg',
 };
 
-const iconSrc = computed(() => {
+const iconPath = computed(() => {
   const relativePath = props.spellSchool
     ? MAGIC_SCHOOL_ICON_PATHS[props.spellSchool] || MAGIC_SCHOOL_ICON_PATHS.Mysticism
     : MAGIC_SCHOOL_ICON_PATHS.Mysticism;
-  return buildIconPath(relativePath);
+  return relativePath;
 });
 </script>
-
-<style scoped lang="scss">
-.magic-icon {
-  display: block;
-  width: var(--icon-size);
-  height: var(--icon-size);
-  background-color: var(--skyrim-text-accent);
-  -webkit-mask-image: var(--icon-src);
-  mask-image: var(--icon-src);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-}
-</style>

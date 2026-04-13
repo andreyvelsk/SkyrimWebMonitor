@@ -1,18 +1,13 @@
 <template>
   <div
     class="inv-item"
-    :class="{ equipped }"
+    :class="{ equipped: isEquipped }"
   >
     <div class="inv-icon">
-      <svg
-        v-if="equipped"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-      >
-        <path d="M20 6L9 17l-5-5" />
-      </svg>
+      <equipped-hand-icon
+        v-if="isEquipped"
+        :equipped-hand="equippedHand"
+      />
     </div>
     <div class="inv-info">
       <span class="inv-name">{{ name }}</span>
@@ -32,11 +27,13 @@
 
 <script setup lang="ts">
 import WeaponIcon from './WeaponIcon.vue';
-import type { WeaponType } from '@/stores/inventory/types';
+import EquippedHandIcon from './EquippedHandIcon.vue';
+import type { WeaponType, EquippedHand } from '@/stores/inventory/types';
 
 defineProps<{
   name: string;
-  equipped?: boolean;
+  isEquipped?: boolean;
+  equippedHand?: EquippedHand;
   quantity?: number;
   weaponType?: WeaponType;
 }>();

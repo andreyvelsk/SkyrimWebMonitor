@@ -7,7 +7,7 @@
         :key="(item as Record<string, any>).id || (item as Record<string, any>).formId || index"
         :name="(item as Record<string, any>).name || $t('pages.inventory.apparel.unknown')"
         :description="(item as Record<string, any>).description || $t('pages.inventory.apparel.noDescription')"
-        :equipped="(item as Record<string, any>).equipped || false"
+        :is-equipped="(item as Record<string, any>).equipped || false"
       />
     </template>
     <!-- Fallback to placeholder when no data -->
