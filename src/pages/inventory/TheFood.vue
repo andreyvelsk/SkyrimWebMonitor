@@ -10,7 +10,6 @@
       <food-item
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
-        :effects="item.effects || []"
         :active="active"
         :quantity="item.count"
         @click="onSelect"

@@ -3,9 +3,8 @@ import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import type { RouterResult } from './types';
 import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isKeysData, isBooksData, isInventoryCategories } from './typeGuards';
-import type { CategoriesData } from '@/shared/lib/types/types';
 export class DataRouter {
-  static routeDataById(subscriptionId: string, data: Record<string, unknown>): RouterResult {
+  static routeDataById(subscriptionId: string, data: unknown): RouterResult {
     const characterStore = useCharacterStore();
     const inventoryStore = useInventoryStore();
     try {
@@ -41,13 +40,13 @@ export class DataRouter {
 
       if (isBooksData(data, subscriptionId)) {
         console.log('[DataRouter] Routing books data to inventory store');
-        inventoryStore.setBooks(data as any);
+        inventoryStore.setBooks(data);
         return { success: true, message: 'Data routed to inventory store (books)' };
       }
 
       if (isInventoryCategories(data, subscriptionId)) {
         const navigationStore = useNavigationStore();
-        const subTabs = (data as unknown as CategoriesData).categories.map((cat) => ({
+        const subTabs = data.categories.map((cat) => ({
           id: cat.categoryId.toLowerCase(),
           label: cat.name,
         }));
