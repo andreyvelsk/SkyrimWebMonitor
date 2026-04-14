@@ -41,7 +41,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 
 const subtabsRef = ref<HTMLElement | null>(null);
@@ -52,6 +52,31 @@ watch(
   () => {
     if (subtabsRef.value) {
       subtabsRef.value.scrollLeft = 0;
+    }
+  }
+);
+
+// Ensure active subtab is fully visible when it changes
+watch(
+  () => nav.activeSubTab,
+  async () => {
+    await nextTick();
+    const container = subtabsRef.value;
+    if (!container) return;
+
+    const activeBtn = container.querySelector('.skyrim-subtab.active') as HTMLElement | null;
+    if (!activeBtn) return;
+
+    const btnLeft = activeBtn.offsetLeft;
+    const btnRight = btnLeft + activeBtn.offsetWidth;
+    const viewLeft = container.scrollLeft;
+    const viewRight = viewLeft + container.clientWidth;
+    const PADDING = 12;
+
+    if (btnLeft < viewLeft) {
+      container.scrollTo({ left: Math.max(0, btnLeft - PADDING), behavior: 'smooth' });
+    } else if (btnRight > viewRight) {
+      container.scrollTo({ left: btnRight - container.clientWidth + PADDING, behavior: 'smooth' });
     }
   }
 );
