@@ -101,5 +101,17 @@
         "equipped": "Одето"
       }
     }
+  },
+  "common": {
+    "cancel": "Отмена",
+    "addToFavorites": "Добавить в избранное",
+    "removeFromFavorites": "Удалить из избранного",
+    "dropItem": "Выбросить предмет"
+  },
+  "modals": {
+    "dropItems": "Выброс предметов",
+    "available": "Доступно",
+    "quantity": "Количество",
+    "drop": "Выбросить"
   }
 }

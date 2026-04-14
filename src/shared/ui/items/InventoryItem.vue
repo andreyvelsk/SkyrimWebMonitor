@@ -1,7 +1,7 @@
 <template>
   <div
     class="inv-item"
-    :class="{ 'inv-item--favorite': isFavorite }"
+    :class="{ 'inv-item--favorite': isFavorite, 'inv-item--active': active }"
   >
     <!-- Status indicator slot -->
     <div class="inv-status">
@@ -26,12 +26,6 @@
     >
       {{ quantity }}
     </div>
-
-    <!-- Favorite indicator (overlaid, doesn't shift text) -->
-    <div
-      v-if="isFavorite"
-      class="inv-favorite-indicator"
-    />
   </div>
 </template>
 
@@ -40,6 +34,7 @@ defineProps<{
   name: string;
   quantity?: number;
   isFavorite?: boolean;
+  active?: boolean;
 }>();
 </script>
 
@@ -56,16 +51,16 @@ defineProps<{
   padding: 0;
 
   &.inv-item--favorite {
-    border-left: 3px solid var(--skyrim-accent-gold);
+    box-shadow: inset 3px 0 0 0 var(--skyrim-accent-gold);
   }
 
-  &:hover {
-    background-color: rgb(201 162 39 / 8%);
+  &.inv-item--active {
+    background-color: var(--tab-bg-active);
     border-color: var(--skyrim-accent-gold-dim);
   }
 
   &:active {
-    background-color: rgb(201 162 39 / 12%);
+    background-color: var(--tab-bg-active);
   }
 }
 

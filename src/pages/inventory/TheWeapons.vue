@@ -11,7 +11,8 @@
             :weapon-type="item.weaponType"
             :is-equipped="item.isEquipped || false"
             :equipped-hand="item.equippedHand"
-            :class="{ active: activeItem === item.formId }"
+            :is-favorite="item.isFavorite || false"
+            :active="activeItem === item.formId"
             :quantity="item.count"
             @click="setActiveItem(item.formId)"
           />
@@ -25,14 +26,42 @@
         </div>
       </div>
     </div>
+
+    <!-- Action toolbar -->
+    <div class="skyrim-weapons-toolbar">
+      <button
+        class="toolbar-btn favorite-btn"
+        :class="{ favorite: isActiveItemFavorite }"
+        :title="isActiveItemFavorite ? $t('common.removeFromFavorites') : $t('common.addToFavorites')"
+        :disabled="!activeItem"
+        @click="toggleFavorite"
+      >
+        <base-icon
+          icon-path="delapouite/round-star.svg"
+          :size="20"
+        />
+      </button>
+
+      <button
+        class="toolbar-btn drop-btn"
+        :title="$t('common.dropItem')"
+        :disabled="!activeItem"
+        @click="startDrop"
+      >
+        <base-icon
+          icon-path="delapouite/trash-can.svg"
+          :size="20"
+        />
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref }  from 'vue';
+import { ref, computed }  from 'vue';
 import { storeToRefs } from 'pinia';
 import { WeaponItem } from '@/entities/ui';
-import { HandPicker } from '@/shared/ui';
+import { HandPicker, DropItemsModal, BaseIcon } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
@@ -44,6 +73,15 @@ const wsStore = useWebSocketStore();
 const { closeModal, openModal } = useModal();
 
 const activeItem = ref<string | null>(null);
+
+const activeItemData = computed(() => {
+  if (!activeItem.value) return null;
+  return weapons.value.items?.find(w => w.formId === activeItem.value) || null;
+});
+
+const isActiveItemFavorite = computed(() => {
+  return activeItemData.value?.isFavorite || false;
+});
 
 function setActiveItem(formId: string) {
   if (activeItem.value !== formId) {
@@ -72,10 +110,10 @@ function equipItem(formId: string) {
           selectHand: (hand: EquipSlot) => {
             if (hand === item.equippedHand || item.equippedHand === 'both') {
               // Unequip from current hand (or unequip if both hands)
-              wsStore.sendCommand('unequip', formId, {});
+              wsStore.sendCommand('unequip', formId);
             } else {
               // Equip to other hand
-              wsStore.sendCommand('equip', formId, { hand });
+              wsStore.sendCommand('equip', formId, hand);
             }
             closeModal();
           },
@@ -85,13 +123,13 @@ function equipItem(formId: string) {
     }
 
     // If two-handed or single copy, just unequip
-    wsStore.sendCommand('unequip', formId, {});
+    wsStore.sendCommand('unequip', formId);
     return;
   }
 
   // If two-handed weapon, equip directly without hand selection
   if (item.isTwoHanded) {
-    wsStore.sendCommand('equip', formId, {});
+    wsStore.sendCommand('equip', formId);
     return;
   }
 
@@ -103,11 +141,42 @@ function equipItem(formId: string) {
     },
     on: {
       selectHand: (hand: EquipSlot) => {
-        wsStore.sendCommand('equip', formId, { hand });
+        wsStore.sendCommand('equip', formId, hand);
         closeModal();
       },
     },
   });
+}
+
+function toggleFavorite() {
+  if (!activeItem.value) return;
+  wsStore.sendCommand('favorite', activeItem.value);
+}
+
+function startDrop() {
+  if (!activeItemData.value || !activeItem.value) return;
+
+  const count = activeItemData.value.count;
+
+  // If more than 5 items, show modal for quantity selection
+  if (count > 5) {
+    openModal({
+      component: DropItemsModal,
+      props: {
+        itemName: activeItemData.value.name,
+        maxCount: count,
+      },
+      on: {
+        drop: (qty: number) => {
+          wsStore.sendCommand('drop', activeItem.value!, undefined, qty);
+        },
+      },
+    });
+    return;
+  }
+
+  // If 5 or fewer, drop one
+  wsStore.sendCommand('drop', activeItem.value, undefined, 1);
 }
 </script>
 
@@ -135,21 +204,51 @@ function equipItem(formId: string) {
   font-size: 0.9rem;
 }
 
-.drop-button {
+.skyrim-weapons-toolbar {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
   padding: var(--spacing-md);
-  margin: 0 var(--spacing-md) var(--spacing-md) var(--spacing-md);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
-  color: var(--skyrim-text-primary);
+  background-color: var(--skyrim-bg-light);
+  border-top: 1px solid var(--skyrim-border-dark);
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   background-color: var(--skyrim-bg-light);
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;
   transition: all var(--transition-fast);
+  --skyrim-text-accent: var(--skyrim-text-secondary);
 
-  &:hover {
-    background-color: rgb(201 162 39 / 8%);
+  &:hover:not(:disabled) {
+    background-color: var(--tab-bg-hover);
     border-color: var(--skyrim-accent-gold-dim);
+    --skyrim-text-accent: var(--skyrim-text-primary);
+  }
+
+  &:active:not(:disabled) {
+    background-color: var(--tab-bg-active);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    border-color: var(--skyrim-border-dark);
+  }
+
+  &.favorite {
+    --skyrim-text-accent: var(--skyrim-accent-gold);
+
+    &:hover:not(:disabled) {
+      --skyrim-text-accent: var(--skyrim-accent-gold);
+    }
   }
 }
 </style>

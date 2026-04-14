@@ -1,16 +1,24 @@
 /**
  * WebSocket Protocol Types and Interfaces
+ * Based on: https://github.com/andreyvelsk/SkyrimWebSocket/blob/main/PROTOCOL.md
  */
 
 // ============================================================================
 // Shared Types
 // ============================================================================
 
-export interface CommandPayload {
-  hand?: 'right' | 'left'
-  count?: number
-  favorite?: boolean
-}
+export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
+export type EquipHand = 'right' | 'left'
+
+/**
+ * Command Details:
+ * - equip: Equips the item. Weapons use the hand parameter to select left/right hand.
+ *          Apparel and ammo auto-select the correct slot.
+ * - unequip: Removes the equipped item. For weapons, hand specifies which hand to unequip from.
+ * - use: Consumes the item (applies effect). Scrolls are equipped for casting.
+ * - drop: Drops count items from inventory onto the ground. Use count parameter to specify quantity.
+ * - favorite: Toggles the item's favorite status on/off.
+ */
 
 // ============================================================================
 // Client → Server Messages
@@ -51,10 +59,11 @@ export interface HeartbeatMessage extends BaseMessage {
 
 export interface CommandMessage extends BaseMessage {
   type: 'command'
-  id: string
-  command: 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
-  formId: string
-  payload?: CommandPayload
+  id: string // unique request identifier
+  command: CommandType // equip | unequip | use | drop | favorite
+  formId: string // item form ID as hex string (e.g. "0x00012EB7")
+  hand?: EquipHand // equip/unequip hand: "right" or "left" (optional, weapons only, default: "right")
+  count?: number // drop count (optional, default: 1, only used by "drop")
 }
 
 export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage | CommandMessage

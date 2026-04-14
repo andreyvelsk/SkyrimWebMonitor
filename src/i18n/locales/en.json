@@ -101,5 +101,17 @@
         "equipped": "Equipped"
       }
     }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites",
+    "dropItem": "Drop Item"
+  },
+  "modals": {
+    "dropItems": "Drop Items",
+    "available": "Available",
+    "quantity": "Quantity",
+    "drop": "Drop"
   }
 }

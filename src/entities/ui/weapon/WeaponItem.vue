@@ -3,6 +3,7 @@
     :name="name"
     :quantity="quantity"
     :is-favorite="isFavorite"
+    :active="active"
   >
     <template #status>
       <equipped-hand-icon
@@ -30,5 +31,6 @@ defineProps<{
   isFavorite?: boolean;
   isEquipped?: boolean;
   equippedHand?: EquippedHand;
+  active?: boolean;
 }>();
 </script>
