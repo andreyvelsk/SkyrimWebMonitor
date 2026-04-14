@@ -7,7 +7,19 @@
     @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
+      <gem-item
+        v-if="isGem(item)"
+        :name="item.name || $t('shared.ui.inventoryItem.unknown')"
+        :is-favorite="item.isFavorite || false"
+        :active="active"
+        :quantity="item.count"
+        :capacity="item.capacity"
+        :contained-soul="item.containedSoul"
+        @click="onSelect"
+      />
+
       <misc-item
+        v-else
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
         :active="active"
@@ -20,7 +32,8 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { MiscItem } from '@/entities/ui';
+import { MiscItem, GemItem } from '@/entities/ui';
+import { isGem } from '@/stores/adapters/typeGuards';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
@@ -42,4 +55,3 @@ function useItem(formId: string) {
   wsStore.sendCommand('use', formId);
 }
 </script>
-

@@ -139,10 +139,16 @@ export interface IngredientsState {
   items?: IngredientItem[] | null;
 }
 
+export interface GemItem extends BaseItem {
+  capacity: string;
+  containedSoul: string;
+}
+
 export interface MiscItem extends BaseItem {}
 
 export interface MiscState {
   items?: MiscItem[] | null;
+  gems?: GemItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscItem;
+export type InventoryItem = WeaponItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscItem | GemItem;

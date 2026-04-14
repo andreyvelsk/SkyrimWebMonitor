@@ -46,6 +46,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/misc page
   const misc = ref<MiscState>({
     items: undefined,
+    gems: undefined,
   });
 
   const weaponsList = computed(() => (weapons.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
@@ -58,7 +59,13 @@ export const useInventoryStore = defineStore('inventory', () => {
   const booksList = computed(() => (books.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const scrollsList = computed(() => (scrolls.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const keysList = computed(() => (keys.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
-  const miscList = computed(() => (misc.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+  const miscList = computed(() => (
+    [
+      ...(misc.value.items || []),
+      ...(misc.value.gems || [])
+
+    ]
+  ).sort((a, b) => a.name.localeCompare(b.name)));
 
   const setWeapons = (newWeapons: WeaponsState) => {
     weapons.value = newWeapons;

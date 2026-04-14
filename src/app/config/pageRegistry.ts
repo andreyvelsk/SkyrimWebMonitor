@@ -99,6 +99,7 @@ export const pagesRegistry: PagesRegistry = {
       component: TheMisc,
       fields: {
         items: 'Inventory::Items::Misc',
+        gems: 'Inventory::Items::SoulGems',
       },
     },
   },
