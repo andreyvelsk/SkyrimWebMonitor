@@ -57,8 +57,10 @@ defineEmits<{
   'subtab-change': [subTabId: string];
 }>();
 
+const subTabsToHide = ['favorites', 'soulgems'];
+
 const currentSubTabs = computed(
-  () => props.tabs.find((t) => t.id === props.activeTab)?.subTabs ?? []
+  () => props.tabs.find((t) => t.id === props.activeTab)?.subTabs?.filter(sub => !subTabsToHide.includes(sub.id)) ?? []
 );
 
 watch(
