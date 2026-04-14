@@ -5,6 +5,7 @@ import {
   TheWeapons,
   TheApparel,
   TheFood,
+  TheKeys,
   TheBooks,
 } from '@/pages';
 
@@ -52,6 +53,13 @@ export const pagesRegistry: PagesRegistry = {
       component: TheFood,
       fields: {
         items: 'Inventory::Items::Food',
+      },
+    },
+    keys: {
+      id: 'inventory.keys',
+      component: TheKeys,
+      fields: {
+        items: 'Inventory::Items::Keys',
       },
     },
     books: {

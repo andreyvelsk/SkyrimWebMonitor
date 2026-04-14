@@ -1,5 +1,5 @@
 import type { CharacterStats } from '@/stores/character/types';
-import type { WeaponsState, ApparelState, FoodState, BookState, WeaponItem, ApparelItem, FoodItem, BookItem } from '@/stores/inventory/types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, WeaponItem, ApparelItem, FoodItem, BookItem } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -20,6 +20,10 @@ export function isFoodData(data: unknown, id: string): data is FoodState {
 
 export function isBooksData(data: unknown, id: string): data is BookState {
   return id === 'inventory.books' && typeof data === 'object' && data !== null;
+}
+
+export function isKeysData(data: unknown, id: string): data is KeysState {
+  return id === 'inventory.keys' && typeof data === 'object' && data !== null;
 }
 
 export function isInventoryCategories(data: unknown, id: string): data is CategoriesData {

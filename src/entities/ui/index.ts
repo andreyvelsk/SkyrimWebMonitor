@@ -6,3 +6,4 @@ export { WeaponItem } from './weapon';
 export { ApparelItem } from './apparel';
 export { FoodItem } from './food';
 export { BookItem } from './books';
+export { KeyItem } from './keys';

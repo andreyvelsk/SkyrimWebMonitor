@@ -8,6 +8,7 @@ export { default as TheApparel } from './inventory/TheApparel.vue';
 export { default as ThePotions } from './inventory/ThePotions.vue';
 export { default as TheMisc } from './inventory/TheMisc.vue';
 export { default as TheFood } from './inventory/TheFood.vue';
+export { default as TheKeys } from './inventory/TheKeys.vue';
 export { default as TheBooks } from './inventory/TheBooks.vue';
 
 // Magic pages

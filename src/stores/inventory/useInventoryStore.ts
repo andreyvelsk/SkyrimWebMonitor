@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { WeaponsState, ApparelState, FoodState, BookState } from './types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState } from './types';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page
@@ -23,12 +23,18 @@ export const useInventoryStore = defineStore('inventory', () => {
     items: undefined,
   });
 
+  // State for inventory/keys page
+  const keys = ref<KeysState>({
+    items: undefined,
+  });
+
   const weaponsList = computed(() => (weapons.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   const apparelList = computed(() => (apparel.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   const foodList = computed(() => (food.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const booksList = computed(() => (books.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+  const keysList = computed(() => (keys.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   const setWeapons = (newWeapons: WeaponsState) => {
     weapons.value = newWeapons;
@@ -46,18 +52,25 @@ export const useInventoryStore = defineStore('inventory', () => {
     books.value = newBooks;
   };
 
+  const setKeys = (newKeys: KeysState) => {
+    keys.value = newKeys;
+  };
+
   return {
     weapons,
     apparel,
     food,
+    keys,
     books,
     weaponsList,
     apparelList,
     foodList,
+    keysList,
     booksList,
     setWeapons,
     setApparel,
     setFood,
+    setKeys,
     setBooks,
   };
 });

@@ -101,6 +101,12 @@ export interface FoodState {
   items?: FoodItem[] | null;
 }
 
+export interface KeyItem extends BaseItem {}
+
+export interface KeysState {
+  items?: KeyItem[] | null;
+}
+
 export interface BookItem extends BaseItem {
   description: string;
 }
@@ -109,4 +115,4 @@ export interface BookState {
   items?: BookItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem | FoodItem | BookItem;
+export type InventoryItem = WeaponItem | ApparelItem | FoodItem | BookItem | KeyItem;
