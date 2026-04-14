@@ -95,7 +95,7 @@ watch(
       align-items: center;
       justify-content: center;
       gap: var(--tab-gap);
-      padding: var(--spacing-sm);
+      padding: var(--spacing-xs);
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
     }
@@ -157,7 +157,7 @@ watch(
       background-color: var(--subtab-bg-inactive);
       color: var(--subtab-text-inactive);
       font-family: var(--font-body);
-      font-size: var(--font-size-base);
+      font-size: var(--font-size-lg);
       font-weight: 500;
       border: none;
       cursor: pointer;
