@@ -5,6 +5,7 @@ import {
   TheWeapons,
   TheApparel,
   TheFood,
+  TheBooks,
 } from '@/pages';
 
 export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
@@ -51,6 +52,13 @@ export const pagesRegistry: PagesRegistry = {
       component: TheFood,
       fields: {
         items: 'Inventory::Items::Food',
+      },
+    },
+    books: {
+      id: 'inventory.books',
+      component: TheBooks,
+      fields: {
+        items: 'Inventory::Items::Books',
       },
     },
   },

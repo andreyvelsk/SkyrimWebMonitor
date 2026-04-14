@@ -1,5 +1,5 @@
 import type { CharacterStats } from '@/stores/character/types';
-import type { WeaponsState, ApparelState, FoodState, WeaponItem, ApparelItem, FoodItem } from '@/stores/inventory/types';
+import type { WeaponsState, ApparelState, FoodState, BookState, WeaponItem, ApparelItem, FoodItem, BookItem } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -16,6 +16,10 @@ export function isApparelData(data: unknown, id: string): data is ApparelState {
 
 export function isFoodData(data: unknown, id: string): data is FoodState {
   return id === 'inventory.food' && typeof data === 'object' && data !== null;
+}
+
+export function isBooksData(data: unknown, id: string): data is BookState {
+  return id === 'inventory.books' && typeof data === 'object' && data !== null;
 }
 
 export function isInventoryCategories(data: unknown, id: string): data is CategoriesData {
@@ -56,5 +60,15 @@ export function isFoodItem(item: unknown): item is FoodItem {
     typeof food.formId === 'string' &&
     typeof food.name === 'string' &&
     Array.isArray(food.effects)
+  );
+}
+
+export function isBookItem(item: unknown): item is BookItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const book = item as Record<string, unknown>;
+  return (
+    typeof book.formId === 'string' &&
+    typeof book.name === 'string' &&
+    typeof book.description === 'string'
   );
 }
