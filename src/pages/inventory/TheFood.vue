@@ -1,19 +1,16 @@
 <template>
   <inventory-list
     v-model="activeItem"
-    :items="apparelList"
-    :empty-message="$t('pages.inventory.apparel.waitingForData')"
+    :items="foodList"
     @favorite="toggleFavorite"
     @drop="startDrop"
-    @item-double-click="equipItem"
+    @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
-      <apparel-item
-        v-if="isApparelItem(item)"
-        :name="item.name || $t('pages.inventory.apparel.unknown')"
-        :apparel-type="item.armorType"
-        :is-equipped="item.isEquipped || false"
+      <food-item
+        :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
+        :effects="item.effects || []"
         :active="active"
         :quantity="item.count"
         @click="onSelect"
@@ -24,30 +21,29 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ApparelItem } from '@/entities/ui';
+import { FoodItem } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
-import { isApparelItem } from '@/stores/adapters/typeGuards';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
 
 const inventoryStore = useInventoryStore();
-const { apparelList } = storeToRefs(inventoryStore);
+const { foodList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
 const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
-  () => apparelList.value
+  () => foodList.value
 );
 
-function equipItem(formId: string) {
-  const item = apparelList.value.find(a => a.formId === formId);
+function useItem(formId: string) {
+  const item = foodList.value.find(f => f.formId === formId);
   if (!item) return;
 
-  // Toggle equip/unequip
-  if (item.isEquipped) {
-    wsStore.sendCommand('unequip', formId);
-  } else {
-    wsStore.sendCommand('equip', formId);
-  }
+  // Use (consume) the food item
+  wsStore.sendCommand('use', formId);
 }
 </script>
+
+<style scoped lang="scss">
+// Component uses InventoryList styles
+</style>

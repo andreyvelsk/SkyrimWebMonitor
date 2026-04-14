@@ -2,7 +2,7 @@ import { useCharacterStore } from '@/stores/character/useCharacterStore';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import type { RouterResult } from './types';
-import { isCharacterStatsData, isWeaponsData, isApparelData, isInventoryCategories } from './typeGuards';
+import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isInventoryCategories } from './typeGuards';
 import type { CategoriesData } from '@/shared/lib/types/types';
 export class DataRouter {
   static routeDataById(subscriptionId: string, data: Record<string, unknown>): RouterResult {
@@ -25,6 +25,12 @@ export class DataRouter {
         console.log('[DataRouter] Routing apparel data to inventory store');
         inventoryStore.setApparel(data);
         return { success: true, message: 'Data routed to inventory store (apparel)' };
+      }
+
+      if (isFoodData(data, subscriptionId)) {
+        console.log('[DataRouter] Routing food data to inventory store');
+        inventoryStore.setFood(data);
+        return { success: true, message: 'Data routed to inventory store (food)' };
       }
 
       if (isInventoryCategories(data, subscriptionId)) {

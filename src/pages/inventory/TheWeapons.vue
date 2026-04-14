@@ -100,7 +100,3 @@ function equipItem(formId: string) {
   });
 }
 </script>
-
-<style scoped lang="scss">
-// Component uses InventoryList styles
-</style>

@@ -97,4 +97,19 @@ export interface ApparelState {
   items?: ApparelItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem;
+export interface FoodItem {
+  count: number;
+  effects: ItemEnchantmentEffect[];
+  formId: string;
+  isFavorite: boolean;
+  isStolen: boolean;
+  name: string;
+  value: number;
+  weight: number;
+}
+
+export interface FoodState {
+  items?: FoodItem[] | null;
+}
+
+export type InventoryItem = WeaponItem | ApparelItem | FoodItem;
