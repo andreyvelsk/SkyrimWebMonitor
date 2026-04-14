@@ -11,7 +11,7 @@
       <apparel-item
         v-if="isApparelItem(item)"
         :name="item.name || $t('pages.inventory.apparel.unknown')"
-        :apparel-type="item.apparelType"
+        :apparel-type="item.armorType"
         :is-equipped="item.isEquipped || false"
         :is-favorite="item.isFavorite || false"
         :active="active"

@@ -62,7 +62,7 @@ export const useNavigationStore = defineStore('navigation', () => {
 
     subTabsMap.value[tabId] = newSubTabs;
 
-    if (activeTab.value === tabId && newSubTabs.length > 0) {
+    if (activeTab.value === tabId && newSubTabs.length > 0 && !newSubTabs.some(st => st.id === activeSubTab.value)) {
       setActiveSubTab(newSubTabs[0].id);
     }
   };
