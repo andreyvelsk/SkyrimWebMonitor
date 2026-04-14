@@ -67,7 +67,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: null,
-  emptyMessage: 'Waiting for data...',
+  emptyMessage: () => '...',
   actions: () => [
     {
       id: 'favorite',

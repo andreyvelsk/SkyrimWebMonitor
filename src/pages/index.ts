@@ -4,6 +4,7 @@ export { default as TheSkills } from './character/TheSkills.vue';
 
 // Inventory pages
 export { default as TheWeapons } from './inventory/TheWeapons.vue';
+export { default as TheApparel } from './inventory/TheApparel.vue';
 export { default as TheArmor } from './inventory/TheArmor.vue';
 export { default as ThePotions } from './inventory/ThePotions.vue';
 export { default as TheMisc } from './inventory/TheMisc.vue';

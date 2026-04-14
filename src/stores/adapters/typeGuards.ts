@@ -1,5 +1,5 @@
 import type { CharacterStats } from '@/stores/character/types';
-import type { WeaponsState, ApparelState, WeaponItem } from '@/stores/inventory/types';
+import type { WeaponsState, ApparelState, WeaponItem, ApparelItem } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -32,5 +32,15 @@ export function isWeaponItem(item: unknown): item is WeaponItem {
     typeof weapon.name === 'string' &&
     typeof weapon.damage === 'number' &&
     'weaponType' in weapon
+  );
+}
+
+export function isApparelItem(item: unknown): item is ApparelItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const apparel = item as Record<string, unknown>;
+  return (
+    typeof apparel.formId === 'string' &&
+    typeof apparel.name === 'string' &&
+    'armorType' in apparel
   );
 }

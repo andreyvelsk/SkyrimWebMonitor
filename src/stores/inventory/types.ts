@@ -16,10 +16,8 @@ export type WeaponType = (typeof WEAPON_TYPES)[keyof typeof WEAPON_TYPES] | null
 // Apparel type constants
 export const APPAREL_TYPES = {
   CLOTHING: "Clothing",
-  LIGHT_ARMOR: "LightArmor",
-  HEAVY_ARMOR: "HeavyArmor",
-  JEWELRY: "Jewelry",
-  ACCESSORIES: "Accessories",
+  LIGHT_ARMOR: "Light",
+  HEAVY_ARMOR: "Heavy",
 } as const;
 
 export type ApparelType = (typeof APPAREL_TYPES)[keyof typeof APPAREL_TYPES] | null;
@@ -41,7 +39,7 @@ export const EQUIPPED_HANDS = {
 
 export type EquippedHand = (typeof EQUIPPED_HANDS)[keyof typeof EQUIPPED_HANDS] | null;
 
-export interface WeaponEnchantmentEffect {
+export interface ItemEnchantmentEffect {
   description: string;
   descriptionTemplate: string;
   duration: number;
@@ -49,8 +47,8 @@ export interface WeaponEnchantmentEffect {
   name: string;
 }
 
-export interface WeaponEnchantment {
-  effects: WeaponEnchantmentEffect[];
+export interface ItemEnchantment {
+  effects: ItemEnchantmentEffect[];
   name: string;
 }
 
@@ -58,7 +56,7 @@ export interface WeaponItem {
   baseDamage: number;
   count: number;
   damage: number;
-  enchantment: WeaponEnchantment | null;
+  enchantment: ItemEnchantment | null;
   enchantmentCharge: number | null;
   equipSlots: EquipSlot[];
   equippedHand: EquippedHand;
@@ -78,8 +76,13 @@ export interface WeaponsState {
 }
 
 export interface ApparelItem {
+  armorRating: number;
+  armorType: ApparelType;
+  armorTypeId?: string;
+  baseArmorRating: number;
+  bodySlots: string[];
   count: number;
-  enchantment: WeaponEnchantment | null;
+  enchantment: ItemEnchantment | null;
   equipSlots: EquipSlot[];
   formId: string;
   isEquipped: boolean;
@@ -87,7 +90,6 @@ export interface ApparelItem {
   isStolen: boolean;
   name: string;
   value: number;
-  apparelType: ApparelType;
   weight: number;
 }
 

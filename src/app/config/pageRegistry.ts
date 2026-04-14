@@ -3,7 +3,7 @@ import type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './ty
 import {
   TheStats,
   TheWeapons,
-  TheArmor,
+  TheApparel,
 } from '@/pages';
 
 export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
@@ -40,7 +40,7 @@ export const pagesRegistry: PagesRegistry = {
     },
     apparel: {
       id: 'inventory.apparel',
-      component: TheArmor,
+      component: TheApparel,
       fields: {
         items: 'Inventory::Items::Apparel',
       },

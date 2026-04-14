@@ -15,6 +15,8 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   const weaponsList = computed(() => (weapons.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
+  const apparelList = computed(() => (apparel.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+
   const setWeapons = (newWeapons: WeaponsState) => {
     weapons.value = newWeapons;
   };
@@ -27,6 +29,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     weapons,
     apparel,
     weaponsList,
+    apparelList,
     setWeapons,
     setApparel,
   };

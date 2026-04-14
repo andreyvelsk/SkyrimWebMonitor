@@ -6,7 +6,7 @@
         v-for="(item, index) in apparel.items"
         :key="item.formId || index"
         :name="item.name || $t('pages.inventory.apparel.unknown')"
-        :apparel-type="item.apparelType"
+        :apparel-type="item.armorType"
         :quantity="item.count"
         :is-equipped="item.isEquipped || false"
       />

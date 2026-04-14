@@ -1,19 +1,18 @@
 <template>
   <inventory-list
     v-model="activeItem"
-    :items="weaponsList"
-    :empty-message="$t('pages.inventory.weapons.waitingForData')"
+    :items="apparelList"
+    :empty-message="$t('pages.inventory.apparel.waitingForData')"
     @favorite="toggleFavorite"
     @drop="startDrop"
     @item-double-click="equipItem"
   >
     <template #default="{ item, active, onSelect }">
-      <weapon-item
-        v-if="isWeaponItem(item)"
-        :name="item.name || $t('pages.inventory.weapons.unknown')"
-        :weapon-type="item.weaponType"
+      <apparel-item
+        v-if="isApparelItem(item)"
+        :name="item.name || $t('pages.inventory.apparel.unknown')"
+        :apparel-type="item.apparelType"
         :is-equipped="item.isEquipped || false"
-        :equipped-hand="item.equippedHand"
         :is-favorite="item.isFavorite || false"
         :active="active"
         :quantity="item.count"
@@ -26,17 +25,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { WeaponItem } from '@/entities/ui';
+import { ApparelItem } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
-import { HandPicker, DropItemsModal } from '@/shared/ui';
+import { DropItemsModal } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
-import { isWeaponItem } from '@/stores/adapters/typeGuards';
-import type { EquipSlot } from '@/stores/inventory/types';
+import { isApparelItem } from '@/stores/adapters/typeGuards';
 
 const inventoryStore = useInventoryStore();
-const { weaponsList } = storeToRefs(inventoryStore);
+const { apparelList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { closeModal, openModal } = useModal();
 
@@ -44,63 +42,19 @@ const activeItem = ref<string | null>(null);
 
 const activeItemData = computed(() => {
   if (!activeItem.value) return null;
-  return weaponsList.value.find(w => w.formId === activeItem.value) || null;
+  return apparelList.value.find(a => a.formId === activeItem.value) || null;
 });
 
 function equipItem(formId: string) {
-  const item = weaponsList.value.find(w => w.formId === formId);
+  const item = apparelList.value.find(a => a.formId === formId);
   if (!item) return;
 
-  // If already equipped
+  // Toggle equip/unequip
   if (item.isEquipped) {
-    // If one-handed and count > 1, show hand picker to switch hand or unequip
-    if (!item.isTwoHanded && item.count > 1) {
-      openModal({
-        component: HandPicker,
-        props: {
-          equippedHand: item.equippedHand,
-          mode: 'equipped',
-        },
-        on: {
-          selectHand: (hand: EquipSlot) => {
-            if (hand === item.equippedHand || item.equippedHand === 'both') {
-              // Unequip from current hand (or unequip if both hands)
-              wsStore.sendCommand('unequip', formId);
-            } else {
-              // Equip to other hand
-              wsStore.sendCommand('equip', formId, hand);
-            }
-            closeModal();
-          },
-        },
-      });
-      return;
-    }
-
-    // If two-handed or single copy, just unequip
     wsStore.sendCommand('unequip', formId);
-    return;
-  }
-
-  // If two-handed weapon, equip directly without hand selection
-  if (item.isTwoHanded) {
+  } else {
     wsStore.sendCommand('equip', formId);
-    return;
   }
-
-  // If one-handed weapon, show hand picker modal
-  openModal({
-    component: HandPicker,
-    props: {
-      mode: 'equip',
-    },
-    on: {
-      selectHand: (hand: EquipSlot) => {
-        wsStore.sendCommand('equip', formId, hand);
-        closeModal();
-      },
-    },
-  });
 }
 
 function toggleFavorite() {

@@ -3,6 +3,8 @@
     :name="name"
     :quantity="quantity"
     :is-favorite="isFavorite"
+    :active="active"
+    @click="$emit('click')"
   >
     <template #status>
       <div
@@ -30,6 +32,11 @@ defineProps<{
   quantity?: number;
   isFavorite?: boolean;
   isEquipped?: boolean;
+  active?: boolean;
+}>();
+
+defineEmits<{
+  click: [];
 }>();
 </script>
 
