@@ -1,70 +1,38 @@
 <template>
-  <div class="skyrim-weapons">
-    <div class="list-wrapper">
-      <div class="list">
-        <!-- Show weapons if data is available -->
-        <template v-if="weaponsList && weaponsList.length > 0">
-          <weapon-item
-            v-for="(item, index) in weaponsList"
-            :key="item.formId || index"
-            :name="item.name || $t('pages.inventory.weapons.unknown')"
-            :weapon-type="item.weaponType"
-            :is-equipped="item.isEquipped || false"
-            :equipped-hand="item.equippedHand"
-            :is-favorite="item.isFavorite || false"
-            :active="activeItem === item.formId"
-            :quantity="item.count"
-            @click="setActiveItem(item.formId)"
-          />
-        </template>
-        <!-- Fallback to placeholder when no data -->
-        <div
-          v-else
-          class="no-data"
-        >
-          {{ $t('pages.inventory.weapons.waitingForData') }}
-        </div>
-      </div>
-    </div>
-
-    <!-- Action toolbar -->
-    <div class="skyrim-weapons-toolbar">
-      <button
-        class="toolbar-btn favorite-btn"
-        :class="{ favorite: isActiveItemFavorite }"
-        :title="isActiveItemFavorite ? $t('common.removeFromFavorites') : $t('common.addToFavorites')"
-        :disabled="!activeItem"
-        @click="toggleFavorite"
-      >
-        <base-icon
-          icon-path="delapouite/round-star.svg"
-          :size="20"
-        />
-      </button>
-
-      <button
-        class="toolbar-btn drop-btn"
-        :title="$t('common.dropItem')"
-        :disabled="!activeItem"
-        @click="startDrop"
-      >
-        <base-icon
-          icon-path="delapouite/trash-can.svg"
-          :size="20"
-        />
-      </button>
-    </div>
-  </div>
+  <inventory-list
+    v-model="activeItem"
+    :items="weaponsList"
+    empty-message="Waiting for weapons data..."
+    @favorite="toggleFavorite"
+    @drop="startDrop"
+    @item-double-click="equipItem"
+  >
+    <template #default="{ item, active, onSelect }">
+      <weapon-item
+        v-if="isWeaponItem(item)"
+        :name="item.name || $t('pages.inventory.weapons.unknown')"
+        :weapon-type="item.weaponType"
+        :is-equipped="item.isEquipped || false"
+        :equipped-hand="item.equippedHand"
+        :is-favorite="item.isFavorite || false"
+        :active="active"
+        :quantity="item.count"
+        @click="onSelect"
+      />
+    </template>
+  </inventory-list>
 </template>
 
 <script setup lang="ts">
-import { ref, computed }  from 'vue';
+import { ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { WeaponItem } from '@/entities/ui';
-import { HandPicker, DropItemsModal, BaseIcon } from '@/shared/ui';
+import { InventoryList } from '@/features/ui';
+import { HandPicker, DropItemsModal } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
+import { isWeaponItem } from '@/stores/adapters/typeGuards';
 import type { EquipSlot } from '@/stores/inventory/types';
 
 const inventoryStore = useInventoryStore();
@@ -78,19 +46,6 @@ const activeItemData = computed(() => {
   if (!activeItem.value) return null;
   return weaponsList.value.find(w => w.formId === activeItem.value) || null;
 });
-
-const isActiveItemFavorite = computed(() => {
-  return activeItemData.value?.isFavorite || false;
-});
-
-function setActiveItem(formId: string) {
-  if (activeItem.value !== formId) {
-    activeItem.value = formId;
-    return;
-  }
-
-  equipItem(formId);
-}
 
 function equipItem(formId: string) {
   const item = weaponsList.value.find(w => w.formId === formId);
@@ -181,72 +136,5 @@ function startDrop() {
 </script>
 
 <style scoped lang="scss">
-.skyrim-weapons {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  max-height: 100%;
-  overflow: hidden;
-  gap: var(--spacing-md);
-}
-
-.list-wrapper {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  min-height: 0;
-}
-
-.no-data {
-  padding: var(--spacing-md);
-  text-align: center;
-  color: var(--skyrim-text-muted);
-  font-size: 0.9rem;
-}
-
-.skyrim-weapons-toolbar {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-md);
-}
-
-.toolbar-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background-color: var(--skyrim-bg-light);
-  border: 1px solid var(--skyrim-border-dark);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  --skyrim-text-accent: var(--skyrim-text-secondary);
-
-  &:hover:not(:disabled) {
-    background-color: var(--tab-bg-hover);
-    border-color: var(--skyrim-accent-gold-dim);
-    --skyrim-text-accent: var(--skyrim-text-primary);
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--tab-bg-active);
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    border-color: var(--skyrim-border-dark);
-  }
-
-  &.favorite {
-    --skyrim-text-accent: var(--skyrim-accent-gold);
-
-    &:hover:not(:disabled) {
-      --skyrim-text-accent: var(--skyrim-accent-gold);
-    }
-  }
-}
+// Component uses InventoryList styles
 </style>

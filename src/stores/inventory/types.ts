@@ -94,3 +94,5 @@ export interface ApparelItem {
 export interface ApparelState {
   items?: ApparelItem[] | null;
 }
+
+export type InventoryItem = WeaponItem | ApparelItem;
