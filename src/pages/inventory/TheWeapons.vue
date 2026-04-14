@@ -62,7 +62,7 @@ function equipItem(formId: string) {
           selectHand: (hand: EquipSlot) => {
             if (hand === item.equippedHand || item.equippedHand === 'both') {
               // Unequip from current hand (or unequip if both hands)
-              wsStore.sendCommand('unequip', formId);
+              wsStore.sendCommand('unequip', formId, item.equippedHand === 'both' ? undefined : item.equippedHand);
             } else {
               // Equip to other hand
               wsStore.sendCommand('equip', formId, hand);
