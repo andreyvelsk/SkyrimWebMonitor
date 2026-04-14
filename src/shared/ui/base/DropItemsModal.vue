@@ -1,16 +1,6 @@
 <template>
   <div class="drop-items-modal">
-    <div class="drop-info">
-      <p class="drop-item">
-        {{ itemName }}
-      </p>
-      <p class="drop-available">
-        {{ $t('modals.available') }}: {{ maxCount }}
-      </p>
-    </div>
-
     <div class="drop-controls">
-      <label>{{ $t('modals.quantity') }}:</label>
       <quantity-picker
         v-model="selectedCount"
         :max="maxCount"
@@ -24,12 +14,6 @@
       >
         {{ $t('modals.drop') }}
       </button>
-      <button
-        class="btn btn-secondary"
-        @click="emit('close')"
-      >
-        {{ $t('common.cancel') }}
-      </button>
     </div>
   </div>
 </template>
@@ -39,7 +23,6 @@ import { ref } from 'vue';
 import QuantityPicker from './QuantityPicker.vue';
 
 defineProps<{
-  itemName: string;
   maxCount: number;
 }>();
 
@@ -87,6 +70,7 @@ function confirmDrop() {
 .drop-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-md);
 
   label {
@@ -101,7 +85,7 @@ function confirmDrop() {
 .drop-actions {
   display: flex;
   gap: var(--spacing-md);
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .btn {

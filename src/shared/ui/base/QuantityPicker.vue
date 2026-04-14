@@ -51,8 +51,8 @@ function increase() {
 }
 
 .qty-btn {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -118,12 +118,12 @@ function startDrop() {
     openModal({
       component: DropItemsModal,
       props: {
-        itemName: activeItemData.value.name,
         maxCount: count,
       },
       on: {
         drop: (qty: number) => {
           wsStore.sendCommand('drop', activeItem.value!, undefined, qty);
+          closeModal();
         },
       },
     });
