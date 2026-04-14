@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { WeaponsState, ApparelState } from './types';
 
 export const useInventoryStore = defineStore('inventory', () => {
@@ -13,6 +13,8 @@ export const useInventoryStore = defineStore('inventory', () => {
     items: undefined,
   });
 
+  const weaponsList = computed(() => (weapons.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+
   const setWeapons = (newWeapons: WeaponsState) => {
     weapons.value = newWeapons;
   };
@@ -24,6 +26,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   return {
     weapons,
     apparel,
+    weaponsList,
     setWeapons,
     setApparel,
   };

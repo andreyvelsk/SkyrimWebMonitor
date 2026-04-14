@@ -3,9 +3,9 @@
     <div class="list-wrapper">
       <div class="list">
         <!-- Show weapons if data is available -->
-        <template v-if="weapons.items && weapons.items.length > 0">
+        <template v-if="weaponsList && weaponsList.length > 0">
           <weapon-item
-            v-for="(item, index) in weapons.items"
+            v-for="(item, index) in weaponsList"
             :key="item.formId || index"
             :name="item.name || $t('pages.inventory.weapons.unknown')"
             :weapon-type="item.weaponType"
@@ -68,7 +68,7 @@ import { useModal } from '@/shared/lib/composables/useModal';
 import type { EquipSlot } from '@/stores/inventory/types';
 
 const inventoryStore = useInventoryStore();
-const { weapons } = storeToRefs(inventoryStore);
+const { weaponsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { closeModal, openModal } = useModal();
 
@@ -76,7 +76,7 @@ const activeItem = ref<string | null>(null);
 
 const activeItemData = computed(() => {
   if (!activeItem.value) return null;
-  return weapons.value.items?.find(w => w.formId === activeItem.value) || null;
+  return weaponsList.value.find(w => w.formId === activeItem.value) || null;
 });
 
 const isActiveItemFavorite = computed(() => {
@@ -93,7 +93,7 @@ function setActiveItem(formId: string) {
 }
 
 function equipItem(formId: string) {
-  const item = weapons.value.items?.find(w => w.formId === formId);
+  const item = weaponsList.value.find(w => w.formId === formId);
   if (!item) return;
 
   // If already equipped
@@ -208,10 +208,8 @@ function startDrop() {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--spacing-md);
-  padding: var(--spacing-md);
-  background-color: var(--skyrim-bg-light);
-  border-top: 1px solid var(--skyrim-border-dark);
 }
 
 .toolbar-btn {
