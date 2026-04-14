@@ -51,61 +51,50 @@ export interface ItemEnchantment {
   effects: ItemEnchantmentEffect[];
   name: string;
 }
-
-export interface WeaponItem {
-  baseDamage: number;
+ 
+export interface BaseItem {
   count: number;
+  formId: string;
+  isFavorite: boolean;
+  isStolen: boolean;
+  name: string;
+  value: number;
+  weight: number;
+}
+
+export interface WeaponItem extends BaseItem {
+  baseDamage: number;
   damage: number;
   enchantment: ItemEnchantment | null;
   enchantmentCharge: number | null;
   equipSlots: EquipSlot[];
   equippedHand: EquippedHand;
-  formId: string;
   isEquipped: boolean;
-  isFavorite: boolean;
-  isStolen: boolean;
   isTwoHanded: boolean;
-  name: string;
-  value: number;
   weaponType: WeaponType;
-  weight: number;
 }
 
 export interface WeaponsState {
   items?: WeaponItem[] | null;
 }
 
-export interface ApparelItem {
+export interface ApparelItem extends BaseItem {
   armorRating: number;
   armorType: ApparelType;
   armorTypeId?: string;
   baseArmorRating: number;
   bodySlots: string[];
-  count: number;
   enchantment: ItemEnchantment | null;
   equipSlots: EquipSlot[];
-  formId: string;
   isEquipped: boolean;
-  isFavorite: boolean;
-  isStolen: boolean;
-  name: string;
-  value: number;
-  weight: number;
 }
 
 export interface ApparelState {
   items?: ApparelItem[] | null;
 }
 
-export interface FoodItem {
-  count: number;
+export interface FoodItem extends BaseItem {
   effects: ItemEnchantmentEffect[];
-  formId: string;
-  isFavorite: boolean;
-  isStolen: boolean;
-  name: string;
-  value: number;
-  weight: number;
 }
 
 export interface FoodState {
