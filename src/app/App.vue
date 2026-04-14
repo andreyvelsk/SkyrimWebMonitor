@@ -26,13 +26,14 @@ import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import { ConnectionStatus, SkyrimModal } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
-import { getPageFields, getPageSubscriptionId, getTabCategorySubscription } from '@/app/config/pageRegistry';
+import { getPageFields, getPageSubscriptionId, getTabCategorySubscription, TAB_CATEGORY_SUBSCRIPTIONS } from '@/app/config/pageRegistry';
+import { DataRouter } from '@/stores/adapters/dataRouter';
 
 const navigationStore = useNavigationStore();
 const { activeTab, activeSubTab } = storeToRefs(navigationStore);
 
 const websocketStore = useWebSocketStore();
-const { connect, startSubscription, stopSubscription } = websocketStore;
+const { connect, startSubscription, stopSubscription, sendQuery } = websocketStore;
 const { isConnected } = storeToRefs(websocketStore);
 
 const startCategorySubscription = (tabId: string): void => {
@@ -61,6 +62,19 @@ onMounted(async () => {
     if (subscriptionId) {
       startSubscription(subscriptionId, pageFields);
     }
+    // One-time initial load for all category subscriptions (populate store)
+    try {
+      Object.values(TAB_CATEGORY_SUBSCRIPTIONS).forEach((cfg) => {
+        // sendQuery will return a single data message which we route through DataRouter
+        sendQuery(cfg.subscriptionId, cfg.fields, (fields) => {
+          DataRouter.routeDataById(cfg.subscriptionId, fields);
+        });
+      });
+    } catch (err) {
+      console.error('Initial category queries failed:', err);
+    }
+
+    // Start live category subscription for the active tab (existing behavior)
     startCategorySubscription(activeTab.value);
   }
 });
