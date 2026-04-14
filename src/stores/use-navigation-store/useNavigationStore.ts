@@ -41,27 +41,47 @@ export const useNavigationStore = defineStore('navigation', () => {
   /**
    * Change active tab and reset sub-tab to first available
    */
-  const setActiveTab = (tabId: string): void => {
+  /**
+   * Change active tab and optionally select a sub-tab.
+   * @param tabId - id of tab to activate
+   * @param selectSubTab - whether to automatically select a subtab (default true)
+   * @param forcedDirection - optional forced transition direction to apply when selecting the subtab
+   */
+  const setActiveTab = (tabId: string, selectSubTab = true, forcedDirection?: 'left' | 'right' | ''): void => {
     const tab = tabs.value.find((t) => t.id === tabId);
     if (!tab) return;
 
     activeTab.value = tabId;
     activeSubTab.value = ''; // Reset sub-tab when changing main tab
 
+    if (!selectSubTab) return;
+
     // Prefer first visible sub-tab, fall back to first available
     const visible = currentSubTabs.value;
     if (visible.length) {
-      setActiveSubTab(visible[0].id);
+      setActiveSubTab(visible[0].id, true, forcedDirection);
     } else if (tab.subTabs?.length) {
-      setActiveSubTab(tab.subTabs[0].id);
+      setActiveSubTab(tab.subTabs[0].id, true, forcedDirection);
     }
   };
 
   /**
    * Change active sub-tab
    */
-  const setActiveSubTab = (subTabId: string, animate = true): void => {
-    if (animate) {
+  /**
+   * Change active sub-tab.
+   * @param subTabId - id of subtab to activate
+   * @param animate - whether to compute transition direction automatically (default true)
+   * @param forcedDirection - optional forced direction (overrides automatic computation)
+   */
+  const setActiveSubTab = (
+    subTabId: string,
+    animate = true,
+    forcedDirection?: 'left' | 'right' | ''
+  ): void => {
+    if (forcedDirection !== undefined) {
+      transitionDirection.value = forcedDirection;
+    } else if (animate) {
       const list = subTabsMap.value[activeTab.value] ?? [];
       const prevIdx = list.findIndex((s) => s.id === activeSubTab.value);
       const newIdx = list.findIndex((s) => s.id === subTabId);
@@ -76,7 +96,7 @@ export const useNavigationStore = defineStore('navigation', () => {
         transitionDirection.value = '';
       }
     } else {
-      transitionDirection.value = '';
+      // do not compute direction and do not overwrite any previously-forced direction
     }
 
     activeSubTab.value = subTabId;
@@ -99,6 +119,22 @@ export const useNavigationStore = defineStore('navigation', () => {
     const nextIdx = idx + 1;
     if (nextIdx < list.length) {
       setActiveSubTab(list[nextIdx].id);
+      return;
+    }
+
+    // At end of visible subtabs -> try next tab
+    const tabIdx = tabs.value.findIndex((t) => t.id === activeTab.value);
+    let nextTabIdx = tabIdx + 1;
+    while (nextTabIdx < tabs.value.length) {
+      const nextTab = tabs.value[nextTabIdx];
+      const visible = nextTab.subTabs?.filter((s) => !subTabsToHide.includes(s.id)) ?? [];
+      if (visible.length) {
+        // select next tab and its first visible subtab, force left transition
+        setActiveTab(nextTab.id, false);
+        setActiveSubTab(visible[0].id, true, 'left');
+        return;
+      }
+      nextTabIdx += 1;
     }
   };
 
@@ -119,6 +155,22 @@ export const useNavigationStore = defineStore('navigation', () => {
     const prevIdx = idx - 1;
     if (prevIdx >= 0) {
       setActiveSubTab(list[prevIdx].id);
+      return;
+    }
+
+    // At start of visible subtabs -> try previous tab
+    const tabIdx = tabs.value.findIndex((t) => t.id === activeTab.value);
+    let prevTabIdx = tabIdx - 1;
+    while (prevTabIdx >= 0) {
+      const prevTab = tabs.value[prevTabIdx];
+      const visible = prevTab.subTabs?.filter((s) => !subTabsToHide.includes(s.id)) ?? [];
+      if (visible.length) {
+        // select previous tab and its last visible subtab, force right transition
+        setActiveTab(prevTab.id, false);
+        setActiveSubTab(visible[visible.length - 1].id, true, 'right');
+        return;
+      }
+      prevTabIdx -= 1;
     }
   };
 
