@@ -47,7 +47,7 @@ export function useCharacterStatsDisplay(): CharacterStatsDisplay {
       carryWeight !== null &&
       carryWeight !== undefined
     ) {
-      return `${String(inventoryWeight)} / ${String(carryWeight)}`;
+      return `${String(Math.round(inventoryWeight))} / ${String(Math.round(carryWeight))}`;
     }
     return '-';
   });
