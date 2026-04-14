@@ -6,33 +6,33 @@
       :aria-label="$t('app.navigation.mainAriaLabel')"
     >
       <button
-        v-for="tab in tabs"
+        v-for="tab in nav.tabs"
         :key="tab.id"
         class="skyrim-tab"
-        :class="{ active: activeTab === tab.id }"
+        :class="{ active: nav.activeTab === tab.id }"
         role="tab"
-        :aria-selected="activeTab === tab.id"
-        @click="$emit('tab-change', tab.id)"
+        :aria-selected="nav.activeTab === tab.id"
+        @click="nav.setActiveTab(tab.id)"
       >
         {{ tab.label }}
       </button>
     </nav>
 
     <nav
-      v-if="currentSubTabs.length > 1"
+      v-if="nav.currentSubTabs.length > 1"
       ref="subtabsRef"
       class="skyrim-subtabs animate-fade-in"
       role="tablist"
       :aria-label="$t('app.navigation.subAriaLabel')"
     >
       <button
-        v-for="sub in currentSubTabs"
+        v-for="sub in nav.currentSubTabs"
         :key="sub.id"
         class="skyrim-subtab"
-        :class="{ active: activeSubTab === sub.id }"
+        :class="{ active: nav.activeSubTab === sub.id }"
         role="tab"
-        :aria-selected="activeSubTab === sub.id"
-        @click="$emit('subtab-change', sub.id)"
+        :aria-selected="nav.activeSubTab === sub.id"
+        @click="nav.setActiveSubTab(sub.id)"
       >
         {{ sub.label }}
       </button>
@@ -41,30 +41,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
-import type { Tab } from '@/stores/use-navigation-store/types/types';
+import { ref, watch } from 'vue';
+import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 
 const subtabsRef = ref<HTMLElement | null>(null);
-
-const props = defineProps<{
-  tabs: Tab[];
-  activeTab: string;
-  activeSubTab: string;
-}>();
-
-defineEmits<{
-  'tab-change': [tabId: string];
-  'subtab-change': [subTabId: string];
-}>();
-
-const subTabsToHide = ['favorites', 'soulgems'];
-
-const currentSubTabs = computed(
-  () => props.tabs.find((t) => t.id === props.activeTab)?.subTabs?.filter(sub => !subTabsToHide.includes(sub.id)) ?? []
-);
+const nav = useNavigationStore();
 
 watch(
-  () => props.activeTab,
+  () => nav.activeTab,
   () => {
     if (subtabsRef.value) {
       subtabsRef.value.scrollLeft = 0;

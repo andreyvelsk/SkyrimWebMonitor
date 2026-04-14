@@ -27,8 +27,16 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
   ]);
 
+  const subTabsToHide = ['favorites', 'soulgems'];
+
   const activeTab = ref<string>('character');
   const activeSubTab = ref<string>('stats');
+  const transitionDirection = ref<'left' | 'right' | ''>('');
+
+  const currentSubTabs = computed<SubTab[]>(() => {
+    const tab = tabs.value.find((t) => t.id === activeTab.value);
+    return tab?.subTabs?.filter((sub) => !subTabsToHide.includes(sub.id)) ?? [];
+  });
 
   /**
    * Change active tab and reset sub-tab to first available
@@ -40,8 +48,11 @@ export const useNavigationStore = defineStore('navigation', () => {
     activeTab.value = tabId;
     activeSubTab.value = ''; // Reset sub-tab when changing main tab
 
-    // Set first sub-tab as active if available
-    if (tab.subTabs?.length) {
+    // Prefer first visible sub-tab, fall back to first available
+    const visible = currentSubTabs.value;
+    if (visible.length) {
+      setActiveSubTab(visible[0].id);
+    } else if (tab.subTabs?.length) {
       setActiveSubTab(tab.subTabs[0].id);
     }
   };
@@ -49,8 +60,66 @@ export const useNavigationStore = defineStore('navigation', () => {
   /**
    * Change active sub-tab
    */
-  const setActiveSubTab = (subTabId: string): void => {
+  const setActiveSubTab = (subTabId: string, animate = true): void => {
+    if (animate) {
+      const list = subTabsMap.value[activeTab.value] ?? [];
+      const prevIdx = list.findIndex((s) => s.id === activeSubTab.value);
+      const newIdx = list.findIndex((s) => s.id === subTabId);
+
+      if (prevIdx === -1 || newIdx === -1) {
+        transitionDirection.value = '';
+      } else if (newIdx > prevIdx) {
+        transitionDirection.value = 'left';
+      } else if (newIdx < prevIdx) {
+        transitionDirection.value = 'right';
+      } else {
+        transitionDirection.value = '';
+      }
+    } else {
+      transitionDirection.value = '';
+    }
+
     activeSubTab.value = subTabId;
+  };
+
+  /**
+   * Switch to next sub-tab for current active tab (if exists).
+   * If no active sub-tab is set, select the first one.
+   */
+  const nextSubTab = (): void => {
+    const list = currentSubTabs.value ?? [];
+    if (!list.length) return;
+
+    const idx = list.findIndex((s) => s.id === activeSubTab.value);
+    if (idx === -1) {
+      setActiveSubTab(list[0].id);
+      return;
+    }
+
+    const nextIdx = idx + 1;
+    if (nextIdx < list.length) {
+      setActiveSubTab(list[nextIdx].id);
+    }
+  };
+
+  /**
+   * Switch to previous sub-tab for current active tab (if exists).
+   * If no active sub-tab is set, select the last one.
+   */
+  const prevSubTab = (): void => {
+    const list = currentSubTabs.value ?? [];
+    if (!list.length) return;
+
+    const idx = list.findIndex((s) => s.id === activeSubTab.value);
+    if (idx === -1) {
+      setActiveSubTab(list[list.length - 1].id);
+      return;
+    }
+
+    const prevIdx = idx - 1;
+    if (prevIdx >= 0) {
+      setActiveSubTab(list[prevIdx].id);
+    }
   };
 
   /**
@@ -62,8 +131,9 @@ export const useNavigationStore = defineStore('navigation', () => {
 
     subTabsMap.value[tabId] = newSubTabs;
 
-    if (activeTab.value === tabId && newSubTabs.length > 0 && !newSubTabs.some(st => st.id === activeSubTab.value)) {
-      setActiveSubTab(newSubTabs[0].id);
+    const visible = newSubTabs.filter((s) => !subTabsToHide.includes(s.id));
+    if (activeTab.value === tabId && visible.length > 0 && !visible.some((st) => st.id === activeSubTab.value)) {
+      setActiveSubTab(visible[0].id);
     }
   };
 
@@ -73,6 +143,10 @@ export const useNavigationStore = defineStore('navigation', () => {
     activeSubTab,
     setActiveTab,
     setActiveSubTab,
+    transitionDirection,
+    currentSubTabs,
+    nextSubTab,
+    prevSubTab,
     setTabSubTabs,
   };
 });

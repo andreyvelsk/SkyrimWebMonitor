@@ -4,11 +4,8 @@
     <connection-status v-if="!isConnected" />
     <template v-else>
       <skyrim-navigation
-        :tabs="tabs"
         :active-tab="activeTab"
         :active-sub-tab="activeSubTab"
-        @tab-change="setActiveTab"
-        @subtab-change="setActiveSubTab"
       />
 
       <main class="content-area">
@@ -32,8 +29,7 @@ import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStor
 import { getPageFields, getPageSubscriptionId, getTabCategorySubscription } from '@/app/config/pageRegistry';
 
 const navigationStore = useNavigationStore();
-const { setActiveTab, setActiveSubTab } = navigationStore;
-const { tabs, activeTab, activeSubTab } = storeToRefs(navigationStore);
+const { activeTab, activeSubTab } = storeToRefs(navigationStore);
 
 const websocketStore = useWebSocketStore();
 const { connect, startSubscription, stopSubscription } = websocketStore;
