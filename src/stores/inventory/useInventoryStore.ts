@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState } from './types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState } from './types';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page
@@ -15,6 +15,11 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   // State for inventory/food page
   const food = ref<FoodState>({
+    items: undefined,
+  });
+
+  // State for inventory/ingredients page
+  const ingredients = ref<IngredientsState>({
     items: undefined,
   });
 
@@ -38,6 +43,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   const apparelList = computed(() => (apparel.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   const foodList = computed(() => (food.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+  const ingredientsList = computed(() => (ingredients.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const booksList = computed(() => (books.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const scrollsList = computed(() => (scrolls.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const keysList = computed(() => (keys.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
@@ -52,6 +58,10 @@ export const useInventoryStore = defineStore('inventory', () => {
 
   const setFood = (newFood: FoodState) => {
     food.value = newFood;
+  };
+
+  const setIngredients = (newIngredients: IngredientsState) => {
+    ingredients.value = newIngredients;
   };
 
   const setBooks = (newBooks: BookState) => {
@@ -70,18 +80,21 @@ export const useInventoryStore = defineStore('inventory', () => {
     weapons,
     apparel,
     food,
+    ingredients,
     keys,
     books,
     scrolls,
     weaponsList,
     apparelList,
     foodList,
+    ingredientsList,
     keysList,
     booksList,
     scrollsList,
     setWeapons,
     setApparel,
     setFood,
+    setIngredients,
     setKeys,
     setBooks,
     setScrolls,

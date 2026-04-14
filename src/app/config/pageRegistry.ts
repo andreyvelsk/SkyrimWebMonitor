@@ -5,6 +5,7 @@ import {
   TheWeapons,
   TheApparel,
   TheFood,
+  TheIngredients,
   TheScrolls,
   TheKeys,
   TheBooks,
@@ -54,6 +55,13 @@ export const pagesRegistry: PagesRegistry = {
       component: TheFood,
       fields: {
         items: 'Inventory::Items::Food',
+      },
+    },
+    ingredients: {
+      id: 'inventory.ingredients',
+      component: TheIngredients,
+      fields: {
+        items: 'Inventory::Items::Ingredients',
       },
     },
     scrolls: {

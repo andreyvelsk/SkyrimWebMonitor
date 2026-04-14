@@ -123,4 +123,12 @@ export interface ScrollsState {
   items?: ScrollItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem | FoodItem | BookItem | KeyItem | ScrollItem;
+export interface IngredientItem extends BaseItem {
+  effects: ItemEnchantmentEffect[];
+}
+
+export interface IngredientsState {
+  items?: IngredientItem[] | null;
+}
+
+export type InventoryItem = WeaponItem | ApparelItem | FoodItem | IngredientItem | BookItem | KeyItem | ScrollItem;
