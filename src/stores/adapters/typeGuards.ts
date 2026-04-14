@@ -1,5 +1,5 @@
 import type { CharacterStats } from '@/stores/character/types';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, WeaponItem, ApparelItem, FoodItem, BookItem } from '@/stores/inventory/types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, WeaponItem, ApparelItem, FoodItem, BookItem, ScrollsState, ScrollItem } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -16,6 +16,10 @@ export function isApparelData(data: unknown, id: string): data is ApparelState {
 
 export function isFoodData(data: unknown, id: string): data is FoodState {
   return id === 'inventory.food' && typeof data === 'object' && data !== null;
+}
+
+export function isScrollsData(data: unknown, id: string): data is ScrollsState {
+  return id === 'inventory.scrolls' && typeof data === 'object' && data !== null;
 }
 
 export function isBooksData(data: unknown, id: string): data is BookState {
@@ -64,6 +68,16 @@ export function isFoodItem(item: unknown): item is FoodItem {
     typeof food.formId === 'string' &&
     typeof food.name === 'string' &&
     Array.isArray(food.effects)
+  );
+}
+
+export function isScrollItem(item: unknown): item is ScrollItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const scroll = item as Record<string, unknown>;
+  return (
+    typeof scroll.formId === 'string' &&
+    typeof scroll.name === 'string' &&
+    Array.isArray(scroll.effects)
   );
 }
 

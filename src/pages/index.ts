@@ -10,6 +10,7 @@ export { default as TheMisc } from './inventory/TheMisc.vue';
 export { default as TheFood } from './inventory/TheFood.vue';
 export { default as TheKeys } from './inventory/TheKeys.vue';
 export { default as TheBooks } from './inventory/TheBooks.vue';
+export { default as TheScrolls } from './inventory/TheScrolls.vue';
 
 // Magic pages
 export { default as TheSpells } from './magic/TheSpells.vue';

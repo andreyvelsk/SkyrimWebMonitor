@@ -7,3 +7,4 @@ export { ApparelItem } from './apparel';
 export { FoodItem } from './food';
 export { BookItem } from './books';
 export { KeyItem } from './keys';
+export { ScrollItem } from './scrolls';
