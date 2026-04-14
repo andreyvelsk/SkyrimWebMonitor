@@ -101,6 +101,14 @@ export interface FoodState {
   items?: FoodItem[] | null;
 }
 
+export interface PotionItem extends BaseItem {
+  effects: ItemEnchantmentEffect[];
+}
+
+export interface PotionsState {
+  items?: PotionItem[] | null;
+}
+
 export interface KeyItem extends BaseItem {}
 
 export interface KeysState {
@@ -131,4 +139,4 @@ export interface IngredientsState {
   items?: IngredientItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem | FoodItem | IngredientItem | BookItem | KeyItem | ScrollItem;
+export type InventoryItem = WeaponItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem;
