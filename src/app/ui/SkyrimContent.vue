@@ -5,11 +5,6 @@
     @touchend="onTouchEnd"
     @touchcancel="onTouchCancel"
   >
-    <div class="ornament-corner top-left" />
-    <div class="ornament-corner top-right" />
-    <div class="ornament-corner bottom-left" />
-    <div class="ornament-corner bottom-right" />
-
     <Transition
       :name="transitionName"
       mode="out-in"

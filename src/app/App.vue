@@ -131,7 +131,6 @@ watch(
 
 .content-area {
   flex: 1;
-  padding: var(--spacing-sm);
   min-height: 0;
   display: flex;
   flex-direction: column;
