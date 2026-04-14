@@ -10,3 +10,4 @@ export { BookItem } from './books';
 export { KeyItem } from './keys';
 export { ScrollItem } from './scrolls';
 export { PotionItem } from './potions';
+export { MiscItem } from './misc';

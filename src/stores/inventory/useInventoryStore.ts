@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState } from './types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState } from './types';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page
@@ -43,6 +43,11 @@ export const useInventoryStore = defineStore('inventory', () => {
     items: undefined,
   });
 
+  // State for inventory/misc page
+  const misc = ref<MiscState>({
+    items: undefined,
+  });
+
   const weaponsList = computed(() => (weapons.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   const apparelList = computed(() => (apparel.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
@@ -53,6 +58,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   const booksList = computed(() => (books.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const scrollsList = computed(() => (scrolls.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const keysList = computed(() => (keys.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+  const miscList = computed(() => (misc.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   const setWeapons = (newWeapons: WeaponsState) => {
     weapons.value = newWeapons;
@@ -86,9 +92,14 @@ export const useInventoryStore = defineStore('inventory', () => {
     keys.value = newKeys;
   };
 
+  const setMisc = (newMisc: MiscState) => {
+    misc.value = newMisc;
+  };
+
   return {
     weapons,
     apparel,
+    misc,
     potions,
     food,
     ingredients,
@@ -97,6 +108,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     scrolls,
     weaponsList,
     apparelList,
+    miscList,
     potionsList,
     foodList,
     ingredientsList,
@@ -105,6 +117,7 @@ export const useInventoryStore = defineStore('inventory', () => {
     scrollsList,
     setWeapons,
     setApparel,
+    setMisc,
     setPotions,
     setFood,
     setIngredients,

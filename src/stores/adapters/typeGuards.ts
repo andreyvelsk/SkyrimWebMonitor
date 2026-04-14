@@ -1,5 +1,5 @@
 import type { CharacterStats } from '@/stores/character/types';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, IngredientsState, PotionsState, WeaponItem, ApparelItem, FoodItem, PotionItem, IngredientItem, BookItem, ScrollsState, ScrollItem } from '@/stores/inventory/types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, IngredientsState, PotionsState, WeaponItem, ApparelItem, FoodItem, PotionItem, IngredientItem, BookItem, ScrollsState, ScrollItem, MiscState } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -46,6 +46,10 @@ export function isInventoryCategories(data: unknown, id: string): data is Catego
     'categories' in data &&
     Array.isArray((data as CategoriesData).categories)
   );
+}
+
+export function isMiscData(data: unknown, id: string): data is MiscState {
+  return id === 'inventory.misc' && typeof data === 'object' && data !== null;
 }
 
 export function isWeaponItem(item: unknown): item is WeaponItem {

@@ -139,4 +139,10 @@ export interface IngredientsState {
   items?: IngredientItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem;
+export interface MiscItem extends BaseItem {}
+
+export interface MiscState {
+  items?: MiscItem[] | null;
+}
+
+export type InventoryItem = WeaponItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscItem;
