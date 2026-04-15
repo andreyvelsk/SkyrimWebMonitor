@@ -7,7 +7,7 @@
     @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
-      <key-item
+      <inventory-item
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
         :active="active"
@@ -15,22 +15,30 @@
         @click="onSelect"
       />
     </template>
+    <template #preview>
+      <key-preview
+        v-if="isKeyItem(activeItemData)"
+        :data="activeItemData"
+      />
+    </template>
   </inventory-list>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { KeyItem } from '@/entities/ui';
+import { KeyPreview } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
+import { InventoryItem } from '@/shared/ui/items';
+import { isKeyItem } from '@/stores/adapters/typeGuards';
 
 const inventoryStore = useInventoryStore();
 const { keysList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
+const { activeItem, activeItemData, toggleFavorite, startDrop } = useInventoryItemActions(
   () => keysList.value
 );
 

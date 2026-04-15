@@ -13,9 +13,11 @@ import type {
   PotionItem, 
   IngredientItem, 
   BookItem, 
+  KeyItem,
   ScrollsState, 
   ScrollItem, 
   MiscState, 
+  MiscItem,
   GemItem,
   AmmoItem,
 } from '@/stores/inventory/types';
@@ -155,6 +157,26 @@ export function isBookItem(item: unknown): item is BookItem {
     typeof book.name === 'string' &&
     typeof book.description === 'string' &&
     book.categoryType === CATEGORY_TYPES.BOOK
+  );
+}
+
+export function isKeyItem(item: unknown): item is KeyItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const key = item as Record<string, unknown>;
+  return (
+    typeof key.formId === 'string' &&
+    typeof key.name === 'string' &&
+    key.categoryType === CATEGORY_TYPES.KEY
+  );
+}
+
+export function isMiscItem(item: unknown): item is MiscItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const misc = item as Record<string, unknown>;
+  return (
+    typeof misc.formId === 'string' &&
+    typeof misc.name === 'string' &&
+    misc.categoryType === CATEGORY_TYPES.MISC
   );
 }
 

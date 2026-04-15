@@ -52,7 +52,9 @@
       },
       "misc": {
         "tab": "Разное",
-        "placeholder": "Раздел разного в разработке"
+        "placeholder": "Раздел разного в разработке",
+        "capacity": "Ёмкость",
+        "containedSoul": "Тип души"
       },
       "potions": {
         "tab": "Зелья"

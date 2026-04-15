@@ -7,19 +7,7 @@
     @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
-      <gem-item
-        v-if="isGem(item)"
-        :name="item.name || $t('shared.ui.inventoryItem.unknown')"
-        :is-favorite="item.isFavorite || false"
-        :active="active"
-        :quantity="item.count"
-        :capacity="item.capacity"
-        :contained-soul="item.containedSoul"
-        @click="onSelect"
-      />
-
-      <misc-item
-        v-else
+      <inventory-item
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
         :active="active"
@@ -27,23 +15,36 @@
         @click="onSelect"
       />
     </template>
+
+    <template #preview>
+      <gem-preview
+        v-if="isGem(activeItemData)"
+        :data="activeItemData"
+      />
+
+      <misc-preview
+        v-else-if="isMiscItem(activeItemData)"
+        :data="activeItemData"
+      />
+    </template>
   </inventory-list>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { MiscItem, GemItem } from '@/entities/ui';
-import { isGem } from '@/stores/adapters/typeGuards';
+import { MiscPreview, GemPreview } from '@/entities/ui';
+import { isGem, isMiscItem } from '@/stores/adapters/typeGuards';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
+import { InventoryItem } from '@/shared/ui/items';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
 
 const inventoryStore = useInventoryStore();
 const { miscList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
+const { activeItem, activeItemData, toggleFavorite, startDrop } = useInventoryItemActions(
   () => miscList.value
 );
 

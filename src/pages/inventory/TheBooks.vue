@@ -7,13 +7,20 @@
     @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
-      <book-item
+      <inventory-item
+        v-if="isBookItem(item)"
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
-        :description="(item as any).description || ''"
+        :description="item.description || ''"
         :active="active"
         :quantity="item.count"
         @click="onSelect"
+      />
+    </template>
+    <template #preview>
+      <book-preview
+        v-if="isBookItem(activeItemData)"
+        :data="activeItemData"
       />
     </template>
   </inventory-list>
@@ -21,17 +28,19 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { BookItem } from '@/entities/ui';
+import { BookPreview } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
+import { isBookItem } from '@/stores/adapters/typeGuards';
+import { InventoryItem } from '@/shared/ui/items';
 
 const inventoryStore = useInventoryStore();
 const { booksList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
+const { activeItem, activeItemData, toggleFavorite, startDrop } = useInventoryItemActions(
   () => booksList.value
 );
 

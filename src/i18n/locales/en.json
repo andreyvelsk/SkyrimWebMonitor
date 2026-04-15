@@ -52,7 +52,8 @@
       },
       "misc": {
         "tab": "Misc",
-        "placeholder": "Miscellaneous items to be implemented"
+        "capacity": "Capacity",
+        "containedSoul": "Contained Soul"
       },
       "potions": {
         "tab": "Potions"
