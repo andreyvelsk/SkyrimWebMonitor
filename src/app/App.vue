@@ -9,7 +9,10 @@
       />
 
       <main class="content-area">
-        <skyrim-content :tab="activeTab" :sub-tab="activeSubTab" />
+        <skyrim-content
+          :tab="activeTab"
+          :sub-tab="activeSubTab"
+        />
       </main>
     </template>
     <skyrim-modal />

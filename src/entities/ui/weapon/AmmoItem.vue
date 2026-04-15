@@ -7,7 +7,10 @@
     @click="$emit('click')"
   >
     <template #status>
-      <div v-if="isEquipped" class="ammo-status">
+      <div
+        v-if="isEquipped"
+        class="ammo-status"
+      >
         <div class="ammo-equipped-indicator" />
       </div>
     </template>

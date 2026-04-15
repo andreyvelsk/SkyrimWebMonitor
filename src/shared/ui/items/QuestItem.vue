@@ -1,11 +1,26 @@
 <template>
-  <div class="quest-item" :class="{ active, completed }">
+  <div
+    class="quest-item"
+    :class="{ active, completed }"
+  >
     <div class="quest-marker">
-      <svg v-if="completed" viewBox="0 0 24 24" fill="currentColor">
+      <svg
+        v-if="completed"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
         <path d="M20 6L9 17l-5-5 1.41-1.41L9 14.17l9.59-9.58L20 6z" />
       </svg>
-      <svg v-else-if="active" viewBox="0 0 24 24" fill="currentColor">
-        <circle cx="12" cy="12" r="8" />
+      <svg
+        v-else-if="active"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+        />
       </svg>
       <svg
         v-else
@@ -14,14 +29,21 @@
         stroke="currentColor"
         stroke-width="2"
       >
-        <circle cx="12" cy="12" r="8" />
+        <circle
+          cx="12"
+          cy="12"
+          r="8"
+        />
       </svg>
     </div>
     <div class="quest-info">
       <span class="quest-name">{{ name }}</span>
       <span class="quest-desc">{{ description }}</span>
     </div>
-    <div v-if="active" class="quest-badge">
+    <div
+      v-if="active"
+      class="quest-badge"
+    >
       {{ $t('shared.ui.questItem.active') }}
     </div>
   </div>

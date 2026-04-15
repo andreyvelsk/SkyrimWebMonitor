@@ -1,11 +1,17 @@
 <template>
   <div class="drop-items-modal">
     <div class="drop-controls">
-      <quantity-picker v-model="selectedCount" :max="maxCount" />
+      <quantity-picker
+        v-model="selectedCount"
+        :max="maxCount"
+      />
     </div>
 
     <div class="drop-actions">
-      <button class="btn btn-primary" @click="confirmDrop">
+      <button
+        class="btn btn-primary"
+        @click="confirmDrop"
+      >
         {{ $t('modals.drop') }}
       </button>
     </div>

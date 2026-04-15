@@ -1,8 +1,18 @@
 <template>
   <!-- Both hands icon for two-handed -->
-  <div v-if="equippedHand === 'both'" class="both-hands">
-    <base-icon icon-path="sbed/hand.svg" :size="8" :flipped="true" />
-    <base-icon icon-path="sbed/hand.svg" :size="8" />
+  <div
+    v-if="equippedHand === 'both'"
+    class="both-hands"
+  >
+    <base-icon
+      icon-path="sbed/hand.svg"
+      :size="8"
+      :flipped="true"
+    />
+    <base-icon
+      icon-path="sbed/hand.svg"
+      :size="8"
+    />
   </div>
   <!-- Single hand -->
   <base-icon

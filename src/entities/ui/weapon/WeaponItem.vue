@@ -6,7 +6,10 @@
     :active="active"
   >
     <template #status>
-      <equipped-hand-icon v-if="isEquipped" :equipped-hand="equippedHand" />
+      <equipped-hand-icon
+        v-if="isEquipped"
+        :equipped-hand="equippedHand"
+      />
     </template>
   </inventory-item>
 </template>

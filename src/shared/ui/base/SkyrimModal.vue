@@ -1,9 +1,16 @@
 <template>
   <Teleport to="body">
     <Transition name="modal-backdrop">
-      <div v-if="isOpen" class="modal-backdrop" @click.self="closeModal">
+      <div
+        v-if="isOpen"
+        class="modal-backdrop"
+        @click.self="closeModal"
+      >
         <Transition name="modal-panel">
-          <div v-if="isOpen" class="modal-panel">
+          <div
+            v-if="isOpen"
+            class="modal-panel"
+          >
             <div class="modal-body">
               <component
                 :is="modalComponent"

@@ -20,7 +20,10 @@
     </div>
 
     <!-- Quantity -->
-    <div v-if="quantity && quantity > 1" class="inv-quantity">
+    <div
+      v-if="quantity && quantity > 1"
+      class="inv-quantity"
+    >
       {{ quantity }}
     </div>
   </div>

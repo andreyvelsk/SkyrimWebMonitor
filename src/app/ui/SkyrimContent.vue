@@ -5,13 +5,20 @@
     @touchend="onTouchEnd"
     @touchcancel="onTouchCancel"
   >
-    <Transition :name="transitionName" mode="out-in">
+    <Transition
+      :name="transitionName"
+      mode="out-in"
+    >
       <component
         :is="currentComponent"
         v-if="currentComponent"
         :key="`${tab}-${subTab}`"
       />
-      <div v-else :key="`${tab}-${subTab}-empty`" class="empty-state">
+      <div
+        v-else
+        :key="`${tab}-${subTab}-empty`"
+        class="empty-state"
+      >
         <p style="color: var(--skyrim-text-secondary)">
           {{ $t('app.content.emptyState') }}
         </p>

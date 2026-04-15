@@ -12,7 +12,10 @@
       />
     </template>
     <!-- Fallback to placeholder when no data -->
-    <div v-else class="no-data">
+    <div
+      v-else
+      class="no-data"
+    >
       {{ $t('pages.inventory.apparel.waitingForData') }}
     </div>
   </div>

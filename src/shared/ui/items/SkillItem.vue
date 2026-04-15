@@ -5,7 +5,10 @@
       <span class="skill-level">{{ level }}</span>
     </div>
     <div class="skill-bar">
-      <div class="skill-fill" :style="{ width: `${level}%` }" />
+      <div
+        class="skill-fill"
+        :style="{ width: `${level}%` }"
+      />
     </div>
   </div>
 </template>

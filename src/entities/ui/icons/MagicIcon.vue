@@ -1,5 +1,8 @@
 <template>
-  <base-icon :icon-path="iconPath" :size="size" />
+  <base-icon
+    :icon-path="iconPath"
+    :size="size"
+  />
 </template>
 
 <script setup lang="ts">

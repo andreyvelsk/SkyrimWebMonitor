@@ -14,7 +14,10 @@
         </template>
 
         <!-- Empty state -->
-        <div v-else class="no-data">
+        <div
+          v-else
+          class="no-data"
+        >
           <slot name="empty">
             {{ emptyMessage }}
           </slot>
@@ -35,7 +38,10 @@
           :disabled="!modelValue"
           @click="handleActionClick(action.event)"
         >
-          <base-icon :icon-path="action.icon" :size="20" />
+          <base-icon
+            :icon-path="action.icon"
+            :size="20"
+          />
         </button>
       </div>
     </div>

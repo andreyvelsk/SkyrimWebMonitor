@@ -5,7 +5,10 @@
       description="Speak to the Greybeards"
       :active="true"
     />
-    <quest-item name="The Golden Claw" description="Return the claw to Lucan" />
+    <quest-item
+      name="The Golden Claw"
+      description="Return the claw to Lucan"
+    />
     <quest-item
       name="Bleak Falls Barrow"
       description="Retrieve the Dragonstone"

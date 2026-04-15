@@ -9,7 +9,11 @@
         }"
         @click="onSelectHand('left')"
       >
-        <base-icon icon-path="sbed/hand.svg" :size="32" :flipped="true" />
+        <base-icon
+          icon-path="sbed/hand.svg"
+          :size="32"
+          :flipped="true"
+        />
       </button>
       <button
         class="hand-button right"
@@ -19,7 +23,10 @@
         }"
         @click="onSelectHand('right')"
       >
-        <base-icon icon-path="sbed/hand.svg" :size="32" />
+        <base-icon
+          icon-path="sbed/hand.svg"
+          :size="32"
+        />
       </button>
     </div>
   </div>
