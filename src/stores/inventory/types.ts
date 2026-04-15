@@ -74,8 +74,13 @@ export interface WeaponItem extends BaseItem {
   weaponType: WeaponType;
 }
 
+export interface AmmoItem extends BaseItem {
+  isEquipped: boolean;
+}
+
 export interface WeaponsState {
   items?: WeaponItem[] | null;
+  ammo?: AmmoItem[] | null;
 }
 
 export interface ApparelItem extends BaseItem {

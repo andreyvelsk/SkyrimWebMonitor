@@ -19,19 +19,29 @@
         :quantity="item.count"
         @click="onSelect"
       />
+      <ammo-item
+        v-else-if="isAmmoItem(item)"
+        :name="item.name || $t('pages.inventory.weapons.unknown')"
+        :is-equipped="item.isEquipped || false"
+        :is-favorite="item.isFavorite || false"
+        :active="active"
+        :quantity="item.count"
+        template
+        @click="onSelect"
+      />
     </template>
   </inventory-list>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { WeaponItem } from '@/entities/ui';
+import { WeaponItem, AmmoItem } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
-import { isWeaponItem } from '@/stores/adapters/typeGuards';
+import { isWeaponItem, isAmmoItem } from '@/stores/adapters/typeGuards';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
 import type { EquipSlot } from '@/stores/inventory/types';
 
@@ -47,6 +57,12 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 function equipItem(formId: string) {
   const item = weaponsList.value.find(w => w.formId === formId);
   if (!item) return;
+
+  if (!isWeaponItem(item) && isAmmoItem(item)) {
+    const command = item.isEquipped ? 'unequip' : 'equip';
+    wsStore.sendCommand(command, formId);
+    return;
+  }
 
   // If already equipped
   if (item.isEquipped) {

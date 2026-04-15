@@ -1,5 +1,24 @@
 import type { CharacterStats } from '@/stores/character/types';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, IngredientsState, PotionsState, WeaponItem, ApparelItem, FoodItem, PotionItem, IngredientItem, BookItem, ScrollsState, ScrollItem, MiscState, GemItem } from '@/stores/inventory/types';
+import type {
+  WeaponsState, 
+  ApparelState, 
+  FoodState, 
+  BookState, 
+  KeysState, 
+  IngredientsState, 
+  PotionsState, 
+  WeaponItem, 
+  ApparelItem, 
+  FoodItem, 
+  PotionItem, 
+  IngredientItem, 
+  BookItem, 
+  ScrollsState, 
+  ScrollItem, 
+  MiscState, 
+  GemItem,
+  AmmoItem,
+} from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -60,6 +79,16 @@ export function isWeaponItem(item: unknown): item is WeaponItem {
     typeof weapon.name === 'string' &&
     typeof weapon.damage === 'number' &&
     'weaponType' in weapon
+  );
+}
+
+export function isAmmoItem(item: unknown): item is AmmoItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const ammo = item as Record<string, unknown>;
+  return (
+    typeof ammo.formId === 'string' &&
+    typeof ammo.name === 'string' &&
+    'isEquipped' in ammo
   );
 }
 

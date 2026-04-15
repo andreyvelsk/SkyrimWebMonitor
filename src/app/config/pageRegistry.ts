@@ -43,6 +43,7 @@ export const pagesRegistry: PagesRegistry = {
       component: TheWeapons,
       fields: {
         items: 'Inventory::Items::Weapons',
+        ammo: 'Inventory::Items::Ammo',
       },
     },
     apparel: {

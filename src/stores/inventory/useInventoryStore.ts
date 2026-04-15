@@ -6,6 +6,7 @@ export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page
   const weapons = ref<WeaponsState>({
     items: undefined,
+    ammo: undefined,
   });
 
   // State for inventory/apparel page
@@ -49,7 +50,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     gems: undefined,
   });
 
-  const weaponsList = computed(() => (weapons.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+  const weaponsList = computed(() => (
+    [
+      ...(weapons.value.items || []),
+      ...(weapons.value.ammo || [])
+    ]
+  ).sort((a, b) => a.name.localeCompare(b.name)));
 
   const apparelList = computed(() => (apparel.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
