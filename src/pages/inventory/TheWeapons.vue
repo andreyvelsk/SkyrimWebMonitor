@@ -42,9 +42,8 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { WeaponItem, AmmoItem } from '@/entities/ui';
+import { WeaponItem, AmmoItem, WeaponPreview } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
-import WeaponPreview from '@/entities/ui/weapon/WeaponPreview.vue';
 import { HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
