@@ -27,7 +27,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
   ]);
 
-  const subTabsToHide = ['favorites', 'soulgems'];
+  const subTabsToHide = ['favorites', 'soulgems', 'ammo'];
 
   const activeTab = ref<string>('character');
   const activeSubTab = ref<string>('stats');
