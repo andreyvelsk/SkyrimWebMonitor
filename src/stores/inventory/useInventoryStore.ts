@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState, WeaponInventoryItem } from './types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState, WeaponInventoryItem, MiscInventoryItem } from './types';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page
@@ -65,13 +65,12 @@ export const useInventoryStore = defineStore('inventory', () => {
   const booksList = computed(() => (books.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const scrollsList = computed(() => (scrolls.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const keysList = computed(() => (keys.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
-  const miscList = computed(() => (
-    [
-      ...(misc.value.items || []),
-      ...(misc.value.gems || [])
-
-    ]
-  ).sort((a, b) => a.name.localeCompare(b.name)));
+  const miscList = computed(() => {
+    const combined: MiscInventoryItem[] = [];
+    if (misc.value.items) combined.push(...misc.value.items);
+    if (misc.value.gems) combined.push(...misc.value.gems);
+    return combined.sort((a, b) => a.name.localeCompare(b.name));
+  });
 
   const setWeapons = (newWeapons: WeaponsState) => {
     if ('items' in newWeapons) {
@@ -111,7 +110,12 @@ export const useInventoryStore = defineStore('inventory', () => {
   };
 
   const setMisc = (newMisc: MiscState) => {
-    misc.value = newMisc;
+    if ('items' in newMisc) {
+      misc.value.items = newMisc.items ?? [];
+    }
+    if ('gems' in newMisc) {
+      misc.value.gems = newMisc.gems ?? [];
+    }
   };
 
   return {

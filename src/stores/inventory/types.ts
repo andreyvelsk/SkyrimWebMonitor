@@ -158,4 +158,6 @@ export interface MiscState {
 
 export type WeaponInventoryItem = WeaponItem | AmmoItem;
 
-export type InventoryItem = WeaponInventoryItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscItem | GemItem;
+export type MiscInventoryItem = MiscItem | GemItem;
+
+export type InventoryItem = WeaponInventoryItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscInventoryItem;
