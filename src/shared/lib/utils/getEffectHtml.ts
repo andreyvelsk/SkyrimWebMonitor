@@ -9,10 +9,23 @@ function escapeHtml(input: string): string {
     .replace(/'/g, '&#39;');
 }
 
-function formatEffectHtml(e: ItemEnchantmentEffect): string {
+function formatEffectHtml(e: ItemEnchantmentEffect, isSurvivalMode: boolean): string {
   if (!e.descriptionTemplate) return '';
 
   let tpl = e.descriptionTemplate;
+
+  // Handle survival-specific templates: [SURV=...]
+  // - when isSurvivalMode === true: replace occurrences with inner text
+  // - when isSurvivalMode === false: remove occurrences; if template becomes empty, ignore effect
+  const survRe = /\[SURV=(.*?)\]/g;
+  if (survRe.test(tpl)) {
+    if (isSurvivalMode) {
+      tpl = tpl.replace(survRe, (_m, inner) => inner ?? '');
+    } else {
+      tpl = tpl.replace(survRe, '');
+      if (!tpl.trim()) return '';
+    }
+  }
 
   // Collect placeholder replacements so they survive escaping
   const placeholders: Record<string, string> = {};
@@ -51,7 +64,10 @@ function formatEffectHtml(e: ItemEnchantmentEffect): string {
   return tpl;
 }
 
-export function getEffectHtml(effects: ItemEnchantmentEffect[] | null | undefined): string {
+export function getEffectHtml(
+  effects: ItemEnchantmentEffect[] | null | undefined,
+  isSurvivalMode: boolean = false
+): string {
   if (!effects || !effects.length) return '';
-  return effects.map(formatEffectHtml).join(' ');
+  return effects.map((effect) => formatEffectHtml(effect, isSurvivalMode)).join(' ');
 }
