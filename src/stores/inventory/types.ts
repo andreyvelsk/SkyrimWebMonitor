@@ -156,4 +156,6 @@ export interface MiscState {
   gems?: GemItem[] | null;
 }
 
-export type InventoryItem = WeaponItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscItem | GemItem;
+export type WeaponInventoryItem = WeaponItem | AmmoItem;
+
+export type InventoryItem = WeaponInventoryItem | ApparelItem | FoodItem | PotionItem | IngredientItem | BookItem | KeyItem | ScrollItem | MiscItem | GemItem;

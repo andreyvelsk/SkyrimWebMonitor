@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState } from './types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState, WeaponInventoryItem } from './types';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page
@@ -50,12 +50,12 @@ export const useInventoryStore = defineStore('inventory', () => {
     gems: undefined,
   });
 
-  const weaponsList = computed(() => (
-    [
-      ...(weapons.value.items || []),
-      ...(weapons.value.ammo || [])
-    ]
-  ).sort((a, b) => a.name.localeCompare(b.name)));
+  const weaponsList = computed(() => {
+    const combined: WeaponInventoryItem[] = [];
+    if (weapons.value.items) combined.push(...weapons.value.items);
+    if (weapons.value.ammo) combined.push(...weapons.value.ammo);
+    return combined.sort((a, b) => a.name.localeCompare(b.name));
+  });
 
   const apparelList = computed(() => (apparel.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
@@ -74,7 +74,12 @@ export const useInventoryStore = defineStore('inventory', () => {
   ).sort((a, b) => a.name.localeCompare(b.name)));
 
   const setWeapons = (newWeapons: WeaponsState) => {
-    weapons.value = newWeapons;
+    if ('items' in newWeapons) {
+      weapons.value.items = newWeapons.items ?? [];
+    }
+    if ('ammo' in newWeapons) {
+      weapons.value.ammo = newWeapons.ammo ?? [];
+    }
   };
 
   const setApparel = (newApparel: ApparelState) => {
