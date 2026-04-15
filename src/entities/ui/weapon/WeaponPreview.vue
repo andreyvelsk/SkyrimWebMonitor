@@ -22,19 +22,14 @@
     </div>
 
     <div
-      v-if="data.enchantment"
+      v-if="data.enchantment && data.enchantment.effects && data.enchantment.effects.length"
       class="enchantment"
     >
-      <div v-if="data.enchantment.effects && data.enchantment.effects.length">
+      <div class="enchant">
         <div
-          v-for="(e, i) in data.enchantment.effects"
-          :key="i"
-          class="enchant"
-        >
-          <div class="enchant-desc">
-            {{ e.description }}
-          </div>
-        </div>
+          class="enchant-desc"
+          v-html="getEffectHtml(data.enchantment.effects)"
+        />
       </div>
     </div>
   </div>
@@ -42,6 +37,7 @@
 
 <script setup lang="ts">
 import { WeaponIcon } from '@/entities/ui';
+import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
 import type { WeaponItem } from '@/stores/inventory/types';
 
 withDefaults(defineProps<{
@@ -68,14 +64,22 @@ withDefaults(defineProps<{
         flex-direction: column;
         .stat {
           color: var(--skyrim-text-secondary);
-          font-size: var(--font-size-sm);
+          font-size: var(--font-size-base);
+
+          strong {
+            color: var(--skyrim-text-primary);
+          }
         }
       }
     }
 
 .enchant-desc {
     color: var(--skyrim-text-secondary);
-    font-size: var(--font-size-xs);
+    font-size: var(--font-size-sm);
+
+    ::v-deep strong {
+      color: var(--skyrim-text-primary);
+    }
 }
 }
 </style>
