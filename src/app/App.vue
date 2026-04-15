@@ -21,104 +21,20 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { watch, onMounted } from 'vue';
 import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import { ConnectionStatus, SkyrimModal } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
-import { getPageFields, getPageSubscriptionId, getTabCategorySubscription, TAB_CATEGORY_SUBSCRIPTIONS } from '@/app/config/pageRegistry';
-import { DataRouter } from '@/stores/adapters/dataRouter';
+import { useAppLoader } from '@/shared/lib/composables/useAppLoader';
 
 const navigationStore = useNavigationStore();
 const { activeTab, activeSubTab } = storeToRefs(navigationStore);
 
 const websocketStore = useWebSocketStore();
-const { connect, startSubscription, stopSubscription, sendQuery } = websocketStore;
 const { isConnected } = storeToRefs(websocketStore);
 
-const startCategorySubscription = (tabId: string): void => {
-  const config = getTabCategorySubscription(tabId);
-  if (config) {
-    startSubscription(config.subscriptionId, config.fields);
-  }
-};
-
-const stopCategorySubscription = (tabId: string): void => {
-  const config = getTabCategorySubscription(tabId);
-  if (config) {
-    stopSubscription(config.subscriptionId);
-  }
-};
-
-// Initialize WebSocket connection on app mount
-onMounted(async () => {
-  console.log('App mounted - initializing WebSocket connection...');
-  await connect();
-  // After connection, subscribe to current page
-  if (isConnected.value) {
-    console.log('Connected on mount, subscribing to current page...');
-    const pageFields = getPageFields(activeTab.value, activeSubTab.value);
-    const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
-    if (subscriptionId) {
-      startSubscription(subscriptionId, pageFields);
-    }
-    // One-time initial load for all category subscriptions (populate store)
-    try {
-      Object.values(TAB_CATEGORY_SUBSCRIPTIONS).forEach((cfg) => {
-        // sendQuery will return a single data message which we route through DataRouter
-        sendQuery(cfg.subscriptionId, cfg.fields, (fields) => {
-          DataRouter.routeDataById(cfg.subscriptionId, fields);
-        });
-      });
-    } catch (err) {
-      console.error('Initial category queries failed:', err);
-    }
-
-    // Start live category subscription for the active tab (existing behavior)
-    startCategorySubscription(activeTab.value);
-  }
-});
-
-// Watch for page changes and update subscription ONLY when connected
-// Also handles reconnection by re-subscribing to current page
-watch(
-  [activeTab, activeSubTab, isConnected],
-  (
-    [newTab, newSubTab, connected],
-    [oldTab, oldSubTab]
-  ) => {
-    // Only handle subscription changes when connected
-    if (!connected) {
-      console.log('WebSocket not connected, skipping subscription update');
-      return;
-    }
-
-    // Handle category subscription lifecycle when main tab changes
-    if (oldTab !== newTab) {
-      stopCategorySubscription(oldTab);
-      startCategorySubscription(newTab);
-    }
-
-    const subscriptionId = getPageSubscriptionId(newTab, newSubTab);
-    const oldSubscriptionId = getPageSubscriptionId(oldTab, oldSubTab);
-
-    if (!newSubTab) {
-      console.log('No sub-tab selected, skipping subscription update');
-      if (oldSubscriptionId) stopSubscription(oldSubscriptionId); // Unsubscribe from old page
-      return;
-    }
-
-    if (oldSubscriptionId && oldSubscriptionId !== subscriptionId) {
-      console.log(`Unsubscribing from old page: ${oldSubscriptionId}`);
-      stopSubscription(oldSubscriptionId); // Unsubscribe from old page
-    }
-
-    console.log(`Subscription update: ${newTab} - ${newSubTab}`);
-    const pageFields = getPageFields(newTab, newSubTab);
-    if (subscriptionId) startSubscription(subscriptionId, pageFields);
-  },
-  { immediate: false } // Don't run immediately on mount, connect() handles initial subscription
-);
+// Externalized loading/subscription logic
+useAppLoader();
 </script>
 
 <style scoped lang="scss">
