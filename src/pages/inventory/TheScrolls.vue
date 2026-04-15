@@ -7,7 +7,7 @@
     @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
-      <scroll-item
+      <inventory-item
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
         :active="active"
@@ -27,12 +27,13 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { ScrollItem, ScrollPreview } from '@/entities/ui';
+import { ScrollPreview } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
 import { isScrollItem } from '@/stores/adapters/typeGuards';
+import { InventoryItem } from '@/shared/ui/items/';
 
 const inventoryStore = useInventoryStore();
 const { scrollsList } = storeToRefs(inventoryStore);

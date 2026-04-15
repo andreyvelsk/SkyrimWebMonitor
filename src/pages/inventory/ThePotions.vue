@@ -7,7 +7,7 @@
     @item-double-click="useItem"
   >
     <template #default="{ item, active, onSelect }">
-      <potion-item
+      <inventory-item
         :name="item.name || $t('shared.ui.inventoryItem.unknown')"
         :is-favorite="item.isFavorite || false"
         :active="active"
@@ -20,7 +20,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { PotionItem } from '@/entities/ui';
+import { InventoryItem } from '@/shared/ui/items/';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
