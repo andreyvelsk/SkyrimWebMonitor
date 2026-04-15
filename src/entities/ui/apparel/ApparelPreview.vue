@@ -4,9 +4,9 @@
     :stats="stats"
   >
     <template #icon>
-      <weapon-icon
+      <apparel-icon
         v-if="data"
-        :weapon-type="data.weaponType"
+        :apparel-type="data.armorType"
         :size="48"
       />
     </template>
@@ -17,14 +17,14 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { BasePreview } from '@/shared/ui/items';
-import { WeaponIcon } from '@/entities/ui';
-import type { WeaponItem } from '@/stores/inventory/types';
+import { ApparelIcon } from '@/entities/ui';
+import type { ApparelItem } from '@/stores/inventory/types';
 
 const { t } = useI18n();
 
 const props = withDefaults(
   defineProps<{
-    data?: WeaponItem | null;
+    data?: ApparelItem | null;
   }>(),
   {
     data: null,
@@ -33,15 +33,15 @@ const props = withDefaults(
 
 const stats = computed(() => [
   {
-    label: t('pages.inventory.weapons.damage'),
-    value: props.data?.damage ?? props.data?.baseDamage ?? '—',
+    label: t('pages.inventory.apparel.armorRating'),
+    value: props.data?.armorRating ?? props.data?.baseArmorRating ?? '—',
   },
   {
-    label: t('pages.inventory.weapons.weight'),
+    label: t('pages.inventory.apparel.weight'),
     value: props.data?.weight ?? '—',
   },
   {
-    label: t('pages.inventory.weapons.value'),
+    label: t('pages.inventory.apparel.value'),
     value: props.data?.value ?? '—',
   },
 ]);

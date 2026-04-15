@@ -76,5 +76,29 @@ export default [
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'no-unused-vars': 'off'
     }
+  },
+  {
+    files: ['**/Preview.vue', '**/BasePreview.vue'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: typescriptParser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true
+        }
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node
+      }
+    },
+    plugins: {
+      '@typescript-eslint': typescriptEslint
+    },
+    rules: {
+      'vue/no-v-html': 'off'
+    }
   }
 ];

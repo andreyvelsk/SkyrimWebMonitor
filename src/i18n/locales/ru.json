@@ -45,7 +45,10 @@
         "tab": "Одежда",
         "waitingForData": "Ожидание данных одежды...",
         "unknown": "Неизвестно",
-        "noDescription": "Нет описания"
+        "noDescription": "Нет описания",
+        "armorRating": "Броня",
+        "weight": "Вес",
+        "value": "Стоимость"
       },
       "misc": {
         "tab": "Разное",

@@ -7,25 +7,23 @@
     @click="$emit('click')"
   >
     <template #status>
-      <div v-if="isEquipped" class="apparel-status">
+      <div
+        v-if="isEquipped"
+        class="apparel-status"
+      >
         <div class="apparel-equipped-indicator" />
       </div>
-    </template>
-
-    <template #icon>
-      <apparel-icon :apparel-type="apparelType" />
     </template>
   </inventory-item>
 </template>
 
 <script setup lang="ts">
 import { InventoryItem } from '@/shared/ui/items';
-import { ApparelIcon } from '@/entities/ui';
-import type { ApparelType } from '@/stores/inventory/types';
+import type { ArmorType } from '@/stores/inventory/types';
 
 defineProps<{
   name: string;
-  apparelType: ApparelType;
+  armorType: ArmorType;
   quantity?: number;
   isFavorite?: boolean;
   isEquipped?: boolean;

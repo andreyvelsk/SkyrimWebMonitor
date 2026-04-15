@@ -20,7 +20,7 @@ export const APPAREL_TYPES = {
   HEAVY_ARMOR: "Heavy",
 } as const;
 
-export type ApparelType = (typeof APPAREL_TYPES)[keyof typeof APPAREL_TYPES] | null;
+export type ArmorType = (typeof APPAREL_TYPES)[keyof typeof APPAREL_TYPES] | null;
 
 // Equip slot constants
 export const EQUIP_SLOTS = {
@@ -85,7 +85,7 @@ export interface WeaponsState {
 
 export interface ApparelItem extends BaseItem {
   armorRating: number;
-  armorType: ApparelType;
+  armorType: ArmorType;
   armorTypeId?: string;
   baseArmorRating: number;
   bodySlots: string[];

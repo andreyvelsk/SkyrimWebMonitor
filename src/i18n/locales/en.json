@@ -45,7 +45,10 @@
         "tab": "Apparel",
         "waitingForData": "Waiting for apparel data...",
         "unknown": "Unknown",
-        "noDescription": "No description"
+        "noDescription": "No description",
+        "armorRating": "Armor",
+        "weight": "Weight",
+        "value": "Value"
       },
       "misc": {
         "tab": "Misc",
