@@ -1,7 +1,7 @@
 <template>
   <div class="handheld-device">
     <!-- Show connection status when not connected -->
-    <connection-status v-if="isConnected" />
+    <connection-status v-if="!isConnected" />
     <template v-else>
       <skyrim-navigation
         :active-tab="activeTab"
