@@ -95,7 +95,6 @@ watch(
       align-items: center;
       justify-content: center;
       gap: var(--tab-gap);
-      padding: var(--spacing-xs);
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
     }
@@ -104,7 +103,6 @@ watch(
       display: flex;
       align-items: center;
       gap: var(--spacing-xs);
-      padding: var(--spacing-xs);
       background-color: var(--skyrim-bg-dark);
       border-bottom: 1px solid var(--skyrim-border-dark);
       overflow-x: auto;
@@ -136,11 +134,6 @@ watch(
       cursor: pointer;
       transition: all var(--transition-normal);
 
-      &:hover {
-        background-color: var(--tab-bg-hover);
-        color: var(--tab-text-hover);
-      }
-
       &.active {
         background-color: var(--tab-bg-active);
         color: var(--tab-text-active);
@@ -163,14 +156,9 @@ watch(
       cursor: pointer;
       transition: all var(--transition-normal);
 
-      &:hover {
-        background-color: var(--subtab-bg-hover);
-        color: var(--subtab-text-hover);
-      }
-
       &.active {
-        background-color: var(--subtab-bg-active);
-        color: var(--subtab-text-active);
+        background-color: var(--tab-bg-active);
+        color: var(--tab-text-active);
       }
     }
   }
