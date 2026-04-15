@@ -57,10 +57,9 @@ defineProps<{
   &.inv-item--active {
     background-color: var(--tab-bg-active);
     border-color: var(--skyrim-accent-gold-dim);
-  }
-
-  &:active {
-    background-color: var(--tab-bg-active);
+    .inv-name {
+      color: var(--skyrim-text-primary);
+    }
   }
 }
 
@@ -85,7 +84,7 @@ defineProps<{
 .inv-name {
   font-family: var(--font-heading);
   font-size: var(--font-size-base);
-  color: var(--skyrim-text-primary);
+  color: var(--skyrim-text-secondary);
   word-break: break-word;
 }
 

@@ -140,7 +140,7 @@ function handleActionClick(actionEvent: string) {
 }
 
 .list-wrapper {
-  flex: 0 0 70%;
+  flex: 0 0 60%;
   min-width: 0;
   min-height: 0;
   display: flex;
