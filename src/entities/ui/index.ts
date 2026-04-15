@@ -8,6 +8,6 @@ export { FoodItem } from './food';
 export { IngredientItem } from './ingredients';
 export { BookItem } from './books';
 export { KeyItem } from './keys';
-export { ScrollItem } from './scrolls';
+export { ScrollItem, ScrollPreview } from './scrolls';
 export { PotionItem } from './potions';
 export { MiscItem, GemItem } from './misc';

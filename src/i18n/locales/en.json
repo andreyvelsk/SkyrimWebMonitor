@@ -112,7 +112,9 @@
     "cancel": "Cancel",
     "addToFavorites": "Add to Favorites",
     "removeFromFavorites": "Remove from Favorites",
-    "dropItem": "Drop Item"
+    "dropItem": "Drop Item",
+    "weight": "Weight",
+    "value": "Value"
   },
   "modals": {
     "dropItems": "Drop Items",

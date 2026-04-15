@@ -112,7 +112,9 @@
     "cancel": "Отмена",
     "addToFavorites": "Добавить в избранное",
     "removeFromFavorites": "Удалить из избранного",
-    "dropItem": "Выбросить предмет"
+    "dropItem": "Выбросить предмет",
+    "weight": "Вес",
+    "value": "Стоимость"
   },
   "modals": {
     "dropItems": "Выброс предметов",
