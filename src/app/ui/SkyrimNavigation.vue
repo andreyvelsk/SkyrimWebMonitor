@@ -28,7 +28,7 @@
       <button
         v-for="sub in nav.currentSubTabs"
         :key="sub.id"
-        class="skyrim-tab"
+        class="skyrim-subtab"
         :class="{ active: nav.activeSubTab === sub.id }"
         role="tab"
         :aria-selected="nav.activeSubTab === sub.id"
@@ -155,6 +155,7 @@ watch(
       border: none;
       cursor: pointer;
       transition: all var(--transition-normal);
+      text-transform: uppercase;
 
       &.active {
         background-color: var(--tab-bg-active);
