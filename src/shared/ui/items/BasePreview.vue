@@ -31,17 +31,14 @@
 
     <div
       v-if="
-        'enchantment' in data &&
-          data.enchantment &&
-          data.enchantment.effects &&
-          data.enchantment.effects.length
+        effects &&effects.length
       "
       class="enchantment"
     >
       <div class="enchant">
         <div
           class="enchant-desc"
-          v-html="getEffectHtml(data.enchantment.effects)"
+          v-html="getEffectHtml(effects)"
         />
       </div>
     </div>
@@ -50,7 +47,7 @@
 
 <script setup lang="ts">
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
-import type { InventoryItem } from '@/stores/inventory/types';
+import type { InventoryItem, ItemEnchantmentEffect } from '@/stores/inventory/types';
 
 interface Stat {
   label: string;
@@ -61,10 +58,12 @@ withDefaults(
   defineProps<{
     data?: InventoryItem | null;
     stats?: Stat[];
+    effects?: ItemEnchantmentEffect[];
   }>(),
   {
     data: null,
     stats: () => [],
+    effects: () => [],
   }
 );
 </script>
