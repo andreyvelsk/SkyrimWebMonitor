@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "tsc": "tsc --noEmit",
+    "export-fixtures": "node scripts/export-fixtures.js",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
     "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\" && npm run lint:css"
@@ -38,6 +39,7 @@
     "tailwindcss": "^3.4.19",
     "typescript": "^6.0.2",
     "vite": "^7.3.2",
-    "vue-eslint-parser": "^10.4.0"
+    "vue-eslint-parser": "^10.4.0",
+    "ws": "^8.13.0"
   }
 }

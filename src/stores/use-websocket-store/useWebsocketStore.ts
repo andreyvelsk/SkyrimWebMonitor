@@ -6,6 +6,7 @@ import type { DataMessage, ServerMessage, CommandResultMessage, CommandType, Equ
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './types';
 import { LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse } from '@/stores/adapters/localeAdapter';
+import { applyFixturesIfEnabled } from '@/stores/fixtures/fixtureLoader';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
 
@@ -192,6 +193,9 @@ export const useWebSocketStore = defineStore('websocket', () => {
   };
 
   setupListeners();
+
+  // if fixtures are enabled, load and apply them on store initialization
+  applyFixturesIfEnabled().catch((err) => console.error('[WebSocketStore] Fixture loader failed:', err));
 
   return {
     status,
