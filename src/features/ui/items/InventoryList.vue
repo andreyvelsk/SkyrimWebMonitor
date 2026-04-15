@@ -145,6 +145,7 @@ function handleActionClick(actionEvent: string) {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: var(--spacing-md);
 }
 

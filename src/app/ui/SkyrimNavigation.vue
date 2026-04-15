@@ -28,7 +28,7 @@
       <button
         v-for="sub in nav.currentSubTabs"
         :key="sub.id"
-        class="skyrim-subtab"
+        class="skyrim-tab"
         :class="{ active: nav.activeSubTab === sub.id }"
         role="tab"
         :aria-selected="nav.activeSubTab === sub.id"
@@ -96,7 +96,7 @@ watch(
       justify-content: center;
       gap: var(--tab-gap);
       background-color: var(--skyrim-bg-dark);
-      border-bottom: 1px solid var(--skyrim-border-dark);
+      border-bottom: 2px solid var(--skyrim-border-dark);
     }
 
     &.skyrim-subtabs {
@@ -104,7 +104,7 @@ watch(
       align-items: center;
       gap: var(--spacing-xs);
       background-color: var(--skyrim-bg-dark);
-      border-bottom: 1px solid var(--skyrim-border-dark);
+      border-bottom: 2px solid var(--skyrim-border-dark);
       overflow-x: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
