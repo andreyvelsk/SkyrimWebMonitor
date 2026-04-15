@@ -15,9 +15,9 @@
       </div>
 
       <div class="stats">
-        <span class="stat">Урон: <strong>{{ data.damage ?? data.baseDamage ?? '—' }}</strong></span>
-        <span class="stat">Вес: <strong>{{ data.weight ?? '—' }}</strong></span>
-        <span class="stat">Стоимость: <strong>{{ data.value ?? '—' }}</strong></span>
+        <span class="stat">{{ $t('pages.inventory.weapons.damage') }}: <strong>{{ data.damage ?? data.baseDamage ?? '—' }}</strong></span>
+        <span class="stat">{{ $t('pages.inventory.weapons.weight') }}: <strong>{{ data.weight ?? '—' }}</strong></span>
+        <span class="stat">{{ $t('pages.inventory.weapons.value') }}: <strong>{{ data.value ?? '—' }}</strong></span>
       </div>
     </div>
 

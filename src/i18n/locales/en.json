@@ -36,7 +36,10 @@
         "waitingForData": "Waiting for weapon data...",
         "drop": "Drop",
         "unknown": "Unknown",
-        "noDescription": "No description"
+        "noDescription": "No description",
+        "damage": "Damage",
+        "weight": "Weight",
+        "value": "Value"
       },
       "apparel": {
         "tab": "Apparel",

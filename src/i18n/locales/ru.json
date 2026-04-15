@@ -36,7 +36,10 @@
         "waitingForData": "Ожидание данных оружия...",
         "drop": "Выбросить",
         "unknown": "Неизвестно",
-        "noDescription": "Нет описания"
+        "noDescription": "Нет описания",
+        "damage": "Урон",
+        "weight": "Вес",
+        "value": "Стоимость"
       },
       "apparel": {
         "tab": "Одежда",
