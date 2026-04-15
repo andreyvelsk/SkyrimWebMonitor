@@ -39,6 +39,61 @@ export const EQUIPPED_HANDS = {
 
 export type EquippedHand = (typeof EQUIPPED_HANDS)[keyof typeof EQUIPPED_HANDS] | null;
 
+// Category types (per Inventory.md `categoryType`)
+export const CATEGORY_TYPES = {
+  WEAPON: "Weapon",
+  APPAREL: "Apparel",
+  BOOK: "Book",
+  POTION: "Potion",
+  FOOD: "Food",
+  INGREDIENT: "Ingredient",
+  MISC: "Misc",
+  AMMO: "Ammo",
+  KEY: "Key",
+  SOUL_GEM: "SoulGem",
+  SCROLL: "Scroll",
+} as const;
+
+export type CategoryType = (typeof CATEGORY_TYPES)[keyof typeof CATEGORY_TYPES];
+
+// Body-slot identifiers for apparel
+export const BODY_SLOTS = {
+  HEAD: "Head",
+  HAIR: "Hair",
+  BODY: "Body",
+  HANDS: "Hands",
+  FOREARMS: "Forearms",
+  AMULET: "Amulet",
+  RING: "Ring",
+  FEET: "Feet",
+  CALVES: "Calves",
+  SHIELD: "Shield",
+  TAIL: "Tail",
+  LONG_HAIR: "LongHair",
+  CIRCLET: "Circlet",
+  EARS: "Ears",
+} as const;
+
+export type BodySlot = (typeof BODY_SLOTS)[keyof typeof BODY_SLOTS];
+
+// Soul gem capacity values
+export const SOUL_GEM_CAPACITIES = {
+  PETTY: "Petty",
+  LESSER: "Lesser",
+  COMMON: "Common",
+  GREATER: "Greater",
+  GRAND: "Grand",
+  NONE: "None",
+} as const;
+
+export type SoulGemCapacity = (typeof SOUL_GEM_CAPACITIES)[keyof typeof SOUL_GEM_CAPACITIES];
+
+// Ingredient-specific effect shape
+export interface IngredientEffect {
+  name: string;
+  known: boolean;
+}
+
 export interface ItemEnchantmentEffect {
   description: string;
   descriptionTemplate: string;
@@ -55,6 +110,7 @@ export interface ItemEnchantment {
 export interface BaseItem {
   count: number;
   formId: string;
+  categoryType: CategoryType;
   isFavorite: boolean;
   isStolen: boolean;
   name: string;
@@ -63,6 +119,7 @@ export interface BaseItem {
 }
 
 export interface WeaponItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['WEAPON'];
   baseDamage: number;
   damage: number;
   enchantment: ItemEnchantment | null;
@@ -75,6 +132,7 @@ export interface WeaponItem extends BaseItem {
 }
 
 export interface AmmoItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['AMMO'];
   isEquipped: boolean;
 }
 
@@ -84,11 +142,12 @@ export interface WeaponsState {
 }
 
 export interface ApparelItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['APPAREL'];
   armorRating: number;
   armorType: ArmorType;
   armorTypeId?: string;
   baseArmorRating: number;
-  bodySlots: string[];
+  bodySlots: BodySlot[];
   enchantment: ItemEnchantment | null;
   equipSlots: EquipSlot[];
   isEquipped: boolean;
@@ -99,6 +158,7 @@ export interface ApparelState {
 }
 
 export interface FoodItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['FOOD'];
   effects: ItemEnchantmentEffect[];
 }
 
@@ -107,6 +167,7 @@ export interface FoodState {
 }
 
 export interface PotionItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['POTION'];
   effects: ItemEnchantmentEffect[];
 }
 
@@ -114,13 +175,16 @@ export interface PotionsState {
   items?: PotionItem[] | null;
 }
 
-export interface KeyItem extends BaseItem {}
+export interface KeyItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['KEY'];
+}
 
 export interface KeysState {
   items?: KeyItem[] | null;
 }
 
 export interface BookItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['BOOK'];
   description: string;
 }
 
@@ -129,6 +193,7 @@ export interface BookState {
 }
 
 export interface ScrollItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['SCROLL'];
   effects: ItemEnchantmentEffect[];
 }
 
@@ -137,7 +202,8 @@ export interface ScrollsState {
 }
 
 export interface IngredientItem extends BaseItem {
-  effects: ItemEnchantmentEffect[];
+  categoryType: (typeof CATEGORY_TYPES)['INGREDIENT'];
+  effects: IngredientEffect[];
 }
 
 export interface IngredientsState {
@@ -145,11 +211,14 @@ export interface IngredientsState {
 }
 
 export interface GemItem extends BaseItem {
-  capacity: string;
-  containedSoul: string;
+  categoryType: (typeof CATEGORY_TYPES)['SOUL_GEM'];
+  capacity: SoulGemCapacity;
+  containedSoul: SoulGemCapacity;
 }
 
-export interface MiscItem extends BaseItem {}
+export interface MiscItem extends BaseItem {
+  categoryType: (typeof CATEGORY_TYPES)['MISC'];
+}
 
 export interface MiscState {
   items?: MiscItem[] | null;

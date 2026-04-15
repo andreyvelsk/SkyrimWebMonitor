@@ -19,6 +19,7 @@ import type {
   GemItem,
   AmmoItem,
 } from '@/stores/inventory/types';
+import { CATEGORY_TYPES } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
@@ -77,8 +78,7 @@ export function isWeaponItem(item: unknown): item is WeaponItem {
   return (
     typeof weapon.formId === 'string' &&
     typeof weapon.name === 'string' &&
-    typeof weapon.damage === 'number' &&
-    'weaponType' in weapon
+    weapon.categoryType === CATEGORY_TYPES.WEAPON
   );
 }
 
@@ -88,7 +88,7 @@ export function isAmmoItem(item: unknown): item is AmmoItem {
   return (
     typeof ammo.formId === 'string' &&
     typeof ammo.name === 'string' &&
-    'isEquipped' in ammo
+    ammo.categoryType === CATEGORY_TYPES.AMMO
   );
 }
 
@@ -98,7 +98,8 @@ export function isApparelItem(item: unknown): item is ApparelItem {
   return (
     typeof apparel.formId === 'string' &&
     typeof apparel.name === 'string' &&
-    'armorType' in apparel
+    Array.isArray(apparel.bodySlots) &&
+    apparel.categoryType === CATEGORY_TYPES.APPAREL
   );
 }
 
@@ -108,7 +109,8 @@ export function isFoodItem(item: unknown): item is FoodItem {
   return (
     typeof food.formId === 'string' &&
     typeof food.name === 'string' &&
-    Array.isArray(food.effects)
+    Array.isArray(food.effects) &&
+    food.categoryType === CATEGORY_TYPES.FOOD
   );
 }
 
@@ -118,7 +120,8 @@ export function isPotionItem(item: unknown): item is PotionItem {
   return (
     typeof potion.formId === 'string' &&
     typeof potion.name === 'string' &&
-    Array.isArray(potion.effects)
+    Array.isArray(potion.effects) &&
+    potion.categoryType === CATEGORY_TYPES.POTION
   );
 }
 
@@ -128,7 +131,8 @@ export function isIngredientItem(item: unknown): item is IngredientItem {
   return (
     typeof ing.formId === 'string' &&
     typeof ing.name === 'string' &&
-    Array.isArray(ing.effects)
+    Array.isArray(ing.effects) &&
+    ing.categoryType === CATEGORY_TYPES.INGREDIENT
   );
 }
 
@@ -138,7 +142,8 @@ export function isScrollItem(item: unknown): item is ScrollItem {
   return (
     typeof scroll.formId === 'string' &&
     typeof scroll.name === 'string' &&
-    Array.isArray(scroll.effects)
+    Array.isArray(scroll.effects) &&
+    scroll.categoryType === CATEGORY_TYPES.SCROLL
   );
 }
 
@@ -148,7 +153,8 @@ export function isBookItem(item: unknown): item is BookItem {
   return (
     typeof book.formId === 'string' &&
     typeof book.name === 'string' &&
-    typeof book.description === 'string'
+    typeof book.description === 'string' &&
+    book.categoryType === CATEGORY_TYPES.BOOK
   );
 }
 
@@ -159,6 +165,7 @@ export function isGem(item: unknown): item is GemItem {
     typeof gem.formId === 'string' &&
     typeof gem.name === 'string' &&
     typeof gem.capacity === 'string' &&
-    typeof gem.containedSoul === 'string'
+    typeof gem.containedSoul === 'string' &&
+    gem.categoryType === CATEGORY_TYPES.SOUL_GEM
   );
 }
