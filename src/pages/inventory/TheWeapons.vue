@@ -30,7 +30,7 @@
         @click="onSelect"
       />
     </template>
-    
+
     <template #preview>
       <weapon-preview
         v-if="isWeaponItem(activeItemData)"
@@ -58,12 +58,11 @@ const { weaponsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { openModal, closeModal } = useModal();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } = useInventoryItemActions(
-  () => weaponsList.value
-);
+const { activeItem, activeItemData, toggleFavorite, startDrop } =
+  useInventoryItemActions(() => weaponsList.value);
 
 function equipItem(formId: string) {
-  const item = weaponsList.value.find(w => w.formId === formId);
+  const item = weaponsList.value.find((w) => w.formId === formId);
   if (!item) return;
 
   if (!isWeaponItem(item) && isAmmoItem(item)) {

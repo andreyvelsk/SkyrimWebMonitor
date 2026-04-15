@@ -35,7 +35,7 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 );
 
 function useItem(formId: string) {
-  const item = scrollsList.value.find(f => f.formId === formId);
+  const item = scrollsList.value.find((f) => f.formId === formId);
   if (!item) return;
 
   // Use the scroll

@@ -1,13 +1,7 @@
 <template>
-  <div
-    v-if="data"
-    class="weapon-preview"
-  >
+  <div v-if="data" class="weapon-preview">
     <div class="flex justify-center">
-      <weapon-icon
-        :weapon-type="data.weaponType"
-        :size="48"
-      />
+      <weapon-icon :weapon-type="data.weaponType" :size="48" />
     </div>
     <div class="info">
       <div class="name">
@@ -15,14 +9,27 @@
       </div>
 
       <div class="stats">
-        <span class="stat">{{ $t('pages.inventory.weapons.damage') }}: <strong>{{ data.damage ?? data.baseDamage ?? '—' }}</strong></span>
-        <span class="stat">{{ $t('pages.inventory.weapons.weight') }}: <strong>{{ data.weight ?? '—' }}</strong></span>
-        <span class="stat">{{ $t('pages.inventory.weapons.value') }}: <strong>{{ data.value ?? '—' }}</strong></span>
+        <span class="stat"
+          >{{ $t('pages.inventory.weapons.damage') }}:
+          <strong>{{ data.damage ?? data.baseDamage ?? '—' }}</strong></span
+        >
+        <span class="stat"
+          >{{ $t('pages.inventory.weapons.weight') }}:
+          <strong>{{ data.weight ?? '—' }}</strong></span
+        >
+        <span class="stat"
+          >{{ $t('pages.inventory.weapons.value') }}:
+          <strong>{{ data.value ?? '—' }}</strong></span
+        >
       </div>
     </div>
 
     <div
-      v-if="data.enchantment && data.enchantment.effects && data.enchantment.effects.length"
+      v-if="
+        data.enchantment &&
+        data.enchantment.effects &&
+        data.enchantment.effects.length
+      "
       class="enchantment"
     >
       <div class="enchant">
@@ -40,11 +47,14 @@ import { WeaponIcon } from '@/entities/ui';
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
 import type { WeaponItem } from '@/stores/inventory/types';
 
-withDefaults(defineProps<{
-  data?: WeaponItem | null;
-}>(), {
-  data: null,
-});
+withDefaults(
+  defineProps<{
+    data?: WeaponItem | null;
+  }>(),
+  {
+    data: null,
+  }
+);
 </script>
 
 <style scoped lang="scss">
@@ -54,32 +64,34 @@ withDefaults(defineProps<{
   gap: var(--spacing-md);
 
   .info {
-      .name {
-        font-weight: 600;
-        font-size: var(--font-size-lg);
-        margin-bottom: 0.25rem;
-      }
-      .stats {
-        display: flex;
-        flex-direction: column;
-        .stat {
-          color: var(--skyrim-text-secondary);
-          font-size: var(--font-size-base);
+    .name {
+      font-weight: 600;
+      font-size: var(--font-size-lg);
+      margin-bottom: 0.25rem;
+    }
 
-          strong {
-            color: var(--skyrim-text-primary);
-          }
+    .stats {
+      display: flex;
+      flex-direction: column;
+
+      .stat {
+        color: var(--skyrim-text-secondary);
+        font-size: var(--font-size-base);
+
+        strong {
+          color: var(--skyrim-text-primary);
         }
       }
     }
+  }
 
-.enchant-desc {
+  .enchant-desc {
     color: var(--skyrim-text-secondary);
     font-size: var(--font-size-sm);
 
     ::v-deep strong {
       color: var(--skyrim-text-primary);
     }
-}
+  }
 }
 </style>

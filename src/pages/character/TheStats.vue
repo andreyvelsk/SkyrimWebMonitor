@@ -19,21 +19,9 @@
       />
     </div>
     <div class="stats-grid">
-      <stat-bar
-        :value="healthPercentage"
-        :max="100"
-        color="health"
-      />
-      <stat-bar
-        :value="magickaPercentage"
-        :max="100"
-        color="magicka"
-      />
-      <stat-bar
-        :value="staminaPercentage"
-        :max="100"
-        color="stamina"
-      />
+      <stat-bar :value="healthPercentage" :max="100" color="health" />
+      <stat-bar :value="magickaPercentage" :max="100" color="magicka" />
+      <stat-bar :value="staminaPercentage" :max="100" color="stamina" />
     </div>
   </div>
 </template>

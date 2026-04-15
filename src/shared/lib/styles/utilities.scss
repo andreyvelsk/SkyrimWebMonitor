@@ -82,17 +82,39 @@
 .flex {
   display: flex;
 
-  &-row { flex-direction: row; }
-  &-col { flex-direction: column; }
-  &-row-reverse { flex-direction: row-reverse; }
-  &-col-reverse { flex-direction: column-reverse; }
-  &-wrap { flex-wrap: wrap; }
-  &-nowrap { flex-wrap: nowrap; }
-  &-wrap-reverse { flex-wrap: wrap-reverse; }
-  &-1 { flex: 1; }
-  &-auto { flex: auto; }
-  &-initial { flex: initial; }
-  &-none { flex: none; }
+  &-row {
+    flex-direction: row;
+  }
+  &-col {
+    flex-direction: column;
+  }
+  &-row-reverse {
+    flex-direction: row-reverse;
+  }
+  &-col-reverse {
+    flex-direction: column-reverse;
+  }
+  &-wrap {
+    flex-wrap: wrap;
+  }
+  &-nowrap {
+    flex-wrap: nowrap;
+  }
+  &-wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+  &-1 {
+    flex: 1;
+  }
+  &-auto {
+    flex: auto;
+  }
+  &-initial {
+    flex: initial;
+  }
+  &-none {
+    flex: none;
+  }
 }
 
 /* JUSTIFY CONTENT */

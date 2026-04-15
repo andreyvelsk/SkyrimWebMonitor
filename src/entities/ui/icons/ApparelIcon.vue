@@ -1,8 +1,5 @@
 <template>
-  <base-icon
-    :icon-path="iconPath"
-    :size="size"
-  />
+  <base-icon :icon-path="iconPath" :size="size" />
 </template>
 
 <script setup lang="ts">
@@ -31,9 +28,10 @@ const APPAREL_ICON_PATHS: Record<string, string> = {
 };
 
 const iconPath = computed(() => {
-  const relativePath = props.apparelType && APPAREL_ICON_PATHS[props.apparelType]
-    ? APPAREL_ICON_PATHS[props.apparelType]
-    : APPAREL_ICON_PATHS.Body;
+  const relativePath =
+    props.apparelType && APPAREL_ICON_PATHS[props.apparelType]
+      ? APPAREL_ICON_PATHS[props.apparelType]
+      : APPAREL_ICON_PATHS.Body;
   return relativePath;
 });
 </script>

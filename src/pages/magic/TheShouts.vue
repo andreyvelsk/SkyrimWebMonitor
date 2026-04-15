@@ -24,4 +24,3 @@
 <script setup lang="ts">
 import { MagicItem } from '@/shared/ui';
 </script>
-

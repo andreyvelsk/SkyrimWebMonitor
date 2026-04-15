@@ -6,9 +6,7 @@
     :active="active"
   >
     <template #icon>
-      <base-icon
-        icon-path="lorc/shiny-apple.svg"
-      />
+      <base-icon icon-path="lorc/shiny-apple.svg" />
     </template>
   </inventory-item>
 </template>

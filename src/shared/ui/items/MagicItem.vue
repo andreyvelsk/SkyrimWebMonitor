@@ -1,21 +1,10 @@
 <template>
-  <div
-    class="magic-item"
-    :class="{ 'is-shout': isShout }"
-  >
+  <div class="magic-item" :class="{ 'is-shout': isShout }">
     <div class="magic-icon">
-      <svg
-        v-if="isShout"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
+      <svg v-if="isShout" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
       </svg>
-      <svg
-        v-else
-        viewBox="0 0 24 24"
-        fill="currentColor"
-      >
+      <svg v-else viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" />
       </svg>
     </div>
@@ -23,16 +12,11 @@
       <span class="magic-name">{{ name }}</span>
       <span class="magic-school">{{ school }}</span>
     </div>
-    <div
-      v-if="!isShout"
-      class="magic-cost"
-    >
-      <span>{{ cost }}</span><span class="cost-label"> {{ $t('shared.ui.magicItem.mp') }}</span>
+    <div v-if="!isShout" class="magic-cost">
+      <span>{{ cost }}</span
+      ><span class="cost-label"> {{ $t('shared.ui.magicItem.mp') }}</span>
     </div>
-    <div
-      v-else
-      class="shout-ready"
-    >
+    <div v-else class="shout-ready">
       {{ $t('shared.ui.magicItem.ready') }}
     </div>
   </div>

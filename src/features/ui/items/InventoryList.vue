@@ -12,42 +12,39 @@
             :on-select="() => handleItemClick(item.formId)"
           />
         </template>
-  
+
         <!-- Empty state -->
-        <div
-          v-else
-          class="no-data"
-        >
+        <div v-else class="no-data">
           <slot name="empty">
             {{ emptyMessage }}
           </slot>
         </div>
       </div>
-  
+
       <!-- Action toolbar -->
       <div class="inventory-toolbar">
         <button
           v-for="action in enabledActions"
           :key="action.id"
           class="toolbar-btn"
-          :class="[action.class, { favorite: action.id === 'favorite' && isActiveItemFavorite }]"
+          :class="[
+            action.class,
+            { favorite: action.id === 'favorite' && isActiveItemFavorite },
+          ]"
           :title="action.title"
           :disabled="!modelValue"
           @click="handleActionClick(action.event)"
         >
-          <base-icon
-            :icon-path="action.icon"
-            :size="20"
-          />
+          <base-icon :icon-path="action.icon" :size="20" />
         </button>
       </div>
     </div>
-    
+
     <div class="item-preview">
       <slot name="preview">
         <!-- Optional preview content goes here -->
       </slot>
-    </div>  
+    </div>
   </div>
 </template>
 
@@ -99,7 +96,7 @@ const emit = defineEmits<{
 
 const activeItemData = computed(() => {
   if (!props.modelValue) return null;
-  return props.items?.find(item => item.formId === props.modelValue) || null;
+  return props.items?.find((item) => item.formId === props.modelValue) || null;
 });
 
 const isActiveItemFavorite = computed(() => {
@@ -151,8 +148,7 @@ function handleActionClick(actionEvent: string) {
 
 .list {
   min-width: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
@@ -190,11 +186,13 @@ function handleActionClick(actionEvent: string) {
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;
   transition: all var(--transition-fast);
+
   --skyrim-text-accent: var(--skyrim-text-secondary);
 
   &:hover:not(:disabled) {
     background-color: var(--tab-bg-hover);
     border-color: var(--skyrim-accent-gold-dim);
+
     --skyrim-text-accent: var(--skyrim-text-primary);
   }
 

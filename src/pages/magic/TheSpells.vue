@@ -1,20 +1,8 @@
 <template>
   <div class="list">
-    <magic-item
-      name="Fireball"
-      school="Destruction"
-      :cost="50"
-    />
-    <magic-item
-      name="Healing Hands"
-      school="Restoration"
-      :cost="25"
-    />
-    <magic-item
-      name="Oakflesh"
-      school="Alteration"
-      :cost="40"
-    />
+    <magic-item name="Fireball" school="Destruction" :cost="50" />
+    <magic-item name="Healing Hands" school="Restoration" :cost="25" />
+    <magic-item name="Oakflesh" school="Alteration" :cost="40" />
     <magic-item
       name="Conjure Flame Atronach"
       school="Conjuration"
@@ -26,4 +14,3 @@
 <script setup lang="ts">
 import { MagicItem } from '@/shared/ui';
 </script>
-

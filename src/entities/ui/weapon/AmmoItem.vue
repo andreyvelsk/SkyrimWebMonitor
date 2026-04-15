@@ -7,10 +7,7 @@
     @click="$emit('click')"
   >
     <template #status>
-      <div
-        v-if="isEquipped"
-        class="ammo-status"
-      >
+      <div v-if="isEquipped" class="ammo-status">
         <div class="ammo-equipped-indicator" />
       </div>
     </template>
@@ -47,6 +44,6 @@ defineEmits<{
   height: 6px;
   border-radius: 50%;
   background-color: var(--skyrim-text-accent);
-  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 2px rgb(0 0 0 / 50%);
 }
 </style>

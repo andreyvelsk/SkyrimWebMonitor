@@ -48,7 +48,7 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 );
 
 function useItem(formId: string) {
-  const item = miscList.value.find(f => f.formId === formId);
+  const item = miscList.value.find((f) => f.formId === formId);
   if (!item) return;
 
   // Use (consume) the misc item when double-clicked (if supported)

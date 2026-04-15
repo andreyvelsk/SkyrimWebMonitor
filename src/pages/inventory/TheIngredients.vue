@@ -35,7 +35,7 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 );
 
 function useItem(formId: string) {
-  const item = ingredientsList.value.find(f => f.formId === formId);
+  const item = ingredientsList.value.find((f) => f.formId === formId);
   if (!item) return;
 
   // Use (consume) the ingredient item

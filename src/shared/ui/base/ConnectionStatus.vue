@@ -17,10 +17,7 @@
         <p class="text-sm font-semibold">
           {{ statusText }}
         </p>
-        <p
-          v-if="wsStore.error"
-          class="text-xs opacity-75"
-        >
+        <p v-if="wsStore.error" class="text-xs opacity-75">
           {{ wsStore.error }}
         </p>
       </div>

@@ -40,7 +40,7 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 );
 
 function equipItem(formId: string) {
-  const item = apparelList.value.find(a => a.formId === formId);
+  const item = apparelList.value.find((a) => a.formId === formId);
   if (!item) return;
 
   // Toggle equip/unequip

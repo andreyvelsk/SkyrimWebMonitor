@@ -1,10 +1,7 @@
 <template>
   <div class="stat-bar">
     <div class="stat-header">
-      <span
-        v-if="label"
-        class="stat-label"
-      >
+      <span v-if="label" class="stat-label">
         {{ label }}
       </span>
     </div>

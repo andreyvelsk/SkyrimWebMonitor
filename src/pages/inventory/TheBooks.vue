@@ -36,7 +36,7 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 );
 
 function useItem(formId: string) {
-  const item = booksList.value.find(f => f.formId === formId);
+  const item = booksList.value.find((f) => f.formId === formId);
   if (!item) return;
 
   // Use (open/read) the book item

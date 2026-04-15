@@ -33,13 +33,9 @@ const iconSrc = computed(() => buildIconPath(props.iconPath));
   width: var(--icon-size);
   height: var(--icon-size);
   background-color: var(--skyrim-text-accent);
-  -webkit-mask-image: var(--icon-src);
   mask-image: var(--icon-src);
-  -webkit-mask-size: contain;
   mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  -webkit-mask-position: center;
   mask-position: center;
 
   &--flipped {

@@ -3,24 +3,23 @@
     <div class="buttons">
       <button
         class="hand-button left"
-        :class="{ 'hand-button--occupied': equippedHand === 'left' || equippedHand === 'both' }"
+        :class="{
+          'hand-button--occupied':
+            equippedHand === 'left' || equippedHand === 'both',
+        }"
         @click="onSelectHand('left')"
       >
-        <base-icon
-          icon-path="sbed/hand.svg"
-          :size="32"
-          :flipped="true"
-        />
+        <base-icon icon-path="sbed/hand.svg" :size="32" :flipped="true" />
       </button>
       <button
         class="hand-button right"
-        :class="{ 'hand-button--occupied': equippedHand === 'right' || equippedHand === 'both' }"
+        :class="{
+          'hand-button--occupied':
+            equippedHand === 'right' || equippedHand === 'both',
+        }"
         @click="onSelectHand('right')"
       >
-        <base-icon
-          icon-path="sbed/hand.svg"
-          :size="32"
-        />
+        <base-icon icon-path="sbed/hand.svg" :size="32" />
       </button>
     </div>
   </div>

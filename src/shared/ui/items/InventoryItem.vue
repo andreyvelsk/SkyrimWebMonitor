@@ -20,10 +20,7 @@
     </div>
 
     <!-- Quantity -->
-    <div
-      v-if="quantity && quantity > 1"
-      class="inv-quantity"
-    >
+    <div v-if="quantity && quantity > 1" class="inv-quantity">
       {{ quantity }}
     </div>
   </div>
@@ -57,6 +54,7 @@ defineProps<{
   &.inv-item--active {
     background-color: var(--tab-bg-active);
     border-color: var(--skyrim-accent-gold-dim);
+
     .inv-name {
       color: var(--skyrim-text-primary);
     }

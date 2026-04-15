@@ -35,7 +35,7 @@ const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
 );
 
 function useItem(formId: string) {
-  const item = keysList.value.find(f => f.formId === formId);
+  const item = keysList.value.find((f) => f.formId === formId);
   if (!item) return;
 
   // Keys generally cannot be "used" like consumables; still send a generic use command

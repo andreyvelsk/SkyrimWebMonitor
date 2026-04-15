@@ -64,7 +64,9 @@ watch(
     const container = subtabsRef.value;
     if (!container) return;
 
-    const activeBtn = container.querySelector('.skyrim-subtab.active') as HTMLElement | null;
+    const activeBtn = container.querySelector(
+      '.skyrim-subtab.active'
+    ) as HTMLElement | null;
     if (!activeBtn) return;
 
     const btnLeft = activeBtn.offsetLeft;
@@ -74,9 +76,15 @@ watch(
     const PADDING = 12;
 
     if (btnLeft < viewLeft) {
-      container.scrollTo({ left: Math.max(0, btnLeft - PADDING), behavior: 'smooth' });
+      container.scrollTo({
+        left: Math.max(0, btnLeft - PADDING),
+        behavior: 'smooth',
+      });
     } else if (btnRight > viewRight) {
-      container.scrollTo({ left: btnRight - container.clientWidth + PADDING, behavior: 'smooth' });
+      container.scrollTo({
+        left: btnRight - container.clientWidth + PADDING,
+        behavior: 'smooth',
+      });
     }
   }
 );

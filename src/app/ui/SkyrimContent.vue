@@ -5,20 +5,13 @@
     @touchend="onTouchEnd"
     @touchcancel="onTouchCancel"
   >
-    <Transition
-      :name="transitionName"
-      mode="out-in"
-    >
+    <Transition :name="transitionName" mode="out-in">
       <component
         :is="currentComponent"
         v-if="currentComponent"
         :key="`${tab}-${subTab}`"
       />
-      <div
-        v-else
-        :key="`${tab}-${subTab}-empty`"
-        class="empty-state"
-      >
+      <div v-else :key="`${tab}-${subTab}-empty`" class="empty-state">
         <p style="color: var(--skyrim-text-secondary)">
           {{ $t('app.content.emptyState') }}
         </p>
@@ -37,7 +30,9 @@ const props = defineProps<{ tab: string; subTab: string }>();
 const nav = useNavigationStore();
 
 const transitionName = computed(() => {
-  return nav.transitionDirection ? `slide-${nav.transitionDirection}` : 'no-slide';
+  return nav.transitionDirection
+    ? `slide-${nav.transitionDirection}`
+    : 'no-slide';
 });
 
 const touchStartX = ref<number | null>(null);
@@ -130,19 +125,40 @@ const currentComponent = computed(() => {
   will-change: transform;
 }
 
-.slide-left-enter-from { transform: translateX(100%); }
-.slide-left-enter-to { transform: translateX(0); }
-.slide-left-leave-from { transform: translateX(0); }
-.slide-left-leave-to { transform: translateX(-100%); }
+.slide-left-enter-from {
+  transform: translateX(100%);
+}
 
-.slide-right-enter-from { transform: translateX(-100%); }
-.slide-right-enter-to { transform: translateX(0); }
-.slide-right-leave-from { transform: translateX(0); }
-.slide-right-leave-to { transform: translateX(100%); }
+.slide-left-enter-to {
+  transform: translateX(0);
+}
+
+.slide-left-leave-from {
+  transform: translateX(0);
+}
+
+.slide-left-leave-to {
+  transform: translateX(-100%);
+}
+
+.slide-right-enter-from {
+  transform: translateX(-100%);
+}
+
+.slide-right-enter-to {
+  transform: translateX(0);
+}
+
+.slide-right-leave-from {
+  transform: translateX(0);
+}
+
+.slide-right-leave-to {
+  transform: translateX(100%);
+}
 
 .no-slide-enter-active,
 .no-slide-leave-active {
   transition: none;
 }
 </style>
-

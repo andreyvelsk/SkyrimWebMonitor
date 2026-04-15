@@ -6,9 +6,7 @@
     :active="active"
   >
     <template #icon>
-      <base-icon
-        icon-path="skoll/pestle-mortar.svg"
-      />
+      <base-icon icon-path="skoll/pestle-mortar.svg" />
     </template>
   </inventory-item>
 </template>

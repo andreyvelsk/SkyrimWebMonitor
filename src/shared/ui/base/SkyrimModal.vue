@@ -1,16 +1,9 @@
 <template>
   <Teleport to="body">
     <Transition name="modal-backdrop">
-      <div
-        v-if="isOpen"
-        class="modal-backdrop"
-        @click.self="closeModal"
-      >
+      <div v-if="isOpen" class="modal-backdrop" @click.self="closeModal">
         <Transition name="modal-panel">
-          <div
-            v-if="isOpen"
-            class="modal-panel"
-          >
+          <div v-if="isOpen" class="modal-panel">
             <div class="modal-body">
               <component
                 :is="modalComponent"
@@ -29,7 +22,8 @@
 <script setup lang="ts">
 import { useModal } from '@/shared/lib/composables/useModal';
 
-const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } = useModal();
+const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
+  useModal();
 </script>
 
 <style scoped lang="scss">

@@ -7,15 +7,8 @@
     @click="$emit('click')"
   >
     <template #description>
-      <div
-        v-if="effects && effects.length > 0"
-        class="potion-effects"
-      >
-        <div
-          v-for="(eff, idx) in effects"
-          :key="idx"
-          class="potion-effect"
-        >
+      <div v-if="effects && effects.length > 0" class="potion-effects">
+        <div v-for="(eff, idx) in effects" :key="idx" class="potion-effect">
           {{ eff.description || eff.name }}
         </div>
       </div>

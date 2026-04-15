@@ -30,14 +30,15 @@ const inventoryStore = useInventoryStore();
 const { potionsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(() => potionsList.value);
+const { activeItem, toggleFavorite, startDrop } = useInventoryItemActions(
+  () => potionsList.value
+);
 
 function useItem(formId: string) {
-  const item = potionsList.value.find(f => f.formId === formId);
+  const item = potionsList.value.find((f) => f.formId === formId);
   if (!item) return;
 
   // Use (consume) the potion
   wsStore.sendCommand('use', formId);
 }
 </script>
-
