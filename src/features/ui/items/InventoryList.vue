@@ -12,7 +12,7 @@
             :on-select="() => handleItemClick(item.formId)"
           />
         </template>
-
+  
         <!-- Empty state -->
         <div
           v-else
@@ -23,25 +23,31 @@
           </slot>
         </div>
       </div>
+  
+      <!-- Action toolbar -->
+      <div class="inventory-toolbar">
+        <button
+          v-for="action in enabledActions"
+          :key="action.id"
+          class="toolbar-btn"
+          :class="[action.class, { favorite: action.id === 'favorite' && isActiveItemFavorite }]"
+          :title="action.title"
+          :disabled="!modelValue"
+          @click="handleActionClick(action.event)"
+        >
+          <base-icon
+            :icon-path="action.icon"
+            :size="20"
+          />
+        </button>
+      </div>
     </div>
-
-    <!-- Action toolbar -->
-    <div class="inventory-toolbar">
-      <button
-        v-for="action in enabledActions"
-        :key="action.id"
-        class="toolbar-btn"
-        :class="[action.class, { favorite: action.id === 'favorite' && isActiveItemFavorite }]"
-        :title="action.title"
-        :disabled="!modelValue"
-        @click="handleActionClick(action.event)"
-      >
-        <base-icon
-          :icon-path="action.icon"
-          :size="20"
-        />
-      </button>
-    </div>
+    
+    <div class="item-preview">
+      <slot name="preview">
+        <!-- Optional preview content goes here -->
+      </slot>
+    </div>  
   </div>
 </template>
 
@@ -126,7 +132,7 @@ function handleActionClick(actionEvent: string) {
 <style scoped lang="scss">
 .inventory-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
   max-height: 100%;
   overflow: hidden;
@@ -134,16 +140,27 @@ function handleActionClick(actionEvent: string) {
 }
 
 .list-wrapper {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  flex: 0 0 70%;
+  min-width: 0;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
 }
 
 .list {
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
+}
+
+.item-preview {
+  flex: 1 1 0%;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .no-data {

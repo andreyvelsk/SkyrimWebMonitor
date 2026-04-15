@@ -21,7 +21,7 @@
 
     <!-- Quantity -->
     <div
-      v-if="quantity"
+      v-if="quantity && quantity > 1"
       class="inv-quantity"
     >
       {{ quantity }}

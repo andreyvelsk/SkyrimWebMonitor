@@ -15,7 +15,6 @@
 <script setup lang="ts">
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem } from '@/shared/ui/items';
-import type { ItemEnchantmentEffect } from '@/stores/inventory/types';
 
 defineProps<{
   name: string;
