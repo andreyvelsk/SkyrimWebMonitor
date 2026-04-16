@@ -7,7 +7,7 @@
     <template #icon>
       <apparel-icon
         v-if="data"
-        :apparel-type="data.armorType"
+        :body-slots="data.bodySlots"
         :size="48"
       />
     </template>

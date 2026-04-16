@@ -8,33 +8,43 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
+import type { BodySlot } from '@/stores/inventory/types';
 
 interface Props {
-  apparelType?: string | null;
+  bodySlots?: BodySlot[] | null;
   size?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  apparelType: null,
+  bodySlots: null,
   size: 24,
 });
 
-// Маппинг типов брони на относительные пути иконок
+// Иконка по умолчанию
+const DEFAULT_ICON = 'lorc/armor-vest.svg';
+
+// Маппинг типов брони на относительные пути иконок (использует фай лы из public/icons/lorc)
 const APPAREL_ICON_PATHS: Record<string, string> = {
-  Head: 'lorc/battle-axe.svg',
-  Hair: 'lorc/mailed-fist.svg',
-  Body: 'lorc/crossed-swords.svg',
-  Hands: 'lorc/mailed-fist.svg',
-  Feet: 'lorc/stone-axe.svg',
-  Outfit: 'lorc/piercing-sword.svg',
-  Jewelry: 'lorc/spiked-mace.svg',
+  Head: 'caro-asercion/warlord-helmet.svg',
+  Hair: 'caro-asercion/warlord-helmet.svg',
+  LongHair: 'caro-asercion/warlord-helmet.svg',
+  Body: 'lorc/lamellar.svg',
+  Hands: 'delapouite/gauntlet.svg',
+  Forearms: 'delapouite/gauntlet.svg',
+  Amulet: 'lorc/gem-chain.svg',
+  Ring: 'delapouite/ring.svg',
+  Feet: 'delapouite/leg-armor.svg',
+  Calves: 'delapouite/leg-armor.svg',
+  Shield: 'lorc/checked-shield.svg',
+  Tail: 'lorc/armadillo-tail.svg',
+  Circlet: 'delapouite/tiara.svg',
+  Ears: 'delapouite/earrings.svg',
+  Outfit: 'lorc/robe.svg',
 };
 
 const iconPath = computed(() => {
-  const relativePath =
-    props.apparelType && APPAREL_ICON_PATHS[props.apparelType]
-      ? APPAREL_ICON_PATHS[props.apparelType]
-      : APPAREL_ICON_PATHS.Body;
-  return relativePath;
+  const slot = props.bodySlots && props.bodySlots.length > 0 ? props.bodySlots[0] : undefined;
+  if (!slot) return DEFAULT_ICON;
+  return APPAREL_ICON_PATHS[slot] ?? DEFAULT_ICON;
 });
 </script>
