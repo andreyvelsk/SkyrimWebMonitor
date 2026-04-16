@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
 import { DropItemsModal } from '@/shared/ui';
@@ -45,6 +45,17 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
     // If 5 or fewer, drop one
     wsStore.sendCommand('drop', activeItem.value, undefined, 1);
   }
+
+  // Automatically select the first item when the items list becomes available
+  watch(
+    () => itemsList(),
+    (newList) => {
+      if (!activeItem.value && newList && newList.length > 0) {
+        activeItem.value = newList[0].formId;
+      }
+    },
+    { immediate: true }
+  );
 
   return {
     activeItem,
