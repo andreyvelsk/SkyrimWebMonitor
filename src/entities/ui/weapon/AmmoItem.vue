@@ -9,7 +9,6 @@
     <template #status>
       <equip-status
         :is-equipped="isEquipped"
-        :centered="true"
       />
     </template>
   </inventory-item>

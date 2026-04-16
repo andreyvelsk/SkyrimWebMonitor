@@ -1,9 +1,9 @@
 <template>
   <div
     class="skyrim-panel animate-slide-down"
-    @touchstart="onTouchStart"
-    @touchend="onTouchEnd"
-    @touchcancel="onTouchCancel"
+    @touchstart.passive="onTouchStart"
+    @touchend.passive="onTouchEnd"
+    @touchcancel.passive="onTouchCancel"
   >
     <Transition
       :name="transitionName"
@@ -81,7 +81,6 @@ const currentComponent = computed(() => {
   display: flex;
   flex-direction: column;
   max-height: 100%;
-  overflow: hidden;
 
   & div {
     &.ornament-corner {
