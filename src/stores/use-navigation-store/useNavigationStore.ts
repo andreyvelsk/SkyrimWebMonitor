@@ -33,9 +33,47 @@ export const useNavigationStore = defineStore('navigation', () => {
   const activeSubTab = ref<string>('stats');
   const transitionDirection = ref<'left' | 'right' | ''>('');
 
+  // Optional ordering map: specify sub-tab ids order per tab.
+  // If an entry is empty or missing, fallback to server order.
+  const subTabsOrderMap = ref<Record<string, string[]>>({
+    inventory: [
+      'weapons', 
+      'apparel', 
+      'potions', 
+      'scrolls', 
+      'food',
+      'ingredients',
+      'books',
+      'keys',
+      'misc',
+    ],
+  });
+
   const currentSubTabs = computed<SubTab[]>(() => {
     const tab = tabs.value.find((t) => t.id === activeTab.value);
-    return tab?.subTabs?.filter((sub) => !subTabsToHide.includes(sub.id)) ?? [];
+    const visible = tab?.subTabs?.filter((sub) => !subTabsToHide.includes(sub.id)) ?? [];
+
+    const order = subTabsOrderMap.value[activeTab.value] ?? [];
+    if (!order || order.length === 0) return visible;
+
+    const ordered: SubTab[] = [];
+
+    order.forEach((id) => {
+      const idx = visible.findIndex((s) => s.id === id);
+      if (idx === -1) return;
+
+      const [sub] = visible.splice(idx, 1);
+      ordered.push(sub);
+    });
+
+    if (visible.length) {
+      // Append any remaining (un-ordered) subtabs at the end
+      ordered.push(...visible);
+    }
+    console.log({visible});
+    
+
+    return ordered;
   });
 
   /**
@@ -82,7 +120,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     if (forcedDirection !== undefined) {
       transitionDirection.value = forcedDirection;
     } else if (animate) {
-      const list = subTabsMap.value[activeTab.value] ?? [];
+      const list = currentSubTabs.value ?? [];
       const prevIdx = list.findIndex((s) => s.id === activeSubTab.value);
       const newIdx = list.findIndex((s) => s.id === subTabId);
 
@@ -185,6 +223,14 @@ export const useNavigationStore = defineStore('navigation', () => {
 
     const visible = newSubTabs.filter((s) => !subTabsToHide.includes(s.id));
     if (activeTab.value === tabId && visible.length > 0 && !visible.some((st) => st.id === activeSubTab.value)) {
+      const order = subTabsOrderMap.value[tabId] ?? [];
+      if (order && order.length) {
+        const firstOrdered = order.find((id) => visible.some((s) => s.id === id));
+        if (firstOrdered) {
+          setActiveSubTab(firstOrdered);
+          return;
+        }
+      }
       setActiveSubTab(visible[0].id);
     }
   };
@@ -197,6 +243,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     setActiveSubTab,
     transitionDirection,
     currentSubTabs,
+    subTabsOrderMap,
     nextSubTab,
     prevSubTab,
     setTabSubTabs,
