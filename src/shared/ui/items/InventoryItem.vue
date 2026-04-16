@@ -3,20 +3,16 @@
     class="inv-item"
     :class="{ 'inv-item--favorite': isFavorite, 'inv-item--active': active }"
   >
-    <!-- Status indicator slot -->
-    <div class="inv-status">
-      <slot name="status" />
-    </div>
-
     <!-- Main content -->
     <div class="inv-info">
-      <span class="inv-name">{{ name }}</span>
+      <div class="inv-row">
+        <span class="inv-name">{{ name }}</span>
+        <!-- Status indicator slot -->
+        <div class="inv-status">
+          <slot name="status" />
+        </div>
+      </div>
       <slot name="description" />
-    </div>
-
-    <!-- Icon slot -->
-    <div class="inv-icon">
-      <slot name="icon" />
     </div>
 
     <!-- Quantity -->
@@ -67,11 +63,10 @@ defineProps<{
 .inv-status {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
   flex-shrink: 0;
   width: 32px;
   height: 32px;
-  padding: 0 var(--spacing-sm);
 }
 
 .inv-info {
@@ -80,6 +75,15 @@ defineProps<{
   flex-direction: column;
   gap: 2px;
   min-width: 0;
+  padding-left: var(--spacing-md);
+}
+
+.inv-row {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 0;
 }
 
 .inv-name {
@@ -87,6 +91,10 @@ defineProps<{
   font-size: var(--font-size-base);
   color: var(--skyrim-text-secondary);
   word-break: break-word;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .inv-icon {
