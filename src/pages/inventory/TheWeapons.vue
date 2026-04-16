@@ -36,13 +36,17 @@
         v-if="isWeaponItem(activeItemData)"
         :data="activeItemData"
       />
+      <ammo-preview
+        v-else-if="isAmmoItem(activeItemData)"
+        :data="activeItemData"
+      />
     </template>
   </inventory-list>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { WeaponItem, AmmoItem, WeaponPreview } from '@/entities/ui';
+import { WeaponItem, AmmoItem, WeaponPreview, AmmoPreview } from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
