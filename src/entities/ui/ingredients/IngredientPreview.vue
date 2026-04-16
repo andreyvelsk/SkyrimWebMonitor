@@ -9,6 +9,25 @@
         :size="48"
       />
     </template>
+    <template #effect>
+      <div
+        v-if="data.effects"
+        class="effects"
+      >
+        <div 
+          v-for="(effect,index) in data.effects" 
+          :key="index" 
+          class="effect"
+        >
+          <span v-if="effect.known">
+            {{ effect.name }}
+          </span>
+          <span v-else>
+            {{ $t('shared.ui.inventoryItem.unknown') }}
+          </span>
+        </div>
+      </div>
+    </template>
   </base-preview>
 </template>
 

@@ -8,7 +8,14 @@
     @favorite="toggleFavorite"
     @drop="startDrop"
     @item-double-click="useItem"
-  />
+  >
+    <template #preview>
+      <ingredient-preview
+        v-if="isIngredientItem(activeItemData)"
+        :data="activeItemData"
+      />
+    </template>
+  </inventory-list>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +27,8 @@ import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
 import { getRoundValue } from '@/shared/lib/utils/getDescriptionValues';
+import { IngredientPreview } from '@/entities/ui/ingredients';
+import { isIngredientItem } from '@/stores/adapters/typeGuards';
 
 const inventoryStore = useInventoryStore();
 const { ingredientsList } = storeToRefs(inventoryStore);

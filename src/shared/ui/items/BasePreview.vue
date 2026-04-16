@@ -29,17 +29,19 @@
       </div>
     </div>
 
-    <div
-      v-if="effects && effects.length"
-      class="enchantment"
-    >
-      <div class="enchant">
-        <div
-          class="enchant-desc"
-          v-html="getEffectHtml(effects)"
-        />
+    <slot name="effect">
+      <div
+        v-if="effects && effects.length"
+        class="enchantment"
+      >
+        <div class="enchant">
+          <div
+            class="enchant-desc"
+            v-html="getEffectHtml(effects)"
+          />
+        </div>
       </div>
-    </div>
+    </slot>
   </div>
 </template>
 
