@@ -1,7 +1,7 @@
 <template>
   <inventory-item
     :name="name"
-    :quantity="5"
+    :quantity="quantity"
     :is-favorite="isFavorite"
     :active="active"
     @click="$emit('click')"
