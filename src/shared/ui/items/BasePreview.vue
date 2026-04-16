@@ -30,9 +30,7 @@
     </div>
 
     <div
-      v-if="
-        effects &&effects.length
-      "
+      v-if="effects && effects.length"
       class="enchantment"
     >
       <div class="enchant">
@@ -47,17 +45,16 @@
 
 <script setup lang="ts">
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
-import type { InventoryItem, ItemEnchantmentEffect } from '@/stores/inventory/types';
-
-interface Stat {
-  label: string;
-  value: string | number | null | undefined;
-}
+import type {
+  InventoryItem,
+  ItemEnchantmentEffect,
+} from '@/stores/inventory/types';
+import type { PreviewStats } from './types/types';
 
 withDefaults(
   defineProps<{
     data?: InventoryItem | null;
-    stats?: Stat[];
+    stats?: PreviewStats[];
     effects?: ItemEnchantmentEffect[];
   }>(),
   {

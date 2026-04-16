@@ -6,16 +6,6 @@
     @drop="startDrop"
     @item-double-click="useItem"
   >
-    <template #default="{ item, active, onSelect }">
-      <inventory-item
-        :name="item.name || $t('shared.ui.inventoryItem.unknown')"
-        :is-favorite="item.isFavorite || false"
-        :active="active"
-        :quantity="item.count"
-        @click="onSelect"
-      />
-    </template>
-
     <template #preview>
       <gem-preview
         v-if="isGem(activeItemData)"
@@ -37,16 +27,14 @@ import { isGem, isMiscItem } from '@/stores/adapters/typeGuards';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
-import { InventoryItem } from '@/shared/ui/items';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
 
 const inventoryStore = useInventoryStore();
 const { miscList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } = useInventoryItemActions(
-  () => miscList.value
-);
+const { activeItem, activeItemData, toggleFavorite, startDrop } =
+  useInventoryItemActions(() => miscList.value);
 
 function useItem(formId: string) {
   const item = miscList.value.find((f) => f.formId === formId);

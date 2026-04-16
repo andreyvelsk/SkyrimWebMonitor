@@ -10,7 +10,15 @@
             :item="item"
             :active="modelValue === item.formId"
             :on-select="() => handleItemClick(item.formId)"
-          />
+          >
+            <inventory-item
+              :name="item.name || $t('shared.ui.inventoryItem.unknown')"
+              :is-favorite="item.isFavorite"
+              :active="modelValue === item.formId"
+              :quantity="item.count"
+              @click="handleItemClick(item.formId)"
+            />
+          </slot>
         </template>
 
         <!-- Empty state -->
@@ -49,6 +57,19 @@
     <div class="item-preview">
       <slot name="preview">
         <!-- Optional preview content goes here -->
+        <base-preview
+          v-if="activeItem"
+          :data="activeItem"
+          :stats="activeItemStats"
+          :effects="previewEffects"
+        >
+          <template #icon>
+            <base-icon
+              :icon-path="previewIconPath"
+              :size="48"
+            />
+          </template>
+        </base-preview>
       </slot>
     </div>
   </div>
@@ -57,7 +78,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
-import type { InventoryItem } from '@/stores/inventory/types';
+import { InventoryItem } from '@/shared/ui/items';
+import { BasePreview } from '@/shared/ui/items';
+import type { InventoryItem as InventoryItemType, ItemEnchantmentEffect } from '@/stores/inventory/types';
+import type { PreviewStats } from '@/shared/ui/items/types/types';
 
 interface ToolbarAction {
   id: string;
@@ -69,9 +93,13 @@ interface ToolbarAction {
 
 interface Props {
   modelValue?: string | null;
-  items: InventoryItem[];
+  items: InventoryItemType[];
   emptyMessage?: string;
   actions?: ToolbarAction[];
+  activeItem?: InventoryItemType | null;
+  activeItemStats?: PreviewStats[];
+  previewEffects?: ItemEnchantmentEffect[];
+  previewIconPath?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -91,6 +119,10 @@ const props = withDefaults(defineProps<Props>(), {
       title: 'Drop item',
     },
   ],
+  activeItem: null,
+  activeItemStats: () => [],
+  previewEffects: () => [],
+  previewIconPath: 'lorc/cog.svg',
 });
 
 const emit = defineEmits<{

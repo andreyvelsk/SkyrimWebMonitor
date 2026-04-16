@@ -2,47 +2,43 @@
   <inventory-list
     v-model="activeItem"
     :items="booksList"
+    :active-item="activeItemData"
+    :active-item-stats="previewStats"
+    preview-icon-path="lorc/open-book.svg"
     @favorite="toggleFavorite"
     @drop="startDrop"
     @item-double-click="useItem"
-  >
-    <template #default="{ item, active, onSelect }">
-      <inventory-item
-        v-if="isBookItem(item)"
-        :name="item.name || $t('shared.ui.inventoryItem.unknown')"
-        :is-favorite="item.isFavorite || false"
-        :description="item.description || ''"
-        :active="active"
-        :quantity="item.count"
-        @click="onSelect"
-      />
-    </template>
-    <template #preview>
-      <book-preview
-        v-if="isBookItem(activeItemData)"
-        :data="activeItemData"
-      />
-    </template>
-  </inventory-list>
+  />
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { BookPreview } from '@/entities/ui';
+import { useI18n } from 'vue-i18n';
 import { InventoryList } from '@/features/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
-import { isBookItem } from '@/stores/adapters/typeGuards';
-import { InventoryItem } from '@/shared/ui/items';
+import { getRoundValue } from '@/shared/lib/utils/getDescriptionValues';
 
 const inventoryStore = useInventoryStore();
 const { booksList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
+const { t } = useI18n();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } = useInventoryItemActions(
-  () => booksList.value
-);
+const { activeItem, activeItemData, toggleFavorite, startDrop } =
+  useInventoryItemActions(() => booksList.value);
+
+const previewStats = computed(() => [
+  {
+    label: t('common.weight'),
+    value: getRoundValue(activeItemData.value?.weight),
+  },
+  {
+    label: t('common.value'),
+    value: getRoundValue(activeItemData.value?.value),
+  },
+]);
 
 function useItem(formId: string) {
   const item = booksList.value.find((f) => f.formId === formId);
