@@ -4,7 +4,10 @@
     :stats="stats"
   >
     <template #icon>
-      <base-icon icon-path="skoll/pestle-mortar.svg" :size="48" />
+      <base-icon
+        icon-path="skoll/pestle-mortar.svg"
+        :size="48"
+      />
     </template>
   </base-preview>
 </template>
