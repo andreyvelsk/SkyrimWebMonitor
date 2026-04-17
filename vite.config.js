@@ -38,8 +38,23 @@ export default defineConfig(({ mode }) => {
         ],
         // Workbox runtime caching rules for icons, svg and fonts
         workbox: {
+          // Activate new service worker immediately and claim clients
+          skipWaiting: true,
+          clientsClaim: true,
           globPatterns: ['**/*.{js,css,html,png,svg,ico,webp,woff2,woff,ttf}'],
           runtimeCaching: [
+            {
+              // Ensure CSS updates come from network when possible
+              urlPattern: /\.css$/,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'css-cache',
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+                },
+              },
+            },
             {
               // Cache everything under /icons/ (from public/icons/...)
               urlPattern: /\/icons\/.*/,

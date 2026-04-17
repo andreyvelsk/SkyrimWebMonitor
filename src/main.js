@@ -7,7 +7,10 @@ import { registerSW } from 'virtual:pwa-register';
 import i18n from './i18n';
 
 // Register service worker for PWA
-registerSW();
+// Register service worker for PWA only in production (avoid dev caching)
+if (import.meta.env.PROD) {
+    registerSW();
+}
 
 const app = createApp(App);
 
