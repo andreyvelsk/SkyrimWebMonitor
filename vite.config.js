@@ -29,6 +29,55 @@ export default defineConfig(({ mode }) => {
       vue(),
       VitePWA({
         registerType: 'autoUpdate',
+        // Explicitly include common static assets so they're precached
+        includeAssets: [
+          'pwa-192x192.png',
+          'pwa-512x512.png',
+          'icons/**',
+          'fonts/**'
+        ],
+        // Workbox runtime caching rules for icons, svg and fonts
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,png,svg,ico,webp,woff2,woff,ttf}'],
+          runtimeCaching: [
+            {
+              // Cache everything under /icons/ (from public/icons/...)
+              urlPattern: /\/icons\/.*/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'icons-cache',
+                expiration: {
+                  maxEntries: 500,
+                  maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                },
+              },
+            },
+            {
+              // Fallback rule for SVG files
+              urlPattern: /\.svg$/,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'svg-cache',
+                expiration: {
+                  maxEntries: 500,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+              },
+            },
+            {
+              // Cache font files aggressively
+              urlPattern: /\.(?:woff2|woff|ttf)$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'fonts-cache',
+                expiration: {
+                  maxEntries: 20,
+                  maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                },
+              },
+            },
+          ],
+        },
         manifest: {
           name: 'SkyrimWebMonitor',
           short_name: 'Skyrim Monitor',
