@@ -47,6 +47,7 @@ useAppLoader();
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  border: none;
 
   &::before {
     content: '';
