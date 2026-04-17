@@ -14,7 +14,7 @@ export const useNavigationStore = defineStore('navigation', () => {
   const tabs = computed<Tab[]>(() => [
     {
       id: 'character',
-      label: t('app.tabs.character'),
+      label: t('app.tabs.character.label'),
       subTabs: subTabsMap.value.character.map((s) => ({
         ...s,
         label: s.label ?? t(`pages.character.${s.id}.tab`),
@@ -22,7 +22,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     },
     {
       id: 'inventory',
-      label: t('app.tabs.inventory'),
+      label: t('app.tabs.inventory.label'),
       subTabs: subTabsMap.value.inventory,
     },
   ]);

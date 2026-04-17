@@ -34,7 +34,11 @@
         :aria-selected="nav.activeSubTab === sub.id"
         @click="nav.setActiveSubTab(sub.id)"
       >
-        {{ sub.label }}
+        {{ 
+          $te(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`) 
+            ? $t(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`) 
+            : sub.label 
+        }}
       </button>
     </nav>
   </header>

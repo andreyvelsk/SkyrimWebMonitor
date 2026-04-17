@@ -5,10 +5,26 @@
       "subAriaLabel": "Вспомогательная навигация"
     },
     "tabs": {
-      "character": "Персонаж",
-      "inventory": "Инвентарь",
-      "magic": "Магия",
-      "map": "Карта"
+      "character": {
+        "label": "Персонаж",
+        "subtabs": {
+          "stats": "Характеристики"
+        }
+      },
+      "inventory": {
+        "label": "Инвентарь",
+        "subtabs": {
+          "weapons": "Оружие",
+          "apparel": "Одежда",
+          "potions": "Зелья",
+          "scrolls": "Свитки",
+          "food": "Еда",
+          "ingredients": "Ингредиенты",
+          "books": "Книги",
+          "keys": "Ключи",
+          "misc": "Разное"
+        }
+      }
     },
     "content": {
       "emptyState": "Выберите раздел для просмотра"

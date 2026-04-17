@@ -5,10 +5,26 @@
       "subAriaLabel": "Sub navigation"
     },
     "tabs": {
-      "character": "Character",
-      "inventory": "Inventory",
-      "magic": "Magic",
-      "map": "Map"
+      "character": {
+        "label": "Character",
+        "subtabs": {
+          "stats": "Stats"
+        }
+      },
+      "inventory": {
+        "label": "Inventory",
+        "subtabs": {
+          "weapons": "Weapons",
+          "apparel": "Apparel",
+          "potions": "Potions",
+          "scrolls": "Scrolls",
+          "food": "Food",
+          "ingredients": "Ingredients",
+          "books": "Books",
+          "keys": "Keys",
+          "misc": "Misc"
+        }
+      }
     },
     "content": {
       "emptyState": "Select an option to view details"
