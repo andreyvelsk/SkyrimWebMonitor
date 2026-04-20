@@ -108,15 +108,3 @@ export interface MagicState {
   enchanting?: MagicSchoolState;
 }
 
-// Type for checking if a spell is master level
-export function isMasterLevelSpell(spell: SpellItem): boolean {
-  return spell.level >= SPELL_LEVELS.MASTER;
-}
-
-// Type guard to get effective equipped hand for UI purposes
-export function getEffectiveEquippedHand(spell: SpellItem): EquippedHand {
-  if (isMasterLevelSpell(spell) && spell.isEquipped) {
-    return 'both';
-  }
-  return spell.equippedHand;
-}

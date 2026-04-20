@@ -3,7 +3,7 @@ import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStor
 import { useModal } from '@/shared/lib/composables/useModal';
 import { HandPicker } from '@/shared/ui';
 import type { SpellItem, EquipSlot } from '@/stores/magic/types';
-import { isMasterLevelSpell } from '@/stores/magic/types';
+import { isMasterLevelSpell } from '@/stores/magic/helpers';
 
 export function useMagicSpellActions(spellsList: () => SpellItem[]) {
   const wsStore = useWebSocketStore();
