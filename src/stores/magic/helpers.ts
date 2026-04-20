@@ -1,4 +1,5 @@
-import type { SpellItem, EquippedHand } from './types';
+import type { SpellItem } from './types';
+import type { EquippedHand } from '@/shared/lib/types/common';
 import { SPELL_LEVELS } from './types';
 
 export function isMasterLevelSpell(spell: SpellItem): boolean {

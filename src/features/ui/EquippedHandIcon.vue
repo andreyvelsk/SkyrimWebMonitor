@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { BaseIcon } from '@/shared/ui';
-import type { EquippedHand } from '@/stores/inventory/types';
+import type { EquippedHand } from '@/shared/lib/types/common';
 
 interface Props {
   equippedHand?: EquippedHand;

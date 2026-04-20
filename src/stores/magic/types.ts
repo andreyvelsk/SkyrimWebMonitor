@@ -1,3 +1,5 @@
+import type { EquippedHand } from '@/shared/lib/types/common';
+
 // Magic school categories
 export const MAGIC_SCHOOLS = {
   DESTRUCTION: 'Destruction',
@@ -39,7 +41,6 @@ export const SPELL_LEVELS = {
   EXPERT: 75,
   MASTER: 100,
 } as const;
-
 // Equipped hand constants
 export const EQUIPPED_HANDS = {
   RIGHT: 'right',
@@ -47,15 +48,11 @@ export const EQUIPPED_HANDS = {
   BOTH: 'both',
 } as const;
 
-export type EquippedHand = (typeof EQUIPPED_HANDS)[keyof typeof EQUIPPED_HANDS] | null;
-
 // Equip slot constants
 export const EQUIP_SLOTS = {
   RIGHT: 'right',
   LEFT: 'left',
 } as const;
-
-export type EquipSlot = (typeof EQUIP_SLOTS)[keyof typeof EQUIP_SLOTS];
 
 // Spell effect object (from server)
 export interface SpellEffect {

@@ -49,7 +49,7 @@
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
 import type {
   ItemEnchantmentEffect,
-} from '@/stores/inventory/types';
+} from '@/shared/lib/types/common';
 import type { ListItem } from '@/shared/lib/types/types';
 import type { PreviewStats } from './types/types';
 

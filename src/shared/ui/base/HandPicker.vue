@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import BaseIcon from '../icons/BaseIcon.vue';
-import type { EquipSlot, EquippedHand } from '@/stores/inventory/types';
+import type { EquipSlot, EquippedHand } from '@/shared/lib/types/common';
 
 interface Props {
   mode?: 'equip' | 'equipped';

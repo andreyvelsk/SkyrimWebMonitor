@@ -17,7 +17,8 @@
 <script setup lang="ts">
 import { InventoryItem } from '@/shared/ui/items';
 import { EquippedHandIcon } from '@/features/ui';
-import type { WeaponType, EquippedHand } from '@/stores/inventory/types';
+  import type { WeaponType } from '@/stores/inventory/types';
+  import type { EquippedHand } from '@/shared/lib/types/common';
 
 defineProps<{
   name: string;

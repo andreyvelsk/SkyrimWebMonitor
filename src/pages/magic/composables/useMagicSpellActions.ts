@@ -2,7 +2,8 @@ import { ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
 import { HandPicker } from '@/shared/ui';
-import type { SpellItem, EquipSlot } from '@/stores/magic/types';
+import type { SpellItem } from '@/stores/magic/types';
+import type { EquipSlot } from '@/shared/lib/types/common';
 import { isMasterLevelSpell } from '@/stores/magic/helpers';
 
 export function useMagicSpellActions(spellsList: () => SpellItem[]) {

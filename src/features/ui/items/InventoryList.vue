@@ -79,7 +79,7 @@ import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem } from '@/shared/ui/items';
 import { BasePreview } from '@/shared/ui/items';
-import type { ItemEnchantmentEffect } from '@/stores/inventory/types';
+import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
 import type { PreviewStats } from '@/shared/ui/items/types/types';
 import type { ListItem } from '@/shared/lib/types/types';
 
