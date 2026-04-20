@@ -21,19 +21,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Маппинг школ магии на относительные пути иконок
 const MAGIC_SCHOOL_ICON_PATHS: Record<string, string> = {
-  Alteration: 'lorc/wizard-staff.svg',
-  Conjuration: 'lorc/energy-sword.svg',
-  Destruction: 'lorc/rune-sword.svg',
-  Illusion: 'lorc/shining-sword.svg',
-  Restoration: 'lorc/holy-symbol.svg',
-  Mysticism: 'lorc/spinning-sword.svg',
+  Alteration: 'lorc/magic-swirl.svg',
+  Conjuration: 'lorc/portal.svg',
+  Destruction: 'lorc/flaming-claw.svg',
+  Illusion: 'delapouite/sparkles.svg',
+  Restoration: 'delapouite/nested-hearts.svg',
 };
 
 const iconPath = computed(() => {
   const relativePath = props.spellSchool
     ? MAGIC_SCHOOL_ICON_PATHS[props.spellSchool] ||
-      MAGIC_SCHOOL_ICON_PATHS.Mysticism
-    : MAGIC_SCHOOL_ICON_PATHS.Mysticism;
+      MAGIC_SCHOOL_ICON_PATHS.Alteration
+    : MAGIC_SCHOOL_ICON_PATHS.Alteration;
   return relativePath;
 });
 </script>

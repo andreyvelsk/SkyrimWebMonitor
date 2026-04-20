@@ -24,6 +24,17 @@
           "keys": "Keys",
           "misc": "Misc"
         }
+      },
+      "magic": {
+        "label": "Magic",
+        "subtabs": {
+          "destruction": "Destruction",
+          "alteration": "Alteration",
+          "conjuration": "Conjuration",
+          "illusion": "Illusion",
+          "restoration": "Restoration",
+          "enchanting": "Enchanting"
+        }
       }
     },
     "content": {
@@ -76,6 +87,31 @@
       }
     },
     "magic": {
+      "unknown": "Unknown",
+      "destruction": {
+        "tab": "Destruction",
+        "waitingForData": "Waiting for destruction spells data..."
+      },
+      "alteration": {
+        "tab": "Alteration",
+        "waitingForData": "Waiting for alteration spells data..."
+      },
+      "conjuration": {
+        "tab": "Conjuration",
+        "waitingForData": "Waiting for conjuration spells data..."
+      },
+      "illusion": {
+        "tab": "Illusion",
+        "waitingForData": "Waiting for illusion spells data..."
+      },
+      "restoration": {
+        "tab": "Restoration",
+        "waitingForData": "Waiting for restoration spells data..."
+      },
+      "enchanting": {
+        "tab": "Enchanting",
+        "waitingForData": "Waiting for enchanting spells data..."
+      },
       "spells": {
         "tab": "Spells"
       },
@@ -132,6 +168,29 @@
     "dropItem": "Drop Item",
     "weight": "Weight",
     "value": "Value"
+  },
+  "entities": {
+    "spell": {
+      "level": "Required level",
+      "cost": "Cost",
+      "baseCost": "Base cost",
+      "range": "Range",
+      "units": "unit",
+      "chargeTime": "Charge time",
+      "delivery": "Delivery",
+      "effects": "Effects",
+      "duration": "Duration",
+      "equipped": "Equipped",
+      "notEquipped": "Not equipped",
+      "levels": {
+        "novice": "Novice",
+        "apprentice": "Apprentice",
+        "adept": "Adept",
+        "expert": "Expert",
+        "master": "Master",
+        "unknown": "Unknown"
+      }
+    }
   },
   "modals": {
     "dropItems": "Drop Items",

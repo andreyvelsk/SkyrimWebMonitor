@@ -54,7 +54,7 @@ import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStor
 import { useModal } from '@/shared/lib/composables/useModal';
 import { isWeaponItem, isAmmoItem } from '@/stores/adapters/typeGuards';
 import { useInventoryItemActions } from '@/pages/inventory/composables/useInventoryItemActions';
-import type { EquipSlot } from '@/stores/inventory/types';
+import type { EquipSlot } from '@/shared/lib/types/common';
 
 const inventoryStore = useInventoryStore();
 const { weaponsList } = storeToRefs(inventoryStore);

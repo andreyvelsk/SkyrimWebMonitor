@@ -11,6 +11,12 @@ import {
   TheScrolls,
   TheKeys,
   TheBooks,
+  TheDestruction,
+  TheAlteration,
+  TheConjuration,
+  TheIllusion,
+  TheRestoration,
+  TheEnchanting,
 } from '@/pages';
 
 export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
@@ -104,6 +110,51 @@ export const pagesRegistry: PagesRegistry = {
       },
     },
   },
+
+  magic: {
+    destruction: {
+      id: 'magic.destruction',
+      component: TheDestruction,
+      fields: {
+        items: 'Magic::Items::Destruction',
+      },
+    },
+    alteration: {
+      id: 'magic.alteration',
+      component: TheAlteration,
+      fields: {
+        items: 'Magic::Items::Alteration',
+      },
+    },
+    conjuration: {
+      id: 'magic.conjuration',
+      component: TheConjuration,
+      fields: {
+        items: 'Magic::Items::Conjuration',
+      },
+    },
+    illusion: {
+      id: 'magic.illusion',
+      component: TheIllusion,
+      fields: {
+        items: 'Magic::Items::Illusion',
+      },
+    },
+    restoration: {
+      id: 'magic.restoration',
+      component: TheRestoration,
+      fields: {
+        items: 'Magic::Items::Restoration',
+      },
+    },
+    enchanting: {
+      id: 'magic.enchanting',
+      component: TheEnchanting,
+      fields: {
+        items: 'Magic::Items::Enchanting',
+      },
+    },
+  },
 };
 
 /**
@@ -115,6 +166,12 @@ export const TAB_CATEGORY_SUBSCRIPTIONS: Record<string, CategorySubscriptionConf
     subscriptionId: 'inventory.categories',
     fields: {
       categories: 'Inventory::Categories',
+    },
+  },
+  magic: {
+    subscriptionId: 'magic.categories',
+    fields: {
+      categories: 'Magic::Categories',
     },
   },
 };

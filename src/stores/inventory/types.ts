@@ -1,3 +1,10 @@
+import type {
+  EquipSlot,
+  EquippedHand,
+  ItemEnchantment,
+  ItemEnchantmentEffect,
+} from '@/shared/lib/types/common';
+
 export const WEAPON_TYPES = {
   ONE_HAND_SWORD: "OneHandSword",
   ONE_HAND_DAGGER: "OneHandDagger",
@@ -28,7 +35,7 @@ export const EQUIP_SLOTS = {
   LEFT: "left",
 } as const;
 
-export type EquipSlot = (typeof EQUIP_SLOTS)[keyof typeof EQUIP_SLOTS];
+// `EquipSlot` type moved to shared/common
 
 // Equipped hand constants
 export const EQUIPPED_HANDS = {
@@ -37,7 +44,7 @@ export const EQUIPPED_HANDS = {
   BOTH: "both",
 } as const;
 
-export type EquippedHand = (typeof EQUIPPED_HANDS)[keyof typeof EQUIPPED_HANDS] | null;
+// `EquippedHand` type moved to shared/common
 
 // Category types (per Inventory.md `categoryType`)
 export const CATEGORY_TYPES = {
@@ -94,18 +101,7 @@ export interface IngredientEffect {
   known: boolean;
 }
 
-export interface ItemEnchantmentEffect {
-  description: string;
-  descriptionTemplate: string;
-  duration: number;
-  magnitude: number;
-  name: string;
-}
-
-export interface ItemEnchantment {
-  effects: ItemEnchantmentEffect[];
-  name: string;
-}
+// ItemEnchantment types moved to shared/common
  
 export interface BaseItem {
   count: number;

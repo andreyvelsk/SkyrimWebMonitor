@@ -11,3 +11,6 @@ export { default as TheIngredients } from './inventory/TheIngredients.vue';
 export { default as TheKeys } from './inventory/TheKeys.vue';
 export { default as TheBooks } from './inventory/TheBooks.vue';
 export { default as TheScrolls } from './inventory/TheScrolls.vue';
+
+// Magic pages
+export { TheDestruction, TheAlteration, TheConjuration, TheIllusion, TheRestoration, TheEnchanting } from './magic';

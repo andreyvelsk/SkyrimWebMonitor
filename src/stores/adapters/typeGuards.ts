@@ -23,6 +23,7 @@ import type {
 } from '@/stores/inventory/types';
 import { CATEGORY_TYPES } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
+import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -191,3 +192,51 @@ export function isGem(item: unknown): item is GemItem {
     gem.categoryType === CATEGORY_TYPES.SOUL_GEM
   );
 }
+
+// Magic-related type guards
+export function isMagicCategoriesData(data: unknown, id: string): data is { categories: MagicState['categories'] } {
+  return (
+    id === 'magic.categories' &&
+    typeof data === 'object' &&
+    data !== null &&
+    'categories' in data &&
+    Array.isArray((data as { categories?: unknown }).categories)
+  );
+}
+
+export function isDestructionData(data: unknown, id: string): data is MagicSchoolState {
+  return id === 'magic.destruction' && typeof data === 'object' && data !== null;
+}
+
+export function isAlterationData(data: unknown, id: string): data is MagicSchoolState {
+  return id === 'magic.alteration' && typeof data === 'object' && data !== null;
+}
+
+export function isConjurationData(data: unknown, id: string): data is MagicSchoolState {
+  return id === 'magic.conjuration' && typeof data === 'object' && data !== null;
+}
+
+export function isIllusionData(data: unknown, id: string): data is MagicSchoolState {
+  return id === 'magic.illusion' && typeof data === 'object' && data !== null;
+}
+
+export function isRestorationData(data: unknown, id: string): data is MagicSchoolState {
+  return id === 'magic.restoration' && typeof data === 'object' && data !== null;
+}
+
+export function isEnchantingData(data: unknown, id: string): data is MagicSchoolState {
+  return id === 'magic.enchanting' && typeof data === 'object' && data !== null;
+}
+
+export function isSpellItem(item: unknown): item is SpellItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const spell = item as Record<string, unknown>;
+  return (
+    typeof spell.formId === 'string' &&
+    typeof spell.name === 'string' &&
+    typeof spell.cost === 'number' &&
+    typeof spell.level === 'number' &&
+    Array.isArray(spell.effects)
+  );
+}
+
