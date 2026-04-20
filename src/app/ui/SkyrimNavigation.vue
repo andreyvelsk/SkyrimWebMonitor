@@ -19,14 +19,14 @@
     </nav>
 
     <nav
-      v-if="nav.currentSubTabs.length > 1"
+      v-if="nav.getVisibleSubTabs().length > 1"
       ref="subtabsRef"
       class="skyrim-subtabs animate-fade-in"
       role="tablist"
       :aria-label="$t('app.navigation.subAriaLabel')"
     >
       <button
-        v-for="sub in nav.currentSubTabs"
+        v-for="sub in nav.getVisibleSubTabs()"
         :key="sub.id"
         class="skyrim-subtab"
         :class="{ active: nav.activeSubTab === sub.id }"

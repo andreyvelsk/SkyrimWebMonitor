@@ -71,12 +71,30 @@ export class DataRouter {
 
       if (isInventoryCategories(data, subscriptionId)) {
         const navigationStore = useNavigationStore();
-        const subTabs = data.categories.map((cat) => ({
+        const subTabs = (data.categories || []).map((cat) => ({
           id: cat.categoryId.toLowerCase(),
           label: cat.name,
         }));
-        console.log('[DataRouter] Routing categories to navigation store', subTabs);
-        navigationStore.setTabSubTabs('inventory', subTabs);
+
+        // Order subTabs according to navigation store ordering map (if present),
+        // using the same logic as `currentSubTabs` (ordered by map, then append rest).
+        const order = (navigationStore.subTabsOrderMap as any)?.inventory ?? (navigationStore.subTabsOrderMap as any)?.value?.inventory ?? [];
+        const ordered: typeof subTabs = [];
+        const remaining = [...subTabs];
+
+        if (Array.isArray(order) && order.length) {
+          order.forEach((id: string) => {
+            const idx = remaining.findIndex((s) => s.id === id);
+            if (idx === -1) return;
+            const [sub] = remaining.splice(idx, 1);
+            ordered.push(sub);
+          });
+        }
+
+        if (remaining.length) ordered.push(...remaining);
+
+        console.log('[DataRouter] Routing categories to navigation store', ordered);
+        navigationStore.setTabSubTabs('inventory', ordered);
         return { success: true, message: 'Data routed to navigation store (inventory categories)' };
       }
 
@@ -88,8 +106,24 @@ export class DataRouter {
           id: cat.categoryId.toLowerCase(),
           label: cat.name,
         }));
-        console.log('[DataRouter] Routing magic categories to navigation store', subTabs);
-        navigationStore.setTabSubTabs('magic', subTabs);
+
+        const order = (navigationStore.subTabsOrderMap as any)?.magic ?? (navigationStore.subTabsOrderMap as any)?.value?.magic ?? [];
+        const ordered: typeof subTabs = [];
+        const remaining = [...subTabs];
+
+        if (Array.isArray(order) && order.length) {
+          order.forEach((id: string) => {
+            const idx = remaining.findIndex((s) => s.id === id);
+            if (idx === -1) return;
+            const [sub] = remaining.splice(idx, 1);
+            ordered.push(sub);
+          });
+        }
+
+        if (remaining.length) ordered.push(...remaining);
+
+        console.log('[DataRouter] Routing magic categories to navigation store', ordered);
+        navigationStore.setTabSubTabs('magic', ordered);
         return { success: true, message: 'Data routed to navigation store (magic categories)' };
       }
 

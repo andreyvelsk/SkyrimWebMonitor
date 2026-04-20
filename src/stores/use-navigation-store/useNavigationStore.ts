@@ -55,32 +55,12 @@ export const useNavigationStore = defineStore('navigation', () => {
     ],
   });
 
-  const currentSubTabs = computed<SubTab[]>(() => {
-    const tab = tabs.value.find((t) => t.id === activeTab.value);
+  const getVisibleSubTabs = (tabId?: string): SubTab[] => {
+    const id = tabId ?? activeTab.value;
+    const tab = tabs.value.find((t) => t.id === id);
     const visible = tab?.subTabs?.filter((sub) => !subTabsToHide.includes(sub.id)) ?? [];
-
-    const order = subTabsOrderMap.value[activeTab.value] ?? [];
-    if (!order || order.length === 0) return visible;
-
-    const ordered: SubTab[] = [];
-
-    order.forEach((id) => {
-      const idx = visible.findIndex((s) => s.id === id);
-      if (idx === -1) return;
-
-      const [sub] = visible.splice(idx, 1);
-      ordered.push(sub);
-    });
-
-    if (visible.length) {
-      // Append any remaining (un-ordered) subtabs at the end
-      ordered.push(...visible);
-    }
-    console.log({visible});
-    
-
-    return ordered;
-  });
+    return visible;
+  };
 
   /**
    * Change active tab and reset sub-tab to first available
@@ -101,7 +81,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     if (!selectSubTab) return;
 
     // Prefer first visible sub-tab, fall back to first available
-    const visible = currentSubTabs.value;
+    const visible = getVisibleSubTabs();
     if (visible.length) {
       setActiveSubTab(visible[0].id, true, forcedDirection);
     } else if (tab.subTabs?.length) {
@@ -126,9 +106,9 @@ export const useNavigationStore = defineStore('navigation', () => {
     if (forcedDirection !== undefined) {
       transitionDirection.value = forcedDirection;
     } else if (animate) {
-      const list = currentSubTabs.value ?? [];
-      const prevIdx = list.findIndex((s) => s.id === activeSubTab.value);
-      const newIdx = list.findIndex((s) => s.id === subTabId);
+    const list = getVisibleSubTabs() ?? [];
+    const prevIdx = list.findIndex((s) => s.id === activeSubTab.value);
+    const newIdx = list.findIndex((s) => s.id === subTabId);
 
       if (prevIdx === -1 || newIdx === -1) {
         transitionDirection.value = '';
@@ -151,7 +131,7 @@ export const useNavigationStore = defineStore('navigation', () => {
    * If no active sub-tab is set, select the first one.
    */
   const nextSubTab = (): void => {
-    const list = currentSubTabs.value ?? [];
+    const list = getVisibleSubTabs() ?? [];
     if (!list.length) return;
 
     const idx = list.findIndex((s) => s.id === activeSubTab.value);
@@ -187,7 +167,7 @@ export const useNavigationStore = defineStore('navigation', () => {
    * If no active sub-tab is set, select the last one.
    */
   const prevSubTab = (): void => {
-    const list = currentSubTabs.value ?? [];
+    const list = getVisibleSubTabs() ?? [];
     if (!list.length) return;
 
     const idx = list.findIndex((s) => s.id === activeSubTab.value);
@@ -248,7 +228,7 @@ export const useNavigationStore = defineStore('navigation', () => {
     setActiveTab,
     setActiveSubTab,
     transitionDirection,
-    currentSubTabs,
+    getVisibleSubTabs,
     subTabsOrderMap,
     nextSubTab,
     prevSubTab,
