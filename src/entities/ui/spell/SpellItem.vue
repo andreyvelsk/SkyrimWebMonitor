@@ -1,7 +1,7 @@
 <template>
   <inventory-item
     :name="spell?.name ?? $t('common.unknown')"
-    :is-favorite="false"
+    :is-favorite="spell?.isFavorite"
     :active="active"
     @click="$emit('click')"
   >

@@ -76,6 +76,7 @@ export interface SpellItem {
   range: number;
   chargeTime: number;
   effects: SpellEffect[];
+  isFavorite: boolean;
   isEquipped: boolean;
   equippedHand: EquippedHand;
   isActive: boolean;

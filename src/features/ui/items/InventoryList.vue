@@ -13,7 +13,7 @@
           >
             <inventory-item
               :name="item.name || $t('shared.ui.inventoryItem.unknown')"
-              :is-favorite="('isFavorite' in item ? item.isFavorite : false)"
+              :is-favorite="item.isFavorite"
               :active="modelValue === item.formId"
               :quantity="('count' in item ? item.count : 0)"
               @click="handleItemClick(item.formId)"
