@@ -9,6 +9,7 @@ export const useNavigationStore = defineStore('navigation', () => {
   const subTabsMap = ref<Record<string, SubTab[]>>({
     character: [{ id: 'stats', label: t('pages.character.stats.tab') }],
     inventory: [],
+    magic: [],
   });
 
   const tabs = computed<Tab[]>(() => [
@@ -25,6 +26,11 @@ export const useNavigationStore = defineStore('navigation', () => {
       label: t('app.tabs.inventory.label'),
       subTabs: subTabsMap.value.inventory,
     },
+    {
+      id: 'magic',
+      label: t('app.tabs.magic.label'),
+      subTabs: subTabsMap.value.magic,
+    }
   ]);
 
   const subTabsToHide = ['favorites', 'soulgems', 'ammo'];

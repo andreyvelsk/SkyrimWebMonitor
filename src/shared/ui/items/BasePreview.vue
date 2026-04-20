@@ -48,14 +48,14 @@
 <script setup lang="ts">
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
 import type {
-  InventoryItem,
   ItemEnchantmentEffect,
 } from '@/stores/inventory/types';
+import type { ListItem } from '@/shared/lib/types/types';
 import type { PreviewStats } from './types/types';
 
 withDefaults(
   defineProps<{
-    data?: InventoryItem | null;
+    data?: ListItem | null;
     stats?: PreviewStats[];
     effects?: ItemEnchantmentEffect[];
   }>(),

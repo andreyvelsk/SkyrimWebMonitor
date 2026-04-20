@@ -13,9 +13,9 @@
           >
             <inventory-item
               :name="item.name || $t('shared.ui.inventoryItem.unknown')"
-              :is-favorite="item.isFavorite"
+              :is-favorite="('isFavorite' in item ? item.isFavorite : false)"
               :active="modelValue === item.formId"
-              :quantity="item.count"
+              :quantity="('count' in item ? item.count : 0)"
               @click="handleItemClick(item.formId)"
             />
           </slot>
@@ -42,7 +42,6 @@
             action.class,
             { favorite: action.id === 'favorite' && isActiveItemFavorite },
           ]"
-          :title="action.title"
           :disabled="!modelValue"
           @click="handleActionClick(action.event)"
         >
@@ -80,23 +79,23 @@ import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem } from '@/shared/ui/items';
 import { BasePreview } from '@/shared/ui/items';
-import type { InventoryItem as InventoryItemType, ItemEnchantmentEffect } from '@/stores/inventory/types';
+import type { ItemEnchantmentEffect } from '@/stores/inventory/types';
 import type { PreviewStats } from '@/shared/ui/items/types/types';
+import type { ListItem } from '@/shared/lib/types/types';
 
 interface ToolbarAction {
   id: string;
   event: string;
   icon: string;
-  title: string;
   class?: string;
 }
 
 interface Props {
   modelValue?: string | null;
-  items: InventoryItemType[];
+  items: ListItem[];
   emptyMessage?: string;
   actions?: ToolbarAction[];
-  activeItem?: InventoryItemType | null;
+  activeItem?: ListItem | null;
   activeItemStats?: PreviewStats[];
   previewEffects?: ItemEnchantmentEffect[];
   previewIconPath?: string;
@@ -110,13 +109,11 @@ const props = withDefaults(defineProps<Props>(), {
       id: 'favorite',
       event: 'favorite',
       icon: 'delapouite/round-star.svg',
-      title: 'Add to favorites',
     },
     {
       id: 'drop',
       event: 'drop',
       icon: 'delapouite/trash-can.svg',
-      title: 'Drop item',
     },
   ],
   activeItem: null,
@@ -138,7 +135,10 @@ const activeItemData = computed(() => {
 });
 
 const isActiveItemFavorite = computed(() => {
-  return activeItemData.value?.isFavorite || false;
+  if (activeItemData.value && 'isFavorite' in activeItemData.value) {
+    return activeItemData.value.isFavorite || false;
+  }
+  return false;
 });
 
 const enabledActions = computed(() => {

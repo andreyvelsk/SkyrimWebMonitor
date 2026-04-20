@@ -7,7 +7,7 @@
 // Shared Types
 // ============================================================================
 
-export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite'
+export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell'
 export type EquipHand = 'right' | 'left'
 
 /**
@@ -18,6 +18,8 @@ export type EquipHand = 'right' | 'left'
  * - use: Consumes the item (applies effect). Scrolls are equipped for casting.
  * - drop: Drops count items from inventory onto the ground. Use count parameter to specify quantity.
  * - favorite: Toggles the item's favorite status on/off.
+ * - equip_spell: Equips a spell to a hand for casting. Uses hand parameter (right/left).
+ * - unequip_spell: Unequips a spell from a hand. Uses hand parameter (right/left).
  */
 
 // ============================================================================

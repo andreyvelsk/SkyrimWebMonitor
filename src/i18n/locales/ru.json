@@ -24,6 +24,17 @@
           "keys": "Ключи",
           "misc": "Разное"
         }
+      },
+      "magic": {
+        "label": "Магия",
+        "subtabs": {
+          "destruction": "Разрушение",
+          "alteration": "Изменение",
+          "conjuration": "Колдовство",
+          "illusion": "Иллюзия",
+          "restoration": "Восстановление",
+          "enchanting": "Чарование"
+        }
       }
     },
     "content": {
@@ -77,6 +88,31 @@
       }
     },
     "magic": {
+      "unknown": "Неизвестно",
+      "destruction": {
+        "tab": "Разрушение",
+        "waitingForData": "Ожидание данных заклинаний разрушения..."
+      },
+      "alteration": {
+        "tab": "Изменение",
+        "waitingForData": "Ожидание данных заклинаний изменения..."
+      },
+      "conjuration": {
+        "tab": "Колдовство",
+        "waitingForData": "Ожидание данных заклинаний колдовства..."
+      },
+      "illusion": {
+        "tab": "Иллюзия",
+        "waitingForData": "Ожидание данных заклинаний иллюзии..."
+      },
+      "restoration": {
+        "tab": "Восстановление",
+        "waitingForData": "Ожидание данных заклинаний восстановления..."
+      },
+      "enchanting": {
+        "tab": "Чарование",
+        "waitingForData": "Ожидание данных заклинаний чарования..."
+      },
       "spells": {
         "tab": "Заклинания"
       },
@@ -133,6 +169,29 @@
     "dropItem": "Выбросить предмет",
     "weight": "Вес",
     "value": "Стоимость"
+  },
+  "entities": {
+    "spell": {
+      "level": "Уровень",
+      "cost": "Стоимость",
+      "baseCost": "Базовая стоимость",
+      "range": "Дальность",
+      "units": "ед.",
+      "chargeTime": "Время зарядки",
+      "delivery": "Способ доставки",
+      "effects": "Эффекты",
+      "duration": "Длительность",
+      "equipped": "Оснащено",
+      "notEquipped": "Не оснащено",
+      "levels": {
+        "novice": "Новичок",
+        "apprentice": "Ученик",
+        "adept": "Адепт",
+        "expert": "Эксперт",
+        "master": "Мастер",
+        "unknown": "Неизвестно"
+      }
+    }
   },
   "modals": {
     "dropItems": "Выброс предметов",
