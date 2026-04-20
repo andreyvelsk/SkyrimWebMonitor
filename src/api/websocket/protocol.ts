@@ -7,7 +7,7 @@
 // Shared Types
 // ============================================================================
 
-export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell'
+export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell' | 'favorite_spell'
 export type EquipHand = 'right' | 'left'
 
 /**

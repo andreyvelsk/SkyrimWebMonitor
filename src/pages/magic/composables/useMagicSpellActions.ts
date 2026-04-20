@@ -94,7 +94,7 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
 
   function toggleFavorite() {
     if (!activeSpell.value) return;
-    wsStore.sendCommand('favorite', activeSpell.value);
+    wsStore.sendCommand('favorite_spell', activeSpell.value);
   }
 
   // Automatically select the first spell when the spells list becomes available
