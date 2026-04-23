@@ -34,23 +34,49 @@
 
       <!-- Action toolbar -->
       <div class="inventory-toolbar">
-        <button
-          v-for="action in enabledActions"
-          :key="action.id"
-          class="toolbar-btn"
-          :class="[
-            action.class,
-            { favorite: action.id === 'favorite' && isActiveItemFavorite },
-            { 'hotkey-bound': action.id === 'hotkey' && isActiveItemHotkeyed },
-          ]"
-          :disabled="!modelValue"
-          @click="handleActionClick(action.event)"
+        <template
+          v-for="(actionItem, index) in enabledActions"
+          :key="index"
         >
-          <base-icon
-            :icon-path="action.icon"
-            :size="20"
-          />
-        </button>
+          <div
+            v-if="isActionGroup(actionItem)"
+            class="toolbar-group"
+          >
+            <button
+              v-for="action in actionItem.group"
+              :key="action.id"
+              class="toolbar-btn"
+              :class="[
+                action.class,
+                { favorite: action.id === 'favorite' && isActiveItemFavorite },
+                { 'hotkey-bound': action.id === 'hotkey' && isActiveItemHotkeyed },
+              ]"
+              :disabled="!modelValue"
+              @click="handleActionClick(action.event)"
+            >
+              <base-icon
+                :icon-path="action.icon"
+                :size="20"
+              />
+            </button>
+          </div>
+          <button
+            v-else
+            class="toolbar-btn"
+            :class="[
+              actionItem.class,
+              { favorite: actionItem.id === 'favorite' && isActiveItemFavorite },
+              { 'hotkey-bound': actionItem.id === 'hotkey' && isActiveItemHotkeyed },
+            ]"
+            :disabled="!modelValue"
+            @click="handleActionClick(actionItem.event)"
+          >
+            <base-icon
+              :icon-path="actionItem.icon"
+              :size="20"
+            />
+          </button>
+        </template>
       </div>
     </div>
 
@@ -92,11 +118,21 @@ interface ToolbarAction {
   class?: string;
 }
 
+interface ToolbarActionGroup {
+  group: ToolbarAction[];
+}
+
+type ToolbarActionItem = ToolbarAction | ToolbarActionGroup;
+
+function isActionGroup(item: ToolbarActionItem): item is ToolbarActionGroup {
+  return 'group' in item;
+}
+
 interface Props {
   modelValue?: string | null;
   items: ListItem[];
   emptyMessage?: string;
-  actions?: ToolbarAction[];
+  actions?: ToolbarActionItem[];
   activeItem?: ListItem | null;
   activeItemStats?: PreviewStats[];
   previewEffects?: ItemEnchantmentEffect[];
@@ -108,20 +144,12 @@ const props = withDefaults(defineProps<Props>(), {
   emptyMessage: () => '...',
   actions: () => [
     {
-      id: 'favorite',
-      event: 'favorite',
-      icon: 'delapouite/round-star.svg',
+      group: [
+        { id: 'favorite', event: 'favorite', icon: 'delapouite/round-star.svg' },
+        { id: 'hotkey', event: 'hotkey', icon: 'delapouite/keyboard.svg' },
+      ],
     },
-    {
-      id: 'hotkey',
-      event: 'hotkey',
-      icon: 'delapouite/keyboard.svg',
-    },
-    {
-      id: 'drop',
-      event: 'drop',
-      icon: 'delapouite/trash-can.svg',
-    },
+    { id: 'drop', event: 'drop', icon: 'delapouite/trash-can.svg' },
   ],
   activeItem: null,
   activeItemStats: () => [],
@@ -155,7 +183,7 @@ const isActiveItemHotkeyed = computed(() => {
   return hotkeysStore.getSlotForFormId(props.modelValue) !== null;
 });
 
-const enabledActions = computed(() => {
+const enabledActions = computed((): ToolbarActionItem[] => {
   return props.actions || [];
 });
 
@@ -170,13 +198,7 @@ function handleItemClick(formId: string) {
 }
 
 function handleActionClick(actionEvent: string) {
-  if (actionEvent === 'favorite') {
-    emit('favorite');
-  } else if (actionEvent === 'drop') {
-    emit('drop');
-  } else if (actionEvent === 'hotkey') {
-    emit('hotkey');
-  }
+  emit(actionEvent as any);
 }
 </script>
 
@@ -227,6 +249,11 @@ function handleActionClick(actionEvent: string) {
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-md);
+}
+
+.toolbar-group {
+  display: flex;
+  gap: var(--spacing-sm);
 }
 
 .toolbar-btn {

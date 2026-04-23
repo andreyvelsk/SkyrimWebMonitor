@@ -5,15 +5,19 @@
     :empty-message="emptyMessage"
     :actions="[
       {
-        id: 'favorite',
-        event: 'favorite',
-        icon: 'delapouite/round-star.svg',
-      },
-      {
-        id: 'hotkey',
-        event: 'hotkey',
-        icon: 'delapouite/keyboard.svg',
-      },
+        group: [
+          {
+            id: 'favorite',
+            event: 'favorite',
+            icon: 'delapouite/round-star.svg',
+          },
+          {
+            id: 'hotkey',
+            event: 'hotkey',
+            icon: 'delapouite/keyboard.svg',
+          },
+        ]
+      }
     ]"
     @item-double-click="equipSpell"
     @favorite="toggleFavorite"
