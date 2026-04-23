@@ -2,6 +2,7 @@ import type { Component } from 'vue';
 import type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 import {
   TheStats,
+  TheHotkeys,
   TheWeapons,
   TheApparel,
   TheMisc,
@@ -40,6 +41,14 @@ export const pagesRegistry: PagesRegistry = {
         carryWeight: 'Player::CarryWeight',
         gold: 'Inventory::Gold',
       },
+    },
+    // Hotkeys page relies on a global `hotkeys.items` subscription started in
+    // useAppLoader so the data is available across all pages. No per-page
+    // subscription is needed (empty id + empty fields).
+    hotkeys: {
+      id: '',
+      component: TheHotkeys,
+      fields: {},
     },
   },
 

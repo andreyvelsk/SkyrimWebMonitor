@@ -17,6 +17,8 @@ export function useAppLoader() {
   const websocketStore = useWebSocketStore();
   const { connect, startSubscription, stopSubscription, sendQuery } = websocketStore;
   const { isConnected } = storeToRefs(websocketStore);
+  const HOTKEYS_SUBSCRIPTION_ID = 'hotkeys.items';
+  const HOTKEYS_FIELDS = { items: 'Hotkey::Items' };
 
   const startCategorySubscription = (tabId: string): void => {
     const config = getTabCategorySubscription(tabId);
@@ -56,6 +58,10 @@ export function useAppLoader() {
 
         // Start live category subscription for the active tab
         startCategorySubscription(activeTab.value);
+
+        // Start global hotkey subscription (persists for the whole session so
+        // any page can reflect current bindings). Not tied to the active tab.
+        startSubscription(HOTKEYS_SUBSCRIPTION_ID, HOTKEYS_FIELDS);
       }
     } catch (err) {
       console.error('Failed to initialize websocket connection', err);
@@ -76,6 +82,11 @@ export function useAppLoader() {
       if (oldTab !== newTab) {
         stopCategorySubscription(oldTab);
         startCategorySubscription(newTab);
+      }
+
+      // Re-establish the global hotkey subscription after reconnect.
+      if (!websocketStore.activeSubscriptions.has(HOTKEYS_SUBSCRIPTION_ID)) {
+        startSubscription(HOTKEYS_SUBSCRIPTION_ID, HOTKEYS_FIELDS);
       }
 
       const subscriptionId = getPageSubscriptionId(newTab, newSubTab);

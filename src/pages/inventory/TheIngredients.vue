@@ -6,6 +6,7 @@
     :active-item-stats="previewStats"
     preview-icon-path="skoll/pestle-mortar.svg"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="useItem"
   >
@@ -35,7 +36,7 @@ const { ingredientsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { t } = useI18n();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => ingredientsList.value);
 
 const previewStats = computed(() => [

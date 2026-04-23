@@ -6,6 +6,7 @@
     :active-item-stats="previewStats"
     preview-icon-path="lorc/key.svg"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="useItem"
   />
@@ -26,7 +27,7 @@ const { keysList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { t } = useI18n();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => keysList.value);
 
 const previewStats = computed(() => [

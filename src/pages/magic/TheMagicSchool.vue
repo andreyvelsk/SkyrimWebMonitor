@@ -8,10 +8,16 @@
         id: 'favorite',
         event: 'favorite',
         icon: 'delapouite/round-star.svg',
-      }
+      },
+      {
+        id: 'hotkey',
+        event: 'hotkey',
+        icon: 'delapouite/keyboard.svg',
+      },
     ]"
     @item-double-click="equipSpell"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
   >
     <template #default="{ item, active, onSelect }">
       <spell-item
@@ -47,7 +53,7 @@ const props = withDefaults(defineProps<Props>(), {
   emptyMessage: 'Waiting for data...',
 });
 
-const { activeSpell, activeSpellData, equipSpell, toggleFavorite } = useMagicSpellActions(
+const { activeSpell, activeSpellData, equipSpell, toggleFavorite, openHotkeyPicker } = useMagicSpellActions(
   () => props.spellsList
 );
 

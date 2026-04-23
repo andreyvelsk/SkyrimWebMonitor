@@ -4,6 +4,7 @@
     :items="weaponsList"
     :empty-message="$t('pages.inventory.weapons.waitingForData')"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="equipItem"
   >
@@ -61,7 +62,7 @@ const { weaponsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { openModal, closeModal } = useModal();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => weaponsList.value);
 
 function equipItem(formId: string) {

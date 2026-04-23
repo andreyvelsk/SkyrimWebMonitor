@@ -8,7 +8,8 @@
       "character": {
         "label": "Character",
         "subtabs": {
-          "stats": "Stats"
+          "stats": "Stats",
+          "hotkeys": "Hotkeys"
         }
       },
       "inventory": {
@@ -49,6 +50,11 @@
         "experience": "Experience",
         "carryWeight": "Carry Weight",
         "gold": "Gold"
+      },
+      "hotkeys": {
+        "tab": "Hotkeys",
+        "emptySlot": "Empty",
+        "slot": "Slot {n}"
       },
       "skills": {
         "tab": "Skills"
@@ -191,6 +197,10 @@
         "unknown": "Unknown"
       }
     }
+  },
+  "hotkeys": {
+    "title": "Assign hotkey",
+    "hint": "Tap a slot to bind; tap the highlighted slot again to clear."
   },
   "modals": {
     "dropItems": "Drop Items",

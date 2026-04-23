@@ -24,6 +24,7 @@ import type {
 import { CATEGORY_TYPES } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
+import type { HotkeyItemsState } from '@/stores/hotkeys/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -240,3 +241,12 @@ export function isSpellItem(item: unknown): item is SpellItem {
   );
 }
 
+export function isHotkeyItemsData(data: unknown, id: string): data is HotkeyItemsState {
+  return (
+    id === 'hotkeys.items' &&
+    typeof data === 'object' &&
+    data !== null &&
+    'items' in data &&
+    Array.isArray((data as HotkeyItemsState).items)
+  );
+}

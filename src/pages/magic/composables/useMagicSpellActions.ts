@@ -1,13 +1,16 @@
 import { ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
-import { HandPicker } from '@/shared/ui';
+import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
+import { HandPicker, HotkeyPickerModal } from '@/shared/ui';
 import type { SpellItem } from '@/stores/magic/types';
 import type { EquipSlot } from '@/shared/lib/types/common';
+import type { HotkeySlot } from '@/api/websocket';
 import { isMasterLevelSpell } from '@/stores/magic/helpers';
 
 export function useMagicSpellActions(spellsList: () => SpellItem[]) {
   const wsStore = useWebSocketStore();
+  const hotkeysStore = useHotkeysStore();
   const { closeModal, openModal } = useModal();
 
   const activeSpell = ref<string | null>(null);
@@ -97,6 +100,31 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
     wsStore.sendCommand('favorite_spell', activeSpell.value);
   }
 
+  function openHotkeyPicker() {
+    if (!activeSpell.value || !activeSpellData.value) return;
+    const formId = activeSpell.value;
+    const currentSlot = hotkeysStore.getSlotForFormId(formId);
+
+    openModal({
+      component: HotkeyPickerModal,
+      props: {
+        currentSlot,
+        itemName: activeSpellData.value.name,
+      },
+      on: {
+        select: (slot: HotkeySlot) => {
+          const existing = hotkeysStore.getSlotForFormId(formId);
+          if (existing === slot) {
+            wsStore.sendCommand('hotkey_clear', undefined, undefined, undefined, slot);
+          } else {
+            wsStore.sendCommand('hotkey_set', formId, undefined, undefined, slot);
+          }
+          closeModal();
+        },
+      },
+    });
+  }
+
   // Automatically select the first spell when the spells list becomes available
   watch(
     () => spellsList(),
@@ -113,5 +141,6 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
     activeSpellData,
     equipSpell,
     toggleFavorite,
+    openHotkeyPicker,
   };
 }

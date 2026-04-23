@@ -6,6 +6,7 @@
     :active-item-stats="previewStats"
     preview-icon-path="lorc/open-book.svg"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="useItem"
   />
@@ -26,7 +27,7 @@ const { booksList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { t } = useI18n();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => booksList.value);
 
 const previewStats = computed(() => [

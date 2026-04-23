@@ -41,6 +41,7 @@
           :class="[
             action.class,
             { favorite: action.id === 'favorite' && isActiveItemFavorite },
+            { 'hotkey-bound': action.id === 'hotkey' && isActiveItemHotkeyed },
           ]"
           :disabled="!modelValue"
           @click="handleActionClick(action.event)"
@@ -79,6 +80,7 @@ import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem } from '@/shared/ui/items';
 import { BasePreview } from '@/shared/ui/items';
+import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
 import type { PreviewStats } from '@/shared/ui/items/types/types';
 import type { ListItem } from '@/shared/lib/types/types';
@@ -111,6 +113,11 @@ const props = withDefaults(defineProps<Props>(), {
       icon: 'delapouite/round-star.svg',
     },
     {
+      id: 'hotkey',
+      event: 'hotkey',
+      icon: 'delapouite/keyboard.svg',
+    },
+    {
       id: 'drop',
       event: 'drop',
       icon: 'delapouite/trash-can.svg',
@@ -126,8 +133,11 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null];
   favorite: [];
   drop: [];
+  hotkey: [];
   'item-double-click': [formId: string];
 }>();
+
+const hotkeysStore = useHotkeysStore();
 
 const activeItemData = computed(() => {
   if (!props.modelValue) return null;
@@ -139,6 +149,10 @@ const isActiveItemFavorite = computed(() => {
     return activeItemData.value.isFavorite || false;
   }
   return false;
+});
+
+const isActiveItemHotkeyed = computed(() => {
+  return hotkeysStore.getSlotForFormId(props.modelValue) !== null;
 });
 
 const enabledActions = computed(() => {
@@ -160,6 +174,8 @@ function handleActionClick(actionEvent: string) {
     emit('favorite');
   } else if (actionEvent === 'drop') {
     emit('drop');
+  } else if (actionEvent === 'hotkey') {
+    emit('hotkey');
   }
 }
 </script>
@@ -236,6 +252,14 @@ function handleActionClick(actionEvent: string) {
 
   &:active:not(:disabled) {
     background-color: var(--tab-bg-active);
+
+  &.hotkey-bound {
+    --skyrim-text-accent: var(--skyrim-accent-gold);
+
+    &:hover:not(:disabled) {
+      --skyrim-text-accent: var(--skyrim-accent-gold);
+    }
+  }
   }
 
   &:disabled {
