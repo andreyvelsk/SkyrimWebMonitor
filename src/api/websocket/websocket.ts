@@ -8,8 +8,7 @@ import type {
   UnsubscribeAllMessage,
   QueryMessage,
   CommandMessage,
-  CommandType,
-  EquipHand,
+  SendCommandOptions,
 } from './protocol';
 import type { MessageHandler, EventCallback, RegistrationCleanup } from './types';
 
@@ -201,27 +200,19 @@ class WebSocketClient {
   }
 
   /**
-   * Send an inventory command to the game
-   * @param id – Unique request identifier
-   * @param command – Action to perform: equip | unequip | use | drop | favorite
-   * @param formId – Item formId (hex string, e.g. "0x00012EB7")
-   * @param hand – Equip/unequip hand: "right" or "left" (optional, weapons only)
-   * @param count – Drop count (optional, default: 1, only used by "drop")
+   * Send an inventory/hotkey command to the game.
+   * Pass an options object — only provided fields are serialized.
    */
-  command(
-    id: string,
-    command: CommandType,
-    formId: string,
-    hand?: EquipHand,
-    count?: number
-  ): boolean {
+  command(id: string, options: SendCommandOptions): boolean {
+    const { command, formId, hand, count, slot } = options;
     const message: CommandMessage = {
       type: 'command',
       id,
       command,
-      formId,
-      ...(hand && { hand }),
-      ...(count && { count }),
+      ...(formId !== undefined && { formId }),
+      ...(hand !== undefined && { hand }),
+      ...(count !== undefined && { count }),
+      ...(slot !== undefined && { slot }),
     };
     return this.send(message);
   }

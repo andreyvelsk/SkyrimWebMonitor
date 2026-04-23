@@ -4,6 +4,7 @@
     :items="weaponsList"
     :empty-message="$t('pages.inventory.weapons.waitingForData')"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="equipItem"
   >
@@ -61,7 +62,7 @@ const { weaponsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { openModal, closeModal } = useModal();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => weaponsList.value);
 
 function equipItem(formId: string) {
@@ -70,7 +71,7 @@ function equipItem(formId: string) {
 
   if (!isWeaponItem(item) && isAmmoItem(item)) {
     const command = item.isEquipped ? 'unequip' : 'equip';
-    wsStore.sendCommand(command, formId);
+    wsStore.sendCommand({ command, formId });
     return;
   }
 
@@ -88,10 +89,10 @@ function equipItem(formId: string) {
           selectHand: (hand: EquipSlot) => {
             if (hand === item.equippedHand || item.equippedHand === 'both') {
               // Unequip from current hand (or unequip if both hands)
-              wsStore.sendCommand('unequip', formId);
+              wsStore.sendCommand({ command: 'unequip', formId });
             } else {
               // Equip to other hand
-              wsStore.sendCommand('equip', formId, hand);
+              wsStore.sendCommand({ command: 'equip', formId, hand });
             }
             closeModal();
           },
@@ -101,13 +102,13 @@ function equipItem(formId: string) {
     }
 
     // If two-handed or single copy, just unequip
-    wsStore.sendCommand('unequip', formId);
+    wsStore.sendCommand({ command: 'unequip', formId });
     return;
   }
 
   // If two-handed weapon, equip directly without hand selection
   if (item.isTwoHanded) {
-    wsStore.sendCommand('equip', formId);
+    wsStore.sendCommand({ command: 'equip', formId });
     return;
   }
 
@@ -119,7 +120,7 @@ function equipItem(formId: string) {
     },
     on: {
       selectHand: (hand: EquipSlot) => {
-        wsStore.sendCommand('equip', formId, hand);
+        wsStore.sendCommand({ command: 'equip', formId, hand });
         closeModal();
       },
     },

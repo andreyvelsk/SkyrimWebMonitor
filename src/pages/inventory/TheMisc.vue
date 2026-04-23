@@ -3,6 +3,7 @@
     v-model="activeItem"
     :items="miscList"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="useItem"
   >
@@ -33,7 +34,7 @@ const inventoryStore = useInventoryStore();
 const { miscList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => miscList.value);
 
 function useItem(formId: string) {
@@ -41,6 +42,6 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Use (consume) the misc item when double-clicked (if supported)
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>

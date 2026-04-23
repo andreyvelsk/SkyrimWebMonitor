@@ -4,6 +4,7 @@
     :items="apparelList"
     :empty-message="$t('pages.inventory.apparel.waitingForData')"
     @favorite="toggleFavorite"
+    @hotkey="openHotkeyPicker"
     @drop="startDrop"
     @item-double-click="equipItem"
   >
@@ -42,7 +43,7 @@ const inventoryStore = useInventoryStore();
 const { apparelList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, activeItemData, toggleFavorite, startDrop } =
+const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
   useInventoryItemActions(() => apparelList.value);
 
 function equipItem(formId: string) {
@@ -51,9 +52,9 @@ function equipItem(formId: string) {
 
   // Toggle equip/unequip
   if (item.isEquipped) {
-    wsStore.sendCommand('unequip', formId);
+    wsStore.sendCommand({ command: 'unequip', formId });
   } else {
-    wsStore.sendCommand('equip', formId);
+    wsStore.sendCommand({ command: 'equip', formId });
   }
 }
 </script>

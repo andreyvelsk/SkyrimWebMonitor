@@ -2,8 +2,9 @@ import { useCharacterStore } from '@/stores/character/useCharacterStore';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
 import { useMagicStore } from '@/stores/magic/useCharacterSpellStore';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
+import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import type { RouterResult } from './types';
-import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData } from './typeGuards';
+import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isHotkeyItemsData } from './typeGuards';
 export class DataRouter {
   static routeDataById(subscriptionId: string, data: unknown): RouterResult {
     const characterStore = useCharacterStore();
@@ -161,6 +162,12 @@ export class DataRouter {
         console.log('[DataRouter] Routing enchanting spells to magic store');
         useMagicStore().setEnchanting(data);
         return { success: true, message: 'Data routed to magic store (enchanting)' };
+      }
+
+      if (isHotkeyItemsData(data, subscriptionId)) {
+        console.log('[DataRouter] Routing hotkey items to hotkeys store');
+        useHotkeysStore().setHotkeys(data);
+        return { success: true, message: 'Data routed to hotkeys store' };
       }
 
       console.warn('[DataRouter] Unknown subscription ID received:', subscriptionId);

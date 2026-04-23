@@ -7,8 +7,9 @@
 // Shared Types
 // ============================================================================
 
-export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell' | 'favorite_spell'
+export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell' | 'favorite_spell' | 'hotkey_set' | 'hotkey_clear' | 'hotkey_trigger'
 export type EquipHand = 'right' | 'left'
+export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 /**
  * Command Details:
@@ -20,6 +21,9 @@ export type EquipHand = 'right' | 'left'
  * - favorite: Toggles the item's favorite status on/off.
  * - equip_spell: Equips a spell to a hand for casting. Uses hand parameter (right/left).
  * - unequip_spell: Unequips a spell from a hand. Uses hand parameter (right/left).
+ * - hotkey_set: Binds a formId to a hotkey slot (1..8). Requires formId and slot.
+ * - hotkey_clear: Removes the binding on a slot (1..8). Requires slot.
+ * - hotkey_trigger: Fires the action bound to a slot (1..8). Requires slot.
  */
 
 // ============================================================================
@@ -62,10 +66,25 @@ export interface HeartbeatMessage extends BaseMessage {
 export interface CommandMessage extends BaseMessage {
   type: 'command'
   id: string // unique request identifier
-  command: CommandType // equip | unequip | use | drop | favorite
-  formId: string // item form ID as hex string (e.g. "0x00012EB7")
+  command: CommandType
+  formId?: string // item/spell form ID as hex string (required for most commands; not required for hotkey_clear / hotkey_trigger)
   hand?: EquipHand // equip/unequip hand: "right" or "left" (optional, weapons only, default: "right")
   count?: number // drop count (optional, default: 1, only used by "drop")
+  slot?: HotkeySlot // hotkey slot 1..8 (required for hotkey_set, hotkey_clear, hotkey_trigger)
+}
+
+/**
+ * Options accepted by `sendCommand` / `wsClient.command`.
+ * Use this object form instead of positional parameters so calls like
+ *   sendCommand({ command: 'hotkey_clear', slot: 1 })
+ * stay readable without trailing `undefined` arguments.
+ */
+export interface SendCommandOptions {
+  command: CommandType
+  formId?: string
+  hand?: EquipHand
+  count?: number
+  slot?: HotkeySlot
 }
 
 export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage | CommandMessage

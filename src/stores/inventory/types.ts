@@ -15,7 +15,7 @@ export const WEAPON_TYPES = {
   BOW: "Bow",
   STAFF: "Staff",
   CROSSBOW: "Crossbow",
-  HAND_TO_HAND: "HandToHand",
+  HAND_TO_HAND: "HandToHandMelee",
 } as const;
 
 export type WeaponType = (typeof WEAPON_TYPES)[keyof typeof WEAPON_TYPES] | null;

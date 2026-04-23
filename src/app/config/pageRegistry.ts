@@ -2,6 +2,7 @@ import type { Component } from 'vue';
 import type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 import {
   TheStats,
+  TheHotkeys,
   TheWeapons,
   TheApparel,
   TheMisc,
@@ -18,6 +19,8 @@ import {
   TheRestoration,
   TheEnchanting,
 } from '@/pages';
+
+const INVENTORY_FREQUENCY = 500; // ms
 
 export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 
@@ -41,6 +44,17 @@ export const pagesRegistry: PagesRegistry = {
         gold: 'Inventory::Gold',
       },
     },
+    // Hotkeys page relies on a global `hotkeys.items` subscription started in
+    // useAppLoader so the data is available across all pages. No per-page
+    // subscription is needed (empty id + empty fields).
+    hotkeys: {
+      id: '',
+      component: TheHotkeys,
+      fields: {},
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
+    },
   },
 
   inventory: {
@@ -51,6 +65,9 @@ export const pagesRegistry: PagesRegistry = {
         items: 'Inventory::Items::Weapons',
         ammo: 'Inventory::Items::Ammo',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     apparel: {
       id: 'inventory.apparel',
@@ -58,6 +75,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Apparel',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     food: {
       id: 'inventory.food',
@@ -65,6 +85,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Food',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     potions: {
       id: 'inventory.potions',
@@ -72,6 +95,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Potions',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     ingredients: {
       id: 'inventory.ingredients',
@@ -79,6 +105,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Ingredients',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     scrolls: {
       id: 'inventory.scrolls',
@@ -86,6 +115,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Scrolls',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     keys: {
       id: 'inventory.keys',
@@ -93,6 +125,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Keys',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     books: {
       id: 'inventory.books',
@@ -100,6 +135,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Inventory::Items::Books',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     misc: {
       id: 'inventory.misc',
@@ -108,6 +146,9 @@ export const pagesRegistry: PagesRegistry = {
         items: 'Inventory::Items::Misc',
         gems: 'Inventory::Items::SoulGems',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
   },
 
@@ -118,6 +159,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Magic::Items::Destruction',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     alteration: {
       id: 'magic.alteration',
@@ -125,6 +169,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Magic::Items::Alteration',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     conjuration: {
       id: 'magic.conjuration',
@@ -132,6 +179,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Magic::Items::Conjuration',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     illusion: {
       id: 'magic.illusion',
@@ -139,6 +189,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Magic::Items::Illusion',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
     restoration: {
       id: 'magic.restoration',
@@ -146,6 +199,10 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Magic::Items::Restoration',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
+
     },
     enchanting: {
       id: 'magic.enchanting',
@@ -153,6 +210,9 @@ export const pagesRegistry: PagesRegistry = {
       fields: {
         items: 'Magic::Items::Enchanting',
       },
+      settings: {
+        frequency: INVENTORY_FREQUENCY,
+      }
     },
   },
 };
@@ -194,4 +254,8 @@ export function getPageComponent(tab: string, subTab: string): Component | null 
 
 export function getPageFields(tab: string, subTab: string): Record<string, string> {
   return getPageConfig(tab, subTab)?.fields ?? {};
+}
+
+export function getPageSettings(tab: string, subTab: string): PageConfig['settings'] {
+  return getPageConfig(tab, subTab)?.settings;
 }

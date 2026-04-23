@@ -1,13 +1,16 @@
 import { ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
-import { HandPicker } from '@/shared/ui';
+import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
+import { HandPicker, HotkeyPickerModal } from '@/shared/ui';
 import type { SpellItem } from '@/stores/magic/types';
 import type { EquipSlot } from '@/shared/lib/types/common';
+import type { HotkeySlot } from '@/api/websocket';
 import { isMasterLevelSpell } from '@/stores/magic/helpers';
 
 export function useMagicSpellActions(spellsList: () => SpellItem[]) {
   const wsStore = useWebSocketStore();
+  const hotkeysStore = useHotkeysStore();
   const { closeModal, openModal } = useModal();
 
   const activeSpell = ref<string | null>(null);
@@ -25,10 +28,10 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
     if (isMasterLevelSpell(spell)) {
       if (spell.isEquipped) {
         // Unequip from right hand (master spells unequip from both hands)
-        wsStore.sendCommand('unequip_spell', formId, 'right');
+        wsStore.sendCommand({ command: 'unequip_spell', formId, hand: 'right' });
       } else {
         // Equip to right hand (will be dual-cast automatically)
-        wsStore.sendCommand('equip_spell', formId, 'right');
+        wsStore.sendCommand({ command: 'equip_spell', formId, hand: 'right' });
       }
       return;
     }
@@ -46,7 +49,7 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
           on: {
             selectHand: (hand: EquipSlot) => {
               // Unequip from one hand
-              wsStore.sendCommand('unequip_spell', formId, hand);
+              wsStore.sendCommand({ command: 'unequip_spell', formId, hand });
               closeModal();
             },
           },
@@ -65,10 +68,10 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
           selectHand: (hand: EquipSlot) => {
             if (hand === spell.equippedHand) {
               // Unequip from current hand
-              wsStore.sendCommand('unequip_spell', formId, hand);
+              wsStore.sendCommand({ command: 'unequip_spell', formId, hand });
             } else {
               // Equip to other hand (will dual-cast if already equipped in one)
-              wsStore.sendCommand('equip_spell', formId, hand);
+              wsStore.sendCommand({ command: 'equip_spell', formId, hand });
             }
             closeModal();
           },
@@ -85,7 +88,7 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
       },
       on: {
         selectHand: (hand: EquipSlot) => {
-          wsStore.sendCommand('equip_spell', formId, hand);
+          wsStore.sendCommand({ command: 'equip_spell', formId, hand });
           closeModal();
         },
       },
@@ -94,7 +97,32 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
 
   function toggleFavorite() {
     if (!activeSpell.value) return;
-    wsStore.sendCommand('favorite_spell', activeSpell.value);
+    wsStore.sendCommand({ command: 'favorite_spell', formId: activeSpell.value });
+  }
+
+  function openHotkeyPicker() {
+    if (!activeSpell.value || !activeSpellData.value) return;
+    const formId = activeSpell.value;
+    const currentSlot = hotkeysStore.getSlotForFormId(formId);
+
+    openModal({
+      component: HotkeyPickerModal,
+      props: {
+        currentSlot,
+        itemName: activeSpellData.value.name,
+      },
+      on: {
+        select: (slot: HotkeySlot) => {
+          const existing = hotkeysStore.getSlotForFormId(formId);
+          if (existing === slot) {
+            wsStore.sendCommand({ command: 'hotkey_clear', slot });
+          } else {
+            wsStore.sendCommand({ command: 'hotkey_set', formId, slot });
+          }
+          closeModal();
+        },
+      },
+    });
   }
 
   // Automatically select the first spell when the spells list becomes available
@@ -113,5 +141,6 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
     activeSpellData,
     equipSpell,
     toggleFavorite,
+    openHotkeyPicker,
   };
 }

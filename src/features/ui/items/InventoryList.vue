@@ -34,22 +34,49 @@
 
       <!-- Action toolbar -->
       <div class="inventory-toolbar">
-        <button
-          v-for="action in enabledActions"
-          :key="action.id"
-          class="toolbar-btn"
-          :class="[
-            action.class,
-            { favorite: action.id === 'favorite' && isActiveItemFavorite },
-          ]"
-          :disabled="!modelValue"
-          @click="handleActionClick(action.event)"
+        <template
+          v-for="(actionItem, index) in enabledActions"
+          :key="index"
         >
-          <base-icon
-            :icon-path="action.icon"
-            :size="20"
-          />
-        </button>
+          <div
+            v-if="isActionGroup(actionItem)"
+            class="toolbar-group"
+          >
+            <button
+              v-for="action in actionItem.group"
+              :key="action.id"
+              class="toolbar-btn"
+              :class="[
+                action.class,
+                { favorite: action.id === 'favorite' && isActiveItemFavorite },
+                { 'hotkey-bound': action.id === 'hotkey' && isActiveItemHotkeyed },
+              ]"
+              :disabled="!modelValue"
+              @click="handleActionClick(action.event)"
+            >
+              <base-icon
+                :icon-path="action.icon"
+                :size="20"
+              />
+            </button>
+          </div>
+          <button
+            v-else
+            class="toolbar-btn"
+            :class="[
+              actionItem.class,
+              { favorite: actionItem.id === 'favorite' && isActiveItemFavorite },
+              { 'hotkey-bound': actionItem.id === 'hotkey' && isActiveItemHotkeyed },
+            ]"
+            :disabled="!modelValue"
+            @click="handleActionClick(actionItem.event)"
+          >
+            <base-icon
+              :icon-path="actionItem.icon"
+              :size="20"
+            />
+          </button>
+        </template>
       </div>
     </div>
 
@@ -79,6 +106,7 @@ import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem } from '@/shared/ui/items';
 import { BasePreview } from '@/shared/ui/items';
+import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
 import type { PreviewStats } from '@/shared/ui/items/types/types';
 import type { ListItem } from '@/shared/lib/types/types';
@@ -90,11 +118,21 @@ interface ToolbarAction {
   class?: string;
 }
 
+interface ToolbarActionGroup {
+  group: ToolbarAction[];
+}
+
+type ToolbarActionItem = ToolbarAction | ToolbarActionGroup;
+
+function isActionGroup(item: ToolbarActionItem): item is ToolbarActionGroup {
+  return 'group' in item;
+}
+
 interface Props {
   modelValue?: string | null;
   items: ListItem[];
   emptyMessage?: string;
-  actions?: ToolbarAction[];
+  actions?: ToolbarActionItem[];
   activeItem?: ListItem | null;
   activeItemStats?: PreviewStats[];
   previewEffects?: ItemEnchantmentEffect[];
@@ -106,15 +144,12 @@ const props = withDefaults(defineProps<Props>(), {
   emptyMessage: () => '...',
   actions: () => [
     {
-      id: 'favorite',
-      event: 'favorite',
-      icon: 'delapouite/round-star.svg',
+      group: [
+        { id: 'favorite', event: 'favorite', icon: 'delapouite/round-star.svg' },
+        { id: 'hotkey', event: 'hotkey', icon: 'delapouite/keyboard.svg' },
+      ],
     },
-    {
-      id: 'drop',
-      event: 'drop',
-      icon: 'delapouite/trash-can.svg',
-    },
+    { id: 'drop', event: 'drop', icon: 'delapouite/trash-can.svg' },
   ],
   activeItem: null,
   activeItemStats: () => [],
@@ -126,8 +161,11 @@ const emit = defineEmits<{
   'update:modelValue': [value: string | null];
   favorite: [];
   drop: [];
+  hotkey: [];
   'item-double-click': [formId: string];
 }>();
+
+const hotkeysStore = useHotkeysStore();
 
 const activeItemData = computed(() => {
   if (!props.modelValue) return null;
@@ -141,7 +179,11 @@ const isActiveItemFavorite = computed(() => {
   return false;
 });
 
-const enabledActions = computed(() => {
+const isActiveItemHotkeyed = computed(() => {
+  return hotkeysStore.getSlotForFormId(props.modelValue) !== null;
+});
+
+const enabledActions = computed((): ToolbarActionItem[] => {
   return props.actions || [];
 });
 
@@ -156,11 +198,7 @@ function handleItemClick(formId: string) {
 }
 
 function handleActionClick(actionEvent: string) {
-  if (actionEvent === 'favorite') {
-    emit('favorite');
-  } else if (actionEvent === 'drop') {
-    emit('drop');
-  }
+  emit(actionEvent as any);
 }
 </script>
 
@@ -213,6 +251,11 @@ function handleActionClick(actionEvent: string) {
   gap: var(--spacing-md);
 }
 
+.toolbar-group {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
 .toolbar-btn {
   display: flex;
   align-items: center;
@@ -236,6 +279,14 @@ function handleActionClick(actionEvent: string) {
 
   &:active:not(:disabled) {
     background-color: var(--tab-bg-active);
+
+  &.hotkey-bound {
+    --skyrim-text-accent: var(--skyrim-accent-gold);
+
+    &:hover:not(:disabled) {
+      --skyrim-text-accent: var(--skyrim-accent-gold);
+    }
+  }
   }
 
   &:disabled {

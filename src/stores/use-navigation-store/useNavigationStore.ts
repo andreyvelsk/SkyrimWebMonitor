@@ -7,7 +7,10 @@ export const useNavigationStore = defineStore('navigation', () => {
   const { t } = useI18n();
 
   const subTabsMap = ref<Record<string, SubTab[]>>({
-    character: [{ id: 'stats', label: t('pages.character.stats.tab') }],
+    character: [
+      { id: 'stats', label: t('pages.character.stats.tab') },
+      { id: 'hotkeys', label: t('pages.character.hotkeys.tab') },
+    ],
     inventory: [],
     magic: [],
   });

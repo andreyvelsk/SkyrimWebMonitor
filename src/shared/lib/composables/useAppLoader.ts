@@ -4,6 +4,7 @@ import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationS
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import {
   getPageFields,
+  getPageSettings,
   getPageSubscriptionId,
   getTabCategorySubscription,
   TAB_CATEGORY_SUBSCRIPTIONS,
@@ -17,6 +18,8 @@ export function useAppLoader() {
   const websocketStore = useWebSocketStore();
   const { connect, startSubscription, stopSubscription, sendQuery } = websocketStore;
   const { isConnected } = storeToRefs(websocketStore);
+  const HOTKEYS_SUBSCRIPTION_ID = 'hotkeys.items';
+  const HOTKEYS_FIELDS = { items: 'Hotkey::Items' };
 
   const startCategorySubscription = (tabId: string): void => {
     const config = getTabCategorySubscription(tabId);
@@ -40,8 +43,9 @@ export function useAppLoader() {
       if (isConnected.value) {
         console.log('Connected on mount, subscribing to current page...');
         const pageFields = getPageFields(activeTab.value, activeSubTab.value);
+        const pageSettings = getPageSettings(activeTab.value, activeSubTab.value);
         const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
-        if (subscriptionId) startSubscription(subscriptionId, pageFields);
+        if (subscriptionId) startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
 
         // One-time initial load for all category subscriptions (populate store)
         try {
@@ -56,6 +60,10 @@ export function useAppLoader() {
 
         // Start live category subscription for the active tab
         startCategorySubscription(activeTab.value);
+
+        // Start global hotkey subscription (persists for the whole session so
+        // any page can reflect current bindings). Not tied to the active tab.
+        startSubscription(HOTKEYS_SUBSCRIPTION_ID, HOTKEYS_FIELDS);
       }
     } catch (err) {
       console.error('Failed to initialize websocket connection', err);
@@ -78,6 +86,11 @@ export function useAppLoader() {
         startCategorySubscription(newTab);
       }
 
+      // Re-establish the global hotkey subscription after reconnect.
+      if (!websocketStore.activeSubscriptions.has(HOTKEYS_SUBSCRIPTION_ID)) {
+        startSubscription(HOTKEYS_SUBSCRIPTION_ID, HOTKEYS_FIELDS);
+      }
+
       const subscriptionId = getPageSubscriptionId(newTab, newSubTab);
       const oldSubscriptionId = getPageSubscriptionId(oldTab, oldSubTab);
 
@@ -94,7 +107,8 @@ export function useAppLoader() {
 
       console.log(`Subscription update: ${newTab} - ${newSubTab}`);
       const pageFields = getPageFields(newTab, newSubTab);
-      if (subscriptionId) startSubscription(subscriptionId, pageFields);
+      const pageSettings = getPageSettings(newTab, newSubTab);
+      if (subscriptionId) startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
     },
     { immediate: false }
   );

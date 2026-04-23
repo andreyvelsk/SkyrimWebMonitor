@@ -1,5 +1,6 @@
 // Character pages
 export { default as TheStats } from './character/TheStats.vue';
+export { default as TheHotkeys } from './character/TheHotkeys.vue';
 
 // Inventory pages
 export { default as TheWeapons } from './inventory/TheWeapons.vue';

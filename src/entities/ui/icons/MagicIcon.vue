@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
+import { getMagicSchoolIconPath } from '@/shared/lib/constants/magicSchoolIcons';
 
 interface Props {
   spellSchool?: string | null;
@@ -19,20 +20,5 @@ const props = withDefaults(defineProps<Props>(), {
   size: 24,
 });
 
-// Маппинг школ магии на относительные пути иконок
-const MAGIC_SCHOOL_ICON_PATHS: Record<string, string> = {
-  Alteration: 'lorc/magic-swirl.svg',
-  Conjuration: 'lorc/portal.svg',
-  Destruction: 'lorc/flaming-claw.svg',
-  Illusion: 'delapouite/sparkles.svg',
-  Restoration: 'delapouite/nested-hearts.svg',
-};
-
-const iconPath = computed(() => {
-  const relativePath = props.spellSchool
-    ? MAGIC_SCHOOL_ICON_PATHS[props.spellSchool] ||
-      MAGIC_SCHOOL_ICON_PATHS.Alteration
-    : MAGIC_SCHOOL_ICON_PATHS.Alteration;
-  return relativePath;
-});
+const iconPath = computed(() => getMagicSchoolIconPath(props.spellSchool));
 </script>
