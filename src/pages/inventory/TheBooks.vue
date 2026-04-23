@@ -46,7 +46,7 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Use (open/read) the book item
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>
 

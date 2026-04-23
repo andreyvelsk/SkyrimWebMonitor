@@ -20,7 +20,7 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
 
   function toggleFavorite() {
     if (!activeItem.value) return;
-    wsStore.sendCommand('favorite', activeItem.value);
+    wsStore.sendCommand({ command: 'favorite', formId: activeItem.value });
   }
 
   function openHotkeyPicker() {
@@ -39,9 +39,9 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
           const existing = hotkeysStore.getSlotForFormId(formId);
           if (existing === slot) {
             // Toggle off: clear the binding
-            wsStore.sendCommand('hotkey_clear', undefined, undefined, undefined, slot);
+            wsStore.sendCommand({ command: 'hotkey_clear', slot });
           } else {
-            wsStore.sendCommand('hotkey_set', formId, undefined, undefined, slot);
+            wsStore.sendCommand({ command: 'hotkey_set', formId, slot });
           }
           closeModal();
         },
@@ -63,7 +63,7 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
         },
         on: {
           drop: (qty: number) => {
-            wsStore.sendCommand('drop', activeItem.value!, undefined, qty);
+            wsStore.sendCommand({ command: 'drop', formId: activeItem.value!, count: qty });
             closeModal();
           },
         },
@@ -72,7 +72,7 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
     }
 
     // If 5 or fewer, drop one
-    wsStore.sendCommand('drop', activeItem.value, undefined, 1);
+    wsStore.sendCommand({ command: 'drop', formId: activeItem.value, count: 1 });
   }
 
   // Automatically select the first item when the items list becomes available

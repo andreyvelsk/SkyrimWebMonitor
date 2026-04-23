@@ -53,7 +53,7 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Use (consume) the food item
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>
 

@@ -46,7 +46,7 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Keys generally cannot be "used" like consumables; still send a generic use command
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>
 

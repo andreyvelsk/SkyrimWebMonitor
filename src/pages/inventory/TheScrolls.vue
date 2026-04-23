@@ -53,7 +53,7 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Use the scroll
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>
 

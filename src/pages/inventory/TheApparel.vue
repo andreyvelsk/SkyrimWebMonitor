@@ -52,9 +52,9 @@ function equipItem(formId: string) {
 
   // Toggle equip/unequip
   if (item.isEquipped) {
-    wsStore.sendCommand('unequip', formId);
+    wsStore.sendCommand({ command: 'unequip', formId });
   } else {
-    wsStore.sendCommand('equip', formId);
+    wsStore.sendCommand({ command: 'equip', formId });
   }
 }
 </script>

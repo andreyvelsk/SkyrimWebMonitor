@@ -18,6 +18,7 @@ export {
   type CommandType,
   type EquipHand,
   type HotkeySlot,
+  type SendCommandOptions,
 } from './protocol';
 export {
   type MessageHandler,

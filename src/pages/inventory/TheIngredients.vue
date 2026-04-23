@@ -55,7 +55,7 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Use (consume) the ingredient item
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>
 

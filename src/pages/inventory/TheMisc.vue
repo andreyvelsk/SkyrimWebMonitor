@@ -42,6 +42,6 @@ function useItem(formId: string) {
   if (!item) return;
 
   // Use (consume) the misc item when double-clicked (if supported)
-  wsStore.sendCommand('use', formId);
+  wsStore.sendCommand({ command: 'use', formId });
 }
 </script>

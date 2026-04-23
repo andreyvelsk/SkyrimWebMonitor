@@ -28,10 +28,10 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
     if (isMasterLevelSpell(spell)) {
       if (spell.isEquipped) {
         // Unequip from right hand (master spells unequip from both hands)
-        wsStore.sendCommand('unequip_spell', formId, 'right');
+        wsStore.sendCommand({ command: 'unequip_spell', formId, hand: 'right' });
       } else {
         // Equip to right hand (will be dual-cast automatically)
-        wsStore.sendCommand('equip_spell', formId, 'right');
+        wsStore.sendCommand({ command: 'equip_spell', formId, hand: 'right' });
       }
       return;
     }
@@ -49,7 +49,7 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
           on: {
             selectHand: (hand: EquipSlot) => {
               // Unequip from one hand
-              wsStore.sendCommand('unequip_spell', formId, hand);
+              wsStore.sendCommand({ command: 'unequip_spell', formId, hand });
               closeModal();
             },
           },
@@ -68,10 +68,10 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
           selectHand: (hand: EquipSlot) => {
             if (hand === spell.equippedHand) {
               // Unequip from current hand
-              wsStore.sendCommand('unequip_spell', formId, hand);
+              wsStore.sendCommand({ command: 'unequip_spell', formId, hand });
             } else {
               // Equip to other hand (will dual-cast if already equipped in one)
-              wsStore.sendCommand('equip_spell', formId, hand);
+              wsStore.sendCommand({ command: 'equip_spell', formId, hand });
             }
             closeModal();
           },
@@ -88,7 +88,7 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
       },
       on: {
         selectHand: (hand: EquipSlot) => {
-          wsStore.sendCommand('equip_spell', formId, hand);
+          wsStore.sendCommand({ command: 'equip_spell', formId, hand });
           closeModal();
         },
       },
@@ -97,7 +97,7 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
 
   function toggleFavorite() {
     if (!activeSpell.value) return;
-    wsStore.sendCommand('favorite_spell', activeSpell.value);
+    wsStore.sendCommand({ command: 'favorite_spell', formId: activeSpell.value });
   }
 
   function openHotkeyPicker() {
@@ -115,9 +115,9 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
         select: (slot: HotkeySlot) => {
           const existing = hotkeysStore.getSlotForFormId(formId);
           if (existing === slot) {
-            wsStore.sendCommand('hotkey_clear', undefined, undefined, undefined, slot);
+            wsStore.sendCommand({ command: 'hotkey_clear', slot });
           } else {
-            wsStore.sendCommand('hotkey_set', formId, undefined, undefined, slot);
+            wsStore.sendCommand({ command: 'hotkey_set', formId, slot });
           }
           closeModal();
         },

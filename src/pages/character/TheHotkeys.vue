@@ -40,7 +40,7 @@ const { slots } = storeToRefs(hotkeysStore);
 const wsStore = useWebSocketStore();
 
 function triggerSlot(slot: HotkeySlot) {
-  wsStore.sendCommand('hotkey_trigger', undefined, undefined, undefined, slot);
+  wsStore.sendCommand({ command: 'hotkey_trigger', slot });
 }
 
 function iconFor(entry: HotkeySlotEntry): string {
@@ -130,8 +130,6 @@ function iconFor(entry: HotkeySlotEntry): string {
   justify-content: center;
   width: 24px;
   height: 24px;
-  background-color: var(--skyrim-bg-medium);
-  border: 1px solid var(--skyrim-border-dark);
 
   --skyrim-text-accent: var(--skyrim-text-primary);
 }

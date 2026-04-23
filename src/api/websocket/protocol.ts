@@ -73,6 +73,20 @@ export interface CommandMessage extends BaseMessage {
   slot?: HotkeySlot // hotkey slot 1..8 (required for hotkey_set, hotkey_clear, hotkey_trigger)
 }
 
+/**
+ * Options accepted by `sendCommand` / `wsClient.command`.
+ * Use this object form instead of positional parameters so calls like
+ *   sendCommand({ command: 'hotkey_clear', slot: 1 })
+ * stay readable without trailing `undefined` arguments.
+ */
+export interface SendCommandOptions {
+  command: CommandType
+  formId?: string
+  hand?: EquipHand
+  count?: number
+  slot?: HotkeySlot
+}
+
 export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage | CommandMessage
 
 // ============================================================================

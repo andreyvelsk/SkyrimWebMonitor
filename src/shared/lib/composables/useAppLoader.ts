@@ -4,6 +4,7 @@ import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationS
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import {
   getPageFields,
+  getPageSettings,
   getPageSubscriptionId,
   getTabCategorySubscription,
   TAB_CATEGORY_SUBSCRIPTIONS,
@@ -42,8 +43,9 @@ export function useAppLoader() {
       if (isConnected.value) {
         console.log('Connected on mount, subscribing to current page...');
         const pageFields = getPageFields(activeTab.value, activeSubTab.value);
+        const pageSettings = getPageSettings(activeTab.value, activeSubTab.value);
         const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
-        if (subscriptionId) startSubscription(subscriptionId, pageFields);
+        if (subscriptionId) startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
 
         // One-time initial load for all category subscriptions (populate store)
         try {
@@ -105,7 +107,8 @@ export function useAppLoader() {
 
       console.log(`Subscription update: ${newTab} - ${newSubTab}`);
       const pageFields = getPageFields(newTab, newSubTab);
-      if (subscriptionId) startSubscription(subscriptionId, pageFields);
+      const pageSettings = getPageSettings(newTab, newSubTab);
+      if (subscriptionId) startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
     },
     { immediate: false }
   );

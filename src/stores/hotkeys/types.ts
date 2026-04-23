@@ -1,5 +1,5 @@
 import type { HotkeySlot } from '@/api/websocket';
-import type { CategoryType } from '@/stores/inventory/types';
+import type { CategoryType, WeaponType, BodySlot } from '@/stores/inventory/types';
 import type { MagicSchool } from '@/stores/magic/types';
 
 export type HotkeyKind = 'spell' | 'item';
@@ -35,6 +35,10 @@ export interface HotkeySlotItem {
   weight: number;
   value: number;
   isFavorite: boolean;
+  // Optional type hints so the hotkey UI can show a more specific icon
+  // (reusing the same mappings as WeaponIcon / ApparelIcon).
+  weaponType?: WeaponType;
+  bodySlots?: BodySlot[] | null;
 }
 
 export type HotkeySlotEntry = HotkeySlotUnbound | HotkeySlotSpell | HotkeySlotItem;
