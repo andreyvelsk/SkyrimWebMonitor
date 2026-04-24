@@ -89,7 +89,7 @@ function equipItem(formId: string) {
           selectHand: (hand: EquipSlot) => {
             if (hand === item.equippedHand || item.equippedHand === 'both') {
               // Unequip from current hand (or unequip if both hands)
-              wsStore.sendCommand({ command: 'unequip', formId });
+              wsStore.sendCommand({ command: 'unequip', formId, hand });
             } else {
               // Equip to other hand
               wsStore.sendCommand({ command: 'equip', formId, hand });
@@ -102,7 +102,11 @@ function equipItem(formId: string) {
     }
 
     // If two-handed or single copy, just unequip
-    wsStore.sendCommand({ command: 'unequip', formId });
+    wsStore.sendCommand({ 
+      command: 'unequip', 
+      formId,
+      hand: item.equippedHand,
+    });
     return;
   }
 

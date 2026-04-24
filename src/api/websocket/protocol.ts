@@ -1,3 +1,7 @@
+import type {
+  EquippedHand,
+} from '@/shared/lib/types/common';
+
 /**
  * WebSocket Protocol Types and Interfaces
  * Based on: https://github.com/andreyvelsk/SkyrimWebSocket/blob/main/PROTOCOL.md
@@ -8,7 +12,7 @@
 // ============================================================================
 
 export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell' | 'favorite_spell' | 'hotkey_set' | 'hotkey_clear' | 'hotkey_trigger'
-export type EquipHand = 'right' | 'left'
+export type EquipHand = EquippedHand
 export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
 /**
