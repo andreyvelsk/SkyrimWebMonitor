@@ -149,7 +149,11 @@
         "connected": "Connected to server",
         "connecting": "Connecting to server...",
         "reconnecting": "Reconnecting to server...",
-        "disconnected": "Disconnected from server"
+        "disconnected": "Disconnected from server",
+        "failed": "Connection failed",
+        "failedHint": "Reconnect attempts exhausted. Try again manually.",
+        "attempt": "Attempt {current} of {total}",
+        "reconnect": "Reconnect"
       },
       "magicItem": {
         "ready": "Ready",
@@ -198,11 +202,11 @@
       }
     }
   },
-  "hotkeys": {
-    "title": "Assign hotkey",
-    "hint": "Tap a slot to bind; tap the highlighted slot again to clear."
-  },
   "modals": {
+    "hotkeys": {
+      "title": "Assign hotkey",
+      "hint": "Tap a slot to bind; tap the highlighted slot again to clear."
+    },
     "dropItems": "Drop Items",
     "available": "Available",
     "quantity": "Quantity",

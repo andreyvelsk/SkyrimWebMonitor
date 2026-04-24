@@ -14,6 +14,9 @@ export const useWebSocketStore = defineStore('websocket', () => {
   // State
   const status = ref<string>(CONNECTION_STATUS.DISCONNECTED);
   const error = ref<string | null>(null);
+  const reconnectAttempt = ref<number>(0);
+  const reconnectMaxAttempts = ref<number>(0);
+  const reconnectFailed = ref<boolean>(false);
   const activeSubscriptions = ref<Map<string, Subscription>>(new Map());
   const pendingQueries = new Map<string, (fields: Record<string, unknown>) => void>();
 
@@ -25,14 +28,13 @@ export const useWebSocketStore = defineStore('websocket', () => {
   let unsubscribeFromClose: (() => void) | null = null;
   let unsubscribeFromError: (() => void) | null = null;
   let unsubscribeFromMessage: (() => void) | null = null;
+  let unsubscribeFromReconnecting: (() => void) | null = null;
+  let unsubscribeFromReconnectFailed: (() => void) | null = null;
 
   // Computed
   const isConnected = computed(() => status.value === CONNECTION_STATUS.CONNECTED);
-  const isConnecting = computed(
-    () =>
-      status.value === CONNECTION_STATUS.CONNECTING ||
-      status.value === CONNECTION_STATUS.RECONNECTING
-  );
+  const isConnecting = computed(() => status.value === CONNECTION_STATUS.CONNECTING);
+  const isReconnecting = computed(() => status.value === CONNECTION_STATUS.RECONNECTING);
 
   const startSubscription = (
     subscriptionId: string,
@@ -144,30 +146,66 @@ export const useWebSocketStore = defineStore('websocket', () => {
     }
   };
 
+  const reconnect = async (): Promise<void> => {
+    try {
+      status.value = CONNECTION_STATUS.CONNECTING;
+      error.value = null;
+      reconnectFailed.value = false;
+      reconnectAttempt.value = 0;
+      await wsClient.reconnect();
+      status.value = CONNECTION_STATUS.CONNECTED;
+    } catch (err) {
+      status.value = CONNECTION_STATUS.DISCONNECTED;
+      error.value = (err as Error).message || 'Failed to reconnect';
+    }
+  };
+
   const disconnect = (): void => {
     stopAllSubscriptions();
     wsClient.disconnect();
     status.value = CONNECTION_STATUS.DISCONNECTED;
     error.value = null;
+    reconnectAttempt.value = 0;
+    reconnectFailed.value = false;
   };
 
   const setupListeners = (): void => {
     unsubscribeFromOpen = wsClient.on('onOpen', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
+      reconnectAttempt.value = 0;
+      reconnectFailed.value = false;
       console.log('WebSocket connected, ready for subscriptions');
       sendQuery(LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse);
     });
 
     unsubscribeFromClose = wsClient.on('onClose', () => {
-      status.value = CONNECTION_STATUS.DISCONNECTED;
+      // Don't override RECONNECTING status set by onReconnecting event
+      if (status.value !== CONNECTION_STATUS.RECONNECTING) {
+        status.value = CONNECTION_STATUS.DISCONNECTED;
+      }
       activeSubscriptions.value.clear();
     });
 
     unsubscribeFromError = wsClient.on('onError', (err: unknown) => {
-      status.value = CONNECTION_STATUS.DISCONNECTED;
+      if (status.value !== CONNECTION_STATUS.RECONNECTING) {
+        status.value = CONNECTION_STATUS.DISCONNECTED;
+      }
       error.value = (err as { message?: string })?.message || 'Connection error';
       activeSubscriptions.value.clear();
+    });
+
+    unsubscribeFromReconnecting = wsClient.on('onReconnecting', (data: unknown) => {
+      const info = data as { attempt: number; max: number } | undefined;
+      status.value = CONNECTION_STATUS.RECONNECTING;
+      reconnectAttempt.value = info?.attempt ?? 0;
+      reconnectMaxAttempts.value = info?.max ?? 0;
+      reconnectFailed.value = false;
+    });
+
+    unsubscribeFromReconnectFailed = wsClient.on('onReconnectFailed', () => {
+      status.value = CONNECTION_STATUS.DISCONNECTED;
+      reconnectFailed.value = true;
     });
 
     unsubscribeFromMessage = wsClient.onMessage((message: ServerMessage) => {
@@ -186,6 +224,8 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromClose?.();
     unsubscribeFromError?.();
     unsubscribeFromMessage?.();
+    unsubscribeFromReconnecting?.();
+    unsubscribeFromReconnectFailed?.();
   };
 
   setupListeners();
@@ -197,9 +237,14 @@ export const useWebSocketStore = defineStore('websocket', () => {
     status,
     error,
     activeSubscriptions,
+    reconnectAttempt,
+    reconnectMaxAttempts,
+    reconnectFailed,
     isConnected,
     isConnecting,
+    isReconnecting,
     connect,
+    reconnect,
     disconnect,
     startSubscription,
     stopSubscription,

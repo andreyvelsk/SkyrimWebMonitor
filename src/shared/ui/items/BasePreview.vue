@@ -5,7 +5,7 @@
   >
     <div
       v-if="$slots.icon"
-      class="flex justify-center"
+      class="icon-slot"
     >
       <slot name="icon" />
     </div>
@@ -72,6 +72,11 @@ withDefaults(
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+
+  .icon-slot {
+    display: flex;
+    justify-content: center;
+  }
 
   .info {
     .name {

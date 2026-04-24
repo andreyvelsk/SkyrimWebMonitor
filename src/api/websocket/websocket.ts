@@ -31,6 +31,47 @@ class WebSocketClient {
     this.eventCallbacks.set('onClose', []);
     this.eventCallbacks.set('onError', []);
     this.eventCallbacks.set('onMessage', []);
+    this.eventCallbacks.set('onReconnecting', []);
+    this.eventCallbacks.set('onReconnectFailed', []);
+  }
+
+  /**
+   * Current reconnect attempt number (0 when connected / idle)
+   */
+  getReconnectAttempts(): number {
+    return this.reconnectAttempts;
+  }
+
+  /**
+   * Maximum reconnect attempts allowed
+   */
+  getMaxReconnectAttempts(): number {
+    return WS_CONFIG.MAX_RECONNECT_ATTEMPTS;
+  }
+
+  /**
+   * Manually trigger reconnection. Cancels any pending reconnect timer,
+   * resets attempt counter and immediately tries to reconnect.
+   */
+  reconnect(): Promise<void> {
+    if (this.reconnectTimer) {
+      clearTimeout(this.reconnectTimer);
+      this.reconnectTimer = null;
+    }
+
+    this.stopHeartbeat();
+
+    if (this.ws) {
+      try {
+        this.ws.close();
+      } catch (error) {
+        console.error('Failed to close existing socket before manual reconnect:', error);
+      }
+      this.ws = null;
+    }
+
+    this.reconnectAttempts = 0;
+    return this.connect();
   }
 
   /**
@@ -272,6 +313,10 @@ class WebSocketClient {
   private attemptReconnect(): void {
     if (this.reconnectAttempts >= WS_CONFIG.MAX_RECONNECT_ATTEMPTS) {
       console.error('Max reconnection attempts reached');
+      this.emit('onReconnectFailed', {
+        attempts: this.reconnectAttempts,
+        max: WS_CONFIG.MAX_RECONNECT_ATTEMPTS,
+      });
       return;
     }
 
@@ -279,6 +324,12 @@ class WebSocketClient {
     console.log(
       `Attempting to reconnect... (${this.reconnectAttempts}/${WS_CONFIG.MAX_RECONNECT_ATTEMPTS})`
     );
+
+    this.emit('onReconnecting', {
+      attempt: this.reconnectAttempts,
+      max: WS_CONFIG.MAX_RECONNECT_ATTEMPTS,
+      delay: WS_CONFIG.RECONNECT_INTERVAL,
+    });
 
     this.reconnectTimer = setTimeout(() => {
       this.connect().catch(error => {

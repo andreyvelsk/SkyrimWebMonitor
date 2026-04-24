@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-1 flex-col justify-between">
+  <div class="stats-layout">
     <div class="list">
       <attribute-row
         :label="$t('pages.character.stats.level')"
@@ -54,6 +54,13 @@ const {
 </script>
 
 <style scoped lang="scss">
+.stats-layout {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .stats-grid {
   display: flex;
   flex-direction: column;

@@ -6,7 +6,6 @@ export default {
         'nesting-rules': true,
       },
     },
-    tailwindcss: {},
     autoprefixer: {},
   },
 };
