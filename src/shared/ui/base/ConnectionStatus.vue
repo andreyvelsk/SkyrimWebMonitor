@@ -78,9 +78,6 @@ const subText = computed(() => {
       total: wsStore.reconnectMaxAttempts,
     });
   }
-  if (state.value === 'failed') {
-    return t('shared.ui.connectionStatus.failedHint');
-  }
   return '';
 });
 
