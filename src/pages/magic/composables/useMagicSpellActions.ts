@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
 import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
+import { DataRouter } from '@/stores/adapters/dataRouter';
 import { HandPicker, HotkeyPickerModal } from '@/shared/ui';
 import type { SpellItem } from '@/stores/magic/types';
 import type { EquipSlot } from '@/shared/lib/types/common';
@@ -103,25 +104,30 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
   function openHotkeyPicker() {
     if (!activeSpell.value || !activeSpellData.value) return;
     const formId = activeSpell.value;
-    const currentSlot = hotkeysStore.getSlotForFormId(formId);
+    const itemName = activeSpellData.value.name;
 
-    openModal({
-      component: HotkeyPickerModal,
-      props: {
-        currentSlot,
-        itemName: activeSpellData.value.name,
-      },
-      on: {
-        select: (slot: HotkeySlot) => {
-          const existing = hotkeysStore.getSlotForFormId(formId);
-          if (existing === slot) {
-            wsStore.sendCommand({ command: 'hotkey_clear', slot });
-          } else {
-            wsStore.sendCommand({ command: 'hotkey_set', formId, slot });
-          }
-          closeModal();
+    wsStore.sendQuery('hotkeys.items', { items: 'Hotkey::Items' }, (fields) => {
+      DataRouter.routeDataById('hotkeys.items', fields);
+      const currentSlot = hotkeysStore.getSlotForFormId(formId);
+
+      openModal({
+        component: HotkeyPickerModal,
+        props: {
+          currentSlot,
+          itemName,
         },
-      },
+        on: {
+          select: (slot: HotkeySlot) => {
+            const existing = hotkeysStore.getSlotForFormId(formId);
+            if (existing === slot) {
+              wsStore.sendCommand({ command: 'hotkey_clear', slot });
+            } else {
+              wsStore.sendCommand({ command: 'hotkey_set', formId, slot });
+            }
+            closeModal();
+          },
+        },
+      });
     });
   }
 
