@@ -84,14 +84,9 @@ const subText = computed(() => {
   return '';
 });
 
-const isBusy = computed(
-  () => state.value === 'connecting' || state.value === 'reconnecting'
-);
-
 const canReconnect = computed(() => state.value !== 'connected');
 
 function handleReconnect(): void {
-  if (isBusy.value) return;
   wsStore.reconnect();
 }
 </script>
