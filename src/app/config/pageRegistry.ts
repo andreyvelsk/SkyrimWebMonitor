@@ -44,13 +44,12 @@ export const pagesRegistry: PagesRegistry = {
         gold: 'Inventory::Gold',
       },
     },
-    // Hotkeys page relies on a global `hotkeys.items` subscription started in
-    // useAppLoader so the data is available across all pages. No per-page
-    // subscription is needed (empty id + empty fields).
     hotkeys: {
-      id: '',
+      id: 'hotkeys.items',
       component: TheHotkeys,
-      fields: {},
+      fields: {
+        items: 'Hotkey::Items',
+      },
       settings: {
         frequency: INVENTORY_FREQUENCY,
       }

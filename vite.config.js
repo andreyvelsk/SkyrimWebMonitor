@@ -29,16 +29,49 @@ export default defineConfig(({ mode }) => {
       vue(),
       VitePWA({
         registerType: 'autoUpdate',
+        // Precache только манифест/иконки PWA, остальное — строго по сети,
+        // чтобы новые деплои подхватывались без ручной очистки кэша.
+        includeAssets: [],
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
-          globPatterns: [
-            '**/*.{js,css,html,ico,png}',
-            'icons/**/*.svg',
-            'fonts/**/*.{woff,woff2,ttf,otf}',
-          ],
+          // Не precache'им HTML/JS/CSS — иначе после деплоя пользователь
+          // видит старую версию до повторной перезагрузки.
+          globPatterns: [],
+          // Не перехватываем навигацию: HTML всегда берётся из сети.
+          navigateFallback: null,
           cleanupOutdatedCaches: true,
           runtimeCaching: [
+            // Локальные SVG-иконки
+            {
+              urlPattern: ({ request, url }) =>
+                request.destination === 'image' && url.pathname.endsWith('.svg'),
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'local-svg-icons',
+                cacheableResponse: { statuses: [0, 200] },
+                expiration: {
+                  maxEntries: 500,
+                  maxAgeSeconds: 30 * 24 * 60 * 60,
+                },
+              },
+            },
+            // Локальные шрифты
+            {
+              urlPattern: ({ request, url }) =>
+                request.destination === 'font' ||
+                /\.(?:woff2?|ttf|otf|eot)$/i.test(url.pathname),
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'local-fonts',
+                cacheableResponse: { statuses: [0, 200] },
+                expiration: {
+                  maxEntries: 50,
+                  maxAgeSeconds: 365 * 24 * 60 * 60,
+                },
+              },
+            },
+            // Google Fonts CSS
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
               handler: 'StaleWhileRevalidate',
@@ -50,14 +83,13 @@ export default defineConfig(({ mode }) => {
                 },
               },
             },
+            // Google Fonts файлы
             {
               urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
               handler: 'CacheFirst',
               options: {
                 cacheName: 'google-fonts-webfonts',
-                cacheableResponse: {
-                  statuses: [0, 200],
-                },
+                cacheableResponse: { statuses: [0, 200] },
                 expiration: {
                   maxEntries: 30,
                   maxAgeSeconds: 365 * 24 * 60 * 60,
