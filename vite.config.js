@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
   return {
     base: '/SkyrimWebMonitor/',
     define: {
-      __APP_VERSION__: JSON.stringify(getAppVersion()),
+      'import.meta.env.VITE_APP_VERSION': JSON.stringify(getAppVersion()),
     },
     resolve: {
       alias: {

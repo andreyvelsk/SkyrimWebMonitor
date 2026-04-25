@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-const version = __APP_VERSION__;
+const version = import.meta.env.VITE_APP_VERSION;
 </script>
 
 <style scoped lang="scss">
