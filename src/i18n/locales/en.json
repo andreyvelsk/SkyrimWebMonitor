@@ -210,6 +210,11 @@
     "dropItems": "Drop Items",
     "available": "Available",
     "quantity": "Quantity",
-    "drop": "Drop"
+    "drop": "Drop",
+    "exitConfirm": {
+      "message": "Are you sure you want to exit?",
+      "yes": "Yes",
+      "no": "No"
+    }
   }
 }

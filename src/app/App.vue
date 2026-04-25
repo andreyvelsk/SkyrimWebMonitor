@@ -26,6 +26,7 @@ import { ConnectionStatus, SkyrimModal } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useAppLoader } from '@/shared/lib/composables/useAppLoader';
+import { useBackGuard } from '@/shared/lib/composables/useBackGuard';
 
 const navigationStore = useNavigationStore();
 const { activeTab, activeSubTab } = storeToRefs(navigationStore);
@@ -33,8 +34,8 @@ const { activeTab, activeSubTab } = storeToRefs(navigationStore);
 const websocketStore = useWebSocketStore();
 const { isConnected } = storeToRefs(websocketStore);
 
-// Externalized loading/subscription logic
 useAppLoader();
+useBackGuard();
 </script>
 
 <style scoped lang="scss">
