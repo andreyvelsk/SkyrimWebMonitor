@@ -12,19 +12,42 @@ export function useBackGuard() {
     history.pushState({ pwaBackGuard: true }, '');
   }
 
+  function isStandalone(): boolean {
+    return (
+      window.matchMedia?.('(display-mode: standalone)').matches ||
+      window.matchMedia?.('(display-mode: fullscreen)').matches ||
+      window.matchMedia?.('(display-mode: minimal-ui)').matches ||
+      // iOS Safari PWA
+      (navigator as Navigator & { standalone?: boolean }).standalone === true
+    );
+  }
+
   function closeApp() {
-    // In PWA standalone mode window.close() actually closes the app window.
-    // In a regular browser tab the call is usually blocked by the browser,
-    // so as a fallback we navigate back out of the SPA.
-    try {
-      window.close();
-    } catch {
-      // ignore — fall through to history.back()
+    if (isStandalone()) {
+      // In an installed PWA: try to close the window. Chromium-based
+      // browsers allow window.close() for installed apps. iOS Safari and
+      // some Android contexts ignore it — in that case we fall back to
+      // a blank page so the user clearly sees they can close manually.
+      try {
+        window.close();
+      } catch {
+        /* ignore */
+      }
+      // If after a tick the window is still open, navigate to about:blank
+      // as a visible fallback. Use location.replace so the user can't
+      // navigate "back" into the app and re-trigger the guard loop.
+      setTimeout(() => {
+        if (!window.closed) {
+          location.replace('about:blank');
+        }
+      }, 50);
+      return;
     }
-    // If window.close() didn't work (browser tab), leave the SPA via history.
-    setTimeout(() => {
-      history.back();
-    }, 0);
+
+    // Regular browser tab: window.close() is blocked by the browser
+    // for tabs the script didn't open. The most useful fallback is to
+    // leave the SPA via the real previous history entry.
+    history.back();
   }
 
   function onPopState() {

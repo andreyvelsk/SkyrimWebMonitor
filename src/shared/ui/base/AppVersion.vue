@@ -11,11 +11,11 @@ const version = import.meta.env.VITE_APP_VERSION;
 <style scoped lang="scss">
 .app-version {
   position: fixed;
-  right: 6px;
-  bottom: 4px;
-  font-size: 9px;
+  right: 2px;
+  bottom: 2px;
+  font-size: 8px;
   font-family: monospace;
-  color: var(--skyrim-text-dim);
+  color: var(--skyrim-text-secondary);
   opacity: 0.5;
   pointer-events: none;
   user-select: none;
