@@ -7,7 +7,6 @@
  *   .btn               — base shape
  *   .btn-primary       — gold-accent affordance (default action)
  *   .btn-secondary     — subtle / cancel
- *   .btn-danger        — destructive (red border on hover)
  *   .btn-ghost         — transparent, hover only
  *   .btn-icon          — square fixed-size button (40x40)
  *   .btn-sm / .btn-lg  — size variants
@@ -76,16 +75,6 @@
   }
 }
 
-.btn-danger {
-  &:hover:not(:disabled) {
-    background-color: rgb(192 74 74 / 12%);
-    border-color: var(--color-danger);
-    color: var(--color-danger-light);
-  }
-  &:active:not(:disabled) {
-    background-color: rgb(192 74 74 / 22%);
-  }
-}
 
 .btn-ghost {
   background-color: transparent;

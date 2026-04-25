@@ -5,7 +5,7 @@
     </p>
     <div class="modal-actions">
       <button
-        class="btn btn-danger"
+        class="btn btn-secondary"
         @click="onConfirm"
       >
         {{ $t('modals.exitConfirm.yes') }}
@@ -28,7 +28,6 @@ const emit = defineEmits<{
 
 function onConfirm() {
   emit('confirm');
-  emit('close');
 }
 </script>
 
