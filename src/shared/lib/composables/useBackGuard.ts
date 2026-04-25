@@ -1,21 +1,30 @@
-import { onMounted, onUnmounted, watch } from 'vue';
-import { ExitConfirmModal } from '@/shared/ui';
-import { useModal } from './useModal';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 /**
- * Intercepts the system "back" gesture / button and asks the user to
- * confirm exiting the app.
+ * Android-style "press back again to exit" guard.
  *
- * Closing the app from JS is platform-limited:
- *   • Installed PWA on Chromium (Android/desktop) — `window.close()` works.
- *   • Installed PWA on iOS Safari — there is no web API to close the
- *     standalone window. The modal will close and the user has to use
- *     a system gesture. This is a WebKit limitation, not a bug.
- *   • Regular browser tab — `window.close()` is blocked by the spec, so
- *     we fall back to leaving the SPA via `history.back()`.
+ * On the first system back gesture/button we show a transient hint and
+ * arm a 2-second window. If the user presses back again inside that
+ * window the app is closed; otherwise the hint disappears and the
+ * counter resets.
+ *
+ * Closing behavior is platform-limited:
+ *   • Installed PWA on Chromium (Android/desktop) — `window.close()`
+ *     closes the standalone window, just like a native back-out.
+ *   • Installed PWA on iOS Safari — WebKit has no API to close a
+ *     standalone window, so the toast is shown but the second press
+ *     is a no-op. This is a platform limitation.
+ *   • Regular browser tab — `window.close()` is blocked, so we leave
+ *     the SPA via `history.back()`.
+ *
+ * Returns a `showToast` ref to be bound to a toast component in the
+ * application root.
  */
 export function useBackGuard() {
-  const { openModal, closeModal, isOpen } = useModal();
+  const showToast = ref(false);
+
+  const TOAST_TIMEOUT_MS = 2000;
+  let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   function pushDummyState() {
     if (history.state?.pwaBackGuard !== true) {
@@ -32,49 +41,41 @@ export function useBackGuard() {
     );
   }
 
+  function clearToast() {
+    if (toastTimer !== null) {
+      clearTimeout(toastTimer);
+      toastTimer = null;
+    }
+    showToast.value = false;
+  }
+
   function closeApp() {
+    clearToast();
     if (isStandalone()) {
-      // The only legitimate way to close an installed PWA from JS.
-      // Works in Chromium-based browsers. On iOS Safari this is a no-op
-      // and there is no alternative — the modal simply closes.
+      // Chromium installed PWA closes; iOS PWA ignores (platform limit).
       window.close();
       return;
     }
-    // Regular browser tab: leave the SPA via the previous history entry.
+    // Regular browser tab: leave the SPA through real history.
     history.back();
   }
 
   function onPopState() {
-    if (isOpen.value) {
-      // Back pressed while modal is already open — dismiss it.
-      closeModal();
-      pushDummyState();
+    if (showToast.value) {
+      // Second back press within the timeout window — exit.
+      closeApp();
       return;
     }
 
-    // Re-arm immediately so the next back press is also intercepted
-    // (e.g. if user keeps pressing back instead of using the modal).
+    // First back press: re-arm dummy state so subsequent presses keep
+    // firing popstate, show the hint and start the confirmation window.
     pushDummyState();
-
-    openModal({
-      component: ExitConfirmModal,
-      on: {
-        confirm: () => {
-          closeModal();
-          closeApp();
-        },
-        close: () => {
-          closeModal();
-        },
-      },
-    });
+    showToast.value = true;
+    toastTimer = setTimeout(() => {
+      showToast.value = false;
+      toastTimer = null;
+    }, TOAST_TIMEOUT_MS);
   }
-
-  // Safety net: if the modal closes through some other path
-  // (ESC, backdrop) keep the guard armed.
-  watch(isOpen, (val) => {
-    if (!val) pushDummyState();
-  });
 
   onMounted(() => {
     pushDummyState();
@@ -83,6 +84,9 @@ export function useBackGuard() {
 
   onUnmounted(() => {
     window.removeEventListener('popstate', onPopState);
+    if (toastTimer !== null) clearTimeout(toastTimer);
   });
+
+  return { showToast };
 }
 

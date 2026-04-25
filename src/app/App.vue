@@ -16,6 +16,7 @@
       </main>
     </template>
     <skyrim-modal />
+    <exit-toast :visible="showToast" />
     <app-version />
   </div>
 </template>
@@ -23,7 +24,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
-import { AppVersion, ConnectionStatus, SkyrimModal } from '@/shared/ui';
+import { AppVersion, ConnectionStatus, SkyrimModal, ExitToast } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useAppLoader } from '@/shared/lib/composables/useAppLoader';
@@ -36,7 +37,7 @@ const websocketStore = useWebSocketStore();
 const { isConnected } = storeToRefs(websocketStore);
 
 useAppLoader();
-useBackGuard();
+const { showToast } = useBackGuard();
 </script>
 
 <style scoped lang="scss">

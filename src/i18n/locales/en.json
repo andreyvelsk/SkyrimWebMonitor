@@ -212,7 +212,7 @@
     "quantity": "Quantity",
     "drop": "Drop",
     "exitConfirm": {
-      "message": "Are you sure you want to exit?",
+      "message": "Press back again to exit",
       "yes": "Yes",
       "no": "No"
     }
