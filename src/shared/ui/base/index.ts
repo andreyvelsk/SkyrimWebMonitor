@@ -1,3 +1,4 @@
+export { default as AppVersion } from './AppVersion.vue';
 export { default as ConnectionStatus } from './ConnectionStatus.vue';
 export { default as SkyrimModal } from './SkyrimModal.vue';
 export { default as HandPicker } from './HandPicker.vue';

@@ -2,6 +2,15 @@ import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
+import { execSync } from 'child_process';
+
+function getAppVersion() {
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch {
+    return 'dev';
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -9,6 +18,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: '/SkyrimWebMonitor/',
+    define: {
+      __APP_VERSION__: JSON.stringify(getAppVersion()),
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
