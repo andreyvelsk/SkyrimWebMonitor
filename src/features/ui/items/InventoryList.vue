@@ -40,12 +40,12 @@
         >
           <div
             v-if="isActionGroup(actionItem)"
-            class="toolbar-group"
+            class="d-flex gap-sm"
           >
             <button
               v-for="action in actionItem.group"
               :key="action.id"
-              class="toolbar-btn"
+              class="btn btn-icon toolbar-btn"
               :class="[
                 action.class,
                 { favorite: action.id === 'favorite' && isActiveItemFavorite },
@@ -62,7 +62,7 @@
           </div>
           <button
             v-else
-            class="toolbar-btn"
+            class="btn btn-icon toolbar-btn"
             :class="[
               actionItem.class,
               { favorite: actionItem.id === 'favorite' && isActiveItemFavorite },
@@ -203,9 +203,14 @@ function handleActionClick(actionEvent: string) {
 </script>
 
 <style scoped lang="scss">
+/*
+ * Toolbar buttons use .btn .btn-icon from the design system; only
+ * the colour-token override behaviour for nested icons (favorite /
+ * hotkey states) is component-specific.
+ */
+
 .inventory-list {
   display: flex;
-  flex-direction: row;
   height: 100%;
   max-height: 100%;
   overflow: hidden;
@@ -225,22 +230,12 @@ function handleActionClick(actionEvent: string) {
 .list {
   min-width: 0;
   overflow: hidden auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-sm);
 }
 
 .item-preview {
   flex: 1 1 0%;
   min-width: 0;
   overflow: hidden;
-}
-
-.no-data {
-  padding: var(--spacing-md);
-  text-align: center;
-  color: var(--skyrim-text-secondary);
-  font-size: 0.9rem;
 }
 
 .inventory-toolbar {
@@ -251,56 +246,18 @@ function handleActionClick(actionEvent: string) {
   gap: var(--spacing-md);
 }
 
-.toolbar-group {
-  display: flex;
-  gap: var(--spacing-sm);
-}
-
 .toolbar-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  background-color: var(--skyrim-bg-light);
-  border: 1px solid var(--skyrim-border-dark);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-
   --skyrim-text-accent: var(--skyrim-text-secondary);
 
   &:hover:not(:disabled) {
-    background-color: var(--tab-bg-hover);
-    border-color: var(--skyrim-accent-gold-dim);
-
     --skyrim-text-accent: var(--skyrim-text-primary);
   }
 
-  &:active:not(:disabled) {
-    background-color: var(--tab-bg-active);
-
-  &.hotkey-bound {
+  &.favorite,
+  &.hotkey-bound,
+  &.favorite:hover:not(:disabled),
+  &.hotkey-bound:hover:not(:disabled) {
     --skyrim-text-accent: var(--skyrim-accent-gold);
-
-    &:hover:not(:disabled) {
-      --skyrim-text-accent: var(--skyrim-accent-gold);
-    }
-  }
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    border-color: var(--skyrim-border-dark);
-  }
-
-  &.favorite {
-    --skyrim-text-accent: var(--skyrim-accent-gold);
-
-    &:hover:not(:disabled) {
-      --skyrim-text-accent: var(--skyrim-accent-gold);
-    }
   }
 }
 </style>

@@ -1,14 +1,20 @@
 /* ============================================
- * SKYRIM HANDHELD INTERFACE - MAIN THEME
+ * SKYRIM HANDHELD INTERFACE — MAIN THEME
  * ============================================
- * 
- * This file imports all CSS modules organized
- * by theme layers: variables, base, utilities,
- * components, and animations
+ *
+ * Layered design system:
+ *   1. variables    — design tokens (colors, spacing, typography, z-index, ...)
+ *   2. base         — element resets, body, scrollbars
+ *   3. utilities/   — Bootstrap-like atomic utilities (p-md, d-flex, gap-sm, ...)
+ *   4. components/  — reusable UI primitives (.btn, .modal-panel, .tab, ...)
+ *   5. animations   — global keyframes & .animate-* helpers
+ *
+ * Component-specific layout MUST live inside the consuming
+ * .vue file's <style scoped>.
  */
 
 @use './variables';
 @use './base';
-@use './utilities';
-@use './components';
+@use './utilities/index' as *;
+@use './components/index' as *;
 @use './animations';

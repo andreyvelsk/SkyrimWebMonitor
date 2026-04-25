@@ -34,35 +34,11 @@ const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
 </script>
 
 <style scoped lang="scss">
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(0 0 0 / 75%);
-  backdrop-filter: blur(2px);
-}
-
-.modal-panel {
-  position: relative;
-  background-color: var(--skyrim-bg-medium);
-  border: 1px solid var(--skyrim-border-dark);
-  padding: var(--spacing-sm);
-  min-width: 280px;
-  max-width: 90vw;
-  max-height: 85vh;
-  overflow-y: auto;
-  box-shadow:
-    var(--shadow-strong),
-    inset 0 0 60px rgb(0 0 0 / 30%);
-}
-
-.modal-body {
-  color: var(--skyrim-text-primary);
-  font-family: var(--font-body);
-}
+/*
+ * Layout & frame styles come from the design system:
+ *   .modal-backdrop, .modal-panel, .modal-body (components/modal.scss)
+ * Only the transitions are component-specific and live here.
+ */
 
 /* Backdrop transition */
 .modal-backdrop-enter-active,

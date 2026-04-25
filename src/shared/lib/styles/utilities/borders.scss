@@ -1,0 +1,23 @@
+/* ============================================
+ * BORDER UTILITIES — radius, width, style
+ * ============================================ */
+
+/* Border style shorthand */
+.border    { border: var(--border-thin) solid var(--skyrim-border-dark); }
+.border-0  { border: 0; }
+.border-2  { border-width: var(--border-thick); border-style: solid; }
+.border-t  { border-top: var(--border-thin) solid var(--skyrim-border-dark); }
+.border-r  { border-right: var(--border-thin) solid var(--skyrim-border-dark); }
+.border-b  { border-bottom: var(--border-thin) solid var(--skyrim-border-dark); }
+.border-l  { border-left: var(--border-thin) solid var(--skyrim-border-dark); }
+
+/* Border-bottom thick (used for tab/subtab bars) */
+.border-b-2 { border-bottom: var(--border-thick) solid var(--skyrim-border-dark); }
+
+/* Border radius */
+.rounded-none { border-radius: 0; }
+.rounded-sm   { border-radius: var(--radius-sm); }
+.rounded-md   { border-radius: var(--radius-md); }
+.rounded-lg   { border-radius: var(--radius-lg); }
+.rounded-full { border-radius: 9999px; }
+.rounded-circle { border-radius: 50%; }

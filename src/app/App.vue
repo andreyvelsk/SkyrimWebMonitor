@@ -8,7 +8,7 @@
         :active-sub-tab="activeSubTab"
       />
 
-      <main class="content-area">
+      <main class="content-area d-flex flex-col flex-1 min-h-0">
         <skyrim-content
           :tab="activeTab"
           :sub-tab="activeSubTab"
@@ -39,6 +39,8 @@ useBackGuard();
 </script>
 
 <style scoped lang="scss">
+/* Vignette overlay is unique to this device frame; layout uses utilities. */
+
 .handheld-device {
   position: relative;
   width: 100%;
@@ -48,7 +50,6 @@ useBackGuard();
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: none;
 
   &::before {
     content: '';
@@ -59,12 +60,5 @@ useBackGuard();
       radial-gradient(ellipse at top, transparent 60%, rgb(0 0 0 / 30%) 100%),
       radial-gradient(ellipse at bottom, transparent 60%, rgb(0 0 0 / 40%) 100%);
   }
-}
-
-.content-area {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
 }
 </style>

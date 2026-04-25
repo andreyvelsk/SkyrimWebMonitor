@@ -1,0 +1,42 @@
+/* ============================================
+ * SIZING UTILITIES — width / height
+ * ============================================ */
+
+/* Width */
+.w-auto { width: auto; }
+.w-full { width: 100%; }
+.w-half { width: 50%; }
+.w-screen { width: 100vw; }
+.w-fit  { width: fit-content; }
+.w-min  { width: min-content; }
+.w-max  { width: max-content; }
+
+/* Height */
+.h-auto   { height: auto; }
+.h-full   { height: 100%; }
+.h-half   { height: 50%; }
+.h-screen { height: 100vh; }
+.h-fit    { height: fit-content; }
+.h-min    { height: min-content; }
+.h-max    { height: max-content; }
+
+/* Min / max */
+.min-w-0 { min-width: 0; }
+.min-h-0 { min-height: 0; }
+.max-w-full { max-width: 100%; }
+.max-h-full { max-height: 100%; }
+
+/* Aspect ratios */
+.aspect-square { aspect-ratio: 1 / 1; }
+.aspect-video  { aspect-ratio: 16 / 9; }
+
+/* Fixed icon-square sizes (matching --size-* tokens) */
+@each $key in (xs, sm, md, lg, xl) {
+  .size-#{$key} {
+    width: var(--size-#{$key});
+    height: var(--size-#{$key});
+  }
+}
+
+/* Backwards compat */
+.h-100 { height: 100%; }

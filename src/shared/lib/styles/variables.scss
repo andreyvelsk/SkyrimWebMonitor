@@ -81,4 +81,48 @@
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 8px;
+
+  /* BORDER WIDTHS */
+  --border-thin: 1px;
+  --border-normal: 1.5px;
+  --border-thick: 2px;
+
+  /* SIZE SCALE (for fixed-size square elements like icon buttons) */
+  --size-xs: 16px;
+  --size-sm: 24px;
+  --size-md: 32px;
+  --size-lg: 40px;
+  --size-xl: 48px;
+  --size-2xl: 64px;
+
+  /* OPACITY LEVELS */
+  --opacity-disabled: 0.55;
+  --opacity-muted: 0.7;
+  --opacity-faint: 0.4;
+
+  /* Z-INDEX STACK */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 500;
+  --z-modal-backdrop: 900;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+
+  /* SEMANTIC STATE COLORS (success / warning / danger / info) */
+  --color-success: #4caf50;
+  --color-success-glow: rgb(76 175 80 / 60%);
+  --color-warning: var(--skyrim-accent-gold);
+  --color-danger: #c04a4a;
+  --color-danger-dim: #7a2a2a;
+  --color-danger-light: #d08a8a;
+
+  /* INTERACTIVE STATE BACKGROUNDS (gold accent transparency steps) */
+  --bg-accent-faint: rgb(201 162 39 / 4%);
+  --bg-accent-soft: rgb(201 162 39 / 8%);
+  --bg-accent-medium: rgb(201 162 39 / 12%);
+  --bg-accent-strong: rgb(201 162 39 / 20%);
+  --bg-overlay: rgb(0 0 0 / 75%);
+  --bg-inset-dark: inset 0 0 60px rgb(0 0 0 / 30%);
 }

@@ -1,0 +1,91 @@
+/* ============================================
+ * TABS COMPONENT
+ * ============================================
+ *   .tab-bar     — horizontal container (border-bottom)
+ *   .tab         — primary tab button
+ *   .subtab-bar  — sub-navigation container (scrollable)
+ *   .subtab      — sub-tab button
+ *
+ * Add `.active` to the active tab.
+ */
+
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tab-gap);
+  background-color: var(--skyrim-bg-dark);
+  border-bottom: 2px solid var(--skyrim-border-dark);
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--tab-height);
+  padding: 0 var(--spacing-sm);
+  background-color: var(--tab-bg-inactive);
+  color: var(--tab-text-inactive);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+
+  &:hover {
+    background-color: var(--tab-bg-hover);
+    color: var(--tab-text-hover);
+  }
+
+  &.active {
+    background-color: var(--tab-bg-active);
+    color: var(--tab-text-active);
+  }
+}
+
+.subtab-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--skyrim-bg-dark);
+  border-bottom: 2px solid var(--skyrim-border-dark);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.subtab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--subtab-height);
+  padding: 0 var(--spacing-md);
+  background-color: var(--subtab-bg-inactive);
+  color: var(--subtab-text-inactive);
+  font-family: var(--font-body);
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all var(--transition-normal);
+
+  &:hover {
+    background-color: var(--subtab-bg-hover);
+    color: var(--subtab-text-hover);
+  }
+
+  &.active {
+    background-color: var(--tab-bg-active);
+    color: var(--tab-text-active);
+  }
+}

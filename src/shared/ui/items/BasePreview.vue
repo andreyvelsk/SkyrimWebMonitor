@@ -1,11 +1,11 @@
 <template>
   <div
     v-if="data"
-    class="base-preview"
+    class="d-flex flex-col gap-md base-preview"
   >
     <div
       v-if="$slots.icon"
-      class="icon-slot"
+      class="d-flex justify-center"
     >
       <slot name="icon" />
     </div>
@@ -16,7 +16,7 @@
 
       <div
         v-if="stats.length"
-        class="stats"
+        class="d-flex flex-col stats"
       >
         <span
           v-for="stat in stats"
@@ -68,16 +68,9 @@ withDefaults(
 </script>
 
 <style scoped lang="scss">
+/* Layout via utility classes; only inner typography is component-specific. */
+
 .base-preview {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-
-  .icon-slot {
-    display: flex;
-    justify-content: center;
-  }
-
   .info {
     .name {
       font-weight: 600;
@@ -85,17 +78,12 @@ withDefaults(
       margin-bottom: 0.25rem;
     }
 
-    .stats {
-      display: flex;
-      flex-direction: column;
+    .stat {
+      color: var(--skyrim-text-secondary);
+      font-size: var(--font-size-base);
 
-      .stat {
-        color: var(--skyrim-text-secondary);
-        font-size: var(--font-size-base);
-
-        strong {
-          color: var(--skyrim-text-primary);
-        }
+      strong {
+        color: var(--skyrim-text-primary);
       }
     }
   }
@@ -104,7 +92,7 @@ withDefaults(
     color: var(--skyrim-text-secondary);
     font-size: var(--font-size-sm);
 
-    ::v-deep strong {
+    :deep(strong) {
       color: var(--skyrim-text-primary);
     }
   }

@@ -1,0 +1,34 @@
+/* ============================================
+ * COLOR UTILITIES — text / background / border
+ * ============================================ */
+
+/* Text colors */
+.text-primary   { color: var(--skyrim-text-primary); }
+.text-secondary { color: var(--skyrim-text-secondary); }
+.text-accent    { color: var(--skyrim-text-accent); }
+.text-dim       { color: var(--skyrim-text-dim); }
+.text-gold      { color: var(--skyrim-accent-gold); }
+.text-gold-light{ color: var(--skyrim-accent-gold-light); }
+.text-gold-dim  { color: var(--skyrim-accent-gold-dim); }
+.text-success   { color: var(--color-success); }
+.text-danger    { color: var(--color-danger); }
+.text-warning   { color: var(--color-warning); }
+
+/* Background colors */
+.bg-dark   { background-color: var(--skyrim-bg-dark); }
+.bg-medium { background-color: var(--skyrim-bg-medium); }
+.bg-light  { background-color: var(--skyrim-bg-light); }
+.bg-transparent { background-color: transparent; }
+.bg-accent-faint  { background-color: var(--bg-accent-faint); }
+.bg-accent-soft   { background-color: var(--bg-accent-soft); }
+.bg-accent-medium { background-color: var(--bg-accent-medium); }
+.bg-accent-strong { background-color: var(--bg-accent-strong); }
+.bg-overlay { background-color: var(--bg-overlay); }
+
+/* Border colors */
+.border-dark    { border-color: var(--skyrim-border-dark); }
+.border-medium  { border-color: var(--skyrim-border-medium); }
+.border-accent  { border-color: var(--skyrim-border-accent); }
+.border-gold    { border-color: var(--skyrim-accent-gold); }
+.border-gold-dim{ border-color: var(--skyrim-accent-gold-dim); }
+.border-danger  { border-color: var(--color-danger-dim); }

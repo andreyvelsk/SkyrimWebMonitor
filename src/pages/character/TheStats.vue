@@ -1,5 +1,5 @@
 <template>
-  <div class="stats-layout">
+  <div class="d-flex flex-col flex-1 justify-between">
     <div class="list">
       <attribute-row
         :label="$t('pages.character.stats.level')"
@@ -18,7 +18,7 @@
         :value="displayGold"
       />
     </div>
-    <div class="stats-grid">
+    <div class="d-flex flex-col gap-md">
       <stat-bar
         :value="healthPercentage"
         :max="100"
@@ -53,17 +53,4 @@ const {
 } = useCharacterStatsDisplay();
 </script>
 
-<style scoped lang="scss">
-.stats-layout {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.stats-grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-}
-</style>
+<!-- All layout via utility classes; no scoped styles required. -->

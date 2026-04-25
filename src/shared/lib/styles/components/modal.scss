@@ -1,0 +1,92 @@
+/* ============================================
+ * MODAL COMPONENT
+ * ============================================
+ * Class set used by SkyrimModal + scenario-specific modal contents.
+ *
+ *   .modal-backdrop     — full-viewport overlay (used by SkyrimModal)
+ *   .modal-panel        — frame (border, bg, inset shadow)
+ *   .modal-body         — content wrapper (typography reset)
+ *   .modal-content      — generic vertical-stack body
+ *                         (gap-lg, padding-lg, min-width 320px)
+ *   .modal-header       — title row centered
+ *   .modal-title        — heading style (Cinzel, uppercase)
+ *   .modal-actions      — button row, centered, gap-md
+ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-overlay);
+  backdrop-filter: blur(2px);
+}
+
+.modal-panel {
+  position: relative;
+  z-index: var(--z-modal);
+  background-color: var(--skyrim-bg-medium);
+  border: 1px solid var(--skyrim-border-dark);
+  padding: var(--spacing-sm);
+  min-width: 280px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow:
+    var(--shadow-strong),
+    var(--bg-inset-dark);
+}
+
+.modal-body {
+  color: var(--skyrim-text-primary);
+  font-family: var(--font-body);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  min-width: 280px;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+  text-align: center;
+}
+
+.modal-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--skyrim-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-subtitle {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-base);
+  color: var(--skyrim-accent-gold);
+}
+
+.modal-message {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--font-size-base);
+  color: var(--skyrim-text-primary);
+  text-align: center;
+}
+
+.modal-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+}

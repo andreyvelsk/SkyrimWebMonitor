@@ -1,7 +1,7 @@
 <template>
-  <div class="quantity-picker">
+  <div class="input-group quantity-picker">
     <button
-      class="qty-btn qty-minus"
+      class="qty-btn"
       :disabled="modelValue <= 1"
       @click="decrease"
     >
@@ -11,7 +11,7 @@
       {{ modelValue }}
     </div>
     <button
-      class="qty-btn qty-plus"
+      class="qty-btn"
       :disabled="modelValue >= max"
       @click="increase"
     >
@@ -41,13 +41,10 @@ function increase() {
 </script>
 
 <style scoped lang="scss">
+/* Frame styles come from .input-group; only the buttons & display layout are unique */
+
 .quantity-picker {
-  display: flex;
-  align-items: center;
   gap: var(--spacing-xs);
-  background-color: var(--skyrim-bg-light);
-  border: 1px solid var(--skyrim-border-dark);
-  border-radius: 2px;
 }
 
 .qty-btn {
@@ -65,16 +62,16 @@ function increase() {
   transition: all var(--transition-fast);
 
   &:hover:not(:disabled) {
-    background-color: rgb(201 162 39 / 8%);
+    background-color: var(--bg-accent-soft);
     color: var(--skyrim-accent-gold);
   }
 
   &:active:not(:disabled) {
-    background-color: rgb(201 162 39 / 16%);
+    background-color: var(--bg-accent-medium);
   }
 
   &:disabled {
-    opacity: 0.4;
+    opacity: var(--opacity-faint);
     cursor: not-allowed;
   }
 }

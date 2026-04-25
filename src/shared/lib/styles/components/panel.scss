@@ -1,0 +1,56 @@
+/* ============================================
+ * PANEL / CARD COMPONENTS
+ * ============================================
+ *   .panel            — boxed container with bg, border, padding
+ *   .panel--elevated  — adds strong + inset shadow (modal-like depth)
+ *   .panel--accent    — gold accent border
+ *   .card             — interactive card (hover state)
+ *   .card.active      — selected state
+ */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  background-color: var(--skyrim-bg-medium);
+  border: 1px solid var(--skyrim-border-dark);
+  padding: var(--spacing-md);
+}
+
+.panel--elevated {
+  box-shadow:
+    var(--shadow-strong),
+    var(--bg-inset-dark);
+}
+
+.panel--accent {
+  border-color: var(--skyrim-accent-gold-dim);
+}
+
+.panel--danger {
+  border-color: var(--color-danger-dim);
+}
+
+.card {
+  background-color: var(--skyrim-bg-light);
+  border: 1px solid var(--skyrim-border-dark);
+  padding: var(--spacing-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+
+  &:hover:not(:disabled) {
+    background-color: var(--bg-accent-soft);
+    border-color: var(--skyrim-accent-gold-dim);
+  }
+
+  &:active:not(:disabled),
+  &.active {
+    background-color: var(--bg-accent-strong);
+    border-color: var(--skyrim-accent-gold-dim);
+  }
+
+  &:disabled {
+    opacity: var(--opacity-disabled);
+    cursor: not-allowed;
+  }
+}

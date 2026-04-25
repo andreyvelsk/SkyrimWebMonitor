@@ -1,14 +1,14 @@
 <template>
   <header class="navigation-header">
     <nav
-      class="skyrim-tabs"
+      class="tab-bar"
       role="tablist"
       :aria-label="$t('app.navigation.mainAriaLabel')"
     >
       <button
         v-for="tab in nav.tabs"
         :key="tab.id"
-        class="skyrim-tab"
+        class="tab"
         :class="{ active: nav.activeTab === tab.id }"
         role="tab"
         :aria-selected="nav.activeTab === tab.id"
@@ -21,14 +21,14 @@
     <nav
       v-if="nav.getVisibleSubTabs().length > 1"
       ref="subtabsRef"
-      class="skyrim-subtabs animate-fade-in"
+      class="subtab-bar animate-fade-in"
       role="tablist"
       :aria-label="$t('app.navigation.subAriaLabel')"
     >
       <button
         v-for="sub in nav.getVisibleSubTabs()"
         :key="sub.id"
-        class="skyrim-subtab"
+        class="subtab"
         :class="{ active: nav.activeSubTab === sub.id }"
         role="tab"
         :aria-selected="nav.activeSubTab === sub.id"
@@ -69,7 +69,7 @@ watch(
     if (!container) return;
 
     const activeBtn = container.querySelector(
-      '.skyrim-subtab.active'
+      '.subtab.active'
     ) as HTMLElement | null;
     if (!activeBtn) return;
 
@@ -95,85 +95,16 @@ watch(
 </script>
 
 <style scoped lang="scss">
+/*
+ * Tab and subtab styles come from the design system:
+ *   .tab-bar, .tab, .subtab-bar, .subtab (components/tabs.scss).
+ * Only the header wrapper (sticky positioning) is component-specific.
+ */
+
 .navigation-header {
   flex-shrink: 0;
   background-color: var(--skyrim-bg-medium);
   position: relative;
-  z-index: 10;
-
-  & nav {
-    &.skyrim-tabs {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--tab-gap);
-      background-color: var(--skyrim-bg-dark);
-      border-bottom: 2px solid var(--skyrim-border-dark);
-    }
-
-    &.skyrim-subtabs {
-      display: flex;
-      align-items: center;
-      gap: var(--spacing-xs);
-      background-color: var(--skyrim-bg-dark);
-      border-bottom: 2px solid var(--skyrim-border-dark);
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
-    }
-  }
-
-  button {
-    &.skyrim-tab {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: var(--tab-height);
-      padding: 0 var(--spacing-sm);
-      background-color: var(--tab-bg-inactive);
-      color: var(--tab-text-inactive);
-      font-family: var(--font-heading);
-      font-size: var(--font-size-lg);
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border: none;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-
-      &.active {
-        background-color: var(--tab-bg-active);
-        color: var(--tab-text-active);
-      }
-    }
-
-    &.skyrim-subtab {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: var(--subtab-height);
-      padding: 0 var(--spacing-md);
-      background-color: var(--subtab-bg-inactive);
-      color: var(--subtab-text-inactive);
-      font-family: var(--font-body);
-      font-size: var(--font-size-lg);
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      text-transform: uppercase;
-
-      &.active {
-        background-color: var(--tab-bg-active);
-        color: var(--tab-text-active);
-      }
-    }
-  }
+  z-index: var(--z-sticky);
 }
 </style>

@@ -1,0 +1,16 @@
+/* ============================================
+ * COMPONENTS — public entry point
+ * ============================================
+ *
+ * Reusable component classes that look the same across the app.
+ * Component-specific layout/decoration must stay inside the .vue
+ * file's <style scoped>.
+ */
+
+@use './button';
+@use './modal';
+@use './panel';
+@use './badge';
+@use './input';
+@use './tabs';
+@use './list';

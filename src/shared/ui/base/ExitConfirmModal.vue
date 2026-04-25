@@ -1,9 +1,9 @@
 <template>
-  <div class="exit-confirm-modal">
-    <p class="exit-confirm-modal__message">
+  <div class="modal-content">
+    <p class="modal-message">
       {{ $t('modals.exitConfirm.message') }}
     </p>
-    <div class="exit-confirm-modal__actions">
+    <div class="modal-actions">
       <button
         class="btn btn-danger"
         @click="onConfirm"
@@ -32,25 +32,5 @@ function onConfirm() {
 }
 </script>
 
-<style scoped lang="scss">
-.exit-confirm-modal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg);
-}
+<!-- All styles come from the design system: .modal-content, .modal-message, .modal-actions, .btn, .btn-danger, .btn-secondary -->
 
-.exit-confirm-modal__message {
-  font-family: var(--font-heading);
-  font-size: var(--font-size-base);
-  color: var(--skyrim-text-primary);
-  text-align: center;
-  margin: 0;
-}
-
-.exit-confirm-modal__actions {
-  display: flex;
-  gap: var(--spacing-md);
-  justify-content: center;
-}
-</style>

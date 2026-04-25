@@ -1,7 +1,7 @@
 <template>
   <div class="connection-status">
     <div
-      class="panel"
+      class="panel panel--elevated connection-panel"
       :class="`panel--${state}`"
     >
       <div class="indicator">
@@ -27,7 +27,7 @@
         class="actions"
       >
         <button
-          class="btn-reconnect"
+          class="btn btn-lg btn-primary"
           @click="handleReconnect"
         >
           {{ $t('shared.ui.connectionStatus.reconnect') }}
@@ -89,6 +89,12 @@ function handleReconnect(): void {
 </script>
 
 <style scoped lang="scss">
+/*
+ * Frame: .panel.panel--elevated and .btn.btn-lg.btn-primary come
+ * from the design system. Only the visual indicator (dot animation,
+ * status colour modifiers) and the centred wrapper are local.
+ */
+
 .connection-status {
   display: flex;
   align-items: center;
@@ -99,31 +105,22 @@ function handleReconnect(): void {
   background-color: var(--skyrim-bg-dark);
 }
 
-.panel {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+.connection-panel {
   align-items: center;
-  gap: var(--spacing-md);
   min-width: 260px;
   max-width: 90vw;
   padding: var(--spacing-xl) var(--spacing-lg);
-  background-color: var(--skyrim-bg-medium);
-  border: 1px solid var(--skyrim-border-dark);
-  box-shadow: var(--shadow-strong), inset 0 0 60px rgb(0 0 0 / 30%);
   text-align: center;
-  color: var(--skyrim-text-primary);
-  font-family: var(--font-body);
+}
 
-  &--connecting,
-  &--reconnecting {
-    border-color: var(--skyrim-accent-gold-dim);
-  }
+.panel--connecting,
+.panel--reconnecting {
+  border-color: var(--skyrim-accent-gold-dim);
+}
 
-  &--failed,
-  &--disconnected {
-    border-color: #7a2a2a;
-  }
+.panel--failed,
+.panel--disconnected {
+  border-color: var(--color-danger-dim);
 }
 
 .indicator {
@@ -141,8 +138,8 @@ function handleReconnect(): void {
     box-shadow: 0 0 0 4px rgb(0 0 0 / 30%);
 
     &--connected {
-      background-color: #4caf50;
-      box-shadow: 0 0 12px rgb(76 175 80 / 60%);
+      background-color: var(--color-success);
+      box-shadow: 0 0 12px var(--color-success-glow);
     }
 
     &--connecting {
@@ -157,7 +154,7 @@ function handleReconnect(): void {
 
     &--disconnected,
     &--failed {
-      background-color: #c04a4a;
+      background-color: var(--color-danger);
     }
   }
 }
@@ -178,46 +175,8 @@ function handleReconnect(): void {
   color: var(--skyrim-text-secondary);
 }
 
-.error {
-  margin: 0;
-  font-size: var(--font-size-xs);
-  color: #d08a8a;
-  opacity: 0.85;
-  word-break: break-word;
-}
-
 .actions {
   margin-top: var(--spacing-sm);
-}
-
-.btn-reconnect {
-  padding: var(--spacing-sm) var(--spacing-lg);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--skyrim-text-primary);
-  background-color: var(--skyrim-bg-light);
-  border: 2px solid var(--skyrim-border-dark);
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  transition: all var(--transition-fast);
-
-  &:hover:not(:disabled) {
-    background-color: rgb(201 162 39 / 12%);
-    border-color: var(--skyrim-accent-gold-dim);
-    color: var(--skyrim-text-accent);
-  }
-
-  &:active:not(:disabled) {
-    background-color: rgb(201 162 39 / 20%);
-    border-color: var(--skyrim-accent-gold);
-  }
-
-  &:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
 }
 
 @keyframes status-pulse {

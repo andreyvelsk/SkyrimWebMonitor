@@ -1,5 +1,5 @@
 <template>
-  <div class="attribute-row">
+  <div class="list-divider attribute-row">
     <span class="attr-label">{{ label }}</span>
     <span class="attr-value">{{ value }}</span>
   </div>
@@ -10,26 +10,16 @@ defineProps<{ label: string; value: string }>();
 </script>
 
 <style scoped lang="scss">
+/* Layout via .list-divider; only typography is component-specific. */
+
 .attribute-row {
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm) 0;
-  border-bottom: 1px solid var(--skyrim-border-dark);
 }
 
 .attr-label {
   color: var(--skyrim-text-secondary);
   min-width: 120px;
-}
-
-.attr-divider {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, var(--skyrim-border-dark), transparent);
 }
 
 .attr-value {

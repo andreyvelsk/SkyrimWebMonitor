@@ -1,0 +1,47 @@
+/* ============================================
+ * LIST / EMPTY STATE COMPONENTS
+ * ============================================
+ *   .list           — vertical list (gap-sm)
+ *   .list--md       — wider gap variant
+ *   .list-divider   — bottom-border row separator
+ *   .empty-state    — centered placeholder
+ *   .no-data        — discrete empty hint inside lists
+ */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.list--md {
+  gap: var(--spacing-md);
+}
+
+.list-divider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--skyrim-border-dark);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: var(--skyrim-text-secondary);
+}
+
+.no-data {
+  padding: var(--spacing-md);
+  text-align: center;
+  color: var(--skyrim-text-secondary);
+  font-size: var(--font-size-sm);
+}

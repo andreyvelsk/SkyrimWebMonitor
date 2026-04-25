@@ -1,12 +1,12 @@
 <template>
-  <div class="hotkeys-page">
+  <div class="d-flex flex-1 flex-center p-md">
     <div class="slots-grid">
       <button
         v-for="entry in slots"
         :key="entry.slot"
         type="button"
-        class="slot-btn"
-        :class="{ bound: entry.bound }"
+        class="btn slot-btn"
+        :class="{ active: entry.bound }"
         @click="triggerSlot(entry.slot)"
       >
         <span class="slot-number">
@@ -49,13 +49,8 @@ function iconFor(entry: HotkeySlotEntry): string {
 </script>
 
 <style scoped lang="scss">
-.hotkeys-page {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-md);
-}
+/* Layout uses utility classes (.d-flex, .flex-1, .flex-center, .p-md);
+   button base via .btn from the design system. Only grid + slot decoration is local. */
 
 .slots-grid {
   display: grid;
@@ -68,57 +63,17 @@ function iconFor(entry: HotkeySlotEntry): string {
 
 .slot-btn {
   position: relative;
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-md);
   aspect-ratio: 1 / 1;
-  background-color: var(--skyrim-bg-light);
-  border: 1px solid var(--skyrim-border-dark);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  color: var(--skyrim-text-secondary);
-  font-family: var(--font-heading);
-
-  &:hover {
-    background-color: var(--tab-bg-hover);
-    border-color: var(--skyrim-accent-gold-dim);
-    color: var(--skyrim-text-primary);
-  }
-
-  &:active {
-    background-color: var(--tab-bg-active);
-  }
-
-  &.bound {
-    color: var(--skyrim-text-primary);
-    border-color: var(--skyrim-accent-gold-dim);
-  }
+  padding: var(--spacing-md);
 }
 
 .slot-number {
-  font-size: var(--font-size-xl, 1.5rem);
+  font-size: var(--font-size-xl);
   font-weight: 700;
   color: var(--skyrim-accent-gold);
   line-height: 1;
-}
-
-.slot-name {
-  font-size: var(--font-size-sm);
-  text-align: center;
-  line-height: 1.2;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 0 var(--spacing-xs);
-
-  &--empty {
-    color: var(--skyrim-text-secondary);
-    font-style: italic;
-  }
 }
 
 .slot-icon {
