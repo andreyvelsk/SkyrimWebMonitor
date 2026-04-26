@@ -57,24 +57,49 @@ body {
 // ============================================
 // SCROLLBAR STYLING
 // ============================================
+// Overlay-style scrollbar: invisible while idle, appears on hover/scroll.
+// The 6px gutter is always reserved so content does not shift.
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color var(--transition-normal);
+}
+
+@media (hover: hover) {
+  *:hover {
+    scrollbar-color: var(--skyrim-border-medium) transparent;
+  }
+}
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
+}
 
-  &-track {
-    background: var(--skyrim-bg-dark);
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 
-  &-thumb {
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-normal);
+}
+
+@media (hover: hover) {
+  *:hover > ::-webkit-scrollbar-thumb,
+  *:hover::-webkit-scrollbar-thumb {
     background: var(--skyrim-border-medium);
-    border-radius: var(--radius-sm);
-
-    @media (hover: hover) {
-      &:hover {
-        background: var(--skyrim-accent-gold-dim);
-      }
-    }
   }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--skyrim-accent-gold-dim);
+  }
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--skyrim-accent-gold-dim);
 }
 
 // ============================================
