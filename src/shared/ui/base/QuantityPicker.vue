@@ -61,9 +61,11 @@ function increase() {
   cursor: pointer;
   transition: all var(--transition-fast);
 
-  &:hover:not(:disabled) {
-    background-color: var(--bg-accent-soft);
-    color: var(--skyrim-accent-gold);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--bg-accent-soft);
+      color: var(--skyrim-accent-gold);
+    }
   }
 
   &:active:not(:disabled) {

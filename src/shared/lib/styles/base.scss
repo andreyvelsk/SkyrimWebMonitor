@@ -69,8 +69,10 @@ body {
     background: var(--skyrim-border-medium);
     border-radius: var(--radius-sm);
 
-    &:hover {
-      background: var(--skyrim-accent-gold-dim);
+    @media (hover: hover) {
+      &:hover {
+        background: var(--skyrim-accent-gold-dim);
+      }
     }
   }
 }
@@ -84,7 +86,9 @@ a {
   text-decoration: underline;
   text-underline-offset: 2px;
 
-  &:hover {
-    color: var(--skyrim-text-secondary);
+  @media (hover: hover) {
+    &:hover {
+      color: var(--skyrim-text-secondary);
+    }
   }
 }

@@ -34,10 +34,12 @@
   letter-spacing: 0.05em;
   user-select: none;
 
-  &:hover:not(:disabled) {
-    background-color: var(--bg-accent-soft);
-    border-color: var(--skyrim-accent-gold-dim);
-    color: var(--skyrim-text-accent);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--bg-accent-soft);
+      border-color: var(--skyrim-accent-gold-dim);
+      color: var(--skyrim-text-accent);
+    }
   }
 
   &.active {
@@ -54,9 +56,11 @@
 
 /* Variants */
 .btn-primary {
-  &:hover:not(:disabled) {
-    background-color: var(--bg-accent-medium);
-    border-color: var(--skyrim-accent-gold);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--bg-accent-medium);
+      border-color: var(--skyrim-accent-gold);
+    }
   }
   &:active:not(:disabled) {
     background-color: var(--bg-accent-strong);
@@ -67,10 +71,12 @@
   background-color: transparent;
   color: var(--skyrim-text-secondary);
 
-  &:hover:not(:disabled) {
-    background-color: var(--bg-accent-faint);
-    color: var(--skyrim-text-primary);
-    border-color: var(--skyrim-accent-gold-dim);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--bg-accent-faint);
+      color: var(--skyrim-text-primary);
+      border-color: var(--skyrim-accent-gold-dim);
+    }
   }
 }
 
@@ -78,9 +84,11 @@
   background-color: transparent;
   border-color: transparent;
 
-  &:hover:not(:disabled) {
-    background-color: var(--bg-accent-soft);
-    border-color: var(--skyrim-accent-gold-dim);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--bg-accent-soft);
+      border-color: var(--skyrim-accent-gold-dim);
+    }
   }
 }
 

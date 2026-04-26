@@ -36,9 +36,11 @@
   cursor: pointer;
   transition: all var(--transition-fast);
 
-  &:hover:not(:disabled) {
-    background-color: var(--bg-accent-soft);
-    border-color: var(--skyrim-accent-gold-dim);
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--bg-accent-soft);
+      border-color: var(--skyrim-accent-gold-dim);
+    }
   }
 
   &.active {
