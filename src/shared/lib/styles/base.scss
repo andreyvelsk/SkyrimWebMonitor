@@ -74,3 +74,17 @@ body {
     }
   }
 }
+
+// ============================================
+// LINK STYLING
+// ============================================
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover {
+    color: var(--skyrim-text-secondary);
+  }
+}

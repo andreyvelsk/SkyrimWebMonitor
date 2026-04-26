@@ -153,7 +153,8 @@
         "failed": "Connection failed",
         "failedHint": "Reconnect attempts exhausted. Try again manually.",
         "attempt": "Attempt {current} of {total}",
-        "reconnect": "Reconnect"
+        "reconnect": "Reconnect",
+        "iconsBy": "Icons by"
       },
       "magicItem": {
         "ready": "Ready",

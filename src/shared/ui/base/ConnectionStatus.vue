@@ -1,9 +1,6 @@
 <template>
   <div class="connection-status">
-    <div
-      class="panel panel--elevated connection-panel"
-      :class="`panel--${state}`"
-    >
+    <div class="flex-center flex-col gap-md">
       <div class="indicator">
         <span
           class="indicator__dot"
@@ -11,14 +8,19 @@
         />
       </div>
 
-      <h2 class="title">
-        {{ statusText }}
-      </h2>
-
-      <p
-        v-if="subText"
-        class="subtitle"
+      <Transition
+        name="fade"
+        mode="out-in"
       >
+        <h2
+          :key="statusText"
+          class="title"
+        >
+          {{ statusText }}
+        </h2>
+      </Transition>
+
+      <p class="subtitle">
         {{ subText }}
       </p>
 
@@ -34,6 +36,15 @@
         </button>
       </div>
     </div>
+
+    <p class="attribution">
+      {{ $t('shared.ui.connectionStatus.iconsBy') }}
+      <a
+        href="https://game-icons.net/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >game-icons.net</a>
+    </p>
   </div>
 </template>
 
@@ -89,20 +100,14 @@ function handleReconnect(): void {
 </script>
 
 <style scoped lang="scss">
-/*
- * Frame: .panel.panel--elevated and .btn.btn-lg.btn-primary come
- * from the design system. Only the visual indicator (dot animation,
- * status colour modifiers) and the centred wrapper are local.
- */
-
 .connection-status {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
   padding: var(--spacing-lg);
-  background-color: var(--skyrim-bg-dark);
 }
 
 .connection-panel {
@@ -113,15 +118,6 @@ function handleReconnect(): void {
   text-align: center;
 }
 
-.panel--connecting,
-.panel--reconnecting {
-  border-color: var(--skyrim-accent-gold-dim);
-}
-
-.panel--failed,
-.panel--disconnected {
-  border-color: var(--color-danger-dim);
-}
 
 .indicator {
   display: flex;
@@ -159,6 +155,16 @@ function handleReconnect(): void {
   }
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .title {
   margin: 0;
   font-family: var(--font-heading);
@@ -173,10 +179,20 @@ function handleReconnect(): void {
   margin: 0;
   font-size: var(--font-size-sm);
   color: var(--skyrim-text-secondary);
+  height: var(--font-size-sm);
 }
 
 .actions {
   margin-top: var(--spacing-sm);
+}
+
+.attribution {
+  position: absolute;
+  bottom: 2px;
+  left: 2px;
+  margin: 0;
+  font-size: var(--font-size-base, 0.75rem);
+  color: var(--skyrim-text-dim);
 }
 
 @keyframes status-pulse {
