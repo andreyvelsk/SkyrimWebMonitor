@@ -9,7 +9,7 @@
       type="button"
       class="btn slot-btn"
       :class="{ active: entry.slot === activeSlot }"
-      :disabled="!entry.bound"
+      :disabled="disableInactive &&!entry.bound"
       @click="emit('select', entry.slot)"
     >
       <span class="slot-number">
@@ -39,11 +39,13 @@ import type { HotkeySlotEntry } from '@/stores/hotkeys/types';
 interface Props {
   activeSlot?: HotkeySlot | null;
   gap?: 'sm' | 'md';
+  disableInactive?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
   activeSlot: null,
   gap: 'md',
+  disableInactive: false,
 });
 
 const emit = defineEmits<{

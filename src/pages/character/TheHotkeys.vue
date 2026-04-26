@@ -1,6 +1,7 @@
 <template>
   <div class="d-flex flex-1 flex-center p-md">
     <hotkey-slots-grid
+      disable-inactive
       class="hotkeys-page-grid"
       gap="md"
       @select="triggerSlot"
