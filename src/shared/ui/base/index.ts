@@ -9,3 +9,4 @@ export { default as HotkeySlotsGrid } from './HotkeySlotsGrid.vue';
 export { default as ExitConfirmModal } from './ExitConfirmModal.vue';
 export { default as ExitToast } from './ExitToast.vue';
 export { default as GameStatusBackdrop } from './GameStatusBackdrop.vue';
+export { default as CombatIndicator } from './CombatIndicator.vue';

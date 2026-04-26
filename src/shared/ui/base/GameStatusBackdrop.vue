@@ -9,7 +9,13 @@
         @click.stop
         @contextmenu.prevent
       >
-        <h2>
+        <base-icon
+          v-if="dead"
+          class="game-status-backdrop__icon"
+          icon-path="lorc/death-zone.svg"
+          :size="96"
+        />
+        <h2 v-else>
           {{ $t('shared.ui.gameStatus.title') }}
         </h2>
       </div>
@@ -20,9 +26,10 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
+import { BaseIcon } from '@/shared/ui';
 
 const gameStatusStore = useGameStatusStore();
-const { canAct } = storeToRefs(gameStatusStore);
+const { canAct, dead } = storeToRefs(gameStatusStore);
 </script>
 
 <style scoped lang="scss">
@@ -38,6 +45,13 @@ const { canAct } = storeToRefs(gameStatusStore);
   background-color: var(--bg-overlay);
   backdrop-filter: blur(3px);
   pointer-events: auto;
+}
+
+.game-status-backdrop__icon {
+  // BaseIcon paints itself with --skyrim-text-accent via mask-image.
+  // No extra color override here — keeps the icon consistent with the rest
+  // of the project (WeaponIcon, EquippedHandIcon, etc.).
+  filter: drop-shadow(0 0 12px var(--skyrim-border-glow));
 }
 
 /* Smooth fade for the whole overlay + a subtle scale on the panel. */
