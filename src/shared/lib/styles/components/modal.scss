@@ -34,9 +34,7 @@
   max-width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow:
-    var(--shadow-strong),
-    var(--bg-inset-dark);
+  box-shadow: var(--shadow-strong), var(--bg-inset-dark);
 }
 
 .modal-body {

@@ -21,5 +21,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 24,
 });
 
-const iconPath = computed(() => getApparelIconPath(props.bodySlots?.[0] ?? null));
+const iconPath = computed(() =>
+  getApparelIconPath(props.bodySlots?.[0] ?? null)
+);
 </script>

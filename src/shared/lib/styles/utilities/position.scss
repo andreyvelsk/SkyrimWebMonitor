@@ -2,24 +2,58 @@
  * POSITION UTILITIES
  * ============================================ */
 
-.static   { position: static; }
-.relative { position: relative; }
-.absolute { position: absolute; }
-.fixed    { position: fixed; }
-.sticky   { position: sticky; }
+.static {
+  position: static;
+}
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.sticky {
+  position: sticky;
+}
 
 /* Inset shorthand */
-.inset-0 { inset: 0; }
-.top-0    { top: 0; }
-.right-0  { right: 0; }
-.bottom-0 { bottom: 0; }
-.left-0   { left: 0; }
+.inset-0 {
+  inset: 0;
+}
+.top-0 {
+  top: 0;
+}
+.right-0 {
+  right: 0;
+}
+.bottom-0 {
+  bottom: 0;
+}
+.left-0 {
+  left: 0;
+}
 
 /* Z-index */
-.z-base    { z-index: var(--z-base); }
-.z-raised  { z-index: var(--z-raised); }
-.z-dropdown{ z-index: var(--z-dropdown); }
-.z-sticky  { z-index: var(--z-sticky); }
-.z-fixed   { z-index: var(--z-fixed); }
-.z-modal   { z-index: var(--z-modal); }
-.z-tooltip { z-index: var(--z-tooltip); }
+.z-base {
+  z-index: var(--z-base);
+}
+.z-raised {
+  z-index: var(--z-raised);
+}
+.z-dropdown {
+  z-index: var(--z-dropdown);
+}
+.z-sticky {
+  z-index: var(--z-sticky);
+}
+.z-fixed {
+  z-index: var(--z-fixed);
+}
+.z-modal {
+  z-index: var(--z-modal);
+}
+.z-tooltip {
+  z-index: var(--z-tooltip);
+}

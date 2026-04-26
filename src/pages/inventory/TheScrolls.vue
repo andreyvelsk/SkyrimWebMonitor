@@ -29,8 +29,13 @@ const { scrollsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { t } = useI18n();
 
-const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
-  useInventoryItemActions(() => scrollsList.value);
+const {
+  activeItem,
+  activeItemData,
+  toggleFavorite,
+  openHotkeyPicker,
+  startDrop,
+} = useInventoryItemActions(() => scrollsList.value);
 
 const previewStats = computed(() => [
   {

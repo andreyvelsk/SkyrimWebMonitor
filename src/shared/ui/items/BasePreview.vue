@@ -47,9 +47,7 @@
 
 <script setup lang="ts">
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
-import type {
-  ItemEnchantmentEffect,
-} from '@/shared/lib/types/common';
+import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
 import type { ListItem } from '@/shared/lib/types/types';
 import type { PreviewStats } from './types/types';
 

@@ -2,20 +2,50 @@
  * INTERACTIVITY UTILITIES
  * ============================================ */
 
-.cursor-pointer    { cursor: pointer; }
-.cursor-default    { cursor: default; }
-.cursor-not-allowed{ cursor: not-allowed; }
-.cursor-text       { cursor: text; }
-.cursor-grab       { cursor: grab; }
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-default {
+  cursor: default;
+}
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+.cursor-text {
+  cursor: text;
+}
+.cursor-grab {
+  cursor: grab;
+}
 
-.pointer-events-none { pointer-events: none; }
-.pointer-events-auto { pointer-events: auto; }
+.pointer-events-none {
+  pointer-events: none;
+}
+.pointer-events-auto {
+  pointer-events: auto;
+}
 
-.select-none { user-select: none; -webkit-user-select: none; }
-.select-text { user-select: text; -webkit-user-select: text; }
-.select-all  { user-select: all; }
+.select-none {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.select-text {
+  user-select: text;
+  -webkit-user-select: text;
+}
+.select-all {
+  user-select: all;
+}
 
-.touch-none       { touch-action: none; }
-.touch-pan-x      { touch-action: pan-x; }
-.touch-pan-y      { touch-action: pan-y; }
-.touch-manipulation { touch-action: manipulation; }
+.touch-none {
+  touch-action: none;
+}
+.touch-pan-x {
+  touch-action: pan-x;
+}
+.touch-pan-y {
+  touch-action: pan-y;
+}
+.touch-manipulation {
+  touch-action: manipulation;
+}

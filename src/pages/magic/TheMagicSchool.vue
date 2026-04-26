@@ -16,8 +16,8 @@
             event: 'hotkey',
             icon: 'delapouite/keyboard.svg',
           },
-        ]
-      }
+        ],
+      },
     ]"
     @item-double-click="equipSpell"
     @favorite="toggleFavorite"
@@ -57,8 +57,11 @@ const props = withDefaults(defineProps<Props>(), {
   emptyMessage: 'Waiting for data...',
 });
 
-const { activeSpell, activeSpellData, equipSpell, toggleFavorite, openHotkeyPicker } = useMagicSpellActions(
-  () => props.spellsList
-);
-
+const {
+  activeSpell,
+  activeSpellData,
+  equipSpell,
+  toggleFavorite,
+  openHotkeyPicker,
+} = useMagicSpellActions(() => props.spellsList);
 </script>

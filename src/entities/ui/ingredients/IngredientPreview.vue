@@ -14,9 +14,9 @@
         v-if="data.effects"
         class="effects"
       >
-        <div 
-          v-for="(effect,index) in data.effects" 
-          :key="index" 
+        <div
+          v-for="(effect, index) in data.effects"
+          :key="index"
           class="effect"
         >
           <span v-if="effect.known">

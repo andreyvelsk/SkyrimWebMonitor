@@ -35,10 +35,10 @@
         :aria-selected="nav.activeSubTab === sub.id"
         @click="nav.setActiveSubTab(sub.id)"
       >
-        {{ 
-          $te(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`) 
-            ? $t(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`) 
-            : sub.label 
+        {{
+          $te(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`)
+            ? $t(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`)
+            : sub.label
         }}
       </button>
     </nav>
@@ -56,10 +56,7 @@ const nav = useNavigationStore();
 // Center the active item in the horizontally scrollable container.
 // If items fit, CSS `justify-content: safe center` centers them and
 // scrollWidth <= clientWidth, so scrollTo is clamped to 0 (no-op).
-function centerActive(
-  container: HTMLElement | null,
-  activeSelector: string
-) {
+function centerActive(container: HTMLElement | null, activeSelector: string) {
   if (!container) return;
   const activeBtn = container.querySelector(
     activeSelector

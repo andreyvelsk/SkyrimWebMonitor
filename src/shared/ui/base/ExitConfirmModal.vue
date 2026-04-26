@@ -32,4 +32,3 @@ function onConfirm() {
 </script>
 
 <!-- All styles come from the design system: .modal-content, .modal-message, .modal-actions, .btn, .btn-danger, .btn-secondary -->
-

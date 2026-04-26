@@ -15,7 +15,7 @@
               :name="item.name || $t('shared.ui.inventoryItem.unknown')"
               :is-favorite="item.isFavorite"
               :active="modelValue === item.formId"
-              :quantity="('count' in item ? item.count : 0)"
+              :quantity="'count' in item ? item.count : 0"
               @click="handleItemClick(item.formId)"
             />
           </slot>
@@ -49,7 +49,10 @@
               :class="[
                 action.class,
                 { favorite: action.id === 'favorite' && isActiveItemFavorite },
-                { 'hotkey-bound': action.id === 'hotkey' && isActiveItemHotkeyed },
+                {
+                  'hotkey-bound':
+                    action.id === 'hotkey' && isActiveItemHotkeyed,
+                },
               ]"
               :disabled="!modelValue"
               @click="handleActionClick(action.event)"
@@ -65,8 +68,13 @@
             class="btn btn-icon toolbar-btn"
             :class="[
               actionItem.class,
-              { favorite: actionItem.id === 'favorite' && isActiveItemFavorite },
-              { 'hotkey-bound': actionItem.id === 'hotkey' && isActiveItemHotkeyed },
+              {
+                favorite: actionItem.id === 'favorite' && isActiveItemFavorite,
+              },
+              {
+                'hotkey-bound':
+                  actionItem.id === 'hotkey' && isActiveItemHotkeyed,
+              },
             ]"
             :disabled="!modelValue"
             @click="handleActionClick(actionItem.event)"
@@ -145,7 +153,11 @@ const props = withDefaults(defineProps<Props>(), {
   actions: () => [
     {
       group: [
-        { id: 'favorite', event: 'favorite', icon: 'delapouite/round-star.svg' },
+        {
+          id: 'favorite',
+          event: 'favorite',
+          icon: 'delapouite/round-star.svg',
+        },
         { id: 'hotkey', event: 'hotkey', icon: 'delapouite/keyboard.svg' },
       ],
     },

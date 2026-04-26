@@ -34,8 +34,13 @@ const inventoryStore = useInventoryStore();
 const { miscList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 
-const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
-  useInventoryItemActions(() => miscList.value);
+const {
+  activeItem,
+  activeItemData,
+  toggleFavorite,
+  openHotkeyPicker,
+  startDrop,
+} = useInventoryItemActions(() => miscList.value);
 
 function useItem(formId: string) {
   const item = miscList.value.find((f) => f.formId === formId);

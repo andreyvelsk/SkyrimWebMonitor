@@ -47,7 +47,12 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
-import { WeaponItem, AmmoItem, WeaponPreview, AmmoPreview } from '@/entities/ui';
+import {
+  WeaponItem,
+  AmmoItem,
+  WeaponPreview,
+  AmmoPreview,
+} from '@/entities/ui';
 import { InventoryList } from '@/features/ui';
 import { HandPicker } from '@/shared/ui';
 import { useInventoryStore } from '@/stores/inventory/useInventoryStore';
@@ -62,8 +67,13 @@ const { weaponsList } = storeToRefs(inventoryStore);
 const wsStore = useWebSocketStore();
 const { openModal, closeModal } = useModal();
 
-const { activeItem, activeItemData, toggleFavorite, openHotkeyPicker, startDrop } =
-  useInventoryItemActions(() => weaponsList.value);
+const {
+  activeItem,
+  activeItemData,
+  toggleFavorite,
+  openHotkeyPicker,
+  startDrop,
+} = useInventoryItemActions(() => weaponsList.value);
 
 function equipItem(formId: string) {
   const item = weaponsList.value.find((w) => w.formId === formId);
@@ -102,8 +112,8 @@ function equipItem(formId: string) {
     }
 
     // If two-handed or single copy, just unequip
-    wsStore.sendCommand({ 
-      command: 'unequip', 
+    wsStore.sendCommand({
+      command: 'unequip',
       formId,
       hand: item.equippedHand,
     });

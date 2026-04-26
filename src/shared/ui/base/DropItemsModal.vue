@@ -40,4 +40,3 @@ function confirmDrop() {
 </script>
 
 <!-- Styles delegated to the design system: .modal-content, .modal-actions, .btn, .btn-primary, .flex-center -->
-

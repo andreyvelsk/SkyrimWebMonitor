@@ -21,9 +21,11 @@ defineProps<{
   width: 100%;
   height: 100%;
 }
+
 .equip--centered {
   justify-content: center;
 }
+
 .equip-equipped-indicator {
   width: 6px;
   height: 6px;

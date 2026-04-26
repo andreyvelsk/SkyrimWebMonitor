@@ -54,7 +54,12 @@ import { useI18n } from 'vue-i18n';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 
-type StatusState = 'connected' | 'connecting' | 'reconnecting' | 'disconnected' | 'failed';
+type StatusState =
+  | 'connected'
+  | 'connecting'
+  | 'reconnecting'
+  | 'disconnected'
+  | 'failed';
 
 const { t } = useI18n();
 const wsStore = useWebSocketStore();
@@ -117,7 +122,6 @@ function handleReconnect(): void {
   padding: var(--spacing-xl) var(--spacing-lg);
   text-align: center;
 }
-
 
 .indicator {
   display: flex;

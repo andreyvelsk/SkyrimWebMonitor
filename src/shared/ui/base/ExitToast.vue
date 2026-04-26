@@ -38,7 +38,9 @@ defineProps<{ visible: boolean }>();
 
 .exit-toast-enter-active,
 .exit-toast-leave-active {
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 
 .exit-toast-enter-from,

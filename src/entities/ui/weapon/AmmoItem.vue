@@ -7,9 +7,7 @@
     @click="$emit('click')"
   >
     <template #status>
-      <equip-status
-        :is-equipped="isEquipped"
-      />
+      <equip-status :is-equipped="isEquipped" />
     </template>
   </inventory-item>
 </template>
@@ -29,4 +27,3 @@ defineEmits<{
   click: [];
 }>();
 </script>
-
