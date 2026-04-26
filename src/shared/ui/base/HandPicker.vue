@@ -84,7 +84,7 @@ function onSelectHand(hand: EquipSlot) {
     border-color: var(--skyrim-accent-gold-dim);
 
     &:hover {
-      background-color: rgb(201 162 39 / 30%);
+      background-color: var(--skyrim-border-glow);
       border-color: var(--skyrim-accent-gold);
     }
   }
