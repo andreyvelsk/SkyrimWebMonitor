@@ -39,11 +39,7 @@
 
     <p class="attribution">
       {{ $t('shared.ui.connectionStatus.iconsBy') }}
-      <a
-        href="https://game-icons.net/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >game-icons.net</a>
+      <strong>game-icons.net</strong>
     </p>
   </div>
 </template>
