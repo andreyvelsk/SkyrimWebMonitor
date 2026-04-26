@@ -69,7 +69,13 @@ withDefaults(
 /* Layout via utility classes; only inner typography is component-specific. */
 
 .base-preview {
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+
   .info {
+    flex: 0 0 auto;
+
     .name {
       font-weight: var(--font-weight-semibold);
       font-size: var(--font-size-lg);
@@ -86,7 +92,24 @@ withDefaults(
     }
   }
 
+  .enchantment {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .enchant {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
   .enchant-desc {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
     color: var(--skyrim-text-secondary);
     font-size: var(--font-size-sm);
 

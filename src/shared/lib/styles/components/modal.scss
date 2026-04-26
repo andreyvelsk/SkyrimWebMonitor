@@ -27,6 +27,8 @@
 .modal-panel {
   position: relative;
   z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
   background-color: var(--skyrim-bg-medium);
   border: 1px solid var(--skyrim-border-dark);
   padding: var(--spacing-sm);
@@ -38,6 +40,10 @@
 }
 
 .modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   color: var(--skyrim-text-primary);
   font-family: var(--font-body);
 }
