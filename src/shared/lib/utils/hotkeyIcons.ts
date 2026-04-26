@@ -47,8 +47,8 @@ export function getHotkeyIconPath(entry: HotkeySlotEntry | null | undefined): st
     if (entry.categoryType === 'Weapon' && entry.weaponType) {
       return getWeaponIconPath(entry.weaponType);
     }
-    if (entry.categoryType === 'Apparel' && entry.bodySlots && entry.bodySlots.length > 0) {
-      return getApparelIconPath(entry.bodySlots[0]);
+    if (entry.categoryType === 'Apparel' && entry.bodySlot) {
+      return getApparelIconPath(entry.bodySlot);
     }
     return getCategoryIconPath(entry.categoryType);
   }

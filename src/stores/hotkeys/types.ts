@@ -38,7 +38,7 @@ export interface HotkeySlotItem {
   // Optional type hints so the hotkey UI can show a more specific icon
   // (reusing the same mappings as WeaponIcon / ApparelIcon).
   weaponType?: WeaponType;
-  bodySlots?: BodySlot[] | null;
+  bodySlot?: BodySlot | null;
 }
 
 export type HotkeySlotEntry = HotkeySlotUnbound | HotkeySlotSpell | HotkeySlotItem;
