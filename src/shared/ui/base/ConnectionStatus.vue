@@ -169,7 +169,7 @@ function handleReconnect(): void {
   margin: 0;
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--skyrim-text-accent);
   letter-spacing: 0.08em;
   text-transform: uppercase;

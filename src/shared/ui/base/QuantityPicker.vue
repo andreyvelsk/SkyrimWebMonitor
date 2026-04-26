@@ -83,7 +83,7 @@ function increase() {
   text-align: center;
   font-family: var(--font-heading);
   font-size: var(--font-size-base);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--skyrim-text-accent);
   padding: 0 var(--spacing-xs);
 }

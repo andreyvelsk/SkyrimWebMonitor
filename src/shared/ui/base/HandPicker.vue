@@ -70,7 +70,7 @@ function onSelectHand(hand: EquipSlot) {
   padding: var(--spacing-md) var(--spacing-lg);
   font-family: var(--font-heading);
   font-size: var(--font-size-lg);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
   color: var(--skyrim-text-primary);
   background-color: var(--skyrim-bg-light);
   border: 2px solid var(--skyrim-border-dark);

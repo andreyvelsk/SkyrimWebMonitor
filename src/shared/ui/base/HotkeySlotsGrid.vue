@@ -84,7 +84,7 @@ function iconFor(entry: HotkeySlotEntry): string {
 
 .slot-number {
   font-size: var(--font-size-xl);
-  font-weight: 700;
+  font-weight: var(--font-weight-semibold);
   color: var(--skyrim-accent-gold);
   line-height: 1;
 }

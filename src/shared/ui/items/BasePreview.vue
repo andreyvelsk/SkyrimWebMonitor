@@ -71,7 +71,7 @@ withDefaults(
 .base-preview {
   .info {
     .name {
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
       font-size: var(--font-size-lg);
       margin-bottom: 0.25rem;
     }
