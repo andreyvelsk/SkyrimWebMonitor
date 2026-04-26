@@ -78,13 +78,13 @@ withDefaults(
 
     .name {
       font-weight: var(--font-weight-semibold);
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-xl);
       margin-bottom: 0.25rem;
     }
 
     .stat {
       color: var(--skyrim-text-secondary);
-      font-size: var(--font-size-base);
+      font-size: var(--font-size-lg);
 
       strong {
         color: var(--skyrim-text-primary);
@@ -111,7 +111,7 @@ withDefaults(
     min-height: 0;
     overflow-y: auto;
     color: var(--skyrim-text-secondary);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-base);
 
     :deep(strong) {
       color: var(--skyrim-text-primary);
