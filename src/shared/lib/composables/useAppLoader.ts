@@ -108,14 +108,17 @@ export function useAppLoader() {
     loadInitialDataAndStartActiveSubs();
   }, { once: true});
 
-  // React to tab/sub-tab changes — only when the player is actually in-game.
+  // React to tab/sub-tab changes only. Initial/reconnect subscription bootstrap
+  // is owned by the `isConnected` and `canAct` watchers above — including this
+  // watcher in that flow caused a duplicate `subscribe` for the active page
+  // (e.g. `character.stats` was subscribed twice on first connect).
   watch(
-    [activeTab, activeSubTab, isConnected],
+    [activeTab, activeSubTab],
     (
-      [newTab, newSubTab, connected],
+      [newTab, newSubTab],
       [oldTab, oldSubTab]
     ) => {
-      if (!connected) {
+      if (!isConnected.value) {
         console.log('WebSocket not connected, skipping subscription update');
         return;
       }
