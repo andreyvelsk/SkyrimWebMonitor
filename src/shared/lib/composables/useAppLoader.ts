@@ -2,6 +2,7 @@ import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
+import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import {
   getPageFields,
   getPageSettings,
@@ -19,6 +20,9 @@ export function useAppLoader() {
   const websocketStore = useWebSocketStore();
   const { connect, startSubscription, stopSubscription, sendQuery } = websocketStore;
   const { isConnected } = storeToRefs(websocketStore);
+
+  const gameStatusStore = useGameStatusStore();
+  const { canAct } = storeToRefs(gameStatusStore);
 
   const startCategorySubscription = (tabId: string): void => {
     const config = getTabCategorySubscription(tabId);
@@ -40,49 +44,71 @@ export function useAppLoader() {
     });
   };
 
+  const startActivePageSubscription = (): void => {
+    const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
+    if (!subscriptionId) return;
+    const pageFields = getPageFields(activeTab.value, activeSubTab.value);
+    const pageSettings = getPageSettings(activeTab.value, activeSubTab.value);
+    startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
+  };
+
+  // Triggered when the player is actually in-game (canAct === true) and the
+  // connection is live. Performs the one-time category bootstrap and starts
+  // live subscriptions for the active tab/page.
+  const loadInitialDataAndStartActiveSubs = (): void => {
+    try {
+      Object.values(TAB_CATEGORY_SUBSCRIPTIONS).forEach((cfg) => {
+        sendQuery(cfg.subscriptionId, cfg.fields, (fields) => {
+          DataRouter.routeDataById(cfg.subscriptionId, fields);
+        });
+      });
+    } catch (err) {
+      console.error('Initial category queries failed:', err);
+    }
+
+    startCategorySubscription(activeTab.value);
+    startActivePageSubscription();
+  };
+
   onMounted(async () => {
     try {
       console.log('App mounted - initializing WebSocket connection...');
       await connect();
-
-      if (isConnected.value) {
-        console.log('Connected on mount, subscribing to current page...');
-        const pageFields = getPageFields(activeTab.value, activeSubTab.value);
-        const pageSettings = getPageSettings(activeTab.value, activeSubTab.value);
-        const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
-        if (subscriptionId) startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
-
-        // One-time initial load for all category subscriptions (populate store)
-        try {
-          Object.values(TAB_CATEGORY_SUBSCRIPTIONS).forEach((cfg) => {
-            sendQuery(cfg.subscriptionId, cfg.fields, (fields) => {
-              DataRouter.routeDataById(cfg.subscriptionId, fields);
-            });
-          });
-        } catch (err) {
-          console.error('Initial category queries failed:', err);
-        }
-
-        // Start live category subscription for the active tab
-        startCategorySubscription(activeTab.value);
-      }
     } catch (err) {
       console.error('Failed to initialize websocket connection', err);
     }
   });
 
-  watch(
-    isConnected,
-    (connected, prev) => {
-      if (connected && !prev) {
-        // Re-arm global subscriptions after a (re)connect. The server clears
-        // its subscription table on disconnect so we must re-send them.
-        console.log('WebSocket connected, re-arming global subscriptions');
-        startGlobalSubscriptions();
+  // The server starts as soon as Skyrim's main menu loads, NOT when the player
+  // actually enters the game world. We must therefore only re-arm GLOBAL
+  // subscriptions on connect — `gameStatus` is the signal that tells us when
+  // the player is ready (canAct === true). Gameplay subscriptions are gated
+  // on `canAct` below.
+  watch(isConnected, (connected, prev) => {
+    if (connected && !prev) {
+      console.log('WebSocket connected, re-arming global subscriptions');
+      startGlobalSubscriptions();
+
+      // If we reconnected WHILE the player is still in-game, the server has
+      // cleared its subscription table on disconnect. The canAct watcher only
+      // fires on transitions, so we must re-arm gameplay subs explicitly here.
+      if (canAct.value) {
+        console.log('Reconnected while in-game — re-arming gameplay subscriptions');
+        loadInitialDataAndStartActiveSubs();
       }
     }
-  );
+  });
 
+  // Gate ALL gameplay-data subscriptions on `canAct`. Before this is true,
+  // queries for inventory/magic/stats return empty or invalid data
+  watch(canAct, () => {
+    if (!isConnected.value) return;
+
+    console.log('Player is in-game (canAct=true) — loading initial data');
+    loadInitialDataAndStartActiveSubs();
+  }, { once: true});
+
+  // React to tab/sub-tab changes — only when the player is actually in-game.
   watch(
     [activeTab, activeSubTab, isConnected],
     (
