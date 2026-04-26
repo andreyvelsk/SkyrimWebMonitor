@@ -5,5 +5,6 @@ export { default as HandPicker } from './HandPicker.vue';
 export { default as QuantityPicker } from './QuantityPicker.vue';
 export { default as DropItemsModal } from './DropItemsModal.vue';
 export { default as HotkeyPickerModal } from './HotkeyPickerModal.vue';
+export { default as HotkeySlotsGrid } from './HotkeySlotsGrid.vue';
 export { default as ExitConfirmModal } from './ExitConfirmModal.vue';
 export { default as ExitToast } from './ExitToast.vue';

@@ -12,22 +12,17 @@
       </p>
     </div>
 
-    <div class="slots-grid">
-      <button
-        v-for="slot in slots"
-        :key="slot"
-        type="button"
-        class="btn btn-lg slot-btn"
-        :class="{ active: slot === currentSlot }"
-        @click="handleSlotClick(slot)"
-      >
-        {{ slot }}
-      </button>
-    </div>
+    <hotkey-slots-grid
+      :active-slot="currentSlot"
+      gap="sm"
+      class="hotkey-picker-grid"
+      @select="handleSlotClick"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import HotkeySlotsGrid from './HotkeySlotsGrid.vue';
 import type { HotkeySlot } from '@/api/websocket';
 
 interface Props {
@@ -45,8 +40,6 @@ const emit = defineEmits<{
   close: [];
 }>();
 
-const slots: HotkeySlot[] = [1, 2, 3, 4, 5, 6, 7, 8];
-
 function handleSlotClick(slot: HotkeySlot) {
   emit('select', slot);
 }
@@ -56,24 +49,14 @@ function handleSlotClick(slot: HotkeySlot) {
 /*
  * Modal frame, title, subtitle and button styles come from the
  * design system (.modal-content, .modal-header, .modal-title,
- * .modal-subtitle, .btn). Only the slot grid layout is unique.
+ * .modal-subtitle, .btn). Slot grid is provided by HotkeySlotsGrid.
  */
 
 .hotkey-picker-modal {
   min-width: 320px;
 }
 
-.slots-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: var(--spacing-sm);
-}
-
-.slot-btn {
-  aspect-ratio: 1 / 1;
+.hotkey-picker-grid :deep(.slot-btn) {
   min-width: 90px;
-  font-size: var(--font-size-lg);
-  font-weight: 700;
 }
 </style>
