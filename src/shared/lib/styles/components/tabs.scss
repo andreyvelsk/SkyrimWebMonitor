@@ -12,10 +12,17 @@
 .tab-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
   gap: var(--tab-gap);
   background-color: var(--skyrim-bg-dark);
   border-bottom: 2px solid var(--skyrim-border-dark);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .tab {
@@ -50,6 +57,7 @@
 .subtab-bar {
   display: flex;
   align-items: center;
+  justify-content: safe center;
   gap: var(--spacing-xs);
   background-color: var(--skyrim-bg-dark);
   border-bottom: 2px solid var(--skyrim-border-dark);

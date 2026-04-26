@@ -1,6 +1,7 @@
 <template>
   <header class="navigation-header">
     <nav
+      ref="tabsRef"
       class="tab-bar"
       role="tablist"
       :aria-label="$t('app.navigation.mainAriaLabel')"
@@ -48,48 +49,49 @@
 import { ref, watch, nextTick } from 'vue';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 
+const tabsRef = ref<HTMLElement | null>(null);
 const subtabsRef = ref<HTMLElement | null>(null);
 const nav = useNavigationStore();
 
+// Center the active item in the horizontally scrollable container.
+// If items fit, CSS `justify-content: safe center` centers them and
+// scrollWidth <= clientWidth, so scrollTo is clamped to 0 (no-op).
+function centerActive(
+  container: HTMLElement | null,
+  activeSelector: string
+) {
+  if (!container) return;
+  const activeBtn = container.querySelector(
+    activeSelector
+  ) as HTMLElement | null;
+  if (!activeBtn) return;
+
+  const btnCenter = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;
+  const targetLeft = btnCenter - container.clientWidth / 2;
+  const maxLeft = container.scrollWidth - container.clientWidth;
+
+  container.scrollTo({
+    left: Math.max(0, Math.min(targetLeft, maxLeft)),
+    behavior: 'smooth',
+  });
+}
+
 watch(
   () => nav.activeTab,
-  () => {
+  async () => {
+    await nextTick();
+    centerActive(tabsRef.value, '.tab.active');
     if (subtabsRef.value) {
       subtabsRef.value.scrollLeft = 0;
     }
   }
 );
 
-// Ensure active subtab is fully visible when it changes
 watch(
   () => nav.activeSubTab,
   async () => {
     await nextTick();
-    const container = subtabsRef.value;
-    if (!container) return;
-
-    const activeBtn = container.querySelector(
-      '.subtab.active'
-    ) as HTMLElement | null;
-    if (!activeBtn) return;
-
-    const btnLeft = activeBtn.offsetLeft;
-    const btnRight = btnLeft + activeBtn.offsetWidth;
-    const viewLeft = container.scrollLeft;
-    const viewRight = viewLeft + container.clientWidth;
-    const PADDING = 12;
-
-    if (btnLeft < viewLeft) {
-      container.scrollTo({
-        left: Math.max(0, btnLeft - PADDING),
-        behavior: 'smooth',
-      });
-    } else if (btnRight > viewRight) {
-      container.scrollTo({
-        left: btnRight - container.clientWidth + PADDING,
-        behavior: 'smooth',
-      });
-    }
+    centerActive(subtabsRef.value, '.subtab.active');
   }
 );
 </script>
