@@ -40,7 +40,6 @@
     color: var(--skyrim-text-accent);
   }
 
-  &:active:not(:disabled),
   &.active {
     background-color: var(--bg-accent-strong);
     border-color: var(--skyrim-accent-gold);
