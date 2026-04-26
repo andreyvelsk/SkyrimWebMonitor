@@ -2,7 +2,7 @@
   <Teleport to="body">
     <Transition name="game-status-backdrop">
       <div
-        v-if="!canAct"
+        v-if="showBackdrop"
         class="game-status-backdrop"
         role="alertdialog"
         aria-modal="true"
@@ -24,12 +24,18 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { BaseIcon } from '@/shared/ui';
 
 const gameStatusStore = useGameStatusStore();
+const wsStore = useWebSocketStore();
+const { isConnected } = storeToRefs(wsStore);
 const { canAct, dead } = storeToRefs(gameStatusStore);
+
+const showBackdrop = computed(() => isConnected.value && !canAct.value);
 </script>
 
 <style scoped lang="scss">

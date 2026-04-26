@@ -20,7 +20,6 @@
     </nav>
 
     <nav
-      v-if="nav.getVisibleSubTabs().length > 1"
       ref="subtabsRef"
       class="subtab-bar animate-fade-in"
       role="tablist"

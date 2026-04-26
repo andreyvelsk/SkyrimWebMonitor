@@ -1,8 +1,6 @@
 <template>
   <div class="handheld-device">
-    <!-- Show connection status when not connected -->
-    <connection-status v-if="!isConnected" />
-    <template v-else>
+    <template v-if="isConnected">
       <skyrim-navigation
         :active-tab="activeTab"
         :active-sub-tab="activeSubTab"
@@ -15,6 +13,8 @@
         />
       </main>
     </template>
+
+    <connection-status v-else />
     <skyrim-modal />
     <game-status-backdrop />
     <combat-indicator />

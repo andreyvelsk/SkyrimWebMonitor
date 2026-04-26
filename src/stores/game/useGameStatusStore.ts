@@ -16,7 +16,7 @@ export const useGameStatusStore = defineStore('gameStatus', () => {
 
   // Convenience flags. While status is unknown we assume actions are allowed
   // so the UI is not blocked before the first push from the server.
-  const canAct = computed<boolean>(() => status.value?.canAct ?? true);
+  const canAct = computed<boolean>(() => status.value?.canAct ?? false);
   const paused = computed<boolean>(() => status.value?.paused ?? false);
   const loading = computed<boolean>(() => status.value?.loading ?? false);
   const inMainMenu = computed<boolean>(() => status.value?.inMainMenu ?? false);
