@@ -9,6 +9,7 @@ import {
   getTabCategorySubscription,
   TAB_CATEGORY_SUBSCRIPTIONS,
 } from '@/app/config/pageRegistry';
+import { GLOBAL_SUBSCRIPTIONS } from '@/app/config/globalSubscriptions';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 
 export function useAppLoader() {
@@ -31,6 +32,12 @@ export function useAppLoader() {
     if (config) {
       stopSubscription(config.subscriptionId);
     }
+  };
+
+  const startGlobalSubscriptions = (): void => {
+    Object.values(GLOBAL_SUBSCRIPTIONS).forEach((cfg) => {
+      startSubscription(cfg.subscriptionId, cfg.fields, cfg.settings?.frequency, cfg.settings?.sendOnChange);
+    });
   };
 
   onMounted(async () => {
@@ -63,6 +70,18 @@ export function useAppLoader() {
       console.error('Failed to initialize websocket connection', err);
     }
   });
+
+  watch(
+    isConnected,
+    (connected, prev) => {
+      if (connected && !prev) {
+        // Re-arm global subscriptions after a (re)connect. The server clears
+        // its subscription table on disconnect so we must re-send them.
+        console.log('WebSocket connected, re-arming global subscriptions');
+        startGlobalSubscriptions();
+      }
+    }
+  );
 
   watch(
     [activeTab, activeSubTab, isConnected],

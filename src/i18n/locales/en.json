@@ -169,6 +169,16 @@
       },
       "handPicker": {
         "equipped": "Equipped"
+      },
+      "gameStatus": {
+        "title": "Actions unavailable",
+        "unavailable": "You can't act right now.",
+        "paused": "Game is paused.",
+        "loading": "Loading…",
+        "inMainMenu": "Main menu is open.",
+        "inDialogue": "You are in a conversation.",
+        "dead": "You have died.",
+        "controlsDisabled": "Controls are disabled."
       }
     }
   },

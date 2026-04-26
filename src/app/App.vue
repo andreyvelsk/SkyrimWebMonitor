@@ -16,6 +16,8 @@
       </main>
     </template>
     <skyrim-modal />
+    <game-status-backdrop />
+    <combat-indicator />
     <exit-toast :visible="showToast" />
     <app-version />
   </div>
@@ -29,6 +31,8 @@ import {
   ConnectionStatus,
   SkyrimModal,
   ExitToast,
+  GameStatusBackdrop,
+  CombatIndicator,
 } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
