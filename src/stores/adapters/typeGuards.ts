@@ -25,6 +25,7 @@ import { CATEGORY_TYPES } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
 import type { HotkeyItemsState } from '@/stores/hotkeys/types';
+import type { GameStatusData } from '@/stores/game/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -249,4 +250,10 @@ export function isHotkeyItemsData(data: unknown, id: string): data is HotkeyItem
     'items' in data &&
     Array.isArray((data as HotkeyItemsState).items)
   );
+}
+
+export function isGameStatusData(data: unknown, id: string): data is GameStatusData {
+  if (id !== 'game.status' || typeof data !== 'object' || data === null) return false;
+  const status = (data as { status?: unknown }).status;
+  return typeof status === 'object' && status !== null && typeof (status as { canAct?: unknown }).canAct === 'boolean';
 }
