@@ -81,13 +81,43 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
     wsStore.sendCommand({ command: 'drop', formId: activeItem.value, count: 1 });
   }
 
-  // Automatically select the first item when the items list becomes available
+  // Automatically select the first item when the items list becomes available,
+  // or fall back to the previous neighbour when the active item disappears.
+  let previousList: InventoryItem[] = [];
   watch(
     () => itemsList(),
     (newList) => {
-      if (!activeItem.value && newList && newList.length > 0) {
-        activeItem.value = newList[0].formId;
+      const list = newList || [];
+
+      if (list.length === 0) {
+        previousList = [];
+        return;
       }
+
+      if (!activeItem.value) {
+        activeItem.value = list[0].formId;
+        previousList = list.slice();
+        return;
+      }
+
+      const stillExists = list.some(item => item.formId === activeItem.value);
+      if (!stillExists) {
+        // Find the previous neighbour in the old list that still exists in the new list.
+        const oldIndex = previousList.findIndex(item => item.formId === activeItem.value);
+        let fallback: string | null = null;
+        if (oldIndex > 0) {
+          for (let i = oldIndex - 1; i >= 0; i--) {
+            const candidate = previousList[i].formId;
+            if (list.some(item => item.formId === candidate)) {
+              fallback = candidate;
+              break;
+            }
+          }
+        }
+        activeItem.value = fallback ?? list[0].formId;
+      }
+
+      previousList = list.slice();
     },
     { immediate: true }
   );

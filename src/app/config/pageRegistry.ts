@@ -20,7 +20,7 @@ import {
   TheEnchanting,
 } from '@/pages';
 
-const INVENTORY_FREQUENCY = 500; // ms
+const INVENTORY_FREQUENCY = 200; // ms
 
 export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
 
