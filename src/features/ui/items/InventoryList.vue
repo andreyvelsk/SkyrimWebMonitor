@@ -49,10 +49,6 @@
               :class="[
                 action.class,
                 { favorite: action.id === 'favorite' && isActiveItemFavorite },
-                {
-                  'hotkey-bound':
-                    action.id === 'hotkey' && isActiveItemHotkeyed,
-                },
               ]"
               :disabled="!modelValue"
               @click="handleActionClick(action.event)"
@@ -70,10 +66,6 @@
               actionItem.class,
               {
                 favorite: actionItem.id === 'favorite' && isActiveItemFavorite,
-              },
-              {
-                'hotkey-bound':
-                  actionItem.id === 'hotkey' && isActiveItemHotkeyed,
               },
             ]"
             :disabled="!modelValue"
@@ -114,7 +106,6 @@ import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem } from '@/shared/ui/items';
 import { BasePreview } from '@/shared/ui/items';
-import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
 import type { PreviewStats } from '@/shared/ui/items/types/types';
 import type { ListItem } from '@/shared/lib/types/types';
@@ -177,8 +168,6 @@ const emit = defineEmits<{
   'item-double-click': [formId: string];
 }>();
 
-const hotkeysStore = useHotkeysStore();
-
 const activeItemData = computed(() => {
   if (!props.modelValue) return null;
   return props.items?.find((item) => item.formId === props.modelValue) || null;
@@ -189,10 +178,6 @@ const isActiveItemFavorite = computed(() => {
     return activeItemData.value.isFavorite || false;
   }
   return false;
-});
-
-const isActiveItemHotkeyed = computed(() => {
-  return hotkeysStore.getSlotForFormId(props.modelValue) !== null;
 });
 
 const enabledActions = computed((): ToolbarActionItem[] => {
