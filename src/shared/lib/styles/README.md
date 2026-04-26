@@ -1,17 +1,17 @@
-# Дизайн-система SkyrimWebMonitor
+# SkyrimWebMonitor Design System
 
-Bootstrap-подобная атомарная дизайн-система с темой Skyrim.
-Главная точка входа — `skyrim-theme.scss` (импортируется один раз в [src/main.js](../../../main.js)).
+A Bootstrap-like atomic design system with a Skyrim theme.
+The single entry point is `skyrim-theme.scss` (imported once from [src/main.js](../../../main.js)).
 
-## Структура
+## Structure
 
 ```
 styles/
-├── skyrim-theme.scss      # entry — порядок слоёв
-├── variables.scss         # design-токены (цвета, spacing, typography, z-index, ...)
+├── skyrim-theme.scss      # entry — layer order
+├── variables.scss         # design tokens (colors, spacing, typography, z-index, ...)
 ├── base.scss              # reset, body, scrollbars
-├── animations.scss        # keyframes + .animate-* помощники
-├── utilities/             # атомарные утилиты (Bootstrap-style)
+├── animations.scss        # keyframes + .animate-* helpers
+├── utilities/             # atomic utilities (Bootstrap-style)
 │   ├── _index.scss
 │   ├── spacing.scss       # p-*, m-*, gap-*
 │   ├── flexbox.scss       # d-flex, flex-*, justify-*, items-*
@@ -23,7 +23,7 @@ styles/
 │   ├── effects.scss       # shadow-*, transition-*, opacity-*
 │   ├── position.scss      # static/relative/absolute/fixed, z-*
 │   └── interactivity.scss # cursor-*, select-*, touch-*
-└── components/            # переиспользуемые UI-классы
+└── components/            # reusable UI classes
     ├── _index.scss
     ├── button.scss        # .btn, .btn-primary/secondary/danger/ghost/icon, .btn-sm/lg/block
     ├── modal.scss         # .modal-backdrop, .modal-panel, .modal-content/header/title/actions
@@ -34,55 +34,55 @@ styles/
     └── list.scss          # .list, .list--md, .list-divider, .empty-state, .no-data
 ```
 
-## 5 слоёв CSS (порядок важен)
+## CSS Layers (order matters)
 
-| # | Слой | Назначение |
-|---|------|-----------|
-| 1 | **variables** | CSS-переменные (токены) |
-| 2 | **base** | Сброс, теги, скроллбары |
-| 3 | **utilities** | Атомарные классы (низкая специфичность) |
-| 4 | **components** | Готовые UI-блоки (`.btn`, `.modal-*`, `.tab`, ...) |
-| 5 | **animations** | Глобальные `@keyframes` + хелперы `.animate-*` |
+| # | Layer | Purpose |
+|---|-------|---------|
+| 1 | **variables** | CSS variables (tokens) |
+| 2 | **base** | Reset, base tags, scrollbars |
+| 3 | **utilities** | Atomic classes (low specificity) |
+| 4 | **components** | Ready-made UI blocks (`.btn`, `.modal-*`, `.tab`, ...) |
+| 5 | **animations** | Global `@keyframes` + `.animate-*` helpers |
 
-## Принципы
+## Principles
 
-1. **Сначала утилиты, затем компонентные классы.** Если дизайн повторяется ≥ 3 раз — вынесите его в `components/`.
-2. **Стили конкретного компонента остаются в нём** (внутри `<style scoped>`).
-   В `components/` попадают только переиспользуемые паттерны.
-3. **Никаких хардкод-значений.** Используйте токены из `variables.scss`.
-4. **CSS-переменные, а не SCSS-переменные** для значений, доступных в рантайме (цвета, размеры).
-5. **`@use` модули, без `@import`.**
+1. **Utilities first, component classes second.** If a pattern repeats ≥ 3 times, promote it to `components/`.
+2. **Component-specific styles live with the component** (inside `<style scoped>`).
+   Only reusable patterns belong in `components/`.
+3. **No hard-coded values.** Use tokens from `variables.scss`.
+4. **CSS variables, not SCSS variables**, for runtime values (colors, sizes).
+5. **Use `@use` modules, not `@import`.**
 
-## Дизайн-токены (`variables.scss`)
+## Design Tokens (`variables.scss`)
 
 ### Spacing
 `--spacing-xs (4px)` · `sm (8px)` · `md (16px)` · `lg (24px)` · `xl (32px)`
 
-### Размеры (для квадратных элементов / иконок)
+### Sizes (for square elements / icons)
 `--size-xs (16)` · `sm (24)` · `md (32)` · `lg (40)` · `xl (48)` · `2xl (64)`
 
-### Типографика
-- `--font-heading: 'Cinzel', serif` — заголовки, кнопки
-- `--font-body: 'Cormorant Garamond', serif` — основной текст
+### Typography
+- `--font-heading: 'Cinzel', serif` — headings, buttons
+- `--font-body: 'Cormorant Garamond', serif` — body text
 - `--font-size-xs/sm/base/lg/xl`
 
-### Цвета
-- Фон: `--skyrim-bg-dark/medium/light`
-- Текст: `--skyrim-text-primary/secondary/accent/dim`
-- Акцент: `--skyrim-accent-gold/-light/-dim`
-- Семантика: `--color-success`, `--color-danger`, `--color-warning`
-- Транспарентные подложки: `--bg-accent-faint/-soft/-medium/-strong`
+### Colors
+- Background: `--skyrim-bg-dark/medium/light`
+- Text: `--skyrim-text-primary/secondary/accent/dim`
+- Accent: `--skyrim-accent-gold/-light/-dim`
+- Semantic: `--color-success`, `--color-danger`, `--color-warning`
+- Translucent overlays: `--bg-accent-faint/-soft/-medium/-strong`
 
-### Эффекты
-- Тени: `--shadow-soft/medium/strong`, `--glow-accent`, `--bg-inset-dark`
-- Радиусы: `--radius-sm/md/lg`
-- Толщина рамки: `--border-thin/normal/thick`
-- Переходы: `--transition-fast (150ms)`, `--normal (250ms)`, `--slow (400ms)`
+### Effects
+- Shadows: `--shadow-soft/medium/strong`, `--glow-accent`, `--bg-inset-dark`
+- Radii: `--radius-sm/md/lg`
+- Border widths: `--border-thin/normal/thick`
+- Transitions: `--transition-fast (150ms)`, `--normal (250ms)`, `--slow (400ms)`
 
-### Z-index стек
+### Z-index stack
 `--z-base · -raised · -dropdown · -sticky · -fixed · -modal-backdrop · -modal · -tooltip`
 
-## Утилиты — шпаргалка
+## Utilities — cheat sheet
 
 ### Spacing — `p-{side}-{size}`, `m-{side}-{size}`, `gap-{size}`
 ```html
@@ -95,11 +95,11 @@ styles/
 <!-- margin-top: var(--spacing-sm) -->
 <div class="mt-sm"></div>
 
-<!-- gap для flex/grid -->
+<!-- gap for flex/grid -->
 <div class="d-flex gap-md"></div>
 ```
-Стороны: `t/r/b/l/x/y` или без суффикса (со всех сторон). Размеры: `0/xs/sm/md/lg/xl`.
-Также: `m-auto`, `mx-auto`, `my-auto`.
+Sides: `t/r/b/l/x/y` or no suffix (all sides). Sizes: `0/xs/sm/md/lg/xl`.
+Also: `m-auto`, `mx-auto`, `my-auto`.
 
 ### Flexbox
 ```html
@@ -143,42 +143,42 @@ styles/
 `cursor-pointer`, `cursor-not-allowed`, `pointer-events-none`,
 `select-none`, `touch-none`.
 
-## Компонентные классы
+## Component classes
 
 ### Button
 ```html
-<!-- Базовая кнопка -->
+<!-- Base button -->
 <button class="btn">Submit</button>
 
-<!-- Варианты -->
+<!-- Variants -->
 <button class="btn btn-primary">Confirm</button>
 <button class="btn btn-secondary">Cancel</button>
 <button class="btn btn-danger">Delete</button>
 <button class="btn btn-ghost">Subtle</button>
 
-<!-- Размеры -->
+<!-- Sizes -->
 <button class="btn btn-sm">…</button>
 <button class="btn btn-lg">…</button>
 
-<!-- Иконочная (40×40) -->
+<!-- Icon-only (40×40) -->
 <button class="btn btn-icon"><svg/></button>
 
-<!-- На всю ширину -->
+<!-- Full width -->
 <button class="btn btn-block">…</button>
 
-<!-- Состояния: :disabled и .active работают автоматически -->
+<!-- States: :disabled and .active work automatically -->
 <button class="btn active">Selected</button>
 ```
 
 ### Modal
 ```html
-<!-- SkyrimModal оборачивает контент в .modal-backdrop / .modal-panel / .modal-body -->
+<!-- SkyrimModal wraps content in .modal-backdrop / .modal-panel / .modal-body -->
 <div class="modal-content">
   <div class="modal-header">
-    <h3 class="modal-title">Заголовок</h3>
+    <h3 class="modal-title">Title</h3>
     <p class="modal-subtitle">Item name</p>
   </div>
-  <p class="modal-message">Текст подтверждения</p>
+  <p class="modal-message">Confirmation text</p>
   <div class="modal-actions">
     <button class="btn btn-danger">Yes</button>
     <button class="btn btn-secondary">No</button>
@@ -230,16 +230,16 @@ styles/
 <div class="empty-state">No items</div>
 ```
 
-## Когда что использовать?
+## When to use what?
 
-| Сценарий | Решение |
-|---------|--------|
-| Однократный layout (центрировать раз, добавить отступ раз) | **Утилиты** прямо в шаблоне (`d-flex gap-md`) |
-| Паттерн повторяется в 3+ компонентах | **Компонентный класс** (`button.scss`, ...) |
-| Уникальная декорация (градиент шкалы, орнаменты, анимации перехода) | **`<style scoped>`** в самом `.vue` |
-| Цвет / размер / шрифт | **Токен** `var(--…)` |
+| Scenario | Solution |
+|----------|----------|
+| One-off layout (center once, add a single offset) | **Utilities** directly in the template (`d-flex gap-md`) |
+| Pattern repeats across 3+ components | **Component class** (`button.scss`, ...) |
+| Unique decoration (gradients, ornaments, transition animations) | **`<style scoped>`** in the `.vue` file itself |
+| Color / size / font value | **Token** `var(--…)` |
 
-## Анимации
+## Animations
 
 ```html
 <div class="animate-fade-in">…</div>
@@ -247,29 +247,32 @@ styles/
 <div class="animate-glow">…</div>
 ```
 
-## Поддержка браузерами
+## Browser support
 
 CSS nesting + custom properties: Chrome 120+, Firefox 117+, Safari 17.2+, Edge 120+.
-Для остального PostCSS-плагин `postcss-preset-env` (stage 3) автоматически даунгрейдит.
+For older browsers, the PostCSS plugin `postcss-preset-env` (stage 3) downgrades automatically.
+
+---
+
 # CSS Architecture - SkyrimWebMonitor
 
-## Структура CSS
+## CSS Structure
 
-Проект использует модульный подход к CSS с поддержкой CSS nesting для лучшей организации и читаемости.
+The project uses a modular approach to CSS with CSS nesting support for better organization and readability.
 
-### Основные слои CSS
+### Main CSS layers
 
-1. **variables.css** - CSS переменные (цвета, размеры, шрифты, расстояния, переходы)
-2. **base.css** - Базовые стили (сброс, html/body, прокрутка)
-3. **utilities.css** - Служебные классы (текст, фон, flexbox, gap)
-4. **components.css** - Стили компонентов (табы, панели, украшения)
-5. **animations.css** - Анимации
+1. **variables.css** — CSS variables (colors, sizes, fonts, spacing, transitions)
+2. **base.css** — base styles (reset, html/body, scrolling)
+3. **utilities.css** — utility classes (text, background, flexbox, gap)
+4. **components.css** — component styles (tabs, panels, decorations)
+5. **animations.css** — animations
 
-Главный файл `skyrim-theme.css` импортирует все слои в правильном порядке.
+The main file `skyrim-theme.css` imports all layers in the correct order.
 
-### Компонент-специфичные стили
+### Component-specific styles
 
-Каждый Vue компонент содержит свои `<style scoped>` блоки с CSS nesting для улучшения читаемости:
+Every Vue component contains its own `<style scoped>` blocks with CSS nesting for better readability:
 
 ```vue
 <style scoped>
@@ -292,58 +295,58 @@ CSS nesting + custom properties: Chrome 120+, Firefox 117+, Safari 17.2+, Edge 1
 </style>
 ```
 
-## CSS Nesting Синтаксис
+## CSS Nesting syntax
 
-### Вложенные селекторы
+### Nested selectors
 
 ```css
 .parent {
-  /* базовые стили */
+  /* base styles */
 
   & .child {
-    /* стили для потомков */
+    /* descendant styles */
   }
 
   &:hover {
-    /* pseudo-классы */
+    /* pseudo-classes */
   }
 
   &.is-active {
-    /* модификаторы */
+    /* modifiers */
   }
 }
 ```
 
-### Родительский селектор `&`
+### Parent selector `&`
 
-- `&` - ссылка на родительский селектор
-- `&:hover` - применить :hover к родителю
-- `&.active` - применить класс к родителю
-- `& .child` - вложенные селекторы
+- `&` — reference to the parent selector
+- `&:hover` — apply :hover to the parent
+- `&.active` — apply a class to the parent
+- `& .child` — nested selectors
 
-## Переменные CSS
+## CSS variables
 
-### Цвета
+### Colors
 
 ```css
-/* Основные цвета фона */
+/* Main background colors */
 --skyrim-bg-dark: #0d0d0d;
 --skyrim-bg-medium: #1a1a1a;
 --skyrim-bg-light: #252525;
 
-/* Цвета текста */
+/* Text colors */
 --skyrim-text-primary: #d4c4a8;
 --skyrim-text-secondary: #9a8b70;
 --skyrim-text-accent: #f5e6c8;
 --skyrim-text-dim: #5a5040;
 
-/* Акцентные цвета */
+/* Accent colors */
 --skyrim-accent-gold: #c9a227;
 --skyrim-accent-gold-light: #e5c44d;
 --skyrim-accent-gold-dim: #8b7220;
 ```
 
-### Размеры и расстояния
+### Sizes and spacing
 
 ```css
 --spacing-xs: 0.25rem;    /* 4px */
@@ -359,7 +362,7 @@ CSS nesting + custom properties: Chrome 120+, Firefox 117+, Safari 17.2+, Edge 1
 --font-size-xl: 1.25rem;
 ```
 
-### Переходы и эффекты
+### Transitions and effects
 
 ```css
 --transition-fast: 150ms ease;
@@ -369,22 +372,22 @@ CSS nesting + custom properties: Chrome 120+, Firefox 117+, Safari 17.2+, Edge 1
 --glow-accent: 0 0 20px var(--skyrim-border-glow);
 ```
 
-## Примеры использования
+## Usage examples
 
-### Общие утилиты
+### General utilities
 
 ```vue
 <div class="flex flex-col gap-md items-center justify-center">
-  <span class="text-primary">Текст</span>
-  <div class="bg-light shadow-soft">Панель</div>
+  <span class="text-primary">Text</span>
+  <div class="bg-light shadow-soft">Panel</div>
 </div>
 ```
 
-### Компонент-специфичные стили
+### Component-specific styles
 
 ```vue
 <template>
-  <button class="skyrim-tab">Вкладка</button>
+  <button class="skyrim-tab">Tab</button>
 </template>
 
 <style scoped>
@@ -406,20 +409,21 @@ CSS nesting + custom properties: Chrome 120+, Firefox 117+, Safari 17.2+, Edge 1
 </style>
 ```
 
-## Рекомендации
+## Recommendations
 
-1. **Используйте переменные** - не хардкодьте цвета или размеры
-2. **CSS nesting** для вложенных селекторов и состояний (:hover, :active, etc.)
-3. **Scoped styles** - используйте `scoped` атрибут в `<style>` Vue компонентов
-4. **Модульность** - держите специфичные стили компонента в компоненте
-5. **Семантические имена классов** - используйте BEM или похожий подход
+1. **Use variables** — do not hard-code colors or sizes
+2. **CSS nesting** for nested selectors and states (:hover, :active, etc.)
+3. **Scoped styles** — use the `scoped` attribute on Vue component `<style>` blocks
+4. **Modularity** — keep component-specific styles inside the component
+5. **Semantic class names** — use BEM or a similar approach
 
-## Поддержка браузерами CSS Nesting
+## Browser support for CSS Nesting
 
-CSS nesting поддерживается в:
+CSS nesting is supported in:
+
 - Chrome 120+
 - Firefox 117+
 - Safari 17.2+
 - Edge 120+
 
-Для более старых браузеров используйте postCSS плагины или компилятор.
+For older browsers, use PostCSS plugins or a compiler.

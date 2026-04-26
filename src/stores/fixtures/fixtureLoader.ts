@@ -1,9 +1,9 @@
 import { DataRouter } from '@/stores/adapters/dataRouter';
 
 /**
- * Загружает fixtures из публичного файла и применяет их в сторы через DataRouter.
- * Путь к файлу можно переопределить через `VITE_FIXTURES_PATH` (по умолчанию `/fixtures.json`).
- * Применяется только если `VITE_USE_FIXTURES` установлено в `true`.
+ * Loads fixtures from a public file and applies them to stores via the DataRouter.
+ * The file path can be overridden via `VITE_FIXTURES_PATH` (defaults to `/fixtures.json`).
+ * Only runs when `VITE_USE_FIXTURES` is set to `true`.
  */
 export async function applyFixturesIfEnabled(): Promise<void> {
   try {

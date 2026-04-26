@@ -151,7 +151,8 @@ export default defineConfig(({ mode }) => {
         manifest: {
           name: 'SkyrimWebMonitor',
           short_name: 'Skyrim Monitor',
-          description: 'Web Monitor for Skyrim',
+          description:
+            'Real-time companion app for The Elder Scrolls V: Skyrim. Monitors stats, inventory, magic and hotkeys over WebSocket.',
           theme_color: '#0d0d0d',
           background_color: '#0d0d0d',
           display: 'standalone',

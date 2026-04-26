@@ -1,8 +1,31 @@
 {
   "name": "skyrimwebmonitor",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
+  "description": "A Vue 3 PWA companion app for The Elder Scrolls V: Skyrim. Monitors player stats, inventory, magic and hotkeys in real time over WebSocket. Designed primarily for the AYN Thor handheld.",
+  "keywords": [
+    "skyrim",
+    "the-elder-scrolls",
+    "pwa",
+    "vue",
+    "vue3",
+    "vite",
+    "websocket",
+    "companion-app",
+    "ayn-thor",
+    "skse"
+  ],
+  "homepage": "https://andreyvelsk.github.io/SkyrimWebMonitor/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreyvelsk/SkyrimWebMonitor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andreyvelsk/SkyrimWebMonitor/issues"
+  },
+  "author": "Andrey Velsk (https://github.com/andreyvelsk)",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
