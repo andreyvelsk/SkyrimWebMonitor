@@ -9,7 +9,7 @@
       type="button"
       class="btn slot-btn"
       :class="{ active: entry.slot === activeSlot }"
-      :disabled="disableInactive &&!entry.bound"
+      :disabled="disableInactive && !entry.bound"
       @click="emit('select', entry.slot)"
     >
       <span class="slot-number">

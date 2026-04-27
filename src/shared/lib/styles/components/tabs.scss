@@ -42,7 +42,9 @@
   border: none;
   cursor: pointer;
   touch-action: manipulation;
-  transition: background-color var(--transition-normal), color var(--transition-normal);
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal);
 
   @media (hover: hover) {
     &:hover {
@@ -102,7 +104,9 @@
   cursor: pointer;
   touch-action: manipulation;
   text-transform: uppercase;
-  transition: background-color var(--transition-normal), color var(--transition-normal);
+  transition:
+    background-color var(--transition-normal),
+    color var(--transition-normal);
 
   @media (hover: hover) {
     &:hover {

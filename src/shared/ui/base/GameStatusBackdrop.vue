@@ -42,6 +42,7 @@ const showBackdrop = computed(() => isConnected.value && !canAct.value);
 .game-status-backdrop {
   position: fixed;
   inset: 0;
+
   // Sit above page content but below user-initiated modals so a modal can
   // still render on top if it was open when the status flipped.
   z-index: calc(var(--z-modal-backdrop) - 50);

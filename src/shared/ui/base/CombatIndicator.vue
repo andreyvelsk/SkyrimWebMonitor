@@ -71,6 +71,7 @@ const { inCombat } = storeToRefs(gameStatusStore);
 
   position: fixed;
   inset: 0;
+
   // Above page chrome but well below modals and the game-status backdrop.
   z-index: var(--z-fixed);
   pointer-events: none;
@@ -89,10 +90,19 @@ const { inCombat } = storeToRefs(gameStatusStore);
   background: radial-gradient(
     ellipse at center,
     transparent var(--combat-indicator-edge-start),
-    rgb(from var(--combat-indicator-soft-color) r g b / var(--combat-indicator-soft-alpha-mid)) var(--combat-indicator-edge-mid),
-    rgb(from var(--combat-indicator-soft-color) r g b / var(--combat-indicator-soft-alpha-edge)) 100%
+    rgb(
+        from var(--combat-indicator-soft-color) r g b /
+          var(--combat-indicator-soft-alpha-mid)
+      )
+      var(--combat-indicator-edge-mid),
+    rgb(
+        from var(--combat-indicator-soft-color) r g b /
+          var(--combat-indicator-soft-alpha-edge)
+      )
+      100%
   );
-  animation: combat-pulse-a var(--combat-indicator-soft-duration) ease-in-out infinite;
+  animation: combat-pulse-a var(--combat-indicator-soft-duration) ease-in-out
+    infinite;
 }
 
 /* Tighter, brighter accent that breaks the rhythm of the soft layer. */
@@ -101,26 +111,62 @@ const { inCombat } = storeToRefs(gameStatusStore);
     ellipse at center,
     transparent var(--combat-indicator-edge-inner),
     rgb(from var(--combat-indicator-sharp-color) r g b / 0%) 78%,
-    rgb(from var(--combat-indicator-sharp-color) r g b / var(--combat-indicator-sharp-alpha-edge)) 100%
+    rgb(
+        from var(--combat-indicator-sharp-color) r g b /
+          var(--combat-indicator-sharp-alpha-edge)
+      )
+      100%
   );
-  animation: combat-pulse-b var(--combat-indicator-sharp-duration) steps(8, end) infinite;
+  animation: combat-pulse-b var(--combat-indicator-sharp-duration) steps(8, end)
+    infinite;
 }
 
 @keyframes combat-pulse-a {
-  0%   { opacity: calc(0.35 * var(--combat-indicator-intensity)); }
-  35%  { opacity: calc(0.85 * var(--combat-indicator-intensity)); }
-  55%  { opacity: calc(0.45 * var(--combat-indicator-intensity)); }
-  80%  { opacity: calc(0.95 * var(--combat-indicator-intensity)); }
-  100% { opacity: calc(0.35 * var(--combat-indicator-intensity)); }
+  0% {
+    opacity: calc(0.35 * var(--combat-indicator-intensity));
+  }
+
+  35% {
+    opacity: calc(0.85 * var(--combat-indicator-intensity));
+  }
+
+  55% {
+    opacity: calc(0.45 * var(--combat-indicator-intensity));
+  }
+
+  80% {
+    opacity: calc(0.95 * var(--combat-indicator-intensity));
+  }
+
+  100% {
+    opacity: calc(0.35 * var(--combat-indicator-intensity));
+  }
 }
 
 @keyframes combat-pulse-b {
-  0%   { opacity: calc(0.15 * var(--combat-indicator-intensity)); }
-  20%  { opacity: calc(0.70 * var(--combat-indicator-intensity)); }
-  40%  { opacity: calc(0.25 * var(--combat-indicator-intensity)); }
-  60%  { opacity: calc(0.55 * var(--combat-indicator-intensity)); }
-  85%  { opacity: calc(0.10 * var(--combat-indicator-intensity)); }
-  100% { opacity: calc(0.15 * var(--combat-indicator-intensity)); }
+  0% {
+    opacity: calc(0.15 * var(--combat-indicator-intensity));
+  }
+
+  20% {
+    opacity: calc(0.7 * var(--combat-indicator-intensity));
+  }
+
+  40% {
+    opacity: calc(0.25 * var(--combat-indicator-intensity));
+  }
+
+  60% {
+    opacity: calc(0.55 * var(--combat-indicator-intensity));
+  }
+
+  85% {
+    opacity: calc(0.1 * var(--combat-indicator-intensity));
+  }
+
+  100% {
+    opacity: calc(0.15 * var(--combat-indicator-intensity));
+  }
 }
 
 /* Smooth fade in/out when entering or leaving combat. */

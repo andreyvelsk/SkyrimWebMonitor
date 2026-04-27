@@ -78,8 +78,7 @@ const currentComponent = computed(() => {
   padding: var(--spacing-md);
   height: 100%;
   max-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden auto;
   display: flex;
   flex-direction: column;
 }
