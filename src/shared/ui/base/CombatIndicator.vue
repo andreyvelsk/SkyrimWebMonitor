@@ -53,12 +53,12 @@ const { inCombat } = storeToRefs(gameStatusStore);
  */
 .combat-indicator {
   /* Width / spread of the danger band along the edges. */
-  --combat-indicator-edge-start: 50%;
-  --combat-indicator-edge-mid: 80%;
+  --combat-indicator-edge-start: 75%;
+  --combat-indicator-edge-mid: 90%;
   --combat-indicator-edge-inner: 60%;
 
   /* Intensity / colors. */
-  --combat-indicator-intensity: 0.8;
+  --combat-indicator-intensity: 0.7;
   --combat-indicator-soft-color: var(--color-danger);
   --combat-indicator-sharp-color: var(--color-danger-light);
   --combat-indicator-soft-alpha-mid: 0.18;
