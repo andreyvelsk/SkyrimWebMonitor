@@ -4,7 +4,7 @@ A Vue 3 + Vite PWA companion app for **The Elder Scrolls V: Skyrim**. It connect
 
 > **Live app:** https://andreyvelsk.github.io/SkyrimWebMonitor/
 
-> Designed primarily for the **[AYN Thor](https://www.aynsmart.com/)** handheld as a second-screen Skyrim companion, but it runs on any modern browser (desktop, phone, tablet).
+> Designed primarily for the **[AYN Thor](https://www.ayntec.com/)** handheld as a second-screen Skyrim companion, but it runs on any modern browser (desktop, phone, tablet).
 
 This is the **client** half of the project. The **server** half — the SKSE plugin that exposes Skyrim's game state over a WebSocket — lives in the companion repository:
 
@@ -40,12 +40,6 @@ The app can be installed to the home screen / start menu like a native app — i
 1. Open the URL.
 2. Tap the **⋮** menu → **Add to Home screen** (or **Install app**).
 3. Confirm. Launch it from the home screen.
-
-### iOS / iPadOS — Safari
-
-1. Open the URL in **Safari** (not Chrome — only Safari can install PWAs on iOS).
-2. Tap the **Share** button → **Add to Home Screen**.
-3. Confirm. Launch from the home screen.
 
 ### AYN Thor / other Android handhelds
 
