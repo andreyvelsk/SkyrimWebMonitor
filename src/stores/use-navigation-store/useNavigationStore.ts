@@ -78,6 +78,18 @@ export const useNavigationStore = defineStore('navigation', () => {
     const tab = tabs.value.find((t) => t.id === tabId);
     if (!tab) return;
 
+    // Compute direction based on main tab order if not forced.
+    // This is needed because activeSubTab is reset below, which would
+    // otherwise prevent setActiveSubTab from computing a direction.
+    let direction = forcedDirection;
+    if (direction === undefined && tabId !== activeTab.value) {
+      const prevTabIdx = tabs.value.findIndex((t) => t.id === activeTab.value);
+      const newTabIdx = tabs.value.findIndex((t) => t.id === tabId);
+      if (prevTabIdx !== -1 && newTabIdx !== -1) {
+        direction = newTabIdx > prevTabIdx ? 'left' : newTabIdx < prevTabIdx ? 'right' : '';
+      }
+    }
+
     activeTab.value = tabId;
     activeSubTab.value = ''; // Reset sub-tab when changing main tab
 
@@ -86,9 +98,9 @@ export const useNavigationStore = defineStore('navigation', () => {
     // Prefer first visible sub-tab, fall back to first available
     const visible = getVisibleSubTabs();
     if (visible.length) {
-      setActiveSubTab(visible[0].id, true, forcedDirection);
+      setActiveSubTab(visible[0].id, true, direction);
     } else if (tab.subTabs?.length) {
-      setActiveSubTab(tab.subTabs[0].id, true, forcedDirection);
+      setActiveSubTab(tab.subTabs[0].id, true, direction);
     }
   };
 
