@@ -84,28 +84,43 @@ export default defineConfig(({ mode }) => {
       pruneUnusedIcons(distDir),
       VitePWA({
         registerType: 'autoUpdate',
-        // Precache only the SVG icons that are actually referenced from
-        // source code. They are downloaded in one go on SW install. Everything
-        // else (HTML/JS/CSS) goes strictly through the network so new deploys
-        // are picked up automatically without manual cache clearing.
-        includeAssets: [],
+        // The full app shell (HTML/JS/CSS + icons) is precached so the PWA
+        // works completely offline. With `autoUpdate` + `skipWaiting` +
+        // `clientsClaim`, vite-plugin-pwa regenerates the precache manifest
+        // with hashed URLs on every build, so newly deployed versions are
+        // picked up automatically as soon as the network is available
+        // — without any manual cache clearing.
+        includeAssets: ['pwa-svg.svg'],
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
-          // Explicit per-file globs for the icons we use. globPatterns runs
-          // against dist/, and pruneUnusedIcons has already removed the rest.
-          globPatterns: USED_ICONS.map((p) => `icons/${p}`),
-          // Defensive: never precache HTML/JS/CSS/PNG/manifest even if a
-          // future workbox default tries to.
-          globIgnores: [
-            '**/node_modules/**/*',
-            '**/*.{js,css,html,map,png,ico,webmanifest,json,txt}',
+          // App shell (auto-generated globs) + every used icon.
+          // pruneUnusedIcons has already removed unused SVGs from dist/.
+          globPatterns: [
+            '**/*.{js,css,html,ico,png,svg,webmanifest}',
+            ...USED_ICONS.map((p) => `icons/${p}`),
           ],
-          maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
-          // Do not intercept navigation: HTML is always fetched from network.
-          navigateFallback: null,
+          globIgnores: ['**/node_modules/**/*', 'fixtures.json'],
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+          // Serve index.html from precache for any SPA navigation when
+          // offline; online requests still hit the network first via the
+          // NetworkFirst handler below.
+          navigateFallback: '/SkyrimWebMonitor/index.html',
+          // Never try to serve index.html for the WebSocket endpoint or
+          // any non-SPA asset request.
+          navigateFallbackDenylist: [/^\/ws/, /\/[^/?]+\.[^/]+$/],
           cleanupOutdatedCaches: true,
           runtimeCaching: [
+            // SPA navigations: fresh HTML when online, precached shell when offline.
+            {
+              urlPattern: ({ request }) => request.mode === 'navigate',
+              handler: 'NetworkFirst',
+              options: {
+                cacheName: 'pages',
+                networkTimeoutSeconds: 3,
+                cacheableResponse: { statuses: [0, 200] },
+              },
+            },
             // Local fonts
             {
               urlPattern: ({ request, url }) =>
