@@ -29,7 +29,8 @@
   background-color: var(--skyrim-bg-light);
   border: 1px solid var(--skyrim-border-dark);
   cursor: pointer;
-  transition: all var(--transition-fast);
+  touch-action: manipulation;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   user-select: none;
@@ -42,7 +43,13 @@
     }
   }
 
-  &:active:not(:disabled),
+  &:active:not(:disabled) {
+    background-color: var(--bg-accent-strong);
+    border-color: var(--skyrim-accent-gold);
+    color: var(--skyrim-accent-gold);
+    transition: none;
+  }
+
   &.active {
     background-color: var(--bg-accent-strong);
     border-color: var(--skyrim-accent-gold);
@@ -63,9 +70,6 @@
       border-color: var(--skyrim-accent-gold);
     }
   }
-  &:active:not(:disabled) {
-    background-color: var(--bg-accent-strong);
-  }
 }
 
 .btn-secondary {
@@ -78,10 +82,6 @@
       color: var(--skyrim-text-primary);
       border-color: var(--skyrim-accent-gold-dim);
     }
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--bg-accent-strong);
   }
 }
 

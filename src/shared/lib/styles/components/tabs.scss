@@ -41,7 +41,8 @@
   text-transform: uppercase;
   border: none;
   cursor: pointer;
-  transition: all var(--transition-normal);
+  touch-action: manipulation;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 
   @media (hover: hover) {
     &:hover {
@@ -50,7 +51,20 @@
     }
   }
 
+  &:active {
+    background-color: var(--tab-bg-active);
+    color: var(--tab-text-active);
+    transition: none;
+  }
+
   &.active {
+    background-color: var(--tab-bg-active);
+    color: var(--tab-text-active);
+  }
+}
+
+@keyframes tab-press {
+  0% {
     background-color: var(--tab-bg-active);
     color: var(--tab-text-active);
   }
@@ -86,14 +100,21 @@
   font-weight: var(--font-weight-medium);
   border: none;
   cursor: pointer;
+  touch-action: manipulation;
   text-transform: uppercase;
-  transition: all var(--transition-normal);
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 
   @media (hover: hover) {
     &:hover {
       background-color: var(--subtab-bg-hover);
       color: var(--subtab-text-hover);
     }
+  }
+
+  &:active {
+    background-color: var(--tab-bg-active);
+    color: var(--tab-text-active);
+    transition: none;
   }
 
   &.active {

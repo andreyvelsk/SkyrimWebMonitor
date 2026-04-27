@@ -1,7 +1,7 @@
 <template>
   <div class="input-group quantity-picker">
     <button
-      class="qty-btn"
+      class="btn btn-ghost btn-icon qty-btn"
       :disabled="modelValue <= 1"
       @click="decrease"
     >
@@ -11,7 +11,7 @@
       {{ modelValue }}
     </div>
     <button
-      class="qty-btn"
+      class="btn btn-ghost btn-icon qty-btn"
       :disabled="modelValue >= max"
       @click="increase"
     >
@@ -48,33 +48,13 @@ function increase() {
 }
 
 .qty-btn {
+  /* Override btn-icon size and font-size to match the picker's 48px target */
   width: 48px;
   height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading);
   font-size: var(--font-size-lg);
-  color: var(--skyrim-text-primary);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-
-  @media (hover: hover) {
-    &:hover:not(:disabled) {
-      background-color: var(--bg-accent-soft);
-      color: var(--skyrim-accent-gold);
-    }
-  }
-
-  &:active:not(:disabled) {
-    background-color: var(--bg-accent-medium);
-  }
 
   &:disabled {
     opacity: var(--opacity-faint);
-    cursor: not-allowed;
   }
 }
 
