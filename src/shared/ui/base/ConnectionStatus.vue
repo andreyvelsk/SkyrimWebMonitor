@@ -38,8 +38,7 @@
     </div>
 
     <p class="attribution">
-      {{ $t('shared.ui.connectionStatus.iconsBy') }}
-      <strong>game-icons.net</strong>
+      alaram: this is dev
     </p>
   </div>
 </template>
