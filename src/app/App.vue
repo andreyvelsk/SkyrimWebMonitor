@@ -1,6 +1,6 @@
 <template>
   <div class="handheld-device">
-    this is dev
+    this is still dev
     <template v-if="isConnected">
       <skyrim-navigation
         :active-tab="activeTab"
