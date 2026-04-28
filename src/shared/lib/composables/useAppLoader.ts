@@ -12,6 +12,7 @@ import {
 } from '@/app/config/pageRegistry';
 import { GLOBAL_SUBSCRIPTIONS } from '@/app/config/globalSubscriptions';
 import { DataRouter } from '@/stores/adapters/dataRouter';
+import { preloadMapImage } from '@/pages/map';
 
 export function useAppLoader() {
   const navigationStore = useNavigationStore();
@@ -77,6 +78,11 @@ export function useAppLoader() {
     } catch (err) {
       console.error('Failed to initialize websocket connection', err);
     }
+
+    // Kick off the map image preload in the background. It does not block
+    // anything and dramatically reduces the time to first paint when the
+    // user opens the Map tab.
+    preloadMapImage();
   });
 
   // The server starts as soon as Skyrim's main menu loads, NOT when the player

@@ -15,3 +15,6 @@ export { default as TheScrolls } from './inventory/TheScrolls.vue';
 
 // Magic pages
 export { TheDestruction, TheAlteration, TheConjuration, TheIllusion, TheRestoration, TheEnchanting } from './magic';
+
+// Map page
+export { TheMap } from './map';
