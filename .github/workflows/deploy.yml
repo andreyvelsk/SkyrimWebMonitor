@@ -4,20 +4,20 @@ on:
   push:
     branches:
       - main
+      - dev
 
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  # Serialize deploys per branch so main and dev don't race for gh-pages.
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,21 +32,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Compute deploy paths
+        id: paths
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "base_path=/SkyrimWebMonitor/" >> "$GITHUB_OUTPUT"
+            echo "destination_dir=." >> "$GITHUB_OUTPUT"
+          else
+            echo "base_path=/SkyrimWebMonitor/dev/" >> "$GITHUB_OUTPUT"
+            echo "destination_dir=dev" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build
+        env:
+          BASE_PATH: ${{ steps.paths.outputs.base_path }}
         run: npm run build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          destination_dir: ${{ steps.paths.outputs.destination_dir }}
+          # Preserve the other branch's deploy (main keeps /dev/, dev keeps root).
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: ${{ github.ref_name }} @ ${{ github.sha }}'

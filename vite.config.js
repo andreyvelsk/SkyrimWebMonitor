@@ -57,8 +57,13 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const distDir = path.resolve(__dirname, 'dist');
 
+  // Base path for the deployed site. Defaults to the production path on
+  // GitHub Pages, but can be overridden at build time (e.g. BASE_PATH=
+  // /SkyrimWebMonitor/dev/ for the dev branch preview deploy).
+  const basePath = process.env.BASE_PATH || '/SkyrimWebMonitor/';
+
   return {
-    base: '/SkyrimWebMonitor/',
+    base: basePath,
     define: {
       'import.meta.env.VITE_APP_VERSION': JSON.stringify(getAppVersion()),
     },
@@ -105,7 +110,7 @@ export default defineConfig(({ mode }) => {
           // Serve index.html from precache for any SPA navigation when
           // offline; online requests still hit the network first via the
           // NetworkFirst handler below.
-          navigateFallback: '/SkyrimWebMonitor/index.html',
+          navigateFallback: `${basePath}index.html`,
           // Never try to serve index.html for the WebSocket endpoint or
           // any non-SPA asset request.
           navigateFallbackDenylist: [/^\/ws/, /\/[^/?]+\.[^/]+$/],
@@ -171,8 +176,8 @@ export default defineConfig(({ mode }) => {
           theme_color: '#0d0d0d',
           background_color: '#0d0d0d',
           display: 'standalone',
-          scope: '/SkyrimWebMonitor/',
-          start_url: '/SkyrimWebMonitor/',
+          scope: basePath,
+          start_url: basePath,
           icons: [
             {
               src: 'pwa-svg.svg',
