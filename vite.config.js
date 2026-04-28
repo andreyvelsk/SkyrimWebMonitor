@@ -62,6 +62,12 @@ export default defineConfig(({ mode }) => {
   // /SkyrimWebMonitor/dev/ for the dev branch preview deploy).
   const basePath = process.env.BASE_PATH || '/SkyrimWebMonitor/';
 
+  // The dev preview deploy must NOT cache anything: every reload should fetch
+  // the latest build straight from the network. We also need to clean up any
+  // service worker that an earlier version may have registered, so we ship a
+  // self-destroying SW via vite-plugin-pwa's `selfDestroying` option.
+  const isDevDeploy = basePath.endsWith('/dev/');
+
   return {
     base: basePath,
     define: {
@@ -89,6 +95,10 @@ export default defineConfig(({ mode }) => {
       pruneUnusedIcons(distDir),
       VitePWA({
         registerType: 'autoUpdate',
+        // On the /dev/ preview deploy, emit a self-destroying service worker
+        // so any previously-registered SW unregisters itself and clears its
+        // caches on the next visit. New dev visitors never get an SW at all.
+        selfDestroying: isDevDeploy,
         // The full app shell (HTML/JS/CSS + icons) is precached so the PWA
         // works completely offline. With `autoUpdate` + `skipWaiting` +
         // `clientsClaim`, vite-plugin-pwa regenerates the precache manifest
