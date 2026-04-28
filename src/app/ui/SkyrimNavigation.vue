@@ -20,13 +20,14 @@
     </nav>
 
     <nav
+      v-if="visibleSubTabs.length > 0"
       ref="subtabsRef"
       class="subtab-bar animate-fade-in"
       role="tablist"
       :aria-label="$t('app.navigation.subAriaLabel')"
     >
       <button
-        v-for="sub in nav.getVisibleSubTabs()"
+        v-for="sub in visibleSubTabs"
         :key="sub.id"
         class="subtab"
         :class="{ active: nav.activeSubTab === sub.id }"
@@ -45,12 +46,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue';
+import { computed, ref, watch, nextTick } from 'vue';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 
 const tabsRef = ref<HTMLElement | null>(null);
 const subtabsRef = ref<HTMLElement | null>(null);
 const nav = useNavigationStore();
+
+const visibleSubTabs = computed(() => nav.getVisibleSubTabs());
 
 // Center the active item in the horizontally scrollable container.
 // If items fit, CSS `justify-content: safe center` centers them and

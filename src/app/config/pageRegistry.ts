@@ -18,6 +18,7 @@ import {
   TheIllusion,
   TheRestoration,
   TheEnchanting,
+  TheMap,
 } from '@/pages';
 
 const INVENTORY_FREQUENCY = 200; // ms
@@ -212,6 +213,12 @@ export const pagesRegistry: PagesRegistry = {
       settings: {
         frequency: INVENTORY_FREQUENCY,
       }
+    },
+  },
+
+  map: {
+    view: {
+      component: TheMap,
     },
   },
 };

@@ -36,6 +36,9 @@
           "restoration": "Restoration",
           "enchanting": "Enchanting"
         }
+      },
+      "map": {
+        "label": "Map"
       }
     },
     "content": {
@@ -130,6 +133,7 @@
       }
     },
     "map": {
+      "alt": "World map",
       "world": {
         "tab": "World",
         "placeholder": "World map to be implemented"

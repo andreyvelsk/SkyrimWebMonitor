@@ -105,14 +105,14 @@ export default defineConfig(({ mode }) => {
         // with hashed URLs on every build, so newly deployed versions are
         // picked up automatically as soon as the network is available
         // — without any manual cache clearing.
-        includeAssets: ['pwa-svg.svg'],
+        includeAssets: ['pwa-svg.svg', 'map.jpg'],
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
           // App shell (auto-generated globs) + every used icon.
           // pruneUnusedIcons has already removed unused SVGs from dist/.
           globPatterns: [
-            '**/*.{js,css,html,ico,png,svg,webmanifest}',
+            '**/*.{js,css,html,ico,png,jpg,svg,webmanifest}',
             ...USED_ICONS.map((p) => `icons/${p}`),
           ],
           globIgnores: ['**/node_modules/**/*', 'fixtures.json'],

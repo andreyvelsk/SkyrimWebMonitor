@@ -1,9 +1,9 @@
 import type { Component } from 'vue';
 
 export interface PageConfig {
-  id: string;
+  id?: string;
   component: Component;
-  fields: Record<string, string>;
+  fields?: Record<string, string>;
   settings?: {
     frequency?: number;
     sendOnChange?: boolean;
