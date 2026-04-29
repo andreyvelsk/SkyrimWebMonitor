@@ -11,7 +11,21 @@ import type {
 // Shared Types
 // ============================================================================
 
-export type CommandType = 'equip' | 'unequip' | 'use' | 'drop' | 'favorite' | 'equip_spell' | 'unequip_spell' | 'favorite_spell' | 'hotkey_set' | 'hotkey_clear' | 'hotkey_trigger'
+export type CommandType =
+  | 'equip'
+  | 'unequip'
+  | 'use'
+  | 'drop'
+  | 'favorite'
+  | 'equip_spell'
+  | 'unequip_spell'
+  | 'favorite_spell'
+  | 'hotkey_set'
+  | 'hotkey_clear'
+  | 'hotkey_trigger'
+  | 'player_marker_set'
+  | 'player_marker_clear'
+  | 'fast_travel'
 export type EquipHand = EquippedHand
 export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
@@ -25,9 +39,14 @@ export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
  * - favorite: Toggles the item's favorite status on/off.
  * - equip_spell: Equips a spell to a hand for casting. Uses hand parameter (right/left).
  * - unequip_spell: Unequips a spell from a hand. Uses hand parameter (right/left).
+ * - favorite_spell: Toggles the spell's favorite status on/off.
  * - hotkey_set: Binds a formId to a hotkey slot (1..8). Requires formId and slot.
  * - hotkey_clear: Removes the binding on a slot (1..8). Requires slot.
  * - hotkey_trigger: Fires the action bound to a slot (1..8). Requires slot.
+ * - player_marker_set: Places/moves the player's custom map marker. Requires x, y; z optional.
+ * - player_marker_clear: Hides the player's custom map marker. Takes no parameters.
+ * - fast_travel: Teleports the player to a discovered map marker. Requires formId
+ *                (use the `refId` returned by `Map::Markers`).
  */
 
 // ============================================================================
@@ -71,10 +90,20 @@ export interface CommandMessage extends BaseMessage {
   type: 'command'
   id: string // unique request identifier
   command: CommandType
-  formId?: string // item/spell form ID as hex string (required for most commands; not required for hotkey_clear / hotkey_trigger)
-  hand?: EquipHand // equip/unequip hand: "right" or "left" (optional, weapons only, default: "right")
-  count?: number // drop count (optional, default: 1, only used by "drop")
-  slot?: HotkeySlot // hotkey slot 1..8 (required for hotkey_set, hotkey_clear, hotkey_trigger)
+  /** Hex form ID. Required by equip/unequip/use/drop/favorite/*_spell, hotkey_set, fast_travel. */
+  formId?: string
+  /** Equip/unequip hand: "right" or "left" (weapons & spells only, default: "right"). */
+  hand?: EquipHand
+  /** Drop count (default: 1, only used by `drop`). */
+  count?: number
+  /** Hotkey slot 1..8 (required for hotkey_set / hotkey_clear / hotkey_trigger). */
+  slot?: HotkeySlot
+  /** World X coordinate (required for `player_marker_set`). */
+  x?: number
+  /** World Y coordinate (required for `player_marker_set`). */
+  y?: number
+  /** World Z coordinate (optional for `player_marker_set`, default: 0). */
+  z?: number
 }
 
 /**
@@ -82,6 +111,17 @@ export interface CommandMessage extends BaseMessage {
  * Use this object form instead of positional parameters so calls like
  *   sendCommand({ command: 'hotkey_clear', slot: 1 })
  * stay readable without trailing `undefined` arguments.
+ *
+ * Per-command required fields:
+ *   - equip / unequip:                formId (+ optional hand)
+ *   - use / favorite / favorite_spell: formId
+ *   - drop:                            formId (+ optional count)
+ *   - equip_spell / unequip_spell:    formId (+ optional hand)
+ *   - hotkey_set:                      formId, slot
+ *   - hotkey_clear / hotkey_trigger:  slot
+ *   - player_marker_set:               x, y (+ optional z)
+ *   - player_marker_clear:             (no fields)
+ *   - fast_travel:                     formId (refId of map marker)
  */
 export interface SendCommandOptions {
   command: CommandType
@@ -89,6 +129,9 @@ export interface SendCommandOptions {
   hand?: EquipHand
   count?: number
   slot?: HotkeySlot
+  x?: number
+  y?: number
+  z?: number
 }
 
 export type ClientMessage = SubscribeMessage | UnsubscribeMessage | UnsubscribeAllMessage | QueryMessage | HeartbeatMessage | CommandMessage
