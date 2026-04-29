@@ -390,13 +390,11 @@ function clamp(v: number, lo: number, hi: number): number {
 
 .hotspot-label__text {
   display: inline-block;
-  max-width: 100%;
   background-color: var(--skyrim-bg-medium);
   border: 1px solid var(--skyrim-border-medium);
   color: var(--skyrim-text-primary);
   font-family: var(--font-heading);
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
   box-shadow: var(--shadow-strong);
 }
