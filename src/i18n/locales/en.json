@@ -144,6 +144,12 @@
       },
       "quests": {
         "tab": "Quests"
+      },
+      "fastTravel": {
+        "title": "Fast Travel",
+        "message": "Travel to this location?",
+        "confirm": "Yes",
+        "cancel": "No"
       }
     }
   },

@@ -19,6 +19,7 @@
       @load="onImageLoad"
     >
     <map-markers
+      ref="markersRef"
       :img-natural-w="imgNaturalW"
       :img-natural-h="imgNaturalH"
       :scale="scale"
@@ -113,6 +114,7 @@ const TEAR_MASK_URL = (() => {
 // =============================================================
 
 const containerRef = ref<HTMLElement | null>(null);
+const markersRef = ref<InstanceType<typeof MapMarkers> | null>(null);
 
 /**
  * Natural image dimensions. Populated on image load. Until then we cannot
@@ -354,6 +356,9 @@ function onWheel(e: WheelEvent): void {
 }
 
 function onClick(e: MouseEvent): void {
+  // Marker clicks use `@click.stop`, so any event reaching this handler
+  // came from the empty map area — clear marker selection.
+  markersRef.value?.clearSelection();
   // Mouse-click coordinate logging for desktop calibration. Touch is handled
   // separately in onTouchEnd because @click is suppressed when touchmove
   // calls preventDefault.
