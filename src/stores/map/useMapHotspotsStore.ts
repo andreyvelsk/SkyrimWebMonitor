@@ -4,7 +4,16 @@ import type { MapHotspot, MapHotspotsState } from './types';
 
 export const useMapHotspotsStore = defineStore('mapHotspots', () => {
   /** Current list of hotspots. Empty until the server delivers a payload. */
-  const hotspots = ref<MapHotspot[]>([]);
+  const hotspots = ref<MapHotspot[]>([{
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Фолкрит",
+                "refId": "0x00017760",
+                "type": "FalkreathCapitol",
+                "typeId": 50,
+                "x": 21941.015625,
+                "y": -44792.43359375
+            },]);
 
   /**
    * Replace the hotspot list. Accepts either the raw `{ hot: [...] }` payload
