@@ -95,6 +95,7 @@ import { resolveMarkerIcon } from './composables/useMapMarkerIcons';
 import FastTravelModal from './FastTravelModal.vue';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
 import { buildIconPath } from '@/shared/lib/utils/iconPath';
 
@@ -179,7 +180,7 @@ const props = defineProps<{
 const hotspotsStore = useMapHotspotsStore();
 const { hotspots } = storeToRefs(hotspotsStore);
 const playerStore = useMapPlayerStore();
-const { position: playerPosition } = storeToRefs(playerStore);
+const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
 const { matrix } = useMapCoordinates();
 
 /**
@@ -223,6 +224,7 @@ const selectedMarker = computed<ProjectedMarker | null>(() => {
 });
 
 const { openModal, closeModal } = useModal();
+const wsStore = useWebSocketStore();
 
 function onMarkerClick(m: ProjectedMarker): void {
   if (selectedRefId.value !== m.refId) {
@@ -235,7 +237,9 @@ function onMarkerClick(m: ProjectedMarker): void {
     props: { locationName: m.name },
     on: {
       confirm: () => {
-        // Fast-travel command handler will be wired up later.
+        // Trigger fast-travel to the selected map marker. The marker's
+        // `refId` is the hex form ID expected by the protocol.
+        wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
         closeModal();
       },
       cancel: () => closeModal(),
@@ -292,18 +296,20 @@ const selectedLabelOffset = computed(() => 4 / props.scale);
 
 /**
  * Player marker projected into image-pixel coords with screen-rotated
- * heading already pre-converted to degrees. Recomputes whenever the player
- * payload changes — i.e. on every server tick — but the work is O(1).
- * Hidden when the player is in an interior or before calibration.
+ * heading already pre-converted to degrees. The store decides which
+ * coordinates to plot (live `Player::Position` outside in Tamriel, or
+ * cached `Player::ExteriorPosition` while in interiors / city sub-worlds);
+ * this component is purely presentational. Hidden before calibration or
+ * when the store has no displayable position (e.g. Solstheim).
  */
 const player = computed(() => {
   const m = matrix.value;
-  const p = playerPosition.value;
-  if (!m || !p || p.isInterior) return null;
+  const dp = playerDisplayPosition.value;
+  if (!m || !dp) return null;
   return {
-    x: m.a * p.x + m.c * p.y + m.e,
-    y: m.b * p.x + m.d * p.y + m.f,
-    angleDeg: p.angle * RAD_TO_DEG,
+    x: m.a * dp.x + m.c * dp.y + m.e,
+    y: m.b * dp.x + m.d * dp.y + m.f,
+    angleDeg: dp.angle * RAD_TO_DEG,
   };
 });
 

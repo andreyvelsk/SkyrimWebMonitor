@@ -25,7 +25,15 @@ export async function applyFixturesIfEnabled(): Promise<void> {
       return;
     }
 
-    for (const [subscriptionId, fields] of Object.entries(data)) {
+    // Apply *.categories first so navigation subtabs exist before content data
+    // (otherwise inventory/magic pages may render before their tabs are registered).
+    const entries = Object.entries(data).sort(([a], [b]) => {
+      const aCat = a.endsWith('.categories') ? 0 : 1;
+      const bCat = b.endsWith('.categories') ? 0 : 1;
+      return aCat - bCat;
+    });
+
+    for (const [subscriptionId, fields] of entries) {
       try {
         const result = DataRouter.routeDataById(subscriptionId, fields);
         if (!result.success) {

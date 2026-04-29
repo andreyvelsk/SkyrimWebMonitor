@@ -31,6 +31,25 @@ const SUBSCRIPTIONS = {
     'inventory.books': { items: 'Inventory::Items::Books' },
     'inventory.misc': { items: 'Inventory::Items::Misc', gems: 'Inventory::Items::SoulGems' },
     'inventory.categories': { categories: 'Inventory::Categories' },
+
+    // Magic
+    'magic.categories': { categories: 'Magic::Categories' },
+    'magic.destruction': { items: 'Magic::Items::Destruction' },
+    'magic.alteration': { items: 'Magic::Items::Alteration' },
+    'magic.conjuration': { items: 'Magic::Items::Conjuration' },
+    'magic.illusion': { items: 'Magic::Items::Illusion' },
+    'magic.restoration': { items: 'Magic::Items::Restoration' },
+    'magic.enchanting': { items: 'Magic::Items::Enchanting' },
+
+    // Character / hotkeys
+    'hotkeys.items': { items: 'Hotkey::Items' },
+
+    // Map
+    'map.player': { position: 'Player::Position' },
+    'map.hotspots': { hot: 'Map::Markers' },
+
+    // Global subscriptions
+    'game.status': { status: 'Game::Status' },
 };
 
 function buildQueryMessage(id, fields) {
