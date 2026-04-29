@@ -64,7 +64,7 @@ import { buildIconPath } from '@/shared/lib/utils/iconPath';
  * Base marker size, in screen pixels at the cover (minimum) zoom level.
  * Markers grow or shrink with zoom according to MARKER_ZOOM_INFLUENCE.
  */
-const MARKER_BASE_SIZE_PX = 24;
+const MARKER_BASE_SIZE_PX = 32;
 
 /**
  * How much the marker size follows the map zoom.
@@ -226,7 +226,7 @@ function clamp(v: number, lo: number, hi: number): number {
 .hotspot-marker {
   width: 100%;
   height: 100%;
-  background-color: var(--skyrim-bg-medium);
+  background-color: var(--skyrim-bg-light);
   mask-image: var(--icon-src);
   mask-size: contain;
   mask-repeat: no-repeat;
@@ -240,7 +240,7 @@ function clamp(v: number, lo: number, hi: number): number {
 .player-marker {
   width: 100%;
   height: 100%;
-  background-color: var(--skyrim-accent-gold);
+  background-color: var(--skyrim-border-medium);
   mask-image: var(--icon-src);
   mask-size: contain;
   mask-repeat: no-repeat;
