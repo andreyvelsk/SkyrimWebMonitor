@@ -77,7 +77,7 @@ const currentComponent = computed(() => {
 .skyrim-panel {
   position: relative;
   background-color: var(--skyrim-bg-medium);
-  padding: var(--spacing-md);
+  padding: var(--spacing-sm);
   height: 100%;
   max-height: 100%;
   overflow: hidden auto;

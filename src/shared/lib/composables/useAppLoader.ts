@@ -4,9 +4,7 @@ import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationS
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import {
-  getPageFields,
-  getPageSettings,
-  getPageSubscriptionId,
+  getPageSubscriptions,
   getTabCategorySubscription,
   TAB_CATEGORY_SUBSCRIPTIONS,
 } from '@/app/config/pageRegistry';
@@ -46,11 +44,10 @@ export function useAppLoader() {
   };
 
   const startActivePageSubscription = (): void => {
-    const subscriptionId = getPageSubscriptionId(activeTab.value, activeSubTab.value);
-    if (!subscriptionId) return;
-    const pageFields = getPageFields(activeTab.value, activeSubTab.value);
-    const pageSettings = getPageSettings(activeTab.value, activeSubTab.value);
-    startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
+    const subs = getPageSubscriptions(activeTab.value, activeSubTab.value);
+    subs.forEach((s) => {
+      startSubscription(s.id, s.fields, s.settings?.frequency, s.settings?.sendOnChange);
+    });
   };
 
   // Triggered when the player is actually in-game (canAct === true) and the
@@ -134,24 +131,27 @@ export function useAppLoader() {
         startCategorySubscription(newTab);
       }
 
-      const subscriptionId = getPageSubscriptionId(newTab, newSubTab);
-      const oldSubscriptionId = getPageSubscriptionId(oldTab, oldSubTab);
+      const newSubs = getPageSubscriptions(newTab, newSubTab);
+      const oldSubs = getPageSubscriptions(oldTab, oldSubTab);
+      const newIds = new Set(newSubs.map((s) => s.id));
+
+      // Stop subs from the previous page that the new page does not need.
+      oldSubs.forEach((s) => {
+        if (!newIds.has(s.id)) {
+          console.log(`Unsubscribing from old page sub: ${s.id}`);
+          stopSubscription(s.id);
+        }
+      });
 
       if (!newSubTab) {
         console.log('No sub-tab selected, skipping subscription update');
-        if (oldSubscriptionId) stopSubscription(oldSubscriptionId);
         return;
       }
 
-      if (oldSubscriptionId && oldSubscriptionId !== subscriptionId) {
-        console.log(`Unsubscribing from old page: ${oldSubscriptionId}`);
-        stopSubscription(oldSubscriptionId);
-      }
-
       console.log(`Subscription update: ${newTab} - ${newSubTab}`);
-      const pageFields = getPageFields(newTab, newSubTab);
-      const pageSettings = getPageSettings(newTab, newSubTab);
-      if (subscriptionId) startSubscription(subscriptionId, pageFields, pageSettings?.frequency, pageSettings?.sendOnChange);
+      newSubs.forEach((s) => {
+        startSubscription(s.id, s.fields, s.settings?.frequency, s.settings?.sendOnChange);
+      });
     },
     { immediate: false }
   );

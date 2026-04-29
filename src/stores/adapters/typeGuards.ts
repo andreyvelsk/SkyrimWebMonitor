@@ -26,6 +26,7 @@ import type { CategoriesData } from '@/shared/lib/types/types';
 import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
 import type { HotkeyItemsState } from '@/stores/hotkeys/types';
 import type { GameStatusData } from '@/stores/game/types';
+import type { MapHotspotsState, PlayerPosition } from '@/stores/map/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -256,4 +257,29 @@ export function isGameStatusData(data: unknown, id: string): data is GameStatusD
   if (id !== 'game.status' || typeof data !== 'object' || data === null) return false;
   const status = (data as { status?: unknown }).status;
   return typeof status === 'object' && status !== null && typeof (status as { canAct?: unknown }).canAct === 'boolean';
+}
+
+export function isMapHotspotsData(data: unknown, id: string): data is MapHotspotsState {
+  return (
+    id === 'map.hotspots' &&
+    typeof data === 'object' &&
+    data !== null &&
+    'hot' in data &&
+    Array.isArray((data as MapHotspotsState).hot)
+  );
+}
+
+export function isPlayerPositionData(
+  data: unknown,
+  id: string
+): data is { position: PlayerPosition } {
+  if (id !== 'map.player' || typeof data !== 'object' || data === null) return false;
+  const pos = (data as { position?: unknown }).position;
+  if (typeof pos !== 'object' || pos === null) return false;
+  const p = pos as Record<string, unknown>;
+  return (
+    typeof p.x === 'number' &&
+    typeof p.y === 'number' &&
+    typeof p.angle === 'number'
+  );
 }

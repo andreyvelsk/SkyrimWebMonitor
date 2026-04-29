@@ -7,6 +7,7 @@
     @touchend.stop="onTouchEnd"
     @touchcancel.stop="onTouchEnd"
     @wheel.prevent="onWheel"
+    @click="onClick"
   >
     <img
       :src="MAP_IMAGE_SRC"
@@ -17,12 +18,20 @@
       draggable="false"
       @load="onImageLoad"
     >
+    <map-markers
+      :img-natural-w="imgNaturalW"
+      :img-natural-h="imgNaturalH"
+      :scale="scale"
+      :cover-scale="coverScale"
+      :overlay-style="imageStyle"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import { MAP_IMAGE_URL, preloadMapImage } from './preloadMap';
+import MapMarkers from './MapMarkers.vue';
 
 // =============================================================
 // Map view configuration
@@ -49,12 +58,17 @@ const INITIAL_ZOOM_FACTOR = 2.5;
 const WHEEL_ZOOM_SPEED = 0.0015;
 
 /** Maximum allowed delay (ms) between two taps to count as a double-tap. */
-const DOUBLE_TAP_DELAY = 300;
+const DOUBLE_TAP_DELAY = 10;
 /** Max distance (px) between two taps to still register as a double-tap. */
 const DOUBLE_TAP_MAX_DISTANCE = 30;
 /** Zoom factor (relative to cover) applied on double-tap zoom-in. */
 const DOUBLE_TAP_ZOOM_FACTOR = 2.5;
-
+/**
+ * Maximum distance (px) the finger may travel between touchstart and
+ * touchend while still being treated as a tap (used for click-coordinate
+ * logging). Anything beyond this is considered a pan gesture.
+ */
+const TAP_MAX_MOVEMENT = 8;
 /** Background color shown around the image during transitions / before load. */
 const BACKGROUND_COLOR = 'var(--skyrim-bg-dark)';
 
@@ -145,6 +159,9 @@ function getMaxScale(): number {
   return getCoverScale() * MAX_ZOOM_FACTOR;
 }
 
+/** Reactive cover scale exposed to child overlays (e.g. markers). */
+const coverScale = computed(() => getCoverScale());
+
 // =============================================================
 // Gesture tracking
 // =============================================================
@@ -161,6 +178,11 @@ let lastPinchCenterY = 0;
 let lastTapTime = 0;
 let lastTapX = 0;
 let lastTapY = 0;
+
+/** Tracks if the current touch sequence has moved beyond the tap threshold. */
+let tapStartX = 0;
+let tapStartY = 0;
+let tapMoved = false;
 
 function getDistance(t1: Touch, t2: Touch): number {
   return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
@@ -244,6 +266,9 @@ function onTouchStart(e: TouchEvent): void {
     isPanning.value = canPanX() || canPanY();
     lastTouchX = t.clientX;
     lastTouchY = t.clientY;
+    tapStartX = t.clientX;
+    tapStartY = t.clientY;
+    tapMoved = false;
 
     const now = Date.now();
     const dx = t.clientX - lastTapX;
@@ -255,6 +280,8 @@ function onTouchStart(e: TouchEvent): void {
         : getCoverScale() * DOUBLE_TAP_ZOOM_FACTOR;
       setScaleAt(target, t.clientX, t.clientY);
       lastTapTime = 0;
+      // Treat as handled — no single-tap log.
+      tapMoved = true;
     } else {
       lastTapTime = now;
       lastTapX = t.clientX;
@@ -263,6 +290,7 @@ function onTouchStart(e: TouchEvent): void {
   } else if (e.touches.length === 2) {
     mode = 'pinch';
     isPanning.value = false;
+    tapMoved = true;
     lastPinchDistance = getDistance(e.touches[0], e.touches[1]);
     lastPinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
     lastPinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
@@ -276,6 +304,9 @@ function onTouchMove(e: TouchEvent): void {
     const dy = t.clientY - lastTouchY;
     lastTouchX = t.clientX;
     lastTouchY = t.clientY;
+    if (!tapMoved && Math.hypot(t.clientX - tapStartX, t.clientY - tapStartY) > TAP_MAX_MOVEMENT) {
+      tapMoved = true;
+    }
     if (canPanX()) translateX.value += dx;
     if (canPanY()) translateY.value += dy;
     clampTranslation();
@@ -302,6 +333,11 @@ function onTouchMove(e: TouchEvent): void {
 
 function onTouchEnd(e: TouchEvent): void {
   if (e.touches.length === 0) {
+    // If this was a quick stationary tap, log the image-pixel coordinates of
+    // the tap so reference points can be calibrated.
+    if (mode === 'pan' && !tapMoved) {
+      logImagePxAt(tapStartX, tapStartY);
+    }
     mode = 'none';
     isPanning.value = false;
   } else if (e.touches.length === 1) {
@@ -315,6 +351,35 @@ function onTouchEnd(e: TouchEvent): void {
 function onWheel(e: WheelEvent): void {
   const factor = 1 + -e.deltaY * WHEEL_ZOOM_SPEED;
   setScaleAt(scale.value * factor, e.clientX, e.clientY);
+}
+
+function onClick(e: MouseEvent): void {
+  // Mouse-click coordinate logging for desktop calibration. Touch is handled
+  // separately in onTouchEnd because @click is suppressed when touchmove
+  // calls preventDefault.
+  logImagePxAt(e.clientX, e.clientY);
+}
+
+/**
+ * Convert client (viewport) coordinates to natural image-pixel coordinates,
+ * accounting for the current zoom and pan transform.
+ */
+function clientToImagePx(clientX: number, clientY: number): { x: number; y: number } | null {
+  const cont = containerRef.value;
+  if (!cont || !scale.value) return null;
+  const rect = cont.getBoundingClientRect();
+  return {
+    x: (clientX - rect.left - translateX.value) / scale.value,
+    y: (clientY - rect.top - translateY.value) / scale.value,
+  };
+}
+
+function logImagePxAt(clientX: number, clientY: number): void {
+  const p = clientToImagePx(clientX, clientY);
+  if (!p) return;
+  // Format that can be pasted directly into the *_IMAGE_PX constants in
+  // useMapCoordinates.ts.
+  console.log(`[map] image px: { x: ${p.x.toFixed(2)}, y: ${p.y.toFixed(2)} }`);
 }
 
 function onImageLoad(e: Event): void {
