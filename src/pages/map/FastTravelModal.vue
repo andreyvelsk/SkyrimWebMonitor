@@ -15,13 +15,13 @@
 
     <div class="modal-actions">
       <button
-        class="btn btn-primary"
+        class="btn btn-lg btn-primary"
         @click="onConfirm"
       >
         {{ $t('pages.map.fastTravel.confirm') }}
       </button>
       <button
-        class="btn btn-secondary"
+        class="btn btn-lg btn-secondary"
         @click="onCancel"
       >
         {{ $t('pages.map.fastTravel.cancel') }}
