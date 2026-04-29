@@ -8,19 +8,7 @@ import type { PlayerPosition } from './types';
  * normalization, no allocation beyond the ref write.
  */
 export const useMapPlayerStore = defineStore('mapPlayer', () => {
-  const position = ref<PlayerPosition | null>({
-            "angle": 4.993187427520752,
-            "cell": "ChargenExit",
-            "cellFormId": "0x000097EE",
-            "isInterior": false,
-            "parentWorldspace": "Tamriel",
-            "parentWorldspaceFormId": "0x0000003C",
-            "worldspace": "Tamriel",
-            "worldspaceFormId": "0x0000003C",
-            "x": 12155.8583984375,
-            "y": -71991.3203125,
-            "z": 6010.48095703125
-        });
+  const position = ref<PlayerPosition | null>();
 
   const setPosition = (data: PlayerPosition | null | undefined): void => {
     position.value = data ?? null;

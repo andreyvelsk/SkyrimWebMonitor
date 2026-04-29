@@ -186,7 +186,7 @@ export class DataRouter {
       }
 
       if (isPlayerPositionData(data, subscriptionId)) {
-        useMapPlayerStore().setPosition(data);
+        useMapPlayerStore().setPosition(data.position);
         return { success: true, message: 'Data routed to map store (player)' };
       }
 

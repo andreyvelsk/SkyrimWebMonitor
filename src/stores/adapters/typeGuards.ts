@@ -269,9 +269,14 @@ export function isMapHotspotsData(data: unknown, id: string): data is MapHotspot
   );
 }
 
-export function isPlayerPositionData(data: unknown, id: string): data is PlayerPosition {
+export function isPlayerPositionData(
+  data: unknown,
+  id: string
+): data is { position: PlayerPosition } {
   if (id !== 'map.player' || typeof data !== 'object' || data === null) return false;
-  const p = data as Record<string, unknown>;
+  const pos = (data as { position?: unknown }).position;
+  if (typeof pos !== 'object' || pos === null) return false;
+  const p = pos as Record<string, unknown>;
   return (
     typeof p.x === 'number' &&
     typeof p.y === 'number' &&

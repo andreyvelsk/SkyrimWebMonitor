@@ -1,5 +1,10 @@
 import type { Component } from 'vue';
-import type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './types';
+import type {
+  PageConfig,
+  PagesRegistry,
+  CategorySubscriptionConfig,
+  PageSubscriptionConfig,
+} from './types';
 import {
   TheStats,
   TheHotkeys,
@@ -28,197 +33,284 @@ export type { PageConfig, PagesRegistry, CategorySubscriptionConfig } from './ty
 export const pagesRegistry: PagesRegistry = {
   character: {
     stats: {
-      id: 'character.stats',
       component: TheStats,
-      fields: {
-        health: 'ActorValue::kHealth',
-        magicka: 'ActorValue::kMagicka',
-        stamina: 'ActorValue::kStamina',
-        healthBase: 'ActorValue::kHealth::Base',
-        magickaBase: 'ActorValue::kMagicka::Base',
-        staminaBase: 'ActorValue::kStamina::Base',
-        level: 'Player::Level',
-        xp: 'Player::XP::Current',
-        xpNext: 'Player::XP::Next',
-        inventoryWeight: 'Player::InventoryWeight',
-        carryWeight: 'Player::CarryWeight',
-        gold: 'Inventory::Gold',
-      },
+      subscriptions: [
+        {
+          id: 'character.stats',
+          fields: {
+            health: 'ActorValue::kHealth',
+            magicka: 'ActorValue::kMagicka',
+            stamina: 'ActorValue::kStamina',
+            healthBase: 'ActorValue::kHealth::Base',
+            magickaBase: 'ActorValue::kMagicka::Base',
+            staminaBase: 'ActorValue::kStamina::Base',
+            level: 'Player::Level',
+            xp: 'Player::XP::Current',
+            xpNext: 'Player::XP::Next',
+            inventoryWeight: 'Player::InventoryWeight',
+            carryWeight: 'Player::CarryWeight',
+            gold: 'Inventory::Gold',
+          },
+        },
+      ],
     },
     hotkeys: {
-      id: 'hotkeys.items',
       component: TheHotkeys,
-      fields: {
-        items: 'Hotkey::Items',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'hotkeys.items',
+          fields: {
+            items: 'Hotkey::Items',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
   },
 
   inventory: {
     weapons: {
-      id: 'inventory.weapons',
       component: TheWeapons,
-      fields: {
-        items: 'Inventory::Items::Weapons',
-        ammo: 'Inventory::Items::Ammo',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.weapons',
+          fields: {
+            items: 'Inventory::Items::Weapons',
+            ammo: 'Inventory::Items::Ammo',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     apparel: {
-      id: 'inventory.apparel',
       component: TheApparel,
-      fields: {
-        items: 'Inventory::Items::Apparel',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.apparel',
+          fields: {
+            items: 'Inventory::Items::Apparel',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     food: {
-      id: 'inventory.food',
       component: TheFood,
-      fields: {
-        items: 'Inventory::Items::Food',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.food',
+          fields: {
+            items: 'Inventory::Items::Food',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     potions: {
-      id: 'inventory.potions',
       component: ThePotions,
-      fields: {
-        items: 'Inventory::Items::Potions',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.potions',
+          fields: {
+            items: 'Inventory::Items::Potions',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     ingredients: {
-      id: 'inventory.ingredients',
       component: TheIngredients,
-      fields: {
-        items: 'Inventory::Items::Ingredients',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.ingredients',
+          fields: {
+            items: 'Inventory::Items::Ingredients',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     scrolls: {
-      id: 'inventory.scrolls',
       component: TheScrolls,
-      fields: {
-        items: 'Inventory::Items::Scrolls',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.scrolls',
+          fields: {
+            items: 'Inventory::Items::Scrolls',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     keys: {
-      id: 'inventory.keys',
       component: TheKeys,
-      fields: {
-        items: 'Inventory::Items::Keys',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.keys',
+          fields: {
+            items: 'Inventory::Items::Keys',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     books: {
-      id: 'inventory.books',
       component: TheBooks,
-      fields: {
-        items: 'Inventory::Items::Books',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.books',
+          fields: {
+            items: 'Inventory::Items::Books',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     misc: {
-      id: 'inventory.misc',
       component: TheMisc,
-      fields: {
-        items: 'Inventory::Items::Misc',
-        gems: 'Inventory::Items::SoulGems',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'inventory.misc',
+          fields: {
+            items: 'Inventory::Items::Misc',
+            gems: 'Inventory::Items::SoulGems',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
   },
 
   magic: {
     destruction: {
-      id: 'magic.destruction',
       component: TheDestruction,
-      fields: {
-        items: 'Magic::Items::Destruction',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'magic.destruction',
+          fields: {
+            items: 'Magic::Items::Destruction',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     alteration: {
-      id: 'magic.alteration',
       component: TheAlteration,
-      fields: {
-        items: 'Magic::Items::Alteration',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'magic.alteration',
+          fields: {
+            items: 'Magic::Items::Alteration',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     conjuration: {
-      id: 'magic.conjuration',
       component: TheConjuration,
-      fields: {
-        items: 'Magic::Items::Conjuration',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'magic.conjuration',
+          fields: {
+            items: 'Magic::Items::Conjuration',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     illusion: {
-      id: 'magic.illusion',
       component: TheIllusion,
-      fields: {
-        items: 'Magic::Items::Illusion',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'magic.illusion',
+          fields: {
+            items: 'Magic::Items::Illusion',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     restoration: {
-      id: 'magic.restoration',
       component: TheRestoration,
-      fields: {
-        items: 'Magic::Items::Restoration',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
-
+      subscriptions: [
+        {
+          id: 'magic.restoration',
+          fields: {
+            items: 'Magic::Items::Restoration',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
     enchanting: {
-      id: 'magic.enchanting',
       component: TheEnchanting,
-      fields: {
-        items: 'Magic::Items::Enchanting',
-      },
-      settings: {
-        frequency: INVENTORY_FREQUENCY,
-      }
+      subscriptions: [
+        {
+          id: 'magic.enchanting',
+          fields: {
+            items: 'Magic::Items::Enchanting',
+          },
+          settings: {
+            frequency: INVENTORY_FREQUENCY,
+          },
+        },
+      ],
     },
   },
 
   map: {
     view: {
       component: TheMap,
+      subscriptions: [
+        {
+          id: 'map.player',
+          fields: {
+            position: 'Player::Position',
+          },
+          settings: {
+            frequency: 50,
+          },
+        },
+        {
+          id: 'map.hotspots',
+          fields: {
+            hot: 'Map::Markers',
+          },
+          settings: {
+            frequency: 1000,
+          },
+        },
+      ],
     },
   },
 };
@@ -250,18 +342,15 @@ export function getPageConfig(tab: string, subTab: string): PageConfig | null {
   return pagesRegistry[tab]?.[subTab] ?? null;
 }
 
-export function getPageSubscriptionId(tab: string, subTab: string): string | null {
-  return getPageConfig(tab, subTab)?.id ?? null;
+/**
+ * Resolve all subscriptions a page wants active. Pages declare them via
+ * the `subscriptions` array; most have one entry, the map page has several
+ * concurrent streams at different frequencies.
+ */
+export function getPageSubscriptions(tab: string, subTab: string): PageSubscriptionConfig[] {
+  return getPageConfig(tab, subTab)?.subscriptions ?? [];
 }
 
 export function getPageComponent(tab: string, subTab: string): Component | null {
   return getPageConfig(tab, subTab)?.component ?? null;
-}
-
-export function getPageFields(tab: string, subTab: string): Record<string, string> {
-  return getPageConfig(tab, subTab)?.fields ?? {};
-}
-
-export function getPageSettings(tab: string, subTab: string): PageConfig['settings'] {
-  return getPageConfig(tab, subTab)?.settings;
 }
