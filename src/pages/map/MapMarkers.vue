@@ -7,17 +7,41 @@
     preserveAspectRatio="none"
     aria-hidden="true"
   >
-    <image
+    <!--
+      Markers are rendered as <foreignObject> so each icon is a regular HTML
+      element painted via CSS mask-image + background-color — the same trick
+      BaseIcon.vue uses. This is the only reliable way to recolor a raster/
+      external SVG to a CSS-variable color across browsers.
+    -->
+    <foreignObject
       v-for="m in markers"
       :key="m.refId"
-      :href="m.iconUrl"
       :x="m.x - markerHalfSize"
       :y="m.y - markerSize"
       :width="markerSize"
       :height="markerSize"
-      :opacity="m.canFastTravel ? 1 : MARKER_DIM_OPACITY"
-      preserveAspectRatio="xMidYMax meet"
-    />
+    >
+      <div
+        xmlns="http://www.w3.org/1999/xhtml"
+        class="hotspot-marker"
+        :class="{ 'hotspot-marker--dim': !m.canFastTravel }"
+        :style="{ '--icon-src': `url('${m.iconUrl}')` }"
+      />
+    </foreignObject>
+    <foreignObject
+      v-if="player"
+      :x="player.x - playerHalfSize"
+      :y="player.y - playerHalfSize"
+      :width="playerSize"
+      :height="playerSize"
+      :transform="`rotate(${player.angleDeg} ${player.x} ${player.y})`"
+    >
+      <div
+        xmlns="http://www.w3.org/1999/xhtml"
+        class="player-marker"
+        :style="{ '--icon-src': `url('${PLAYER_ICON_URL}')` }"
+      />
+    </foreignObject>
   </svg>
 </template>
 
@@ -27,6 +51,8 @@ import { storeToRefs } from 'pinia';
 import { useMapCoordinates } from './composables/useMapCoordinates';
 import { resolveMarkerIcon } from './composables/useMapMarkerIcons';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
+import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
+import { buildIconPath } from '@/shared/lib/utils/iconPath';
 
 // =============================================================
 // Marker overlay configuration
@@ -53,8 +79,31 @@ const MARKER_MIN_SIZE_PX = 18;
 /** Hard ceiling for marker size in screen pixels. */
 const MARKER_MAX_SIZE_PX = 72;
 
-/** Opacity applied to markers whose `canFastTravel` is false. */
-const MARKER_DIM_OPACITY = 0.45;
+// =============================================================
+// Player marker
+// =============================================================
+
+/** Icon path (relative to /icons/) for the player position marker. */
+const PLAYER_ICON_URL = buildIconPath('delapouite/growth.svg');
+
+/**
+ * Base size (screen px at cover scale) for the player marker. Slightly
+ * larger than hotspots so the player stands out at a glance.
+ */
+const PLAYER_BASE_SIZE_PX = 28;
+
+/** Same zoom-influence curve idea as hotspots, but tuned independently. */
+const PLAYER_ZOOM_INFLUENCE = 0.3;
+const PLAYER_MIN_SIZE_PX = 24;
+const PLAYER_MAX_SIZE_PX = 96;
+
+/**
+ * Skyrim's `angle` is yaw in radians: 0 = North, increases clockwise. SVG's
+ * `rotate()` is also clockwise-positive, so we just convert radians → degrees
+ * with no axis flip. The growth icon points up by default, which lines up
+ * with North.
+ */
+const RAD_TO_DEG = 180 / Math.PI;
 
 // =============================================================
 // Props
@@ -78,6 +127,8 @@ const props = defineProps<{
 
 const hotspotsStore = useMapHotspotsStore();
 const { hotspots } = storeToRefs(hotspotsStore);
+const playerStore = useMapPlayerStore();
+const { position: playerPosition } = storeToRefs(playerStore);
 const { matrix } = useMapCoordinates();
 
 /**
@@ -120,6 +171,38 @@ const markerSize = computed(() => {
 
 const markerHalfSize = computed(() => markerSize.value / 2);
 
+/**
+ * Player marker projected into image-pixel coords with screen-rotated
+ * heading already pre-converted to degrees. Recomputes whenever the player
+ * payload changes — i.e. on every server tick — but the work is O(1).
+ * Hidden when the player is in an interior or before calibration.
+ */
+const player = computed(() => {
+  const m = matrix.value;
+  const p = playerPosition.value;
+  if (!m || !p || p.isInterior) return null;
+  return {
+    x: m.a * p.x + m.c * p.y + m.e,
+    y: m.b * p.x + m.d * p.y + m.f,
+    angleDeg: p.angle * RAD_TO_DEG,
+  };
+});
+
+const playerSize = computed(() => {
+  const s = props.scale;
+  const cover = props.coverScale;
+  if (!s || !cover) return 0;
+  const zoomFactor = s / cover;
+  const screenPx = clamp(
+    PLAYER_BASE_SIZE_PX * Math.pow(zoomFactor, PLAYER_ZOOM_INFLUENCE),
+    PLAYER_MIN_SIZE_PX,
+    PLAYER_MAX_SIZE_PX
+  );
+  return screenPx / s;
+});
+
+const playerHalfSize = computed(() => playerSize.value / 2);
+
 function clamp(v: number, lo: number, hi: number): number {
   return v < lo ? lo : v > hi ? hi : v;
 }
@@ -135,5 +218,32 @@ function clamp(v: number, lo: number, hi: number): number {
   /* `overlayStyle` provides width/height inline; explicit dims here would
      override and break the transform sync with the map image. */
   overflow: visible;
+}
+
+/* Hotspot icons are loaded as external SVG files. To recolor them with a
+   CSS variable we replicate BaseIcon.vue's approach: render an HTML <div>
+   inside <foreignObject>, mask it with the icon, and fill via background. */
+.hotspot-marker {
+  width: 100%;
+  height: 100%;
+  background-color: var(--skyrim-bg-medium);
+  mask-image: var(--icon-src);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center bottom;
+}
+
+.hotspot-marker--dim {
+  opacity: 0.45;
+}
+
+.player-marker {
+  width: 100%;
+  height: 100%;
+  background-color: var(--skyrim-accent-gold);
+  mask-image: var(--icon-src);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
 }
 </style>

@@ -59,3 +59,29 @@ export interface MapHotspot {
 export interface MapHotspotsState {
   hot: MapHotspot[];
 }
+
+/**
+ * Player position payload from the game server. Updated frequently (multiple
+ * times per second) — keep handlers cheap.
+ *
+ * - `x`, `y`, `z` — raw game coordinates.
+ * - `angle`       — Z-axis rotation (yaw) in **radians**. `0` = North,
+ *                   increases **clockwise**. To convert to SVG-rotate degrees
+ *                   no axis flip is needed: SVG's positive rotation is also
+ *                   clockwise, and "icon points up" maps to "facing North".
+ * - `cell` / `worldspace` etc. are kept verbatim for future filtering (e.g.
+ *   hide the marker when the player is inside an interior).
+ */
+export interface PlayerPosition {
+  x: number;
+  y: number;
+  z: number;
+  angle: number;
+  cell: string;
+  cellFormId: string;
+  isInterior: boolean;
+  worldspace: string;
+  worldspaceFormId: string;
+  parentWorldspace: string;
+  parentWorldspaceFormId: string;
+}
