@@ -13,7 +13,6 @@
       :marker-max-size="markerMaxSize"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
-      @marker-click="onMarkerClick"
     />
 
     <quest-markers
@@ -22,7 +21,6 @@
       :marker-max-size="markerMaxSize"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
-      @marker-click="onMarkerClick"
     />
 
     <player-marker
@@ -164,7 +162,38 @@ function clearSelection(): void {
   selectedMarkerKey.value = null;
 }
 
-defineExpose({ clearSelection });
+/**
+ * Hit-test a tap at image-pixel coordinates against currently rendered
+ * markers and, if hit, run the same selection / fast-travel flow as a
+ * direct marker click. Returns `true` when a marker was hit so the host
+ * can skip its own "deselect on empty tap" logic.
+ *
+ * Markers themselves are `pointer-events: none` so the underlying OSD
+ * canvas always receives pan/pinch gestures uninterrupted.
+ */
+function handleClickAt(imgX: number, imgY: number): boolean {
+  const halfW = markerMaxHalf.value;
+  const fullH = markerMaxSize.value;
+  if (halfW <= 0 || fullH <= 0) return false;
+
+  // Markers are drawn anchored at (m.x, m.y) with the icon tip at the
+  // anchor and the body extending up by `markerMaxSize`. Iterate from the
+  // last drawn (top-most in z-order, after quest markers) back to the
+  // first so a tap on overlapping markers picks the visually-topmost one.
+  const all = markers.value;
+  for (let i = all.length - 1; i >= 0; i -= 1) {
+    const m = all[i];
+    const dx = imgX - m.x;
+    const dy = imgY - m.y;
+    if (dx >= -halfW && dx <= halfW && dy >= -fullH && dy <= 0) {
+      onMarkerClick(m);
+      return true;
+    }
+  }
+  return false;
+}
+
+defineExpose({ clearSelection, handleClickAt });
 
 /**
  * Marker size in image-natural-pixel units. Pre-divided by current scale so
@@ -249,10 +278,21 @@ function clamp(v: number, lo: number, hi: number): number {
   position: absolute;
   top: 0;
   left: 0;
+  // Make the SVG and every descendant transparent to pointer/touch events.
+  // On iOS Safari `pointer-events: none` on the <svg> alone does NOT
+  // propagate to <foreignObject> HTML children, so they keep stealing
+  // touches from the OSD canvas underneath. The :deep selector forces
+  // every nested node to be event-transparent.
   pointer-events: none;
+  touch-action: none;
   will-change: transform;
   /* `overlayStyle` provides width/height inline; explicit dims here would
      override and break the transform sync with the map image. */
   overflow: visible;
+
+  :deep(*) {
+    pointer-events: none;
+    touch-action: none;
+  }
 }
 </style>

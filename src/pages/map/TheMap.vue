@@ -439,7 +439,12 @@ async function setupViewer(): Promise<void> {
     if (!item) return;
     const viewportPoint = viewer.viewport.pointFromPixel(event.position);
     const imgPoint = item.viewportToImageCoordinates(viewportPoint);
-    markersRef.value?.clearSelection();
+    // First let the marker overlay try to handle the tap (selection /
+    // fast-travel). Only deselect when the tap landed on empty map area.
+    const hit = markersRef.value?.handleClickAt(imgPoint.x, imgPoint.y) ?? false;
+    if (!hit) {
+      markersRef.value?.clearSelection();
+    }
     logImagePxAt(imgPoint.x, imgPoint.y);
   });
 }
