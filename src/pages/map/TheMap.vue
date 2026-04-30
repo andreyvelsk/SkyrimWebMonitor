@@ -426,14 +426,6 @@ async function setupViewer(): Promise<void> {
   viewer.addHandler('animation', syncOverlayTransform);
   viewer.addHandler('animation-finish', syncOverlayTransform);
 
-  // Enforce zoom constraints immediately after any pinch/zoom/pan to prevent
-  // the map from briefly escaping beyond the minimum zoom during fast gestures.
-  viewer.addHandler('zoom', () => {
-    if (viewer) {
-      viewer.viewport.applyConstraints(false);
-    }
-  });
-
   viewer.addHandler('canvas-click', (event) => {
     if (!viewer) return;
     if (!event.quick) return;
