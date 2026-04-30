@@ -21,7 +21,7 @@
     -->
     <foreignObject
       v-for="m in markers"
-      :key="m.refId"
+      :key="m.key"
       :x="m.x - markerMaxHalf"
       :y="m.y - markerMaxSize"
       :width="markerMaxSize"
@@ -31,8 +31,9 @@
         xmlns="http://www.w3.org/1999/xhtml"
         class="hotspot-marker"
         :class="{
-          'hotspot-marker--dim': !m.canFastTravel,
-          'hotspot-marker--selected': m.refId === selectedRefId,
+          'hotspot-marker--dim': m.kind === 'location' && !m.canFastTravel,
+          'hotspot-marker--quest': m.kind === 'quest',
+          'hotspot-marker--selected': m.key === selectedMarkerKey,
         }"
         :style="{
           '--icon-src': `url('${m.iconUrl}')`,
@@ -81,7 +82,7 @@
             lineHeight: `${labelLineHeight}px`,
             padding: `${labelPaddingY}px ${labelPaddingX}px`,
           }"
-        >{{ selectedMarker.name }}</span>
+        >{{ selectedMarker.label }}</span>
       </div>
     </foreignObject>
   </svg>
@@ -137,6 +138,7 @@ const MARKER_SELECTED_SCALE = 1.35;
 
 /** Icon path (relative to /icons/) for the player position marker. */
 const PLAYER_ICON_URL = buildIconPath('delapouite/growth.svg');
+const QUEST_ICON_URL = buildIconPath('delapouite/human-target.svg');
 
 /**
  * Base size (screen px at cover scale) for the player marker. Slightly
@@ -178,33 +180,79 @@ const props = defineProps<{
 // =============================================================
 
 const hotspotsStore = useMapHotspotsStore();
-const { hotspots } = storeToRefs(hotspotsStore);
+const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
 const playerStore = useMapPlayerStore();
 const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
 const { matrix } = useMapCoordinates();
+
+interface BaseProjectedMarker {
+  key: string;
+  refId: string;
+  label: string;
+  canFastTravel: boolean;
+  x: number;
+  y: number;
+  iconUrl: string;
+}
+
+interface LocationProjectedMarker extends BaseProjectedMarker {
+  kind: 'location';
+  type: (typeof hotspots.value)[number]['type'];
+}
+
+interface QuestProjectedMarker extends BaseProjectedMarker {
+  kind: 'quest';
+  type: 'QuestObjective';
+}
+
+type ProjectedMarker = LocationProjectedMarker | QuestProjectedMarker;
+
+function isLocationMarker(marker: ProjectedMarker): marker is LocationProjectedMarker {
+  return marker.kind === 'location';
+}
+
+function isQuestMarker(marker: ProjectedMarker): marker is QuestProjectedMarker {
+  return marker.kind === 'quest';
+}
 
 /**
  * Hotspots projected from game coords into image-natural-pixel coords.
  * Recomputes only when the hotspot list or the calibration matrix changes —
  * NOT on every zoom/pan.
  */
-const markers = computed(() => {
+const markers = computed<ProjectedMarker[]>(() => {
   const m = matrix.value;
   if (!m) return [];
-  return hotspots.value
+  const locationMarkers: LocationProjectedMarker[] = hotspots.value
     .filter((h) => h.isVisible)
     .map((h) => ({
+      key: `location:${h.refId}`,
+      kind: 'location',
       refId: h.refId,
       type: h.type,
-      name: h.name,
+      label: h.name,
       canFastTravel: h.canFastTravel,
       x: m.a * h.x + m.c * h.y + m.e,
       y: m.b * h.x + m.d * h.y + m.f,
       iconUrl: resolveMarkerIcon(h.type),
     }));
-});
 
-type ProjectedMarker = (typeof markers.value)[number];
+  const questObjectiveMarkers: QuestProjectedMarker[] = questMarkers.value
+    .filter((marker) => Number.isFinite(marker.x) && Number.isFinite(marker.y))
+    .map((marker) => ({
+      key: `quest:${marker.questFormId}:${marker.objectiveIndex}:${marker.aliasId}:${marker.refId}`,
+      kind: 'quest',
+      refId: marker.refId,
+      type: 'QuestObjective',
+      label: marker.objectiveText || marker.name || marker.questName,
+      canFastTravel: false,
+      x: m.a * marker.x + m.c * marker.y + m.e,
+      y: m.b * marker.x + m.d * marker.y + m.f,
+      iconUrl: QUEST_ICON_URL,
+    }));
+
+  return [...locationMarkers, ...questObjectiveMarkers];
+});
 
 // =============================================================
 // Selection + fast-travel flow
@@ -216,25 +264,27 @@ type ProjectedMarker = (typeof markers.value)[number];
 // player taps a different marker, selection moves to that one (no modal).
 // =============================================================
 
-const selectedRefId = ref<string | null>(null);
+const selectedMarkerKey = ref<string | null>(null);
 
 const selectedMarker = computed<ProjectedMarker | null>(() => {
-  if (!selectedRefId.value) return null;
-  return markers.value.find((m) => m.refId === selectedRefId.value) ?? null;
+  if (!selectedMarkerKey.value) return null;
+  return markers.value.find((m) => m.key === selectedMarkerKey.value) ?? null;
 });
 
 const { openModal, closeModal } = useModal();
 const wsStore = useWebSocketStore();
 
 function onMarkerClick(m: ProjectedMarker): void {
-  if (selectedRefId.value !== m.refId) {
-    selectedRefId.value = m.refId;
+  if (selectedMarkerKey.value !== m.key) {
+    selectedMarkerKey.value = m.key;
     return;
   }
+  if (isQuestMarker(m)) return;
+  if (!isLocationMarker(m)) return;
   if (!m.canFastTravel) return;
   openModal({
     component: FastTravelModal,
-    props: { locationName: m.name },
+    props: { locationName: m.label },
     on: {
       confirm: () => {
         // Trigger fast-travel to the selected map marker. The marker's
@@ -250,7 +300,7 @@ function onMarkerClick(m: ProjectedMarker): void {
 /** Clear marker selection. Called by the host map when the user taps the
  *  empty area of the map (those clicks bypass the marker `@click.stop`). */
 function clearSelection(): void {
-  selectedRefId.value = null;
+  selectedMarkerKey.value = null;
 }
 
 defineExpose({ clearSelection });
@@ -377,6 +427,14 @@ function clamp(v: number, lo: number, hi: number): number {
 .hotspot-marker--selected {
   background-color: var(--skyrim-accent-gold);
   transform: scale(1);
+}
+
+.hotspot-marker--quest {
+  background-color: var(--skyrim-accent-gold-dim);
+}
+
+.hotspot-marker--quest.hotspot-marker--selected {
+  background-color: var(--skyrim-accent-gold-light);
 }
 
 /* Label host wraps the foreignObject; the inner div centers the badge. */

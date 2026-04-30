@@ -26,7 +26,11 @@ import type { CategoriesData } from '@/shared/lib/types/types';
 import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
 import type { HotkeyItemsState } from '@/stores/hotkeys/types';
 import type { GameStatusData } from '@/stores/game/types';
-import type { MapHotspotsState, PlayerPosition } from '@/stores/map/types';
+import type {
+  MapHotspotsState,
+  MapQuestMarkersState,
+  PlayerPosition,
+} from '@/stores/map/types';
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -266,6 +270,19 @@ export function isMapHotspotsData(data: unknown, id: string): data is MapHotspot
     data !== null &&
     'hot' in data &&
     Array.isArray((data as MapHotspotsState).hot)
+  );
+}
+
+export function isMapQuestMarkersData(
+  data: unknown,
+  id: string
+): data is MapQuestMarkersState {
+  return (
+    id === 'map.questMarkers' &&
+    typeof data === 'object' &&
+    data !== null &&
+    'marker' in data &&
+    Array.isArray((data as MapQuestMarkersState).marker)
   );
 }
 

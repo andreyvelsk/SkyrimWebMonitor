@@ -310,6 +310,15 @@ export const pagesRegistry: PagesRegistry = {
             frequency: 1000,
           },
         },
+        {
+          id: 'map.questMarkers',
+          fields: {
+            marker: 'Map::Markers::Quests',
+          },
+          settings: {
+            frequency: 1000,
+          },
+        },
       ],
     },
   },

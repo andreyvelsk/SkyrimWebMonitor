@@ -61,6 +61,38 @@ export interface MapHotspotsState {
 }
 
 /**
+ * Quest objective marker from the game server. Coordinates are in the same
+ * raw game space as regular hotspots and can be projected with the same map
+ * calibration matrix.
+ */
+export interface MapQuestMarker {
+  aliasId: number;
+  cell: string | null;
+  cellFormId: string | null;
+  isInterior: boolean;
+  name: string;
+  objectiveIndex: number;
+  objectiveText: string;
+  parentWorldspace: string | null;
+  parentWorldspaceFormId: string | null;
+  questEditorId: string;
+  questFormId: string;
+  questName: string;
+  questType: string;
+  refId: string;
+  worldspace: string | null;
+  worldspaceFormId: string | null;
+  x: number;
+  y: number;
+  z: number;
+}
+
+/** `Map::Markers::Quests` payload shape (after field unwrapping). */
+export interface MapQuestMarkersState {
+  marker: MapQuestMarker[];
+}
+
+/**
  * `Player::Position` payload from the game server. Updated at high frequency
  * (multiple times per second) — keep handlers cheap.
  *
