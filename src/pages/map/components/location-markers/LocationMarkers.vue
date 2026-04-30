@@ -6,6 +6,7 @@
     :y="m.y - markerMaxSize"
     :width="markerMaxSize"
     :height="markerMaxSize"
+    style="pointer-events: none"
   >
     <div
       xmlns="http://www.w3.org/1999/xhtml"
@@ -18,7 +19,6 @@
         '--icon-src': `url('${m.iconUrl}')`,
         '--marker-rest-scale': restScale,
       }"
-      @click.stop="emit('marker-click', m)"
     />
   </foreignObject>
 </template>
@@ -33,10 +33,6 @@ defineProps<{
   restScale: string;
   selectedMarkerKey: string | null;
 }>();
-
-const emit = defineEmits<{
-  (_e: 'marker-click', _marker: LocationProjectedMarker): void;
-}>();
 </script>
 
 <style scoped lang="scss">
@@ -48,8 +44,13 @@ const emit = defineEmits<{
   mask-size: contain;
   mask-repeat: no-repeat;
   mask-position: center bottom;
-  cursor: pointer;
-  pointer-events: auto;
+  // Markers are visual-only — OSD must receive all touch/mouse events for
+  // pan/zoom. Clicks are delegated via the parent's hit-test.
+  // `touch-action: none` is critical on iOS Safari, where <foreignObject>
+  // children otherwise claim the touch gesture before pointer-events:none
+  // takes effect.
+  pointer-events: none;
+  touch-action: none;
   transform: scale(var(--marker-rest-scale, 1));
   transform-origin: 50% 100%;
   transition:

@@ -1,1221 +1,907 @@
 {
-  "character.stats": {
-    "carryWeight": 320,
-    "gold": 485,
-    "health": 110,
-    "healthBase": 110,
-    "inventoryWeight": 161.09999084472656,
-    "level": 6,
-    "magicka": 100,
-    "magickaBase": 100,
-    "stamina": 140,
-    "staminaBase": 140,
-    "xp": 46,
-    "xpNext": 225
-  },
-  "inventory.weapons": {
-    "ammo": [
-      {
-        "baseDamage": 0,
-        "categoryType": "Ammo",
-        "count": 33,
-        "damage": 0,
-        "formId": "0x0001397D",
-        "isEquipped": true,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Железная стрела",
-        "value": 1,
-        "weight": -1
-      }
-    ],
-    "items": [
-      {
-        "baseDamage": 5,
-        "categoryType": "Weapon",
-        "count": 1,
-        "damage": 5,
-        "enchantment": null,
-        "enchantmentCharge": null,
-        "equipSlots": [
-          "right",
-          "left"
-        ],
-        "equippedHand": null,
-        "formId": "0x000E3C16",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "isTwoHanded": false,
-        "name": "Кирка",
-        "value": 5,
-        "weaponType": "OneHandAxe",
-        "weight": 10
-      },
-      {
-        "baseDamage": 7,
-        "categoryType": "Weapon",
-        "count": 1,
-        "damage": 7,
-        "enchantment": {
-          "effects": [
+    "character.stats": {
+        "carryWeight": 300,
+        "gold": 106,
+        "health": 100,
+        "healthBase": 100,
+        "inventoryWeight": 143.39999389648438,
+        "level": 1,
+        "magicka": 100,
+        "magickaBase": 100,
+        "stamina": 100,
+        "staminaBase": 100,
+        "xp": 148,
+        "xpNext": 100
+    },
+    "inventory.weapons": {
+        "ammo": [
             {
-              "description": "Если противник умирает в течение 3 с, заполняет камень душ.",
-              "descriptionTemplate": "Если противник умирает в течение <dur> с, заполняет камень душ.",
-              "duration": 3,
-              "magnitude": 0,
-              "name": "Захват душ"
+                "baseDamage": 0,
+                "categoryType": "Ammo",
+                "count": 1,
+                "damage": 0,
+                "formId": "0x0001397D",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Железная стрела",
+                "value": 1,
+                "weight": -1
             }
-          ],
-          "name": "Захват душ"
-        },
-        "enchantmentCharge": 100,
-        "equipSlots": [
-          "right"
         ],
-        "equippedHand": null,
-        "formId": "0x000A7352",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "isTwoHanded": true,
-        "name": "Охотничий лук душ",
-        "value": 163,
-        "weaponType": "Bow",
-        "weight": 7
-      },
-      {
-        "baseDamage": 8,
-        "categoryType": "Weapon",
-        "count": 2,
-        "damage": 8,
-        "enchantment": null,
-        "enchantmentCharge": null,
-        "equipSlots": [
-          "right",
-          "left"
-        ],
-        "equippedHand": null,
-        "formId": "0x00013989",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "isTwoHanded": false,
-        "name": "Стальной меч",
-        "value": 45,
-        "weaponType": "OneHandSword",
-        "weight": 10
-      },
-      {
-        "baseDamage": 10,
-        "categoryType": "Weapon",
-        "count": 1,
-        "damage": 10,
-        "enchantment": null,
-        "enchantmentCharge": null,
-        "equipSlots": [
-          "right",
-          "left"
-        ],
-        "equippedHand": null,
-        "formId": "0x00013988",
-        "isEquipped": false,
-        "isFavorite": true,
-        "isStolen": false,
-        "isTwoHanded": false,
-        "name": "Стальная булава",
-        "value": 65,
-        "weaponType": "OneHandMace",
-        "weight": 14
-      },
-      {
-        "baseDamage": 18,
-        "categoryType": "Weapon",
-        "count": 1,
-        "damage": 18,
-        "enchantment": null,
-        "enchantmentCharge": null,
-        "equipSlots": [
-          "right"
-        ],
-        "equippedHand": null,
-        "formId": "0x00013984",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "isTwoHanded": true,
-        "name": "Стальная секира",
-        "value": 100,
-        "weaponType": "TwoHandAxe",
-        "weight": 21
-      },
-      {
-        "baseDamage": 4,
-        "categoryType": "Weapon",
-        "count": 1,
-        "damage": 4,
-        "enchantment": null,
-        "enchantmentCharge": null,
-        "equipSlots": [
-          "right",
-          "left"
-        ],
-        "equippedHand": null,
-        "formId": "0x0001397E",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "isTwoHanded": false,
-        "name": "Железный кинжал",
-        "value": 10,
-        "weaponType": "OneHandDagger",
-        "weight": 2
-      }
-    ]
-  },
-  "inventory.apparel": {
-    "items": [
-      {
-        "armorRating": 5,
-        "armorType": "Light",
-        "armorTypeId": "Light",
-        "baseArmorRating": 5,
-        "bodySlots": [
-          "Hands"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": {
-          "effects": [
+        "items": [
             {
-              "description": "Удары без оружия наносят 10 дополнительного урона.",
-              "descriptionTemplate": "Удары без оружия наносят <mag> дополнительного урона.",
-              "duration": 0,
-              "magnitude": 10,
-              "name": "Повышение рукопашного урона"
-            }
-          ],
-          "name": "Повышение навыка: бой без оружия"
-        },
-        "formId": "0x0010A06A",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Перчатки борца",
-        "value": 194,
-        "weight": 2
-      },
-      {
-        "armorRating": 31,
-        "armorType": "Heavy",
-        "armorTypeId": "Heavy",
-        "baseArmorRating": 31,
-        "bodySlots": [
-          "Body"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": null,
-        "formId": "0x000F6F22",
-        "isEquipped": true,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Стальная броня",
-        "value": 275,
-        "weight": 35
-      },
-      {
-        "armorRating": 0,
-        "armorType": "Clothing",
-        "armorTypeId": "Clothing",
-        "baseArmorRating": 0,
-        "bodySlots": [
-          "Amulet"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": {
-          "effects": [
+                "baseDamage": 9,
+                "categoryType": "Weapon",
+                "count": 1,
+                "damage": 9,
+                "enchantment": null,
+                "enchantmentCharge": null,
+                "equipSlots": [
+                    "right",
+                    "left"
+                ],
+                "equippedHand": "right",
+                "formId": "0x00013982",
+                "isEquipped": true,
+                "isFavorite": true,
+                "isStolen": false,
+                "isTwoHanded": false,
+                "name": "Железная булава",
+                "value": 35,
+                "weaponType": "OneHandMace",
+                "weight": 13
+            },
             {
-              "description": "Заклинания восстановления расходуют на 10% меньше магии.",
-              "descriptionTemplate": "Заклинания восстановления расходуют на <mag>% меньше магии.",
-              "duration": 0,
-              "magnitude": 10,
-              "name": "Повышение навыка: восстановление"
+                "baseDamage": 18,
+                "categoryType": "Weapon",
+                "count": 1,
+                "damage": 18,
+                "enchantment": null,
+                "enchantmentCharge": null,
+                "equipSlots": [
+                    "right"
+                ],
+                "equippedHand": null,
+                "formId": "0x00013981",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "isTwoHanded": true,
+                "name": "Железный боевой молот",
+                "value": 60,
+                "weaponType": "TwoHandAxe",
+                "weight": 24
+            },
+            {
+                "baseDamage": 16,
+                "categoryType": "Weapon",
+                "count": 1,
+                "damage": 16,
+                "enchantment": null,
+                "enchantmentCharge": null,
+                "equipSlots": [
+                    "right"
+                ],
+                "equippedHand": null,
+                "formId": "0x00013980",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "isTwoHanded": true,
+                "name": "Железная секира",
+                "value": 55,
+                "weaponType": "TwoHandAxe",
+                "weight": 20
+            },
+            {
+                "baseDamage": 7,
+                "categoryType": "Weapon",
+                "count": 2,
+                "damage": 7,
+                "enchantment": null,
+                "enchantmentCharge": null,
+                "equipSlots": [
+                    "right",
+                    "left"
+                ],
+                "equippedHand": null,
+                "formId": "0x00012EB7",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "isTwoHanded": false,
+                "name": "Железный меч",
+                "value": 25,
+                "weaponType": "OneHandSword",
+                "weight": 9
             }
-          ],
-          "name": "Благословение Мары"
-        },
-        "formId": "0x000C891B",
-        "isEquipped": true,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Амулет Мары",
-        "value": 316,
-        "weight": 1
-      },
-      {
-        "armorRating": 15,
-        "armorType": "Heavy",
-        "armorTypeId": "Heavy",
-        "baseArmorRating": 15,
-        "bodySlots": [
-          "Hair",
-          "Circlet"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": null,
-        "formId": "0x00056A9E",
-        "isEquipped": true,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Древний нордский шлем",
-        "value": 60,
-        "weight": 4
-      },
-      {
-        "armorRating": 10,
-        "armorType": "Heavy",
-        "armorTypeId": "Heavy",
-        "baseArmorRating": 10,
-        "bodySlots": [
-          "Feet"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": null,
-        "formId": "0x00056A9D",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Древние нордские сапоги",
-        "value": 25,
-        "weight": 5
-      },
-      {
-        "armorRating": 0,
-        "armorType": "Clothing",
-        "armorTypeId": "Clothing",
-        "baseArmorRating": 0,
-        "bodySlots": [
-          "Amulet"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": null,
-        "formId": "0x0009171B",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Серебряное ожерелье",
-        "value": 60,
-        "weight": 0.5
-      },
-      {
-        "armorRating": 0,
-        "armorType": "Clothing",
-        "armorTypeId": "Clothing",
-        "baseArmorRating": 0,
-        "bodySlots": [
-          "Ring"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": null,
-        "formId": "0x000877AB",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Серебряное кольцо с гранатом",
-        "value": 160,
-        "weight": 0.25
-      },
-      {
-        "armorRating": 0,
-        "armorType": "Clothing",
-        "armorTypeId": "Clothing",
-        "baseArmorRating": 0,
-        "bodySlots": [
-          "Ring"
-        ],
-        "categoryType": "Apparel",
-        "count": 1,
-        "enchantment": null,
-        "formId": "0x000877A7",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Серебряное кольцо с аметистом",
-        "value": 180,
-        "weight": 0.25
-      },
-      {
-        "armorRating": 0,
-        "armorType": "Clothing",
-        "armorTypeId": "Clothing",
-        "baseArmorRating": 0,
-        "bodySlots": [
-          "Ring"
-        ],
-        "categoryType": "Apparel",
-        "count": 3,
-        "enchantment": null,
-        "formId": "0x0003B97C",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Серебряное кольцо",
-        "value": 30,
-        "weight": 0.25
-      }
-    ]
-  },
-  "inventory.food": {
-    "items": [
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 5 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 5,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <380> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <380> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от большого голода"
-          }
-        ],
-        "formId": "0x000722BD",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Оленья отбивная",
-        "value": 5,
-        "weight": 2
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 5 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 5,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <220> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <220> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от среднего голода"
-          }
-        ],
-        "formId": "0x000E8947",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Жареная куриная грудка",
-        "value": 4,
-        "weight": 0.20000000298023224
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 2 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 2,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <18> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <18> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от малого голода"
-          }
-        ],
-        "formId": "0x00065C97",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Хлеб",
-        "value": 2,
-        "weight": 0.20000000298023224
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 2 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 2,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x00065C98",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Хлеб",
-        "value": 2,
-        "weight": 0.20000000298023224
-      },
-      {
-        "categoryType": "Food",
-        "count": 2,
-        "effects": [
-          {
-            "description": "Восстановление 2 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 2,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x00065C9E",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Сырая кроличья ножка",
-        "value": 2,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Food",
-        "count": 2,
-        "effects": [
-          {
-            "description": "Восстановление 2 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 2,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x00065C9F",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Лососина",
-        "value": 3,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Food",
-        "count": 5,
-        "effects": [
-          {
-            "description": "Восстановление 1 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 1,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x000669A5",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Лук-порей",
-        "value": 1,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Food",
-        "count": 3,
-        "effects": [
-          {
-            "description": "Восстановление 10 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 10,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <380> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <380> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от большого голода"
-          }
-        ],
-        "formId": "0x000721E8",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Отварная говядина",
-        "value": 5,
-        "weight": 0.5
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 1 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 1,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x00064B32",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Кусок эйдарского сыра",
-        "value": 5,
-        "weight": 0.25
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 15 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 15,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <18> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <18> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от малого голода"
-          }
-        ],
-        "formId": "0x00064B33",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Круг козьего сыра",
-        "value": 10,
-        "weight": 2
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 15 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 15,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <18> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <18> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от малого голода"
-          }
-        ],
-        "formId": "0x00064B35",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Початый круг козьего сыра",
-        "value": 8,
-        "weight": 2
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстановление 15 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 15,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <18> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <18> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от малого голода"
-          }
-        ],
-        "formId": "0x00064B36",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Початый круг эйдарского сыра",
-        "value": 10,
-        "weight": 2
-      },
-      {
-        "categoryType": "Food",
-        "count": 13,
-        "effects": [
-          {
-            "description": "Восстановление 1 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 1,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x00064B3F",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Капуста",
-        "value": 2,
-        "weight": 0.25
-      },
-      {
-        "categoryType": "Food",
-        "count": 8,
-        "effects": [
-          {
-            "description": "Восстановление 1 ед. здоровья.",
-            "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
-            "duration": 0,
-            "magnitude": 1,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x00064B41",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Картофель",
-        "value": 1,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Food",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Восстанавливает 15 ед. запаса сил.",
-            "descriptionTemplate": "Восстанавливает <mag> ед. запаса сил.",
-            "duration": 0,
-            "magnitude": 15,
-            "name": "Восстановление запаса сил"
-          },
-          {
-            "description": "Запас сил восстанавливается на 30% медленнее в течение 30 с.",
-            "descriptionTemplate": "Запас сил восстанавливается на <mag>% медленнее в течение <dur> с.",
-            "duration": 30,
-            "magnitude": 30,
-            "name": "Повреждение регенерации запаса сил"
-          },
-          {
-            "description": "[SURV=Восстановление на <2> ед. от голода.]",
-            "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
-            "duration": 0,
-            "magnitude": 0,
-            "name": "Восстановление от очень малого голода"
-          }
-        ],
-        "formId": "0x0003133C",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Вино",
-        "value": 7,
-        "weight": 0.5
-      }
-    ]
-  },
-  "inventory.potions": {
-    "items": []
-  },
-  "inventory.ingredients": {
-    "items": [
-      {
-        "categoryType": "Ingredient",
-        "count": 2,
-        "effects": [
-          {
-            "known": false,
-            "name": "Сопротивление магии"
-          },
-          {
-            "known": false,
-            "name": "Повреждение регенерации магии"
-          },
-          {
-            "known": false,
-            "name": "Водное дыхание"
-          },
-          {
-            "known": false,
-            "name": "Затяжной урон запасу сил"
-          }
-        ],
-        "formId": "0x00023D77",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Куриное яйцо",
-        "value": 2,
-        "weight": 0.5
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 1,
-        "effects": [
-          {
-            "known": false,
-            "name": "Восстановление запаса сил"
-          },
-          {
-            "known": false,
-            "name": "Опустошение здоровья"
-          },
-          {
-            "known": false,
-            "name": "Урон магии"
-          },
-          {
-            "known": false,
-            "name": "Восстановление здоровья"
-          }
-        ],
-        "formId": "0x0006BC07",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Глаз саблезуба",
-        "value": 2,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 1,
-        "effects": [
-          {
-            "known": false,
-            "name": "Урон магии"
-          },
-          {
-            "known": false,
-            "name": "Повышение здоровья"
-          },
-          {
-            "known": false,
-            "name": "Повреждение регенерации магии"
-          },
-          {
-            "known": false,
-            "name": "Повышение навыка: одноручное оружие"
-          }
-        ],
-        "formId": "0x00057F91",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Бородатый мох",
-        "value": 1,
-        "weight": 0.25
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 2,
-        "effects": [
-          {
-            "known": false,
-            "name": "Сопротивление огню"
-          },
-          {
-            "known": false,
-            "name": "Повышение искусства торговли"
-          },
-          {
-            "known": false,
-            "name": "Повышение навыка: иллюзия"
-          },
-          {
-            "known": false,
-            "name": "Повышение навыка: двуручное оружие"
-          }
-        ],
-        "formId": "0x000889A2",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Язык дракона",
-        "value": 5,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 1,
-        "effects": [
-          {
-            "known": false,
-            "name": "Уязвимость к магии"
-          },
-          {
-            "known": false,
-            "name": "Повышение навыка: иллюзия"
-          },
-          {
-            "known": false,
-            "name": "Регенерация магии"
-          },
-          {
-            "known": false,
-            "name": "Восстановление магии"
-          }
-        ],
-        "formId": "0x0003AD71",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Стержневой корень",
-        "value": 15,
-        "weight": 0.5
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 6,
-        "effects": [
-          {
-            "known": false,
-            "name": "Восстановление здоровья"
-          },
-          {
-            "known": false,
-            "name": "Повышение здоровья"
-          },
-          {
-            "known": false,
-            "name": "Повреждение регенерации запаса сил"
-          },
-          {
-            "known": false,
-            "name": "Затяжной урон магии"
-          }
-        ],
-        "formId": "0x0004B0BA",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Пшеница",
-        "value": 5,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 1,
-        "effects": [
-          {
-            "known": false,
-            "name": "Сопротивление огню"
-          },
-          {
-            "known": false,
-            "name": "Повышение навыка: зачарование"
-          },
-          {
-            "known": false,
-            "name": "Сопротивление холоду"
-          },
-          {
-            "known": false,
-            "name": "Сопротивление электричеству"
-          }
-        ],
-        "formId": "0x0001B3BD",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Снежные ягоды",
-        "value": 4,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Ingredient",
-        "count": 2,
-        "effects": [
-          {
-            "known": true,
-            "name": "Урон запасу сил"
-          },
-          {
-            "known": false,
-            "name": "Сопротивление огню"
-          },
-          {
-            "known": false,
-            "name": "Повышение навыка: колдовство"
-          },
-          {
-            "known": false,
-            "name": "Опустошение запаса сил"
-          }
-        ],
-        "formId": "0x00034CDD",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Костная мука",
-        "value": 5,
-        "weight": 0.5
-      }
-    ]
-  },
-  "inventory.scrolls": {
-    "items": [
-      {
-        "categoryType": "Scroll",
-        "count": 1,
-        "effects": [
-          {
-            "description": "Существа и люди уровня 12 и ниже обращаются в бегство на 60 с.",
-            "descriptionTemplate": "Существа и люди уровня <mag> и ниже обращаются в бегство на <dur> с.",
-            "duration": 60,
-            "magnitude": 12,
-            "name": "Истерия"
-          }
-        ],
-        "formId": "0x000A44BD",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Свиток: Истерия",
-        "value": 500,
-        "weight": 0.5
-      }
-    ]
-  },
-  "inventory.keys": {
-    "items": [
-      {
-        "categoryType": "Key",
-        "count": 1,
-        "formId": "0x000B5178",
-        "isEquipped": false,
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Ключ от крепости Хелген",
-        "value": 0,
-        "weight": 0
-      }
-    ]
-  },
-  "inventory.books": {
-    "items": [
-      {
-        "categoryType": "Book",
-        "count": 1,
-        "description": "Договор купли-продажи\r\n\r\nЭтот договор подтверждает, что Клепп, владелец таверны \"Серебряная Кровь\" в городе Маркарт, обязуется платить Болли, владельцу рыбного порта Рифтена, что в городе Рифтен, сумму в размере трех септимов за каждый бушель рыбы. Оплату надлежит производить при получении, свежесть товара гарантируется.\r\n\r\nБолли",
-        "formId": "0x000557EC",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Договор купли-продажи",
-        "value": 0,
-        "weight": 0
-      },
-      {
-        "categoryType": "Book",
-        "count": 1,
-        "description": "[pagebreak]\r\n<p align=\"center\">\r\n\r\n\r\nЗЕРКАЛО\r\n\r\n\r\n\r\nБЕРДИР ВРИНС\r\n\r\n</p>\r\n[pagebreak]\r\n[pagebreak]\r\n<p align=\"left\"><img src='img://Textures/Interface/Books/Illuminated_Letters/b_letter.png'>етер завывал над открытой равниной, заставляя редкие деревья склоняться почти до земли с каждым новым порывом. Молодой человек в ярком зеленом тюрбане подошел к командиру армии и передал от своего начальника условия мирного договора. Ему было отказано. Предстояла битва, битва при Айн-Колуре.\r\n\r\nИтак, вождь Ямбез бросил вызов, и его всадники снова готовы были вступить в бой. Множество раз племя вторгалось на чужую территорию в надежде захватить ее, и множество раз дипломатические усилия оказывались тщетными. И наконец все пришло к этому. Так было и с Миндотраксом. Его союзники могли побеждать и проигрывать, но он всегда оставался в живых. Хотя иногда ему случалось бороться на стороне проигравших, ни разу за тридцать четыре года он не познал поражения в рукопашном бою.\r\n\r\nДве армии смешались, словно два пенящихся потока в пыли, и когда они столкнулись, раздался рев, эхом отразившийся в холмах. Кровь, первая жидкость за много месяцев, падавшая на эту глину, так и летела в разные стороны. Крики воюющих племен смешивались, пока две армии вгрызались в плоть друг друга. Миндотракс был в своей стихии.\r\n\r\nЧерез десять часов сражения без сна и отдыха оба командира скомандовали отступить.\r\n\r\nЛагерь разместился за высокими стенами старого кладбища, увитыми весенними цветами. Глядя на эту землю, Миндотракс вспоминал страну своего детства. Это было прекрасное и печальное воспоминание - чистота детских помыслов, обучение боевому искусству, судьба его несчастной матери. Прекрасная женщина, которая смотрела на своего сына с гордостью и невысказанной грустью. Она никогда не говорила о том, что тревожит ее, но никто не удивился, когда однажды ее нашли на вересковой пустоши с горлом, перерезанным ее собственной рукой.\r\n\r\nАрмия была похожа на растревоженный муравейник. Прошло всего полчаса после конца битвы, а они уже инстинктивно перестроились. Пока лекари осматривали раненных, кто-то удивленно и восхищенно заметил: \"Только поглядите на Миндотракса. Он себе даже прически не испортил\".\r\n\r\n\"Он отлично владеет мечом\", - сказал услышавший это врач.\r\n\r\n\"Меч часто переоценивают, - сказал Миндотракс, недовольный общим вниманием. - Воины слишком заботятся об атаке, но совсем не знают, как отразить удар. В битве надо уметь защищаться, а удар по противнику наносить только тогда, когда для этого настанет самый подходящий момент\".\r\n\r\n\"Я предпочитаю натиск, - улыбнулся один из раненых. - Таков путь всадников\".\r\n\r\n\"Если этот путь приведет к поражению племен Бьюлси, я откажусь от такого пути, - сказал Миндотракс, делая знак духам, чтобы они поняли, что он не хотел быть нечестивым. - Вспомните, слова великого воина Гэйдена Шинджи - \"Лучшая техника - техника выживших\". Я участвовал в тридцати шести битвах, и не могу показать ни одного шрама, который напоминал бы мне о них. Это потому, что я полагаюсь вначале на щит, потом лишь на меч\".\r\n\r\n\"В чем твой секрет?\"\r\n\r\n\"Думайте о бое как о зеркале. Я смотрю на левую руку противника, когда собираюсь ударить правой. Если он готовится блокировать мой удар, я не наношу его. Зачем зря тратить силы? - Миндотракс поднял бровь. - Но если я вижу, что его правая рука напрягается, моя левая рука поднимает щит. Видите ли, для удара нужно вдвое больше силы, чем для его отражения. Если вы можете отличить, собирается ли ваш противник ударить сверху, или с локтя, или снизу, вы легко защититесь с помощью щита. Я могу защищаться часами, если потребуется, но обычно проходит всего несколько минут, а то и секунд, прежде чем противник, занятый боем, предоставляет и мне возможность нанести удар\".\r\n\r\n\"А когда тебе приходилось защищаться дольше всего?\" - спросил раненый.\r\n\r\n\"Однажды я сражался целый час, - ответил Миндотракс. - Он неустанно наносил удары и не давал мне времени ни на что, кроме защиты. Но, в конце концов, я улучил момент, когда он слишком долго поднимал свою дубину, и вонзил меч ему в грудь. Он попадал по моему щиту тысячи раз, а я ударил его в сердце лишь однажды. Но этого было достаточно\".\r\n\r\n\"Так это был твой сильнейший противник?\" - спросил врач.\r\n\r\n\"О, конечно, нет, - сказал Миндотракс, поворачивая свой большой щит так, чтобы на его серебряной поверхности отразилось его лицо. - Вот мой самый страшный противник\".\r\n\r\nНа следующий день битва возобновилась. Вождь Ямбез привел подкрепление с южных островов. К ужасу и возмущению племени, теперь в битве принимали участие наемники, всадники-отступники и даже несколько ведьм из Западного Предела. На поле боя вот-вот должны были схлестнуться две армии. Проверяя снаряжение, Миндотракс снова подумал о своей несчастной матери. Что ее так мучило? Почему она не могла без боли смотреть на собственного сына?\r\n\r\nБитва длилась с восхода до заката. Яркое голубое небо потемнело над головами сражавшихся, которые снова и снова бросались друг на друга. Миндотракс побеждал во всех схватках. Враг с топором обрушил на его щит целый град ударов, но Миндотракс отразил их все, а потом убил воина. Девушка с копьем первым ударом едва не проткнула щит, но Миндотракс ждал этого удара, и потому вывел ее из равновесия и заставил открыться для его контратаки. И наконец он столкнулся с наемником, вооруженным щитом и мечом, в шлеме из золотистой бронзы. Они сражались полтора часа.\r\n\r\nМиндотракс использовал все приемы, которые знал. Если наемник напрягал левую руку, он не наносил удара. Когда противник поднимал меч, поднимался и щит Миндотракса. В первый раз в жизни он сражался с бойцом, который использовал тактику защиты. У его противника хватило бы сил биться много дней. Время от времени в стычку ввязывались другие воины, иногда из армии Миндотракса, иногда из армии его противника. Однако их быстро убивали, и воины продолжали бой.\r\n\r\nПока они сражались, кружа, Миндотраксу пришло в голову, что в первый раз в своей жизни он сражается с идеальным зеркалом.\r\n\r\nЭто больше походило на игру или танец, чем на кровавую битву. Так продолжалось до тех пор, пока Миндотракс не оступился, ударил слишком быстро и потерял равновесие. Тут игра закончилась. Он скорее увидел, чем почувствовал, как меч наемника рассек его от горла до груди. Хороший удар. Он и сам гордился бы таким.\r\n\r\nМиндотракс упал на землю, чувствуя, что его жизнь подходит к концу. Наемник стоял над ним, готовясь нанести своему достойному сопернику последний убийственный удар. Это было слишком благородно для чужака и удивило Миндотракса. Где-то на поле боя кто-то выкрикнул имя, похожее на его собственное.\r\n\r\n\"Джуррифакс!\"\r\n\r\nНаемник снял шлем, чтобы ответить на зов. Когда он сделал это, Миндотракс содрогнулся, увидев, что лицо этого человека было отражением его собственного лица. Его собственные близко посаженные глаза, каштановые с рыжиной волосы, тонкие губы, широкий рот и массивный подбородок. Мгновение он смотрелся в это зеркало, потом незнакомец повернулся и нанес последний удар.\r\n\r\nДжуррифакс вернулся к своему командиру и получил щедрую плату за свой вклад в победу. Они приступили к трапезе под звездами у старого кладбища, на том самом месте, где до них сидели их враги. Наемник притих, оглядываясь.\r\n\r\n\"Ты бывал здесь раньше, Джуррифакс?\" - спросил его член племени, который нанял его.\r\n\r\n\"Я родился всадником, как и ты. Моя мать продала меня, когда я был еще ребенком. Мне всегда было интересно, как бы сложилась моя жизнь, если бы меня не продали. Возможно, я бы никогда не стал наемником\".\r\n\r\n\"Наша судьба зависит от многих вещей, - сказала ведьма. - Просто безумие желать узнать, как бы шла твоя жизнь, если бы все было по-другому. Ты это ты, и незачем думать об этом\".\r\n\r\n\"Но есть еще кое-что, - сказал Джуррифакс, глядя на звезды. - Мой хозяин, прежде чем отпустить меня на свободу, сказал, что у моей матери было два сына. Она могла позволить себе только одного ребенка, но где-то живет человек, который во всем похож на меня. Мой брат. Я надеюсь встретиться с ним\".\r\n\r\nВедьма видела духов вокруг, и знала, что близнецы уже встретились. Однако она молчала и глядела в огонь, гоня эти мысли из головы, потому что была слишком мудра, чтоб сказать об этом.",
-        "formId": "0x0001AFDE",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Зеркало",
-        "value": 50,
-        "weight": 1
-      }
-    ]
-  },
-  "inventory.misc": {
-    "gems": [
-      {
-        "capacity": "Common",
-        "categoryType": "SoulGem",
-        "containedSoul": "None",
-        "count": 1,
-        "formId": "0x0002E4E6",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Обычный камень душ",
-        "value": 50,
-        "weight": 0.30000001192092896
-      },
-      {
-        "capacity": "Petty",
-        "categoryType": "SoulGem",
-        "containedSoul": "None",
-        "count": 3,
-        "formId": "0x0002E4E2",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Крохотный камень душ",
-        "value": 10,
-        "weight": 0.10000000149011612
-      },
-      {
-        "capacity": "Petty",
-        "categoryType": "SoulGem",
-        "containedSoul": "Petty",
-        "count": 1,
-        "formId": "0x0002E4E3",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Крохотный камень душ",
-        "value": 40,
-        "weight": 0.10000000149011612
-      }
-    ],
-    "items": [
-      {
-        "categoryType": "Misc",
-        "count": 13,
-        "formId": "0x0000000A",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Отмычка",
-        "value": 2,
-        "weight": -1
-      },
-      {
-        "categoryType": "Misc",
-        "count": 8,
-        "formId": "0x0005ACE3",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Серебряный слиток",
-        "value": 50,
-        "weight": 1
-      },
-      {
-        "categoryType": "Misc",
-        "count": 8,
-        "formId": "0x0005ACE4",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Железный слиток",
-        "value": 7,
-        "weight": 1
-      },
-      {
-        "categoryType": "Misc",
-        "count": 3,
-        "formId": "0x00063B45",
-        "isFavorite": false,
-        "isStolen": true,
-        "name": "Гранат",
-        "value": 100,
-        "weight": 0.10000000149011612
-      },
-      {
-        "categoryType": "Misc",
-        "count": 3,
-        "formId": "0x00063B46",
-        "isFavorite": false,
-        "isStolen": false,
-        "name": "Аметист",
-        "value": 120,
-        "weight": 0.10000000149011612
-      }
-    ]
-  },
-  "inventory.categories": {
-    "categories": [
-      {
-        "categoryId": "Weapons",
-        "count": 7,
-        "name": "Weapons"
-      },
-      {
-        "categoryId": "Apparel",
-        "count": 11,
-        "name": "Apparel"
-      },
-      {
-        "categoryId": "Books",
-        "count": 2,
-        "name": "Books"
-      },
-      {
-        "categoryId": "Misc",
-        "count": 35,
-        "name": "Misc"
-      },
-      {
-        "categoryId": "Scrolls",
-        "count": 1,
-        "name": "Scrolls"
-      },
-      {
-        "categoryId": "Ammo",
-        "count": 33,
-        "name": "Ammo"
-      },
-      {
-        "categoryId": "Ingredients",
-        "count": 16,
-        "name": "Ingredients"
-      },
-      {
-        "categoryId": "SoulGems",
-        "count": 5,
-        "name": "SoulGems"
-      },
-      {
-        "categoryId": "Keys",
-        "count": 1,
-        "name": "Keys"
-      },
-      {
-        "categoryId": "Food",
-        "count": 42,
-        "name": "Food"
-      },
-      {
-        "categoryId": "Favorites",
-        "count": 1,
-        "name": "Favorites"
-      }
-    ]
-  }
+        ]
+    },
+    "inventory.apparel": {
+        "items": [
+            {
+                "armorRating": 31,
+                "armorType": "Heavy",
+                "armorTypeId": "Heavy",
+                "baseArmorRating": 31,
+                "bodySlots": [
+                    "Body"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0x00013952",
+                "isEquipped": true,
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Стальная броня",
+                "value": 275,
+                "weight": 35
+            },
+            {
+                "armorRating": 22,
+                "armorType": "Clothing",
+                "armorTypeId": "Clothing",
+                "baseArmorRating": 22,
+                "bodySlots": [
+                    "Shield"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0x0001394B",
+                "isEquipped": false,
+                "isFavorite": true,
+                "isStolen": false,
+                "name": "Прочный железный щит",
+                "value": 100,
+                "weight": 12
+            },
+            {
+                "armorRating": 15,
+                "armorType": "Heavy",
+                "armorTypeId": "Heavy",
+                "baseArmorRating": 15,
+                "bodySlots": [
+                    "Hair",
+                    "Circlet"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0x00012E4D",
+                "isEquipped": true,
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Железный шлем",
+                "value": 60,
+                "weight": 5
+            },
+            {
+                "armorRating": 10,
+                "armorType": "Heavy",
+                "armorTypeId": "Heavy",
+                "baseArmorRating": 10,
+                "bodySlots": [
+                    "Feet"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0x00012E4B",
+                "isEquipped": true,
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Железные сапоги",
+                "value": 25,
+                "weight": 6
+            },
+            {
+                "armorRating": 10,
+                "armorType": "Heavy",
+                "armorTypeId": "Heavy",
+                "baseArmorRating": 10,
+                "bodySlots": [
+                    "Hands"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0x00012E46",
+                "isEquipped": true,
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Железные перчатки",
+                "value": 25,
+                "weight": 5
+            }
+        ]
+    },
+    "inventory.food": {
+        "items": [
+            {
+                "categoryType": "Food",
+                "count": 1,
+                "effects": [
+                    {
+                        "description": "Восстановление 2 ед. здоровья.",
+                        "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
+                        "duration": 0,
+                        "magnitude": 2,
+                        "name": "Восстановление здоровья"
+                    },
+                    {
+                        "description": "[SURV=Восстановление на <2> ед. от голода.]",
+                        "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
+                        "duration": 0,
+                        "magnitude": 0,
+                        "name": "Восстановление от очень малого голода"
+                    }
+                ],
+                "formId": "0x00065C98",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Хлеб",
+                "value": 2,
+                "weight": 0.20000000298023224
+            },
+            {
+                "categoryType": "Food",
+                "count": 1,
+                "effects": [
+                    {
+                        "description": "Восстанавливает 15 ед. запаса сил.",
+                        "descriptionTemplate": "Восстанавливает <mag> ед. запаса сил.",
+                        "duration": 0,
+                        "magnitude": 15,
+                        "name": "Восстановление запаса сил"
+                    },
+                    {
+                        "description": "Запас сил восстанавливается на 30% медленнее в течение 30 с.",
+                        "descriptionTemplate": "Запас сил восстанавливается на <mag>% медленнее в течение <dur> с.",
+                        "duration": 30,
+                        "magnitude": 30,
+                        "name": "Повреждение регенерации запаса сил"
+                    },
+                    {
+                        "description": "[SURV=Восстановление на <2> ед. от голода.]",
+                        "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
+                        "duration": 0,
+                        "magnitude": 0,
+                        "name": "Восстановление от очень малого голода"
+                    }
+                ],
+                "formId": "0x0003133C",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Вино",
+                "value": 7,
+                "weight": 0.5
+            }
+        ]
+    },
+    "inventory.potions": {
+        "items": [
+            {
+                "categoryType": "Potion",
+                "count": 5,
+                "effects": [
+                    {
+                        "description": "Восстанавливает 25 ед. здоровья.",
+                        "descriptionTemplate": "Восстанавливает <mag> ед. здоровья.",
+                        "duration": 0,
+                        "magnitude": 25,
+                        "name": "Восстановление здоровья"
+                    }
+                ],
+                "formId": "0x0003EADD",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Слабое зелье лечения",
+                "value": 17,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Potion",
+                "count": 3,
+                "effects": [
+                    {
+                        "description": "Восстанавливает 25 ед. магии.",
+                        "descriptionTemplate": "Восстанавливает <mag> ед. магии.",
+                        "duration": 0,
+                        "magnitude": 25,
+                        "name": "Восстановление магии"
+                    }
+                ],
+                "formId": "0x0003EAE0",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Слабое зелье магии",
+                "value": 20,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Potion",
+                "count": 1,
+                "effects": [
+                    {
+                        "description": "Восстанавливает 25 ед. запаса сил.",
+                        "descriptionTemplate": "Восстанавливает <mag> ед. запаса сил.",
+                        "duration": 0,
+                        "magnitude": 25,
+                        "name": "Восстановление запаса сил"
+                    }
+                ],
+                "formId": "0x0003EAE5",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Слабое зелье запаса сил",
+                "value": 20,
+                "weight": 0.5
+            }
+        ]
+    },
+    "inventory.ingredients": {
+        "items": [
+            {
+                "categoryType": "Ingredient",
+                "count": 1,
+                "effects": [
+                    {
+                        "known": true,
+                        "name": "Уязвимость к магии"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: восстановление"
+                    },
+                    {
+                        "known": false,
+                        "name": "Замедление"
+                    },
+                    {
+                        "known": false,
+                        "name": "Регенерация магии"
+                    }
+                ],
+                "formId": "0x00034CDF",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Соль",
+                "value": 2,
+                "weight": 0.20000000298023224
+            }
+        ]
+    },
+    "inventory.scrolls": {
+        "items": []
+    },
+    "inventory.keys": {
+        "items": [
+            {
+                "categoryType": "Key",
+                "count": 1,
+                "formId": "0x000B5178",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Ключ от крепости Хелген",
+                "value": 0,
+                "weight": 0
+            }
+        ]
+    },
+    "inventory.books": {
+        "items": []
+    },
+    "inventory.misc": {
+        "gems": [],
+        "items": [
+            {
+                "categoryType": "Misc",
+                "count": 13,
+                "formId": "0x0000000A",
+                "isFavorite": false,
+                "isStolen": false,
+                "name": "Отмычка",
+                "value": 2,
+                "weight": -1
+            }
+        ]
+    },
+    "inventory.categories": {
+        "categories": [
+            {
+                "categoryId": "Food",
+                "count": 2,
+                "name": "Food"
+            },
+            {
+                "categoryId": "Misc",
+                "count": 13,
+                "name": "Misc"
+            },
+            {
+                "categoryId": "Ammo",
+                "count": 1,
+                "name": "Ammo"
+            },
+            {
+                "categoryId": "Ingredients",
+                "count": 1,
+                "name": "Ingredients"
+            },
+            {
+                "categoryId": "Keys",
+                "count": 1,
+                "name": "Keys"
+            },
+            {
+                "categoryId": "Potions",
+                "count": 9,
+                "name": "Potions"
+            },
+            {
+                "categoryId": "Weapons",
+                "count": 5,
+                "name": "Weapons"
+            },
+            {
+                "categoryId": "Apparel",
+                "count": 5,
+                "name": "Apparel"
+            },
+            {
+                "categoryId": "Favorites",
+                "count": 2,
+                "name": "Favorites"
+            }
+        ]
+    },
+    "magic.categories": {
+        "categories": [
+            {
+                "categoryId": "Destruction",
+                "count": 1,
+                "name": "Destruction"
+            },
+            {
+                "categoryId": "Restoration",
+                "count": 1,
+                "name": "Restoration"
+            }
+        ]
+    },
+    "magic.destruction": {
+        "items": [
+            {
+                "castingType": "Concentration",
+                "categoryType": "Destruction",
+                "chargeTime": 0,
+                "cost": 13,
+                "costValue": 14,
+                "delivery": "Aimed",
+                "effects": [
+                    {
+                        "description": "Струя пламени, наносящая 8 ед. урона в секунду. Подожженные несут дополнительный урон.",
+                        "descriptionTemplate": "Струя пламени, наносящая <mag> ед. урона в секунду. Подожженные несут дополнительный урон.",
+                        "duration": 1,
+                        "magnitude": 8,
+                        "name": "Пламя"
+                    },
+                    {
+                        "description": "",
+                        "descriptionTemplate": "",
+                        "duration": 15,
+                        "magnitude": 99,
+                        "name": "Жаркое пламя - страх"
+                    }
+                ],
+                "equippedHand": null,
+                "formId": "0x00012FCD",
+                "hotkeys": [
+                    7
+                ],
+                "isActive": false,
+                "isEquipped": false,
+                "isFavorite": true,
+                "level": 0,
+                "name": "Пламя",
+                "range": 0
+            }
+        ]
+    },
+    "magic.alteration": {
+        "items": []
+    },
+    "magic.conjuration": {
+        "items": []
+    },
+    "magic.illusion": {
+        "items": []
+    },
+    "magic.restoration": {
+        "items": [
+            {
+                "castingType": "Concentration",
+                "categoryType": "Restoration",
+                "chargeTime": 0,
+                "cost": 11,
+                "costValue": 12,
+                "delivery": "Self",
+                "effects": [
+                    {
+                        "description": "Восстанавливает 10 ед. здоровья заклинателя в секунду.",
+                        "descriptionTemplate": "Восстанавливает <mag> ед. здоровья заклинателя в секунду.",
+                        "duration": 1,
+                        "magnitude": 10,
+                        "name": "Восстановление здоровья"
+                    },
+                    {
+                        "description": "",
+                        "descriptionTemplate": "",
+                        "duration": 1,
+                        "magnitude": 10,
+                        "name": "Восстановление запаса сил"
+                    }
+                ],
+                "equippedHand": "left",
+                "formId": "0x00012FCC",
+                "hotkeys": [
+                    0
+                ],
+                "isActive": false,
+                "isEquipped": true,
+                "isFavorite": true,
+                "level": 0,
+                "name": "Лечение",
+                "range": 0
+            }
+        ]
+    },
+    "magic.enchanting": {
+        "items": []
+    },
+    "hotkeys.items": {
+        "items": [
+            {
+                "bound": true,
+                "chargeTime": 0,
+                "cost": 11,
+                "formId": "0x00012FCC",
+                "kind": "spell",
+                "level": 0,
+                "name": "Лечение",
+                "school": "Restoration",
+                "slot": 1,
+                "spellType": "Spell"
+            },
+            {
+                "bound": false,
+                "slot": 2
+            },
+            {
+                "bound": false,
+                "slot": 3
+            },
+            {
+                "bound": true,
+                "categoryType": "Weapon",
+                "count": 1,
+                "formId": "0x00013982",
+                "isFavorite": true,
+                "kind": "item",
+                "name": "Железная булава",
+                "slot": 4,
+                "value": 35,
+                "weaponType": "OneHandMace",
+                "weight": 13
+            },
+            {
+                "bodySlot": "Shield",
+                "bound": true,
+                "categoryType": "Apparel",
+                "count": 1,
+                "formId": "0x0001394B",
+                "isFavorite": true,
+                "kind": "item",
+                "name": "Прочный железный щит",
+                "slot": 5,
+                "value": 100,
+                "weight": 12
+            },
+            {
+                "bound": false,
+                "slot": 6
+            },
+            {
+                "bound": false,
+                "slot": 7
+            },
+            {
+                "bound": true,
+                "chargeTime": 0,
+                "cost": 13,
+                "formId": "0x00012FCD",
+                "kind": "spell",
+                "level": 0,
+                "name": "Пламя",
+                "school": "Destruction",
+                "slot": 8,
+                "spellType": "Spell"
+            }
+        ]
+    },
+    "map.player": {
+        "position": {
+            "angle": 4.774328231811523,
+            "cell": "Пустоши",
+            "cellFormId": "0x00009BB4",
+            "isInterior": false,
+            "parentWorldspace": "Tamriel",
+            "parentWorldspaceFormId": "0x0000003C",
+            "worldspace": "Tamriel",
+            "worldspaceFormId": "0x0000003C",
+            "x": -7371.52978515625,
+            "y": -63319.64453125,
+            "z": 818.838623046875
+        }
+    },
+    "map.hotspots": {
+        "hot": [
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Хелген",
+                "refId": "0x00017780",
+                "type": "Town",
+                "typeId": 2,
+                "x": 18350.400390625,
+                "y": -79480.96875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Фолкрит",
+                "refId": "0x00017760",
+                "type": "FalkreathCapitol",
+                "typeId": 50,
+                "x": -30296.33203125,
+                "y": -86283.8984375
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Пещера Каменный Ручей",
+                "refId": "0x00080F13",
+                "type": "Cave",
+                "typeId": 4,
+                "x": 174741.984375,
+                "y": -24827.77734375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Вайтран - Конюшни",
+                "refId": "0x00072879",
+                "type": "Stable",
+                "typeId": 21,
+                "x": 18312.81640625,
+                "y": -10665.4560546875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Данстар",
+                "refId": "0x0001773A",
+                "type": "DawnstarCapitol",
+                "typeId": 52,
+                "x": 30808.154296875,
+                "y": 106138.28125
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Могила чемпиона",
+                "refId": "0x0900CD93",
+                "type": "NordicRuin",
+                "typeId": 7,
+                "x": 191825.21875,
+                "y": -65998.8203125
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Медоварня Хоннинга",
+                "refId": "0x00038593",
+                "type": "Settlement",
+                "typeId": 3,
+                "x": 30929.93359375,
+                "y": -17710.779296875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Камни-хранители",
+                "refId": "0x0001BABD",
+                "type": "Doomstone",
+                "typeId": 18,
+                "x": 2806.979736328125,
+                "y": -59215.84765625
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Винтерхолд",
+                "refId": "0x000177EF",
+                "type": "WinterholdCapitol",
+                "typeId": 46,
+                "x": 109207.53125,
+                "y": 102864.0390625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Факельная шахта",
+                "refId": "0x000B6CDF",
+                "type": "Mine",
+                "typeId": 15,
+                "x": 8248.990234375,
+                "y": -57382.9375
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Пещеры слива",
+                "refId": "0x070038D6",
+                "type": "Cave",
+                "typeId": 4,
+                "x": -103703.328125,
+                "y": -35798.7109375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Ривервуд",
+                "refId": "0x000162A4",
+                "type": "Town",
+                "typeId": 2,
+                "x": 21941.015625,
+                "y": -44792.43359375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Ферма Пелагио",
+                "refId": "0x00016373",
+                "type": "WheatMill",
+                "typeId": 19,
+                "x": 19263.994140625,
+                "y": -16976.1953125
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Морфал",
+                "refId": "0x000177B0",
+                "type": "MorthalCapitol",
+                "typeId": 48,
+                "x": -38639.7421875,
+                "y": 66734.296875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Мирвотч",
+                "refId": "0xFE013FA2",
+                "type": "NordicTower",
+                "typeId": 31,
+                "x": -24536.19140625,
+                "y": 63564.9921875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Жилище в тундре",
+                "refId": "0x08000B8A",
+                "type": "Town",
+                "typeId": 2,
+                "x": 39685.3671875,
+                "y": 321.53350830078125
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Ветреный пик",
+                "refId": "0x00016232",
+                "type": "NordicRuin",
+                "typeId": 7,
+                "x": 1482.456298828125,
+                "y": -41162.3203125
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Виндхельм",
+                "refId": "0x00038436",
+                "type": "WindhelmCapitol",
+                "typeId": 38,
+                "x": 135025.78125,
+                "y": 35596.5859375
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Рифтен",
+                "refId": "0x0001C390",
+                "type": "RiftenCapitol",
+                "typeId": 36,
+                "x": 173415.203125,
+                "y": -96600.1484375
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Маркарт",
+                "refId": "0x0001C38A",
+                "type": "MarkarthCapitol",
+                "typeId": 44,
+                "x": -174024.296875,
+                "y": 5255.478515625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 26871.640625,
+                "y": 209.0516357421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Вайтран",
+                "refId": "0x000162CE",
+                "type": "WhiterunCapitol",
+                "typeId": 40,
+                "x": 19855.2265625,
+                "y": -7422.51025390625
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Солитьюд",
+                "refId": "0x0004D0F4",
+                "type": "SolitudeCapitol",
+                "typeId": 42,
+                "x": -64942.99609375,
+                "y": 104648
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Скайрим",
+                "refId": "0x04016FE6",
+                "type": "DLC02ToSkyrim",
+                "typeId": 57,
+                "x": 13982.345703125,
+                "y": 23713.3984375
+            }
+        ]
+    },
+    "game.status": {
+        "status": {
+            "canAct": true,
+            "controlsEnabled": true,
+            "dead": false,
+            "inCombat": false,
+            "inDialogue": false,
+            "inMainMenu": false,
+            "loading": false,
+            "paused": false
+        }
+    }
 }
