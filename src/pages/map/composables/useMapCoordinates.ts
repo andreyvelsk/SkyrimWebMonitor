@@ -72,9 +72,15 @@ export const MORTHAL_GAME: Point = { x: -38639.7421875, y: 66734.296875 };
 export const DAWNSTAR_GAME: Point = { x: 30808.154296875, y: 106138.28125 };
 export const WINTERHOLD_GAME: Point = { x: 109207.53125, y: 102864.0390625 };
 
-export const WHITERUN_IMAGE_PX: Point = { x: 5190.46, y: 2883.55 };
-export const SOLITUDE_IMAGE_PX: Point = { x: 3831.38, y: 1203.09 };
-export const RIFTEN_IMAGE_PX: Point = { x: 7497.31, y: 4262.83 };
+export const WHITERUN_IMAGE_PX: Point = { x: 6032.07, y: 4930.39 };
+export const SOLITUDE_IMAGE_PX: Point = { x: 4219.38, y: 2392.07 };
+export const RIFTEN_IMAGE_PX: Point = { x: 9625.23, y: 7005.07 };
+export const MARKARTH_IMAGE_PX: Point = { x: 1497.63, y: 4642.97 };
+export const WINDHELM_IMAGE_PX: Point = { x: 8682.57, y: 3974.99 };
+export const FALKREATH_IMAGE_PX: Point = { x: 4887.76, y: 6942.50 };
+export const MORTHAL_IMAGE_PX: Point = { x: 4627.66, y: 3117.10 };
+export const DAWNSTAR_IMAGE_PX: Point = { x: 6157.81, y: 2415.48 };
+export const WINTERHOLD_IMAGE_PX: Point = { x: 8116.69, y: 2364.11 };
 
 /**
  * Calibration set. Order is irrelevant. Entries with `game === null` or
@@ -82,15 +88,15 @@ export const RIFTEN_IMAGE_PX: Point = { x: 7497.31, y: 4262.83 };
  * to the fit.
  */
 export const REFERENCE_POINTS: ReferencePoint[] = [
-  { name: 'Whiterun',   game: WHITERUN_GAME,   imagePx: WHITERUN_IMAGE_PX },
-  { name: 'Solitude',   game: SOLITUDE_GAME,   imagePx: SOLITUDE_IMAGE_PX },
-  { name: 'Riften',     game: RIFTEN_GAME,     imagePx: RIFTEN_IMAGE_PX   },
-  { name: 'Markarth',   game: MARKARTH_GAME,   imagePx: { x: 2228.58, y: 2748.90 } },
-  { name: 'Windhelm',   game: WINDHELM_GAME,   imagePx: { x: 6882.69, y: 2315.27 } },
-  { name: 'Falkreath',  game: FALKREATH_GAME,  imagePx: { x: 4362.94, y: 4147.11 } },
-  { name: 'Morthal',    game: MORTHAL_GAME,    imagePx: { x: 4311.21, y: 1867.25 } },
-  { name: 'Dawnstar',   game: DAWNSTAR_GAME,   imagePx: { x: 5248.70, y: 1191.39 } },
-  { name: 'Winterhold', game: WINTERHOLD_GAME, imagePx: { x: 6458.78, y: 1168.84 } },
+  { name: 'Whiterun',   game: WHITERUN_GAME,   imagePx: WHITERUN_IMAGE_PX   },
+  { name: 'Solitude',   game: SOLITUDE_GAME,   imagePx: SOLITUDE_IMAGE_PX   },
+  { name: 'Riften',     game: RIFTEN_GAME,     imagePx: RIFTEN_IMAGE_PX     },
+  { name: 'Markarth',   game: MARKARTH_GAME,   imagePx: MARKARTH_IMAGE_PX   },
+  { name: 'Windhelm',   game: WINDHELM_GAME,   imagePx: WINDHELM_IMAGE_PX   },
+  { name: 'Falkreath',  game: FALKREATH_GAME,  imagePx: FALKREATH_IMAGE_PX  },
+  { name: 'Morthal',    game: MORTHAL_GAME,    imagePx: MORTHAL_IMAGE_PX    },
+  { name: 'Dawnstar',   game: DAWNSTAR_GAME,   imagePx: DAWNSTAR_IMAGE_PX   },
+  { name: 'Winterhold', game: WINTERHOLD_GAME, imagePx: WINTERHOLD_IMAGE_PX },
 ];
 function solve3x3(
   M: readonly [readonly number[], readonly number[], readonly number[]],
