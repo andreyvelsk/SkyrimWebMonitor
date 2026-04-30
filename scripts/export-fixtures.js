@@ -46,7 +46,7 @@ const SUBSCRIPTIONS = {
 
     // Map
     'map.player': { position: 'Player::Position' },
-    'map.hotspots': { hot: 'Map::Markers' },
+    'map.hotspots': { hot: 'Map::Markers::Locations' },
 
     // Global subscriptions
     'game.status': { status: 'Game::Status' },
