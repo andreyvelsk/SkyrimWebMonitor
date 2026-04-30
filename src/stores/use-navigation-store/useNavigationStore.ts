@@ -50,6 +50,11 @@ export const useNavigationStore = defineStore('navigation', () => {
   const activeSubTab = ref<string>('stats');
   const transitionDirection = ref<'left' | 'right' | ''>('');
 
+  // Remembers the last active sub-tab per main tab so that returning
+  // to a tab restores its previously selected sub-tab (only on tab click,
+  // not when swiping between sub-tabs).
+  const lastSubTabMap = ref<Record<string, string>>({});
+
   // Optional ordering map: specify sub-tab ids order per tab.
   // If an entry is empty or missing, fallback to server order.
   const subTabsOrderMap = ref<Record<string, string[]>>({
@@ -103,8 +108,14 @@ export const useNavigationStore = defineStore('navigation', () => {
 
     if (!selectSubTab) return;
 
-    // Prefer first visible sub-tab, fall back to first available
+    // Prefer last-visited visible sub-tab for this tab, then ordered first,
+    // then first visible, then first available.
     const visible = getVisibleSubTabs();
+    const remembered = lastSubTabMap.value[tabId];
+    if (remembered && visible.some((s) => s.id === remembered)) {
+      setActiveSubTab(remembered, true, direction);
+      return;
+    }
     if (visible.length) {
       setActiveSubTab(visible[0].id, true, direction);
     } else if (tab.subTabs?.length) {
@@ -147,6 +158,9 @@ export const useNavigationStore = defineStore('navigation', () => {
     }
 
     activeSubTab.value = subTabId;
+    if (subTabId && activeTab.value) {
+      lastSubTabMap.value[activeTab.value] = subTabId;
+    }
   };
 
   /**
