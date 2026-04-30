@@ -7,7 +7,7 @@ import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import type { RouterResult } from './types';
-import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isHotkeyItemsData, isGameStatusData, isMapHotspotsData, isPlayerPositionData } from './typeGuards';
+import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isHotkeyItemsData, isGameStatusData, isMapHotspotsData, isMapQuestMarkersData, isPlayerPositionData } from './typeGuards';
 export class DataRouter {
   static routeDataById(subscriptionId: string, data: unknown): RouterResult {
     const characterStore = useCharacterStore();
@@ -183,6 +183,12 @@ export class DataRouter {
         console.log('[DataRouter] Routing map hotspots to map store');
         useMapHotspotsStore().setHotspots(data);
         return { success: true, message: 'Data routed to map store (hotspots)' };
+      }
+
+      if (isMapQuestMarkersData(data, subscriptionId)) {
+        console.log('[DataRouter] Routing map quest markers to map store');
+        useMapHotspotsStore().setQuestMarkers(data);
+        return { success: true, message: 'Data routed to map store (quest markers)' };
       }
 
       if (isPlayerPositionData(data, subscriptionId)) {

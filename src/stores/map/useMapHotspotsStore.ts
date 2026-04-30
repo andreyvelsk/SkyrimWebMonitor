@@ -1,10 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { MapHotspot, MapHotspotsState } from './types';
+import type {
+  MapHotspot,
+  MapHotspotsState,
+  MapQuestMarker,
+  MapQuestMarkersState,
+} from './types';
 
 export const useMapHotspotsStore = defineStore('mapHotspots', () => {
   /** Current list of hotspots. Empty until the server delivers a payload. */
   const hotspots = ref<MapHotspot[]>([]);
+  /** Current list of quest objective markers. */
+  const questMarkers = ref<MapQuestMarker[]>([]);
 
   /**
    * Replace the hotspot list. Accepts either the raw `{ hot: [...] }` payload
@@ -23,8 +30,25 @@ export const useMapHotspotsStore = defineStore('mapHotspots', () => {
     hotspots.value = Array.isArray(data.hot) ? data.hot : [];
   };
 
+  /** Replace quest marker list from `{ marker: [...] }` payload or bare array. */
+  const setQuestMarkers = (
+    data: MapQuestMarkersState | MapQuestMarker[] | null | undefined
+  ): void => {
+    if (!data) {
+      questMarkers.value = [];
+      return;
+    }
+    if (Array.isArray(data)) {
+      questMarkers.value = data;
+      return;
+    }
+    questMarkers.value = Array.isArray(data.marker) ? data.marker : [];
+  };
+
   return {
     hotspots,
+    questMarkers,
     setHotspots,
+    setQuestMarkers,
   };
 });
