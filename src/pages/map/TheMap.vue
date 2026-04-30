@@ -46,7 +46,15 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue';
 import OpenSeadragon from 'openseadragon';
-import { MAP_IMAGE_URL, preloadMapImage } from './preloadMap';
+import {
+  MAP_IMAGE_URL,
+  MAP_DZI_URL,
+  preloadMapImage,
+  prefetchMapTiles,
+  mapTileBlobUrls,
+  mapTilesPrefetchActive,
+  mapTilesPrefetchProgress,
+} from './preloadMap';
 import MapMarkers from './MapMarkers.vue';
 import { SkyrimBackdrop } from '@/shared/ui';
 
@@ -63,13 +71,6 @@ vips dzsave public/skyrim.png public/map-dzi/skyrim \
   --overlap 1 \
   --suffix '.webp[Q=80]'
 */
-/**
- * Optional Deep Zoom (DZI) URL produced by libvips. If the file is reachable,
- * OpenSeadragon serves the map from a tiled pyramid (no lag, no grid, no
- * zoom artefacts). Otherwise the viewer falls back to the single PNG.
- */
-const MAP_DZI_URL = `${import.meta.env.BASE_URL}map-dzi/skyrim.dzi`;
-
 /** Initial zoom factor relative to the "cover" home zoom. */
 const INITIAL_ZOOM_FACTOR = 2.5;
 /** Max zoom factor relative to home zoom. */
@@ -124,9 +125,9 @@ const translateY = ref(0);
 const viewportTick = ref(0);
 
 /** Whether tile prefetch is still in progress (used to show a backdrop). */
-const isPrefetching = ref(false);
+const isPrefetching = mapTilesPrefetchActive;
 /** 0..100 — how many tiles have been cached so far. */
-const prefetchProgress = ref(0);
+const prefetchProgress = mapTilesPrefetchProgress;
 
 const overlayStyle = computed<StyleValue>(() => ({
   width: `${imgNaturalW.value}px`,
@@ -192,146 +193,36 @@ function logImagePxAt(imgX: number, imgY: number): void {
 }
 
 /**
- * Cache every DZI tile as a Blob in JS memory and rewrite the source's
- * `getTileUrl` to return `blob:` URLs. After the prefetch completes, the
- * browser never re-hits the network for tiles regardless of the server's
- * Cache-Control headers, and OSD's internal tile-cache evictions don't cost
- * a thing because re-loading from a blob URL is instant.
+ * Patch OSD's source so it serves DZI tiles from the shared blob-URL cache
+ * populated by `prefetchMapTiles()` (kicked off at app start by
+ * `useAppLoader`). Falls back to the original network URL for tiles that
+ * are not cached yet, so the viewer is fully usable while the background
+ * prefetch is still running.
+ *
+ * After the prefetch completes, the browser never re-hits the network for
+ * tiles regardless of the server's Cache-Control headers, and OSD's
+ * internal tile-cache evictions don't cost a thing because re-loading from
+ * a blob URL is instant.
  */
-const PREFETCH_CONCURRENCY = 12;
-const tileBlobUrls = new Map<string, string>();
-
-async function prefetchAllTiles(item: OpenSeadragon.TiledImage): Promise<void> {
+function attachSharedTileCache(item: OpenSeadragon.TiledImage): void {
   const source = item.source as OpenSeadragon.TileSource & {
-    minLevel?: number;
-    maxLevel?: number;
-    getNumTiles?: (_level: number) => OpenSeadragon.Point;
     getTileUrl?: (_level: number, _x: number, _y: number) => string | (() => string);
   };
 
-  if (typeof source.getTileUrl !== 'function' || typeof source.getNumTiles !== 'function') {
-    console.warn('[map] prefetch skipped: source has no tile pyramid', {
-      hasGetTileUrl: typeof source.getTileUrl,
-      hasGetNumTiles: typeof source.getNumTiles,
-      source,
-    });
-    return; // Single-image source has no tile pyramid to prefetch.
+  if (typeof source.getTileUrl !== 'function') {
+    return; // Single-image source has no tile pyramid.
   }
 
   const originalGetTileUrl = source.getTileUrl.bind(source);
-  // Resolve real URL the same way OSD would.
-  const resolveUrl = (level: number, x: number, y: number): string => {
-    const raw = originalGetTileUrl(level, x, y);
-    return typeof raw === 'function' ? raw() : raw;
-  };
-
-  // Patch the source so OSD asks for blob URLs once they are ready,
-  // and falls back to the network URL until then.
   source.getTileUrl = ((level: number, x: number, y: number): string => {
-    const realUrl = resolveUrl(level, x, y);
-    return tileBlobUrls.get(realUrl) ?? realUrl;
+    const raw = originalGetTileUrl(level, x, y);
+    const realUrl = typeof raw === 'function' ? raw() : raw;
+    return mapTileBlobUrls.get(realUrl) ?? realUrl;
   }) as typeof source.getTileUrl;
 
-  const minLevel = source.minLevel ?? 0;
-  const maxLevel = source.maxLevel ?? 0;
-
-  // Order: lowest LODs first (cheap and cover full zoom-out instantly), then
-  // climb level by level. Each level is iterated in a centre-out order so
-  // tiles around the current view are warmed before the corners.
-  const urls: string[] = [];
-  for (let level = minLevel; level <= maxLevel; level += 1) {
-    const counts = source.getNumTiles(level);
-    const cx = (counts.x - 1) / 2;
-    const cy = (counts.y - 1) / 2;
-    const coords: Array<{ x: number; y: number; d: number }> = [];
-    for (let y = 0; y < counts.y; y += 1) {
-      for (let x = 0; x < counts.x; x += 1) {
-        coords.push({ x, y, d: (x - cx) ** 2 + (y - cy) ** 2 });
-      }
-    }
-    coords.sort((a, b) => a.d - b.d);
-    for (const { x, y } of coords) {
-      urls.push(resolveUrl(level, x, y));
-    }
-  }
-
-  isPrefetching.value = true;
-  prefetchProgress.value = 0;
-  const total = urls.length;
-  console.info('[map] prefetch starting', {
-    minLevel,
-    maxLevel,
-    totalTiles: total,
-    sampleUrl: urls[0],
-  });
-  let done = 0;
-  let okCount = 0;
-  let failCount = 0;
-
-  let cursor = 0;
-  async function worker(): Promise<void> {
-    while (cursor < urls.length) {
-      const url = urls[cursor++];
-      if (!tileBlobUrls.has(url)) {
-        try {
-          const response = await fetch(url, { cache: 'force-cache' });
-          if (response.ok) {
-            const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            // Pre-decode the image so the browser doesn't pay the WebP/PNG
-            // decode cost on first render. Without this, blob URLs are already
-            // in memory but the actual bitmap is created lazily, which causes
-            // a visible flash on rapid zoom transitions.
-            try {
-              const img = new Image();
-              img.decoding = 'async';
-              img.src = blobUrl;
-              await img.decode();
-            } catch {
-              // decode() can throw on some formats — ignore, the blob URL is
-              // still usable and OSD's loader will decode lazily.
-            }
-            tileBlobUrls.set(url, blobUrl);
-            okCount += 1;
-          } else {
-            failCount += 1;
-          }
-        } catch {
-          failCount += 1;
-          // Network error — leave the original URL so OSD can retry on demand.
-        }
-      } else {
-        okCount += 1;
-      }
-      done += 1;
-      // Throttle reactivity: only update on whole-percent steps.
-      const pct = Math.floor((done / total) * 100);
-      if (pct !== prefetchProgress.value) prefetchProgress.value = pct;
-    }
-  }
-
-  const workers = Array.from({ length: PREFETCH_CONCURRENCY }, worker);
-  await Promise.all(workers);
-  isPrefetching.value = false;
-  prefetchProgress.value = 100;
-  console.info('[map] prefetch done', {
-    cached: okCount,
-    failed: failCount,
-    total,
-  });
-
-  // Note: we deliberately do NOT call viewer.world.resetItems() here. OSD's
-  // tile cache already holds the initial tiles; when it evicts them and asks
-  // again, our patched `getTileUrl` returns the blob URL and the request is
-  // served from memory. Calling resetItems would force a full re-render and
-  // produce its own visible flash.
-}
-
-function releaseTileBlobUrls(): void {
-  for (const url of tileBlobUrls.values()) {
-    URL.revokeObjectURL(url);
-  }
-  tileBlobUrls.clear();
+  // Make sure the background prefetch is running. Idempotent: a no-op if it
+  // was already started by useAppLoader.
+  void prefetchMapTiles();
 }
 
 function applyHomeBounds(): void {
@@ -424,7 +315,7 @@ async function setupViewer(): Promise<void> {
     imgNaturalW.value = size.x;
     imgNaturalH.value = size.y;
     applyHomeBounds();
-    void prefetchAllTiles(item);
+    attachSharedTileCache(item);
   });
 
   viewer.addHandler('update-viewport', syncOverlayTransform);
@@ -463,7 +354,9 @@ onBeforeUnmount(() => {
     viewer.destroy();
     viewer = null;
   }
-  releaseTileBlobUrls();
+  // Note: blob URLs in the shared `mapTileBlobUrls` cache are intentionally
+  // NOT revoked here. They live for the lifetime of the page so that
+  // re-entering the Map tab is instant.
 });
 </script>
 
