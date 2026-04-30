@@ -12,6 +12,16 @@ dist
 dist-ssr
 *.local
 
+# Map source PNG and generated DZI pyramid: kept out of git so the repo
+# doesn't bloat each time the map is replaced. Re-generate via:
+#   vips dzsave public/skyrim.png public/map-dzi/skyrim \
+#     --layout dz --tile-size 512 --overlap 1 --suffix '.webp[Q=80]'
+# The PNG itself should be stored in cloud storage / release assets and
+# fetched as part of the build (or kept locally by developers).
+public/skyrim.png
+public/map-dzi/
+public/map.jpg
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -151,6 +151,10 @@
         "message": "Совершить быстрое путешествие?",
         "confirm": "Да",
         "cancel": "Нет"
+      },
+      "prefetch": {
+        "label": "Загрузка карты",
+        "progress": "{progress}%"
       }
     }
   },

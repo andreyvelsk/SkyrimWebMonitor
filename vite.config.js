@@ -105,14 +105,21 @@ export default defineConfig(({ mode }) => {
         // with hashed URLs on every build, so newly deployed versions are
         // picked up automatically as soon as the network is available
         // — without any manual cache clearing.
-        includeAssets: ['pwa-svg.svg', 'map.jpg'],
+        includeAssets: ['pwa-svg.svg'],
         workbox: {
           skipWaiting: true,
           clientsClaim: true,
-          // App shell (auto-generated globs) + every used icon.
+          // App shell (auto-generated globs) + every used icon + map tiles.
           // pruneUnusedIcons has already removed unused SVGs from dist/.
+          // `webp` and `dzi` are listed so the deep-zoom map pyramid under
+          // `dist/map-dzi/` is precached: Workbox stamps every file with a
+          // content-hash revision, so replacing `public/skyrim.png` and
+          // re-running `vips dzsave` will produce a new SW manifest and the
+          // browser will swap caches automatically on next visit
+          // (autoUpdate + skipWaiting + clientsClaim + cleanupOutdatedCaches).
           globPatterns: [
-            '**/*.{js,css,html,ico,png,jpg,svg,webmanifest}',
+            '**/*.{js,css,html,ico,png,jpg,svg,webp,webmanifest}',
+            'map-dzi/**/*.dzi',
             ...USED_ICONS.map((p) => `icons/${p}`),
           ],
           globIgnores: ['**/node_modules/**/*', 'fixtures.json'],
