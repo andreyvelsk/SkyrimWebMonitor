@@ -1,101 +1,86 @@
 <template>
   <div class="map-outer">
-    <div
-      ref="containerRef"
-      class="map-page"
-      @touchstart.stop="onTouchStart"
-      @touchmove.prevent.stop="onTouchMove"
-      @touchend.stop="onTouchEnd"
-      @touchcancel.stop="onTouchEnd"
-      @wheel.prevent="onWheel"
-      @click="onClick"
-    >
-      <img
-        :src="MAP_IMAGE_SRC"
-        class="map-image"
-        :class="{ 'is-grabbing': isPanning }"
-        :style="imageStyle"
-        :alt="$t('pages.map.alt')"
-        draggable="false"
-        @load="onImageLoad"
-      >
+    <div class="map-page">
+      <div
+        ref="osdContainerRef"
+        class="osd-host"
+      />
       <map-markers
+        v-if="imgNaturalW && imgNaturalH"
         ref="markersRef"
+        class="map-overlay"
         :img-natural-w="imgNaturalW"
         :img-natural-h="imgNaturalH"
         :scale="scale"
         :cover-scale="coverScale"
-        :overlay-style="imageStyle"
+        :overlay-style="overlayStyle"
       />
+      <div
+        v-if="isPrefetching"
+        class="map-prefetch-backdrop"
+        role="status"
+        aria-live="polite"
+      >
+        <div class="map-prefetch-backdrop__panel">
+          <span class="map-prefetch-backdrop__label">
+            {{ $t('pages.map.prefetch.label') }}
+          </span>
+          <div
+            class="map-prefetch-backdrop__bar"
+            :style="{ '--p': `${prefetchProgress}%` }"
+          />
+          <span class="map-prefetch-backdrop__pct">
+            {{ $t('pages.map.prefetch.progress', { progress: prefetchProgress }) }}
+          </span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue';
+import OpenSeadragon from 'openseadragon';
 import { MAP_IMAGE_URL, preloadMapImage } from './preloadMap';
 import MapMarkers from './MapMarkers.vue';
 
 // =============================================================
 // Map view configuration
-// All tunable parameters are kept here as named constants.
 // =============================================================
 
-/** Path to the map image (served from /public). */
-const MAP_IMAGE_SRC = MAP_IMAGE_URL;
+/*
+to generate tiles use command
 
+vips dzsave public/skyrim.png public/map-dzi/skyrim \
+  --layout dz \
+  --tile-size 512 \
+  --overlap 1 \
+  --suffix '.webp[Q=80]'
+*/
 /**
- * Minimum zoom factor relative to the "cover" base scale (the scale at which
- * the image fully fills the viewport with no empty bars). Must be >= 1 — any
- * value below 1 would expose background bars, which is forbidden.
+ * Optional Deep Zoom (DZI) URL produced by libvips. If the file is reachable,
+ * OpenSeadragon serves the map from a tiled pyramid (no lag, no grid, no
+ * zoom artefacts). Otherwise the viewer falls back to the single PNG.
  */
-const MIN_ZOOM_FACTOR = 1;
+const MAP_DZI_URL = `${import.meta.env.BASE_URL}map-dzi/skyrim.dzi`;
 
-/** Maximum zoom factor relative to the cover base scale. */
-const MAX_ZOOM_FACTOR = 10;
-
-/** Initial zoom factor relative to the cover base scale. */
+/** Initial zoom factor relative to the "cover" home zoom. */
 const INITIAL_ZOOM_FACTOR = 2.5;
-
-/** Wheel/trackpad zoom sensitivity. Higher = faster zoom per wheel tick. */
-const WHEEL_ZOOM_SPEED = 0.0015;
-
-/** Maximum allowed delay (ms) between two taps to count as a double-tap. */
-const DOUBLE_TAP_DELAY = 10;
-/** Max distance (px) between two taps to still register as a double-tap. */
-const DOUBLE_TAP_MAX_DISTANCE = 30;
-/** Zoom factor (relative to cover) applied on double-tap zoom-in. */
-const DOUBLE_TAP_ZOOM_FACTOR = 2.5;
-/**
- * Maximum distance (px) the finger may travel between touchstart and
- * touchend while still being treated as a tap (used for click-coordinate
- * logging). Anything beyond this is considered a pan gesture.
- */
-const TAP_MAX_MOVEMENT = 8;
-/** Background color shown around the image during transitions / before load. */
+/** Max zoom factor relative to home zoom. */
+const MAX_ZOOM_FACTOR = 1;
+/** Background color around the map. */
 const BACKGROUND_COLOR = 'var(--skyrim-bg-dark)';
 
 // =============================================================
-// Torn-paper edge effect
-// Drawn as an SVG mask: a white rect inset from the edges, distorted by an
-// feTurbulence/feDisplacementMap filter so its outline becomes irregular.
-// All parameters live in viewBox units (0..TEAR_VIEWBOX) and stretch with the
-// container thanks to `preserveAspectRatio='none'`.
+// Torn-paper edge effect (unchanged)
 // =============================================================
 
-/** SVG viewBox size for the mask. Larger = finer noise resolution. */
 const TEAR_VIEWBOX = 400;
-/** Distance (viewBox units) from each edge to the rect that gets distorted. */
 const TEAR_INSET = 5;
-/** feTurbulence baseFrequency. Smaller = larger, smoother tears. */
 const TEAR_BASE_FREQUENCY = 0.055;
-/** feTurbulence octaves. Higher = more detailed roughness. */
 const TEAR_OCTAVES = 3;
-/** feDisplacementMap scale (viewBox units). Higher = deeper tears. */
 const TEAR_DISPLACEMENT = 32;
-/** feTurbulence seed. Change to vary the pattern. */
 const TEAR_SEED = 4;
-/** Soft drop-shadow under the torn edges, gives a slight paper depth. */
 const TEAR_SHADOW = '0 4px 14px rgba(0, 0, 0, 0.55)';
 
 const TEAR_MASK_URL = (() => {
@@ -115,321 +100,366 @@ const TEAR_MASK_URL = (() => {
 // State
 // =============================================================
 
-const containerRef = ref<HTMLElement | null>(null);
+const osdContainerRef = ref<HTMLElement | null>(null);
 const markersRef = ref<InstanceType<typeof MapMarkers> | null>(null);
 
-/**
- * Natural image dimensions. Populated on image load. Until then we cannot
- * compute the cover scale, so interactions are no-ops.
- */
 const imgNaturalW = ref(0);
 const imgNaturalH = ref(0);
 
-/** Current absolute scale (in CSS pixels per natural image pixel). */
+/**
+ * Current absolute scale (CSS px per natural image px) and translate of the
+ * image inside the viewport. Synced from OSD on every viewport update so the
+ * marker SVG overlay can mirror the image transform exactly.
+ */
 const scale = ref(0);
 const translateX = ref(0);
 const translateY = ref(0);
-const isPanning = ref(false);
+/** Bumped on each viewport update to keep coverScale reactive. */
+const viewportTick = ref(0);
 
-const imageStyle = computed(() => ({
+/** Whether tile prefetch is still in progress (used to show a backdrop). */
+const isPrefetching = ref(false);
+/** 0..100 — how many tiles have been cached so far. */
+const prefetchProgress = ref(0);
+
+const overlayStyle = computed<StyleValue>(() => ({
   width: `${imgNaturalW.value}px`,
   height: `${imgNaturalH.value}px`,
   transform: `translate3d(${translateX.value}px, ${translateY.value}px, 0) scale(${scale.value})`,
   transformOrigin: '0 0',
 }));
 
-// =============================================================
-// Scale helpers
-// =============================================================
-
-/**
- * Cover scale: the scale at which the image fully fills the viewport with no
- * empty bars. This is the floor for all zoom operations.
- */
-function getCoverScale(): number {
-  const cont = containerRef.value;
+const coverScale = computed(() => {
+  // Touch the tick so this recomputes on viewport changes / resize.
+  void viewportTick.value;
+  const cont = osdContainerRef.value;
   if (!cont || !imgNaturalW.value || !imgNaturalH.value) return 1;
   return Math.max(
     cont.clientWidth / imgNaturalW.value,
     cont.clientHeight / imgNaturalH.value
   );
-}
-
-function getMinScale(): number {
-  return getCoverScale() * MIN_ZOOM_FACTOR;
-}
-
-function getMaxScale(): number {
-  return getCoverScale() * MAX_ZOOM_FACTOR;
-}
-
-/** Reactive cover scale exposed to child overlays (e.g. markers). */
-const coverScale = computed(() => getCoverScale());
+});
 
 // =============================================================
-// Gesture tracking
+// OpenSeadragon viewer
 // =============================================================
 
-type Mode = 'none' | 'pan' | 'pinch';
-let mode: Mode = 'none';
+let viewer: OpenSeadragon.Viewer | null = null;
 
-let lastTouchX = 0;
-let lastTouchY = 0;
-let lastPinchDistance = 0;
-let lastPinchCenterX = 0;
-let lastPinchCenterY = 0;
+type OsdTileSource = NonNullable<OpenSeadragon.Options['tileSources']>;
 
-let lastTapTime = 0;
-let lastTapX = 0;
-let lastTapY = 0;
-
-/** Tracks if the current touch sequence has moved beyond the tap threshold. */
-let tapStartX = 0;
-let tapStartY = 0;
-let tapMoved = false;
-
-function getDistance(t1: Touch, t2: Touch): number {
-  return Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+async function detectTileSource(): Promise<OsdTileSource> {
+  // Try DZI first; HEAD is enough to confirm presence.
+  try {
+    const res = await fetch(MAP_DZI_URL, { method: 'HEAD', cache: 'force-cache' });
+    if (res.ok) return MAP_DZI_URL;
+  } catch {
+    // fall through
+  }
+  return { type: 'image', url: MAP_IMAGE_URL } as OsdTileSource;
 }
 
-function canPanX(): boolean {
-  const cont = containerRef.value;
-  if (!cont) return false;
-  return imgNaturalW.value * scale.value > cont.clientWidth + 1e-6;
-}
+function syncOverlayTransform(): void {
+  if (!viewer || !imgNaturalW.value) return;
+  const item = viewer.world.getItemAt(0);
+  if (!item) return;
 
-function canPanY(): boolean {
-  const cont = containerRef.value;
-  if (!cont) return false;
-  return imgNaturalH.value * scale.value > cont.clientHeight + 1e-6;
-}
+  // Project the image's (0,0) and (W,0) onto the viewer's CSS pixel space to
+  // recover the affine transform (uniform scale + translate).
+  const p0v = item.imageToViewportCoordinates(0, 0, true);
+  const pXv = item.imageToViewportCoordinates(imgNaturalW.value, 0, true);
+  const p0 = viewer.viewport.pixelFromPoint(p0v, true);
+  const pX = viewer.viewport.pixelFromPoint(pXv, true);
 
-function isZoomedIn(): boolean {
-  return scale.value > getMinScale() + 1e-6;
-}
-
-function clampTranslation(): void {
-  const cont = containerRef.value;
-  if (!cont) return;
-  const cw = cont.clientWidth;
-  const ch = cont.clientHeight;
-  const sw = imgNaturalW.value * scale.value;
-  const sh = imgNaturalH.value * scale.value;
-
-  if (sw <= cw) {
-    translateX.value = (cw - sw) / 2;
-  } else {
-    translateX.value = Math.max(cw - sw, Math.min(0, translateX.value));
+  const s = (pX.x - p0.x) / imgNaturalW.value;
+  if (s > 0 && Number.isFinite(s)) {
+    scale.value = s;
+    translateX.value = p0.x;
+    translateY.value = p0.y;
   }
 
-  if (sh <= ch) {
-    translateY.value = (ch - sh) / 2;
-  } else {
-    translateY.value = Math.max(ch - sh, Math.min(0, translateY.value));
-  }
+  viewportTick.value += 1;
 }
 
-function setScaleAt(newScale: number, focalClientX: number, focalClientY: number): void {
-  const cont = containerRef.value;
-  if (!cont || !scale.value) return;
-  const rect = cont.getBoundingClientRect();
-  const fx = focalClientX - rect.left;
-  const fy = focalClientY - rect.top;
-
-  const clamped = Math.max(getMinScale(), Math.min(getMaxScale(), newScale));
-  if (clamped === scale.value) return;
-
-  // Keep the focal point fixed in image space.
-  translateX.value = fx - ((fx - translateX.value) / scale.value) * clamped;
-  translateY.value = fy - ((fy - translateY.value) / scale.value) * clamped;
-  scale.value = clamped;
-  clampTranslation();
-}
-
-function resetView(): void {
-  const cont = containerRef.value;
-  scale.value = getCoverScale() * INITIAL_ZOOM_FACTOR;
-  if (cont) {
-    translateX.value = (cont.clientWidth - imgNaturalW.value * scale.value) / 2;
-    translateY.value = (cont.clientHeight - imgNaturalH.value * scale.value) / 2;
-  } else {
-    translateX.value = 0;
-    translateY.value = 0;
-  }
-  clampTranslation();
-}
-
-// =============================================================
-// Touch handlers
-// =============================================================
-
-function onTouchStart(e: TouchEvent): void {
-  if (e.touches.length === 1) {
-    const t = e.touches[0];
-    mode = 'pan';
-    isPanning.value = canPanX() || canPanY();
-    lastTouchX = t.clientX;
-    lastTouchY = t.clientY;
-    tapStartX = t.clientX;
-    tapStartY = t.clientY;
-    tapMoved = false;
-
-    const now = Date.now();
-    const dx = t.clientX - lastTapX;
-    const dy = t.clientY - lastTapY;
-    const tapDistance = Math.hypot(dx, dy);
-    if (now - lastTapTime < DOUBLE_TAP_DELAY && tapDistance < DOUBLE_TAP_MAX_DISTANCE) {
-      const target = isZoomedIn()
-        ? getMinScale()
-        : getCoverScale() * DOUBLE_TAP_ZOOM_FACTOR;
-      setScaleAt(target, t.clientX, t.clientY);
-      lastTapTime = 0;
-      // Treat as handled — no single-tap log.
-      tapMoved = true;
-    } else {
-      lastTapTime = now;
-      lastTapX = t.clientX;
-      lastTapY = t.clientY;
-    }
-  } else if (e.touches.length === 2) {
-    mode = 'pinch';
-    isPanning.value = false;
-    tapMoved = true;
-    lastPinchDistance = getDistance(e.touches[0], e.touches[1]);
-    lastPinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-    lastPinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-  }
-}
-
-function onTouchMove(e: TouchEvent): void {
-  if (mode === 'pan' && e.touches.length === 1) {
-    const t = e.touches[0];
-    const dx = t.clientX - lastTouchX;
-    const dy = t.clientY - lastTouchY;
-    lastTouchX = t.clientX;
-    lastTouchY = t.clientY;
-    if (!tapMoved && Math.hypot(t.clientX - tapStartX, t.clientY - tapStartY) > TAP_MAX_MOVEMENT) {
-      tapMoved = true;
-    }
-    if (canPanX()) translateX.value += dx;
-    if (canPanY()) translateY.value += dy;
-    clampTranslation();
-  } else if (mode === 'pinch' && e.touches.length >= 2) {
-    const dist = getDistance(e.touches[0], e.touches[1]);
-    const cx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-    const cy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-
-    if (lastPinchDistance > 0) {
-      const factor = dist / lastPinchDistance;
-      setScaleAt(scale.value * factor, cx, cy);
-    }
-
-    // Two-finger pan along with pinch.
-    if (canPanX()) translateX.value += cx - lastPinchCenterX;
-    if (canPanY()) translateY.value += cy - lastPinchCenterY;
-    clampTranslation();
-
-    lastPinchDistance = dist;
-    lastPinchCenterX = cx;
-    lastPinchCenterY = cy;
-  }
-}
-
-function onTouchEnd(e: TouchEvent): void {
-  if (e.touches.length === 0) {
-    // If this was a quick stationary tap, log the image-pixel coordinates of
-    // the tap so reference points can be calibrated.
-    if (mode === 'pan' && !tapMoved) {
-      logImagePxAt(tapStartX, tapStartY);
-    }
-    mode = 'none';
-    isPanning.value = false;
-  } else if (e.touches.length === 1) {
-    mode = 'pan';
-    isPanning.value = canPanX() || canPanY();
-    lastTouchX = e.touches[0].clientX;
-    lastTouchY = e.touches[0].clientY;
-  }
-}
-
-function onWheel(e: WheelEvent): void {
-  const factor = 1 + -e.deltaY * WHEEL_ZOOM_SPEED;
-  setScaleAt(scale.value * factor, e.clientX, e.clientY);
-}
-
-function onClick(e: MouseEvent): void {
-  // Marker clicks use `@click.stop`, so any event reaching this handler
-  // came from the empty map area — clear marker selection.
-  markersRef.value?.clearSelection();
-  // Mouse-click coordinate logging for desktop calibration. Touch is handled
-  // separately in onTouchEnd because @click is suppressed when touchmove
-  // calls preventDefault.
-  logImagePxAt(e.clientX, e.clientY);
+function logImagePxAt(imgX: number, imgY: number): void {
+  console.log(`[map] image px: { x: ${imgX.toFixed(2)}, y: ${imgY.toFixed(2)} }`);
 }
 
 /**
- * Convert client (viewport) coordinates to natural image-pixel coordinates,
- * accounting for the current zoom and pan transform.
+ * Cache every DZI tile as a Blob in JS memory and rewrite the source's
+ * `getTileUrl` to return `blob:` URLs. After the prefetch completes, the
+ * browser never re-hits the network for tiles regardless of the server's
+ * Cache-Control headers, and OSD's internal tile-cache evictions don't cost
+ * a thing because re-loading from a blob URL is instant.
  */
-function clientToImagePx(clientX: number, clientY: number): { x: number; y: number } | null {
-  const cont = containerRef.value;
-  if (!cont || !scale.value) return null;
-  const rect = cont.getBoundingClientRect();
-  return {
-    x: (clientX - rect.left - translateX.value) / scale.value,
-    y: (clientY - rect.top - translateY.value) / scale.value,
+const PREFETCH_CONCURRENCY = 12;
+const tileBlobUrls = new Map<string, string>();
+
+async function prefetchAllTiles(item: OpenSeadragon.TiledImage): Promise<void> {
+  const source = item.source as OpenSeadragon.TileSource & {
+    minLevel?: number;
+    maxLevel?: number;
+    getNumTiles?: (_level: number) => OpenSeadragon.Point;
+    getTileUrl?: (_level: number, _x: number, _y: number) => string | (() => string);
   };
+
+  if (typeof source.getTileUrl !== 'function' || typeof source.getNumTiles !== 'function') {
+    console.warn('[map] prefetch skipped: source has no tile pyramid', {
+      hasGetTileUrl: typeof source.getTileUrl,
+      hasGetNumTiles: typeof source.getNumTiles,
+      source,
+    });
+    return; // Single-image source has no tile pyramid to prefetch.
+  }
+
+  const originalGetTileUrl = source.getTileUrl.bind(source);
+  // Resolve real URL the same way OSD would.
+  const resolveUrl = (level: number, x: number, y: number): string => {
+    const raw = originalGetTileUrl(level, x, y);
+    return typeof raw === 'function' ? raw() : raw;
+  };
+
+  // Patch the source so OSD asks for blob URLs once they are ready,
+  // and falls back to the network URL until then.
+  source.getTileUrl = ((level: number, x: number, y: number): string => {
+    const realUrl = resolveUrl(level, x, y);
+    return tileBlobUrls.get(realUrl) ?? realUrl;
+  }) as typeof source.getTileUrl;
+
+  const minLevel = source.minLevel ?? 0;
+  const maxLevel = source.maxLevel ?? 0;
+
+  // Order: lowest LODs first (cheap and cover full zoom-out instantly), then
+  // climb level by level. Each level is iterated in a centre-out order so
+  // tiles around the current view are warmed before the corners.
+  const urls: string[] = [];
+  for (let level = minLevel; level <= maxLevel; level += 1) {
+    const counts = source.getNumTiles(level);
+    const cx = (counts.x - 1) / 2;
+    const cy = (counts.y - 1) / 2;
+    const coords: Array<{ x: number; y: number; d: number }> = [];
+    for (let y = 0; y < counts.y; y += 1) {
+      for (let x = 0; x < counts.x; x += 1) {
+        coords.push({ x, y, d: (x - cx) ** 2 + (y - cy) ** 2 });
+      }
+    }
+    coords.sort((a, b) => a.d - b.d);
+    for (const { x, y } of coords) {
+      urls.push(resolveUrl(level, x, y));
+    }
+  }
+
+  isPrefetching.value = true;
+  prefetchProgress.value = 0;
+  const total = urls.length;
+  console.info('[map] prefetch starting', {
+    minLevel,
+    maxLevel,
+    totalTiles: total,
+    sampleUrl: urls[0],
+  });
+  let done = 0;
+  let okCount = 0;
+  let failCount = 0;
+
+  let cursor = 0;
+  async function worker(): Promise<void> {
+    while (cursor < urls.length) {
+      const url = urls[cursor++];
+      if (!tileBlobUrls.has(url)) {
+        try {
+          const response = await fetch(url, { cache: 'force-cache' });
+          if (response.ok) {
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            // Pre-decode the image so the browser doesn't pay the WebP/PNG
+            // decode cost on first render. Without this, blob URLs are already
+            // in memory but the actual bitmap is created lazily, which causes
+            // a visible flash on rapid zoom transitions.
+            try {
+              const img = new Image();
+              img.decoding = 'async';
+              img.src = blobUrl;
+              await img.decode();
+            } catch {
+              // decode() can throw on some formats — ignore, the blob URL is
+              // still usable and OSD's loader will decode lazily.
+            }
+            tileBlobUrls.set(url, blobUrl);
+            okCount += 1;
+          } else {
+            failCount += 1;
+          }
+        } catch {
+          failCount += 1;
+          // Network error — leave the original URL so OSD can retry on demand.
+        }
+      } else {
+        okCount += 1;
+      }
+      done += 1;
+      // Throttle reactivity: only update on whole-percent steps.
+      const pct = Math.floor((done / total) * 100);
+      if (pct !== prefetchProgress.value) prefetchProgress.value = pct;
+    }
+  }
+
+  const workers = Array.from({ length: PREFETCH_CONCURRENCY }, worker);
+  await Promise.all(workers);
+  isPrefetching.value = false;
+  prefetchProgress.value = 100;
+  console.info('[map] prefetch done', {
+    cached: okCount,
+    failed: failCount,
+    total,
+  });
+
+  // Note: we deliberately do NOT call viewer.world.resetItems() here. OSD's
+  // tile cache already holds the initial tiles; when it evicts them and asks
+  // again, our patched `getTileUrl` returns the blob URL and the request is
+  // served from memory. Calling resetItems would force a full re-render and
+  // produce its own visible flash.
 }
 
-function logImagePxAt(clientX: number, clientY: number): void {
-  const p = clientToImagePx(clientX, clientY);
-  if (!p) return;
-  // Format that can be pasted directly into the *_IMAGE_PX constants in
-  // useMapCoordinates.ts.
-  console.log(`[map] image px: { x: ${p.x.toFixed(2)}, y: ${p.y.toFixed(2)} }`);
+function releaseTileBlobUrls(): void {
+  for (const url of tileBlobUrls.values()) {
+    URL.revokeObjectURL(url);
+  }
+  tileBlobUrls.clear();
 }
 
-function onImageLoad(e: Event): void {
-  const img = e.target as HTMLImageElement;
-  imgNaturalW.value = img.naturalWidth;
-  imgNaturalH.value = img.naturalHeight;
-  resetView();
+function applyHomeBounds(): void {
+  if (!viewer) return;
+  // Clamp current zoom to a sane initial level relative to home (cover).
+  const home = viewer.viewport.getHomeZoom();
+  const target = home * INITIAL_ZOOM_FACTOR;
+  viewer.viewport.zoomTo(target, undefined, true);
+  viewer.viewport.applyConstraints(true);
+  syncOverlayTransform();
+}
+
+async function setupViewer(): Promise<void> {
+  const host = osdContainerRef.value;
+  if (!host) return;
+
+  const tileSources = await detectTileSource();
+
+  viewer = OpenSeadragon({
+    element: host,
+    tileSources,
+    prefixUrl: '',
+    showNavigator: false,
+    showNavigationControl: false,
+    showSequenceControl: false,
+    showFullPageControl: false,
+    showHomeControl: false,
+    showZoomControl: false,
+    showRotationControl: false,
+    // Always cover viewport: home zoom fills, and we forbid any zoom-out below it.
+    homeFillsViewer: true,
+    visibilityRatio: 1.0,
+    constrainDuringPan: true,
+    minZoomImageRatio: 1.0,
+    maxZoomPixelRatio: MAX_ZOOM_FACTOR,
+    animationTime: 0.3,
+    springStiffness: 9.5,
+    // false = OSD keeps the previous LOD visible until the next one is fully
+    // loaded. With `true` it would clear and re-render immediately, exposing
+    // the placeholderFillStyle as a visible flash during fast zoom-out.
+    immediateRender: false,
+    preserveImageSizeOnResize: true,
+    blendTime: 0,
+    alwaysBlend: false,
+    // Used only as the very last resort when no tile of any LOD is available.
+    placeholderFillStyle: BACKGROUND_COLOR,
+    // Load lower-res tiles a bit earlier so during a fast zoom there is
+    // always *something* sharp-ish to show before the target LOD arrives.
+    minPixelRatio: 0.5,
+    // Larger cache + more parallel network slots = far less popping during
+    // rapid zoom/pan. Numbers are conservative; tune up if memory allows.
+    imageLoaderLimit: 8,
+    maxImageCacheCount: 2048,
+    // Pre-fetch tiles around the current viewport so panning/zooming has
+    // them ready instead of starting a request only when they enter view.
+    preload: true,
+    // Avoid sub-pixel half-transparent seams between adjacent tiles.
+    subPixelRoundingForTransparency:
+      OpenSeadragon.SUBPIXEL_ROUNDING_OCCURRENCES.ALWAYS as unknown as object,
+    smoothTileEdgesMinZoom: Infinity,
+    gestureSettingsMouse: {
+      clickToZoom: false,
+      dblClickToZoom: false,
+      flickEnabled: true,
+      scrollToZoom: true,
+      pinchToZoom: true,
+      dragToPan: true,
+    },
+    gestureSettingsTouch: {
+      clickToZoom: false,
+      dblClickToZoom: true,
+      flickEnabled: true,
+      pinchToZoom: true,
+      dragToPan: true,
+    },
+    gestureSettingsPen: {
+      clickToZoom: false,
+      dblClickToZoom: false,
+      flickEnabled: true,
+      pinchToZoom: true,
+      dragToPan: true,
+    },
+  });
+
+  viewer.addHandler('open', () => {
+    if (!viewer) return;
+    const item = viewer.world.getItemAt(0);
+    if (!item) return;
+    const size = item.getContentSize();
+    imgNaturalW.value = size.x;
+    imgNaturalH.value = size.y;
+    applyHomeBounds();
+    void prefetchAllTiles(item);
+  });
+
+  viewer.addHandler('update-viewport', syncOverlayTransform);
+  viewer.addHandler('resize', syncOverlayTransform);
+  viewer.addHandler('animation', syncOverlayTransform);
+  viewer.addHandler('animation-finish', syncOverlayTransform);
+
+  viewer.addHandler('canvas-click', (event) => {
+    if (!viewer) return;
+    if (!event.quick) return;
+    const item = viewer.world.getItemAt(0);
+    if (!item) return;
+    const viewportPoint = viewer.viewport.pointFromPixel(event.position);
+    const imgPoint = item.viewportToImageCoordinates(viewportPoint);
+    markersRef.value?.clearSelection();
+    logImagePxAt(imgPoint.x, imgPoint.y);
+  });
 }
 
 // =============================================================
 // Lifecycle
 // =============================================================
 
-function onResize(): void {
-  if (!imgNaturalW.value) return;
-  const cont = containerRef.value;
-  if (!cont) return;
-  const minS = getMinScale();
-  const maxS = getMaxScale();
-  if (scale.value < minS || scale.value > maxS) {
-    scale.value = Math.max(minS, Math.min(maxS, scale.value));
-  }
-  clampTranslation();
-}
-
 onMounted(() => {
-  // Make sure the bitmap is in the cache. If the global preloader has already
-  // fired, this call returns the same resolved promise instantly.
   preloadMapImage();
-  window.addEventListener('resize', onResize);
+  void setupViewer();
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', onResize);
+  if (viewer) {
+    viewer.destroy();
+    viewer = null;
+  }
+  releaseTileBlobUrls();
 });
 </script>
 
 <style scoped lang="scss">
 /*
-  .map-outer owns the flex slot and hosts the torn-paper shadow via ::before.
-  Keeping filter on a non-ancestor of .map-image lets the browser promote
-  img.map-image to an independent GPU compositor layer, so pan/zoom gestures
-  become cheap matrix operations instead of full texture re-uploads.
+  .map-outer hosts the torn-paper shadow on a static ::before, so the
+  animated OSD canvas underneath stays on its own GPU layer.
 */
 .map-outer {
   position: relative;
@@ -439,8 +469,6 @@ onBeforeUnmount(() => {
   min-height: 0;
   background-color: v-bind(BACKGROUND_COLOR);
 
-  /* Torn-paper shadow drawn on a static pseudo-element that has no animated
-     children — filter here does NOT block child GPU layer promotion. */
   &::before {
     content: '';
     position: absolute;
@@ -462,30 +490,93 @@ onBeforeUnmount(() => {
   inset: 0;
   overflow: hidden;
   background-color: v-bind(BACKGROUND_COLOR);
-  touch-action: none;
-  user-select: none;
-  -webkit-user-select: none;
 
-  /* Torn-paper clip — mask-image alone does NOT prevent child GPU layer
-     promotion (unlike filter), so img.map-image keeps its own layer. */
   -webkit-mask-image: v-bind(TEAR_MASK_URL);
   mask-image: v-bind(TEAR_MASK_URL);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.map-image {
+.osd-host {
+  position: absolute;
+  inset: 0;
+}
+
+.map-overlay {
   position: absolute;
   top: 0;
   left: 0;
   pointer-events: none;
-  will-change: transform;
-  cursor: grab;
 }
 
-.map-image.is-grabbing {
-  cursor: grabbing;
+.map-prefetch-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Block all interaction while warming up the cache so OSD never has a chance
+  // to issue a network request mid-zoom.
+  pointer-events: all;
+  cursor: progress;
+  background-color: rgb(13 13 13 / 70%); // tinted --skyrim-bg-dark
+  backdrop-filter: blur(2px);
+}
+
+.map-prefetch-backdrop__panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  min-width: 14rem;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--skyrim-bg-medium);
+  border: var(--border-thin) solid var(--skyrim-border-medium);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-medium);
+  color: var(--skyrim-text-accent);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.04em;
+}
+
+.map-prefetch-backdrop__label {
+  color: var(--skyrim-text-accent);
+}
+
+.map-prefetch-backdrop__bar {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  background-color: var(--skyrim-bg-dark);
+  border: var(--border-thin) solid var(--skyrim-border-dark);
+  border-radius: var(--radius-sm);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: var(--p, 0%);
+    background: linear-gradient(
+      90deg,
+      var(--skyrim-accent-gold-dim),
+      var(--skyrim-accent-gold-light)
+    );
+    transition: width var(--transition-fast);
+  }
+}
+
+.map-prefetch-backdrop__pct {
+  color: var(--skyrim-text-secondary);
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums;
 }
 </style>

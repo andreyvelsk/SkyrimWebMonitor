@@ -150,6 +150,10 @@
         "message": "Travel to this location?",
         "confirm": "Yes",
         "cancel": "No"
+      },
+      "prefetch": {
+        "label": "Loading map",
+        "progress": "{progress}%"
       }
     }
   },
