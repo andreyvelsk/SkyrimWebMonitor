@@ -1,31 +1,33 @@
 <template>
-  <div
-    ref="containerRef"
-    class="map-page"
-    @touchstart.stop="onTouchStart"
-    @touchmove.prevent.stop="onTouchMove"
-    @touchend.stop="onTouchEnd"
-    @touchcancel.stop="onTouchEnd"
-    @wheel.prevent="onWheel"
-    @click="onClick"
-  >
-    <img
-      :src="MAP_IMAGE_SRC"
-      class="map-image"
-      :class="{ 'is-grabbing': isPanning }"
-      :style="imageStyle"
-      :alt="$t('pages.map.alt')"
-      draggable="false"
-      @load="onImageLoad"
+  <div class="map-outer">
+    <div
+      ref="containerRef"
+      class="map-page"
+      @touchstart.stop="onTouchStart"
+      @touchmove.prevent.stop="onTouchMove"
+      @touchend.stop="onTouchEnd"
+      @touchcancel.stop="onTouchEnd"
+      @wheel.prevent="onWheel"
+      @click="onClick"
     >
-    <map-markers
-      ref="markersRef"
-      :img-natural-w="imgNaturalW"
-      :img-natural-h="imgNaturalH"
-      :scale="scale"
-      :cover-scale="coverScale"
-      :overlay-style="imageStyle"
-    />
+      <img
+        :src="MAP_IMAGE_SRC"
+        class="map-image"
+        :class="{ 'is-grabbing': isPanning }"
+        :style="imageStyle"
+        :alt="$t('pages.map.alt')"
+        draggable="false"
+        @load="onImageLoad"
+      >
+      <map-markers
+        ref="markersRef"
+        :img-natural-w="imgNaturalW"
+        :img-natural-h="imgNaturalH"
+        :scale="scale"
+        :cover-scale="coverScale"
+        :overlay-style="imageStyle"
+      />
+    </div>
   </div>
 </template>
 
@@ -423,27 +425,55 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
-.map-page {
+/*
+  .map-outer owns the flex slot and hosts the torn-paper shadow via ::before.
+  Keeping filter on a non-ancestor of .map-image lets the browser promote
+  img.map-image to an independent GPU compositor layer, so pan/zoom gestures
+  become cheap matrix operations instead of full texture re-uploads.
+*/
+.map-outer {
   position: relative;
   flex: 1 1 auto;
   width: 100%;
   height: 100%;
   min-height: 0;
+  background-color: v-bind(BACKGROUND_COLOR);
+
+  /* Torn-paper shadow drawn on a static pseudo-element that has no animated
+     children — filter here does NOT block child GPU layer promotion. */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-color: v-bind(BACKGROUND_COLOR);
+    -webkit-mask-image: v-bind(TEAR_MASK_URL);
+    mask-image: v-bind(TEAR_MASK_URL);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    filter: drop-shadow(v-bind(TEAR_SHADOW));
+  }
+}
+
+.map-page {
+  position: absolute;
+  inset: 0;
   overflow: hidden;
   background-color: v-bind(BACKGROUND_COLOR);
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
 
-  /* Torn-paper edge: SVG mask cuts irregular bites out of all four sides,
-     drop-shadow gives the cut edge a subtle depth. */
+  /* Torn-paper clip — mask-image alone does NOT prevent child GPU layer
+     promotion (unlike filter), so img.map-image keeps its own layer. */
   -webkit-mask-image: v-bind(TEAR_MASK_URL);
   mask-image: v-bind(TEAR_MASK_URL);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-  filter: drop-shadow(v-bind(TEAR_SHADOW));
 }
 
 .map-image {
