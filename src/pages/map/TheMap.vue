@@ -359,10 +359,10 @@ async function setupViewer(): Promise<void> {
     homeFillsViewer: true,
     visibilityRatio: 1.0,
     constrainDuringPan: true,
-    minZoomImageRatio: 1.0,
+    minZoomImageRatio: 1.1,
     maxZoomPixelRatio: MAX_ZOOM_FACTOR,
     animationTime: 0.3,
-    springStiffness: 9.5,
+    springStiffness: 5,
     // false = OSD keeps the previous LOD visible until the next one is fully
     // loaded. With `true` it would clear and re-render immediately, exposing
     // the placeholderFillStyle as a visible flash during fast zoom-out.
@@ -396,7 +396,7 @@ async function setupViewer(): Promise<void> {
     },
     gestureSettingsTouch: {
       clickToZoom: false,
-      dblClickToZoom: true,
+      dblClickToZoom: false,
       flickEnabled: true,
       pinchToZoom: true,
       dragToPan: true,
