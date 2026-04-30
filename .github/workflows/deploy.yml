@@ -32,6 +32,28 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Download pre-built map tiles
+        # Tiles are produced once by `.github/workflows/build-map.yml` and
+        # stored in the `map-assets` release. Every deploy just pulls the
+        # current tarball — we never re-run libvips on normal pushes.
+        # If the release does not exist yet (first deploy ever, or someone
+        # deleted it) the deploy continues without tiles and the map page
+        # falls back to the single-PNG source (or a missing-asset state).
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view map-assets >/dev/null 2>&1; then
+            mkdir -p public
+            gh release download map-assets \
+              --pattern 'map-dzi.tar.gz' \
+              --output map-dzi.tar.gz
+            tar -xzf map-dzi.tar.gz -C public
+            rm map-dzi.tar.gz
+            echo "Tiles extracted: $(find public/map-dzi -name '*.webp' | wc -l) webp files"
+          else
+            echo "::warning::No 'map-assets' release found — building without map tiles. Run the 'Build map tiles' workflow first."
+          fi
+
       - name: Compute deploy paths
         id: paths
         run: |
