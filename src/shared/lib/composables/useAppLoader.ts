@@ -10,7 +10,7 @@ import {
 } from '@/app/config/pageRegistry';
 import { GLOBAL_SUBSCRIPTIONS } from '@/app/config/globalSubscriptions';
 import { DataRouter } from '@/stores/adapters/dataRouter';
-import { preloadMapImage } from '@/pages/map';
+import { preloadMapImage, prefetchMapTiles } from '@/pages/map';
 
 export function useAppLoader() {
   const navigationStore = useNavigationStore();
@@ -69,17 +69,19 @@ export function useAppLoader() {
   };
 
   onMounted(async () => {
+    // Kick off the map image preload + DZI tile prefetch in the background
+    // BEFORE awaiting the websocket connection. `connect()` can take a
+    // while (or hang while the game is not running), and we don't want
+    // that to delay the heavy map prefetch.
+    preloadMapImage();
+    void prefetchMapTiles();
+
     try {
       console.log('App mounted - initializing WebSocket connection...');
       await connect();
     } catch (err) {
       console.error('Failed to initialize websocket connection', err);
     }
-
-    // Kick off the map image preload in the background. It does not block
-    // anything and dramatically reduces the time to first paint when the
-    // user opens the Map tab.
-    preloadMapImage();
   });
 
   // The server starts as soon as Skyrim's main menu loads, NOT when the player

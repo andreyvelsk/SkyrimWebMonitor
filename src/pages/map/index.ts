@@ -1,5 +1,13 @@
 export { default as TheMap } from './TheMap.vue';
-export { preloadMapImage, MAP_IMAGE_URL } from './preloadMap';
+export {
+  preloadMapImage,
+  prefetchMapTiles,
+  mapTileBlobUrls,
+  mapTilesPrefetchActive,
+  mapTilesPrefetchProgress,
+  MAP_IMAGE_URL,
+  MAP_DZI_URL,
+} from './preloadMap';
 export {
   useMapCoordinates,
   solveAffine,
