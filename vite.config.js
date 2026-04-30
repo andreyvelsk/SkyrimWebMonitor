@@ -105,7 +105,7 @@ export default defineConfig(({ mode }) => {
         // with hashed URLs on every build, so newly deployed versions are
         // picked up automatically as soon as the network is available
         // — without any manual cache clearing.
-        includeAssets: ['pwa-svg.svg', 'map.jpg'],
+        includeAssets: ['pwa-svg.svg'],
         workbox: {
           skipWaiting: true,
           clientsClaim: true,

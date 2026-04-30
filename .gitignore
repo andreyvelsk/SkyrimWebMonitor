@@ -20,6 +20,7 @@ dist-ssr
 # fetched as part of the build (or kept locally by developers).
 public/skyrim.png
 public/map-dzi/
+public/map.jpg
 
 # Editor directories and files
 .vscode/*
