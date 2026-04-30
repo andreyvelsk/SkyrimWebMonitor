@@ -7,84 +7,43 @@
     preserveAspectRatio="none"
     aria-hidden="true"
   >
-    <!--
-      Markers are rendered as <foreignObject> so each icon is a regular HTML
-      element painted via CSS mask-image + background-color — the same trick
-      BaseIcon.vue uses. This is the only reliable way to recolor a raster/
-      external SVG to a CSS-variable color across browsers.
+    <location-markers
+      :markers="locationMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
+      :rest-scale="restScale"
+      :selected-marker-key="selectedMarkerKey"
+      @marker-click="onMarkerClick"
+    />
 
-      The foreignObject is sized to the *maximum* (selected) marker size and
-      anchored so its bottom edge sits exactly at the hotspot's `y`. The inner
-      div uses `mask-position: center bottom`, so the marker tip always lines
-      up with the hotspot regardless of how the inner element is scaled.
-      Selection is animated via `transform: scale()` with a smooth transition.
-    -->
-    <foreignObject
-      v-for="m in markers"
-      :key="m.key"
-      :x="m.x - markerMaxHalf"
-      :y="m.y - markerMaxSize"
-      :width="markerMaxSize"
-      :height="markerMaxSize"
-    >
-      <div
-        xmlns="http://www.w3.org/1999/xhtml"
-        class="hotspot-marker"
-        :class="{
-          'hotspot-marker--dim': m.kind === 'location' && !m.canFastTravel,
-          'hotspot-marker--quest': m.kind === 'quest',
-          'hotspot-marker--selected': m.key === selectedMarkerKey,
-        }"
-        :style="{
-          '--icon-src': `url('${m.iconUrl}')`,
-          '--marker-rest-scale': restScale,
-        }"
-        @click.stop="onMarkerClick(m)"
-      />
-    </foreignObject>
+    <quest-markers
+      :markers="questObjectiveMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
+      :rest-scale="restScale"
+      :selected-marker-key="selectedMarkerKey"
+      @marker-click="onMarkerClick"
+    />
 
-    <foreignObject
+    <player-marker
       v-if="player"
-      :x="player.x - playerHalfSize"
-      :y="player.y - playerHalfSize"
-      :width="playerSize"
-      :height="playerSize"
-      :transform="`rotate(${player.angleDeg} ${player.x} ${player.y})`"
-    >
-      <div
-        xmlns="http://www.w3.org/1999/xhtml"
-        class="player-marker"
-        :style="{ '--icon-src': `url('${PLAYER_ICON_URL}')` }"
-      />
-    </foreignObject>
+      :player="player"
+      :player-size="playerSize"
+      :player-half-size="playerHalfSize"
+      :icon-url="PLAYER_ICON_URL"
+    />
 
-    <!--
-      Selected marker label. Rendered as a separate <foreignObject> so it
-      stacks above all markers regardless of source order. Width is generous
-      (twice the marker size) and centered on the marker's x.
-    -->
-    <foreignObject
+    <selected-marker-label
       v-if="selectedMarker"
-      :x="selectedMarker.x - markerSize"
-      :y="selectedMarker.y + selectedLabelOffset"
-      :width="markerSize * 2"
-      :height="labelHeight"
-      class="map-markers__label-host"
-    >
-      <div
-        xmlns="http://www.w3.org/1999/xhtml"
-        class="hotspot-label"
-      >
-        <span
-          class="hotspot-label__text"
-          :style="{
-            fontSize: `${labelFontSize}px`,
-            lineHeight: `${labelLineHeight}px`,
-            padding: `${labelPaddingY}px ${labelPaddingX}px`,
-          }"
-        >{{ selectedMarker.label }}</span>
-      </div>
-    </foreignObject>
+      :marker="selectedMarker"
+      :marker-size="markerSize"
+      :selected-label-offset="selectedLabelOffset"
+      :label-height="labelHeight"
+      :label-font-size="labelFontSize"
+      :label-line-height="labelLineHeight"
+      :label-padding-x="labelPaddingX"
+      :label-padding-y="labelPaddingY"
+    />
   </svg>
 </template>
 
@@ -92,72 +51,37 @@
 import { computed, ref, type StyleValue } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMapCoordinates } from './composables/useMapCoordinates';
-import { resolveMarkerIcon } from './composables/useMapMarkerIcons';
+import { useProjectedMapMarkers } from './composables/useProjectedMapMarkers';
+import {
+  MARKER_BASE_SIZE_PX,
+  MARKER_MAX_SIZE_PX,
+  MARKER_MIN_SIZE_PX,
+  MARKER_SELECTED_SCALE,
+  MARKER_ZOOM_INFLUENCE,
+  PLAYER_BASE_SIZE_PX,
+  PLAYER_ICON_URL,
+  PLAYER_MAX_SIZE_PX,
+  PLAYER_MIN_SIZE_PX,
+  PLAYER_ZOOM_INFLUENCE,
+  QUEST_ICON_URL,
+  RAD_TO_DEG,
+} from './constants';
 import FastTravelModal from './FastTravelModal.vue';
+import LocationMarkers from './components/location-markers/LocationMarkers.vue';
+import QuestMarkers from './components/quest-markers/QuestMarkers.vue';
+import PlayerMarker from './components/player-marker/PlayerMarker.vue';
+import SelectedMarkerLabel from './components/selected-marker-label/SelectedMarkerLabel.vue';
+import {
+  isLocationMarker,
+  isQuestMarker,
+  type ProjectedMarker,
+} from './types';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useModal } from '@/shared/lib/composables/useModal';
-import { buildIconPath } from '@/shared/lib/utils/iconPath';
 
-// =============================================================
-// Marker overlay configuration
-// All tunables live here so the host component (TheMap) never has to know
-// about marker sizes or styling.
-// =============================================================
-
-/**
- * Base marker size, in screen pixels at the cover (minimum) zoom level.
- * Markers grow or shrink with zoom according to MARKER_ZOOM_INFLUENCE.
- */
-const MARKER_BASE_SIZE_PX = 32;
-
-/**
- * How much the marker size follows the map zoom.
- *   0   — markers stay the same size on screen at every zoom level
- *   1   — markers scale 1:1 with the map (like child SVG elements normally do)
- *   0.5 — square-root scaling: bigger when zoomed in, but not aggressively
- */
-const MARKER_ZOOM_INFLUENCE = 0.2;
-
-/** Hard floor for marker size in screen pixels. */
-const MARKER_MIN_SIZE_PX = 18;
-/** Hard ceiling for marker size in screen pixels. */
-const MARKER_MAX_SIZE_PX = 72;
-
-/**
- * Multiplier applied to a selected marker's rendered size. The marker is
- * drawn at `markerSize * MARKER_SELECTED_SCALE` (still anchored to the same
- * point) to give a tactile "lifted" feel when tapped.
- */
-const MARKER_SELECTED_SCALE = 1.35;
-
-// =============================================================
-// Player marker
-// =============================================================
-
-/** Icon path (relative to /icons/) for the player position marker. */
-const PLAYER_ICON_URL = buildIconPath('delapouite/growth.svg');
-const QUEST_ICON_URL = buildIconPath('delapouite/human-target.svg');
-
-/**
- * Base size (screen px at cover scale) for the player marker. Slightly
- * larger than hotspots so the player stands out at a glance.
- */
-const PLAYER_BASE_SIZE_PX = 28;
-
-/** Same zoom-influence curve idea as hotspots, but tuned independently. */
-const PLAYER_ZOOM_INFLUENCE = 0.3;
-const PLAYER_MIN_SIZE_PX = 24;
-const PLAYER_MAX_SIZE_PX = 96;
-
-/**
- * Skyrim's `angle` is yaw in radians: 0 = North, increases clockwise. SVG's
- * `rotate()` is also clockwise-positive, so we just convert radians → degrees
- * with no axis flip. The growth icon points up by default, which lines up
- * with North.
- */
-const RAD_TO_DEG = 180 / Math.PI;
+void [LocationMarkers, QuestMarkers, PlayerMarker, SelectedMarkerLabel];
 
 // =============================================================
 // Props
@@ -184,74 +108,11 @@ const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
 const playerStore = useMapPlayerStore();
 const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
 const { matrix } = useMapCoordinates();
-
-interface BaseProjectedMarker {
-  key: string;
-  refId: string;
-  label: string;
-  canFastTravel: boolean;
-  x: number;
-  y: number;
-  iconUrl: string;
-}
-
-interface LocationProjectedMarker extends BaseProjectedMarker {
-  kind: 'location';
-  type: (typeof hotspots.value)[number]['type'];
-}
-
-interface QuestProjectedMarker extends BaseProjectedMarker {
-  kind: 'quest';
-  type: 'QuestObjective';
-}
-
-type ProjectedMarker = LocationProjectedMarker | QuestProjectedMarker;
-
-function isLocationMarker(marker: ProjectedMarker): marker is LocationProjectedMarker {
-  return marker.kind === 'location';
-}
-
-function isQuestMarker(marker: ProjectedMarker): marker is QuestProjectedMarker {
-  return marker.kind === 'quest';
-}
-
-/**
- * Hotspots projected from game coords into image-natural-pixel coords.
- * Recomputes only when the hotspot list or the calibration matrix changes —
- * NOT on every zoom/pan.
- */
-const markers = computed<ProjectedMarker[]>(() => {
-  const m = matrix.value;
-  if (!m) return [];
-  const locationMarkers: LocationProjectedMarker[] = hotspots.value
-    .filter((h) => h.isVisible)
-    .map((h) => ({
-      key: `location:${h.refId}`,
-      kind: 'location',
-      refId: h.refId,
-      type: h.type,
-      label: h.name,
-      canFastTravel: h.canFastTravel,
-      x: m.a * h.x + m.c * h.y + m.e,
-      y: m.b * h.x + m.d * h.y + m.f,
-      iconUrl: resolveMarkerIcon(h.type),
-    }));
-
-  const questObjectiveMarkers: QuestProjectedMarker[] = questMarkers.value
-    .filter((marker) => Number.isFinite(marker.x) && Number.isFinite(marker.y))
-    .map((marker) => ({
-      key: `quest:${marker.questFormId}:${marker.objectiveIndex}:${marker.aliasId}:${marker.refId}`,
-      kind: 'quest',
-      refId: marker.refId,
-      type: 'QuestObjective',
-      label: marker.objectiveText || marker.name || marker.questName,
-      canFastTravel: false,
-      x: m.a * marker.x + m.c * marker.y + m.e,
-      y: m.b * marker.x + m.d * marker.y + m.f,
-      iconUrl: QUEST_ICON_URL,
-    }));
-
-  return [...locationMarkers, ...questObjectiveMarkers];
+const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarkers({
+  matrix,
+  hotspots,
+  questMarkers,
+  questIconUrl: QUEST_ICON_URL,
 });
 
 // =============================================================
@@ -393,83 +254,5 @@ function clamp(v: number, lo: number, hi: number): number {
   /* `overlayStyle` provides width/height inline; explicit dims here would
      override and break the transform sync with the map image. */
   overflow: visible;
-}
-
-/* Hotspot icons are loaded as external SVG files. To recolor them with a
-   CSS variable we replicate BaseIcon.vue's approach: render an HTML <div>
-   inside <foreignObject>, mask it with the icon, and fill via background.
-
-   The foreignObject is sized to the *selected* (max) size, and the inner
-   element starts shrunk via `--marker-rest-scale`. Selecting a marker
-   removes the shrink, scaling smoothly back to 100%. `transform-origin`
-   anchors the scale at the bottom-center, where the marker tip is. */
-.hotspot-marker {
-  width: 100%;
-  height: 100%;
-  background-color: var(--skyrim-bg-light);
-  mask-image: var(--icon-src);
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center bottom;
-  cursor: pointer;
-  pointer-events: auto;
-  transform: scale(var(--marker-rest-scale, 1));
-  transform-origin: 50% 100%;
-  transition:
-    transform 200ms ease-out,
-    background-color var(--transition-fast);
-}
-
-.hotspot-marker--dim {
-  opacity: 0.45;
-}
-
-.hotspot-marker--selected {
-  background-color: var(--skyrim-accent-gold);
-  transform: scale(1);
-}
-
-.hotspot-marker--quest {
-  background-color: var(--skyrim-accent-gold-dim);
-}
-
-.hotspot-marker--quest.hotspot-marker--selected {
-  background-color: var(--skyrim-accent-gold-light);
-}
-
-/* Label host wraps the foreignObject; the inner div centers the badge. */
-.map-markers__label-host {
-  pointer-events: none;
-  overflow: visible;
-}
-
-.hotspot-label {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.hotspot-label__text {
-  display: inline-block;
-  background-color: var(--skyrim-bg-medium);
-  border: 1px solid var(--skyrim-border-medium);
-  color: var(--skyrim-text-primary);
-  font-family: var(--font-heading);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  box-shadow: var(--shadow-strong);
-}
-
-.player-marker {
-  width: 100%;
-  height: 100%;
-  background-color: var(--skyrim-border-medium);
-  mask-image: var(--icon-src);
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
 }
 </style>
