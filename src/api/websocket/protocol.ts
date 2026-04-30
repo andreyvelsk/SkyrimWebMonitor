@@ -46,7 +46,7 @@ export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
  * - player_marker_set: Places/moves the player's custom map marker. Requires x, y; z optional.
  * - player_marker_clear: Hides the player's custom map marker. Takes no parameters.
  * - fast_travel: Teleports the player to a discovered map marker. Requires formId
- *                (use the `refId` returned by `Map::Markers`).
+ *                (use the `refId` returned by `Map::Markers::Locations`).
  */
 
 // ============================================================================

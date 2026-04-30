@@ -304,7 +304,7 @@ export const pagesRegistry: PagesRegistry = {
         {
           id: 'map.hotspots',
           fields: {
-            hot: 'Map::Markers',
+            hot: 'Map::Markers::Locations',
           },
           settings: {
             frequency: 1000,
