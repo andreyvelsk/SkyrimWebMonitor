@@ -3,7 +3,6 @@
  * ============================================
  * Class set used by SkyrimModal + scenario-specific modal contents.
  *
- *   .modal-backdrop     — full-viewport overlay (used by SkyrimModal)
  *   .modal-panel        — frame (border, bg, inset shadow)
  *   .modal-body         — content wrapper (typography reset)
  *   .modal-content      — generic vertical-stack body
@@ -11,18 +10,10 @@
  *   .modal-header       — title row centered
  *   .modal-title        — heading style (Cinzel, uppercase)
  *   .modal-actions      — button row, centered, gap-md
+ *
+ * The full-viewport overlay (formerly `.modal-backdrop`) is now provided by
+ * <SkyrimBackdrop> from `shared/ui/base`.
  */
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal-backdrop);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--bg-overlay);
-  backdrop-filter: blur(2px);
-}
 
 .modal-panel {
   position: relative;

@@ -15,11 +15,16 @@
         :cover-scale="coverScale"
         :overlay-style="overlayStyle"
       />
-      <div
-        v-if="isPrefetching"
-        class="map-prefetch-backdrop"
+      <skyrim-backdrop
+        :visible="isPrefetching"
+        :teleport="false"
+        position="absolute"
+        tone="dim"
+        :z-index="5"
         role="status"
         aria-live="polite"
+        blocking
+        class="map-prefetch-backdrop"
       >
         <div class="map-prefetch-backdrop__panel">
           <span class="map-prefetch-backdrop__label">
@@ -33,7 +38,7 @@
             {{ $t('pages.map.prefetch.progress', { progress: prefetchProgress }) }}
           </span>
         </div>
-      </div>
+      </skyrim-backdrop>
     </div>
   </div>
 </template>
@@ -43,6 +48,7 @@ import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue'
 import OpenSeadragon from 'openseadragon';
 import { MAP_IMAGE_URL, preloadMapImage } from './preloadMap';
 import MapMarkers from './MapMarkers.vue';
+import { SkyrimBackdrop } from '@/shared/ui';
 
 // =============================================================
 // Map view configuration
@@ -516,18 +522,7 @@ onBeforeUnmount(() => {
 }
 
 .map-prefetch-backdrop {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  // Block all interaction while warming up the cache so OSD never has a chance
-  // to issue a network request mid-zoom.
-  pointer-events: all;
   cursor: progress;
-  background-color: rgb(13 13 13 / 70%); // tinted --skyrim-bg-dark
-  backdrop-filter: blur(2px);
 }
 
 .map-prefetch-backdrop__panel {
