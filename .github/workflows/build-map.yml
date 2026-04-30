@@ -1,0 +1,76 @@
+name: Build map tiles
+
+# Run this workflow manually whenever the source map (skyrim.png) is replaced.
+# It downloads the latest skyrim.png from the `map-source` release, regenerates
+# the Deep Zoom (DZI) tile pyramid with libvips, packages it as
+# `map-dzi.tar.gz` and uploads it to the `map-assets` release (replacing any
+# previous asset). The deploy workflow then pulls this tarball on every push.
+#
+# Triggered manually only — normal pushes to main/dev never re-run this.
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_tag:
+        description: 'Git tag of the release that holds skyrim.png'
+        required: false
+        default: 'map-source'
+      target_tag:
+        description: 'Git tag of the release that will hold map-dzi.tar.gz'
+        required: false
+        default: 'map-assets'
+
+permissions:
+  contents: write
+
+jobs:
+  build-map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install libvips
+        run: sudo apt-get update && sudo apt-get install -y libvips-tools
+
+      - name: Download skyrim.png from source release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p map-build
+          gh release download "${{ inputs.source_tag }}" \
+            --pattern 'skyrim.png' \
+            --output map-build/skyrim.png
+
+      - name: Generate DZI pyramid
+        run: |
+          mkdir -p map-build/map-dzi
+          vips dzsave map-build/skyrim.png map-build/map-dzi/skyrim \
+            --layout dz \
+            --tile-size 512 \
+            --overlap 1 \
+            --suffix '.webp[Q=80]'
+          # Sanity check
+          ls -la map-build/map-dzi/
+          echo "Total tiles: $(find map-build/map-dzi -name '*.webp' | wc -l)"
+          echo "Pyramid size: $(du -sh map-build/map-dzi | cut -f1)"
+
+      - name: Package tiles
+        run: |
+          cd map-build
+          tar -czf map-dzi.tar.gz map-dzi
+          ls -la map-dzi.tar.gz
+
+      - name: Upload to map-assets release (create if missing, replace asset)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="${{ inputs.target_tag }}"
+          # Create the release if it does not exist yet.
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" \
+              --title "Map assets" \
+              --notes "Pre-built DZI tile pyramid for the Skyrim map. Regenerated automatically by .github/workflows/build-map.yml whenever the source PNG changes."
+          fi
+          # --clobber replaces an existing asset of the same name.
+          gh release upload "$TAG" map-build/map-dzi.tar.gz --clobber
