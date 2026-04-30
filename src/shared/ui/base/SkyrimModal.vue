@@ -1,33 +1,32 @@
 <template>
-  <Teleport to="body">
-    <Transition name="modal-backdrop">
+  <skyrim-backdrop
+    :visible="isOpen"
+    role="dialog"
+    aria-modal
+    transition-name="modal-backdrop"
+    @self-click="closeModal"
+  >
+    <Transition name="modal-panel">
       <div
         v-if="isOpen"
-        class="modal-backdrop"
-        @click.self="closeModal"
+        class="modal-panel"
       >
-        <Transition name="modal-panel">
-          <div
-            v-if="isOpen"
-            class="modal-panel"
-          >
-            <div class="modal-body">
-              <component
-                :is="modalComponent"
-                v-if="modalComponent"
-                v-bind="modalProps"
-                v-on="modalHandlers"
-              />
-            </div>
-          </div>
-        </Transition>
+        <div class="modal-body">
+          <component
+            :is="modalComponent"
+            v-if="modalComponent"
+            v-bind="modalProps"
+            v-on="modalHandlers"
+          />
+        </div>
       </div>
     </Transition>
-  </Teleport>
+  </skyrim-backdrop>
 </template>
 
 <script setup lang="ts">
 import { useModal } from '@/shared/lib/composables/useModal';
+import SkyrimBackdrop from './SkyrimBackdrop.vue';
 
 const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
   useModal();
@@ -36,11 +35,12 @@ const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
 <style scoped lang="scss">
 /*
  * Layout & frame styles come from the design system:
- *   .modal-backdrop, .modal-panel, .modal-body (components/modal.scss)
+ *   .modal-panel, .modal-body (components/modal.scss)
+ * The full-viewport overlay is provided by <SkyrimBackdrop>.
  * Only the transitions are component-specific and live here.
  */
 
-/* Backdrop transition */
+/* Backdrop transition (overrides default skyrim-backdrop fade timing). */
 .modal-backdrop-enter-active,
 .modal-backdrop-leave-active {
   transition: opacity 0.25s ease;
