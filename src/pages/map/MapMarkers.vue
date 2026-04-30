@@ -42,6 +42,21 @@
       />
     </foreignObject>
 
+    <foreignObject
+      v-if="player"
+      :x="player.x - playerHalfSize"
+      :y="player.y - playerHalfSize"
+      :width="playerSize"
+      :height="playerSize"
+      :transform="`rotate(${player.angleDeg} ${player.x} ${player.y})`"
+    >
+      <div
+        xmlns="http://www.w3.org/1999/xhtml"
+        class="player-marker"
+        :style="{ '--icon-src': `url('${PLAYER_ICON_URL}')` }"
+      />
+    </foreignObject>
+
     <!--
       Selected marker label. Rendered as a separate <foreignObject> so it
       stacks above all markers regardless of source order. Width is generous
@@ -68,21 +83,6 @@
           }"
         >{{ selectedMarker.name }}</span>
       </div>
-    </foreignObject>
-
-    <foreignObject
-      v-if="player"
-      :x="player.x - playerHalfSize"
-      :y="player.y - playerHalfSize"
-      :width="playerSize"
-      :height="playerSize"
-      :transform="`rotate(${player.angleDeg} ${player.x} ${player.y})`"
-    >
-      <div
-        xmlns="http://www.w3.org/1999/xhtml"
-        class="player-marker"
-        :style="{ '--icon-src': `url('${PLAYER_ICON_URL}')` }"
-      />
     </foreignObject>
   </svg>
 </template>
