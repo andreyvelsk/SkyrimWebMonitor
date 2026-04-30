@@ -50,7 +50,7 @@ const MAP_IMAGE_SRC = MAP_IMAGE_URL;
 const MIN_ZOOM_FACTOR = 1;
 
 /** Maximum zoom factor relative to the cover base scale. */
-const MAX_ZOOM_FACTOR = 6;
+const MAX_ZOOM_FACTOR = 10;
 
 /** Initial zoom factor relative to the cover base scale. */
 const INITIAL_ZOOM_FACTOR = 2.5;
