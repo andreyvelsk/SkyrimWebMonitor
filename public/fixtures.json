@@ -863,6 +863,56 @@
             {
                 "canFastTravel": true,
                 "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 26171.640625,
+                "y": 209.0516357421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 26271.640625,
+                "y": 209.0516357421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 26371.640625,
+                "y": 209.0516357421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 21871.640625,
+                "y": 209.0516357421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 23871.640625,
+                "y": 209.0516357421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
                 "name": "Вайтран",
                 "refId": "0x000162CE",
                 "type": "WhiterunCapitol",
