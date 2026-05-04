@@ -73,6 +73,7 @@ export interface MapQuestMarker {
   name: string;
   objectiveIndex: number;
   objectiveText: string;
+  objectiveTextResolved: string;
   parentWorldspace: string | null;
   parentWorldspaceFormId: string | null;
   questEditorId: string;

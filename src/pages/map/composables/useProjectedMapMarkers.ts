@@ -49,7 +49,7 @@ export function useProjectedMapMarkers({
         kind: 'quest',
         refId: marker.refId,
         type: 'QuestObjective',
-        label: marker.objectiveText || marker.name || marker.questName,
+        label: marker.objectiveTextResolved || marker.name || marker.questName,
         canFastTravel: false,
         x: m.a * marker.x + m.c * marker.y + m.e,
         y: m.b * marker.x + m.d * marker.y + m.f,
