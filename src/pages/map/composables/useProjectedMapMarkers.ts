@@ -58,8 +58,8 @@ export function useProjectedMapMarkers({
   });
 
   const markers = computed<ProjectedMarker[]>(() => [
-    ...locationMarkers.value,
     ...questObjectiveMarkers.value,
+    ...locationMarkers.value,
   ]);
 
   return {

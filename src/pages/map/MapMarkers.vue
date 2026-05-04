@@ -7,13 +7,23 @@
     preserveAspectRatio="none"
     aria-hidden="true"
   >
-    <location-markers
-      :markers="locationMarkers"
-      :marker-max-half="markerMaxHalf"
-      :marker-max-size="markerMaxSize"
-      :rest-scale="restScale"
-      :selected-marker-key="selectedMarkerKey"
-    />
+    <defs>
+      <symbol
+        v-for="icon in iconSpriteSymbols"
+        :id="icon.id"
+        :key="icon.id"
+        viewBox="0 0 1 1"
+      >
+        <image
+          :href="icon.url"
+          x="0"
+          y="0"
+          width="1"
+          height="1"
+          preserveAspectRatio="xMidYMax meet"
+        />
+      </symbol>
+    </defs>
 
     <quest-markers
       :markers="questObjectiveMarkers"
@@ -21,6 +31,16 @@
       :marker-max-size="markerMaxSize"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
+      :icon-symbol-by-url="iconSymbolByUrl"
+    />
+
+    <location-markers
+      :markers="locationMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
+      :rest-scale="restScale"
+      :selected-marker-key="selectedMarkerKey"
+      :icon-symbol-by-url="iconSymbolByUrl"
     />
 
     <player-marker
@@ -28,7 +48,7 @@
       :player="player"
       :player-size="playerSize"
       :player-half-size="playerHalfSize"
-      :icon-url="PLAYER_ICON_URL"
+      :icon-symbol-id="playerIconSymbolId"
     />
 
     <selected-marker-label
@@ -48,6 +68,7 @@
 <script setup lang="ts">
 import { computed, ref, type StyleValue } from 'vue';
 import { storeToRefs } from 'pinia';
+import { iconUrlToSymbolId } from './composables/iconSprite';
 import { useMapCoordinates } from './composables/useMapCoordinates';
 import { useProjectedMapMarkers } from './composables/useProjectedMapMarkers';
 import {
@@ -124,6 +145,26 @@ const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarke
 // =============================================================
 
 const selectedMarkerKey = ref<string | null>(null);
+
+const iconSymbolByUrl = computed<Record<string, string>>(() => {
+  const map: Record<string, string> = {};
+  map[PLAYER_ICON_URL] = iconUrlToSymbolId(PLAYER_ICON_URL);
+  const all = markers.value;
+  for (let i = 0; i < all.length; i += 1) {
+    const marker = all[i];
+    const url = marker.iconUrl;
+    if (!map[url]) {
+      map[url] = iconUrlToSymbolId(url);
+    }
+  }
+  return map;
+});
+
+const iconSpriteSymbols = computed(() =>
+  Object.entries(iconSymbolByUrl.value).map(([url, id]) => ({ url, id }))
+);
+
+const playerIconSymbolId = computed(() => iconSymbolByUrl.value[PLAYER_ICON_URL]);
 
 const selectedMarker = computed<ProjectedMarker | null>(() => {
   if (!selectedMarkerKey.value) return null;
