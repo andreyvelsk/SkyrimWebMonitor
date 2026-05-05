@@ -130,8 +130,8 @@ const imgNaturalH = ref(0);
 const scale = ref(0);
 const translateX = ref(0);
 const translateY = ref(0);
-/** Bumped on each viewport update to keep coverScale reactive. */
-const viewportTick = ref(0);
+const containerWidth = ref(0);
+const containerHeight = ref(0);
 
 /** Whether tile prefetch is still in progress (used to show a backdrop). */
 const isPrefetching = mapTilesPrefetchActive;
@@ -146,13 +146,12 @@ const overlayStyle = computed<StyleValue>(() => ({
 }));
 
 const coverScale = computed(() => {
-  // Touch the tick so this recomputes on viewport changes / resize.
-  void viewportTick.value;
-  const cont = osdContainerRef.value;
-  if (!cont || !imgNaturalW.value || !imgNaturalH.value) return 1;
+  if (!containerWidth.value || !containerHeight.value || !imgNaturalW.value || !imgNaturalH.value) {
+    return 1;
+  }
   return Math.max(
-    cont.clientWidth / imgNaturalW.value,
-    cont.clientHeight / imgNaturalH.value
+    containerWidth.value / imgNaturalW.value,
+    containerHeight.value / imgNaturalH.value
   );
 });
 
@@ -189,12 +188,29 @@ function syncOverlayTransform(): void {
 
   const s = (pX.x - p0.x) / imgNaturalW.value;
   if (s > 0 && Number.isFinite(s)) {
-    scale.value = s;
-    translateX.value = p0.x;
-    translateY.value = p0.y;
+    if (Math.abs(scale.value - s) > 1e-6) {
+      scale.value = s;
+    }
+    if (Math.abs(translateX.value - p0.x) > 1e-3) {
+      translateX.value = p0.x;
+    }
+    if (Math.abs(translateY.value - p0.y) > 1e-3) {
+      translateY.value = p0.y;
+    }
   }
+}
 
-  viewportTick.value += 1;
+function syncContainerSize(): void {
+  const cont = osdContainerRef.value;
+  if (!cont) return;
+  const w = cont.clientWidth;
+  const h = cont.clientHeight;
+  if (containerWidth.value !== w) {
+    containerWidth.value = w;
+  }
+  if (containerHeight.value !== h) {
+    containerHeight.value = h;
+  }
 }
 
 function logImagePxAt(imgX: number, imgY: number): void {
@@ -343,14 +359,16 @@ async function setupViewer(): Promise<void> {
       item.setClip(new OpenSeadragon.Rect(MAP_CROP_X, MAP_CROP_Y_TOP, croppedW, croppedH));
     }
 
+    syncContainerSize();
     applyHomeBounds();
     attachSharedTileCache(item);
   });
 
   viewer.addHandler('update-viewport', syncOverlayTransform);
-  viewer.addHandler('resize', syncOverlayTransform);
-  viewer.addHandler('animation', syncOverlayTransform);
-  viewer.addHandler('animation-finish', syncOverlayTransform);
+  viewer.addHandler('resize', () => {
+    syncContainerSize();
+    syncOverlayTransform();
+  });
 
   viewer.addHandler('canvas-click', (event) => {
     if (!viewer) return;
