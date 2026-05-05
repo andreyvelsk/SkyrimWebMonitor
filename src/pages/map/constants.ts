@@ -1,7 +1,7 @@
 import { buildIconPath } from '@/shared/lib/utils/iconPath';
 
 // Map marker overlay tuning.
-export const MARKER_BASE_SIZE_PX = 32;
+export const MARKER_BASE_SIZE_PX = 26;
 export const MARKER_ZOOM_INFLUENCE = 0.2;
 export const MARKER_MIN_SIZE_PX = 18;
 export const MARKER_MAX_SIZE_PX = 72;
