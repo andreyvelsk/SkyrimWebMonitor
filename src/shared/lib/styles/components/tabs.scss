@@ -30,8 +30,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: var(--tab-height);
-  padding: 0 var(--spacing-sm);
+  padding: var(--spacing-sm);
   background-color: var(--tab-bg-inactive);
   color: var(--tab-text-inactive);
   font-family: var(--font-heading);
@@ -93,8 +92,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: var(--subtab-height);
-  padding: 0 var(--spacing-md);
+  padding: var(--spacing-sm);
   background-color: var(--subtab-bg-inactive);
   color: var(--subtab-text-inactive);
   font-family: var(--font-body);
