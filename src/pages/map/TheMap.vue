@@ -77,6 +77,15 @@ const INITIAL_ZOOM_FACTOR = 2.5;
 const MAX_ZOOM_FACTOR = 1;
 /** Background color around the map. */
 const BACKGROUND_COLOR = 'var(--skyrim-bg-medium)';
+/**
+ * Pixels to hide on the LEFT and RIGHT edges of the map image (same on both sides).
+ * Increase to push the dark horizontal borders out of view.
+ */
+const MAP_CROP_X = 500;
+/** Pixels to hide on the TOP edge of the map image. */
+const MAP_CROP_Y_TOP = 1500;
+/** Pixels to hide on the BOTTOM edge of the map image. */
+const MAP_CROP_Y_BOTTOM = 2000;
 
 // =============================================================
 // Torn-paper edge effect (unchanged)
@@ -314,6 +323,26 @@ async function setupViewer(): Promise<void> {
     const size = item.getContentSize();
     imgNaturalW.value = size.x;
     imgNaturalH.value = size.y;
+
+    // Reposition the item so only the non-dark cropped area is considered
+    // the "world" by OSD. This makes homeFillsViewer, visibilityRatio and
+    // constrainDuringPan all work relative to the cropped region, which
+    // naturally prevents the user from panning into the dark edges.
+    if (MAP_CROP_X > 0 || MAP_CROP_Y_TOP > 0 || MAP_CROP_Y_BOTTOM > 0) {
+      const W = size.x;
+      const croppedW = W - 2 * MAP_CROP_X;
+      const croppedH = size.y - MAP_CROP_Y_TOP - MAP_CROP_Y_BOTTOM;
+      // In OSD viewport space the item default width is 1.0. We scale it so
+      // the cropped region spans exactly 1.0 viewport unit.
+      const newWidth = W / croppedW;
+      item.setWidth(newWidth);
+      item.setPosition(
+        new OpenSeadragon.Point(-MAP_CROP_X / croppedW, -MAP_CROP_Y_TOP / croppedW),
+      );
+      // Also clip rendering so OSD won't bother loading tiles for the dark area.
+      item.setClip(new OpenSeadragon.Rect(MAP_CROP_X, MAP_CROP_Y_TOP, croppedW, croppedH));
+    }
+
     applyHomeBounds();
     attachSharedTileCache(item);
   });
