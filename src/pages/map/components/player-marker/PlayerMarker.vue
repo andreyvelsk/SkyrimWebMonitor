@@ -1,17 +1,15 @@
 <template>
-  <foreignObject
-    :x="player.x - playerHalfSize"
-    :y="player.y - playerHalfSize"
-    :width="playerSize"
-    :height="playerSize"
-    :transform="`rotate(${player.angleDeg} ${player.x} ${player.y})`"
-  >
-    <div
-      xmlns="http://www.w3.org/1999/xhtml"
+  <g :transform="`translate(${player.x} ${player.y}) rotate(${player.angleDeg})`">
+    <use
       class="player-marker"
-      :style="{ '--icon-src': `url('${iconUrl}')` }"
+      :href="`#${iconSymbolId}`"
+      :x="-playerHalfSize"
+      :y="-playerHalfSize"
+      :width="playerSize"
+      :height="playerSize"
+      preserveAspectRatio="xMidYMid meet"
     />
-  </foreignObject>
+  </g>
 </template>
 
 <script setup lang="ts">
@@ -21,18 +19,12 @@ defineProps<{
   player: PlayerOverlayPosition;
   playerSize: number;
   playerHalfSize: number;
-  iconUrl: string;
+  iconSymbolId: string;
 }>();
 </script>
 
 <style scoped lang="scss">
 .player-marker {
-  width: 100%;
-  height: 100%;
-  background-color: var(--skyrim-border-medium);
-  mask-image: var(--icon-src);
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
+  pointer-events: none;
 }
 </style>

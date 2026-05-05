@@ -37,8 +37,7 @@ export type MapHotspotType = KnownMapHotspotType | (string & {});
 
 /**
  * Single hotspot as delivered by the game server. `x` / `y` are in raw game
- * coordinates — exactly the values the `useMapCoordinates` overlay matrix
- * expects.
+ * coordinates — exactly the values the FWMF map projection expects.
  */
 export interface MapHotspot {
   type: MapHotspotType;
@@ -63,7 +62,7 @@ export interface MapHotspotsState {
 /**
  * Quest objective marker from the game server. Coordinates are in the same
  * raw game space as regular hotspots and can be projected with the same map
- * calibration matrix.
+ * projection when the marker belongs to top-level Tamriel.
  */
 export interface MapQuestMarker {
   aliasId: number;
@@ -73,6 +72,7 @@ export interface MapQuestMarker {
   name: string;
   objectiveIndex: number;
   objectiveText: string;
+  objectiveTextResolved: string;
   parentWorldspace: string | null;
   parentWorldspaceFormId: string | null;
   questEditorId: string;

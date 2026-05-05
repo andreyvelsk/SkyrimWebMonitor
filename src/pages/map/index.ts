@@ -9,23 +9,18 @@ export {
   MAP_DZI_URL,
 } from './preloadMap';
 export {
-  useMapCoordinates,
-  solveAffine,
-  solveAffineLeastSquares,
-  REFERENCE_POINTS,
-  WHITERUN_GAME,
-  SOLITUDE_GAME,
-  RIFTEN_GAME,
-  WHITERUN_IMAGE_PX,
-  SOLITUDE_IMAGE_PX,
-  RIFTEN_IMAGE_PX,
-} from './composables/useMapCoordinates';
+  FWMF_MAP_BOUNDS,
+  FWMF_MAP_IMAGE_HEIGHT,
+  FWMF_MAP_IMAGE_WIDTH,
+  FWMF_MAP_MESH_NAME,
+  projectWorldToImage,
+  useMapProjection,
+} from './composables/useMapProjection';
 export type {
-  Point,
-  AffineMatrix,
-  ReferencePoint,
-  UseMapCoordinates,
-} from './composables/useMapCoordinates';
+  MapProjectionFn,
+  ProjectedPoint,
+  UseMapProjection,
+} from './composables/useMapProjection';
 export {
   DEFAULT_MARKER_ICON,
   MARKER_ICON_MAP,

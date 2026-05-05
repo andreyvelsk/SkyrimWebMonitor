@@ -7,13 +7,23 @@
     preserveAspectRatio="none"
     aria-hidden="true"
   >
-    <location-markers
-      :markers="locationMarkers"
-      :marker-max-half="markerMaxHalf"
-      :marker-max-size="markerMaxSize"
-      :rest-scale="restScale"
-      :selected-marker-key="selectedMarkerKey"
-    />
+    <defs>
+      <symbol
+        v-for="icon in iconSpriteSymbols"
+        :id="icon.id"
+        :key="icon.id"
+        viewBox="0 0 1 1"
+      >
+        <image
+          :href="icon.url"
+          x="0"
+          y="0"
+          width="1"
+          height="1"
+          preserveAspectRatio="xMidYMax meet"
+        />
+      </symbol>
+    </defs>
 
     <quest-markers
       :markers="questObjectiveMarkers"
@@ -21,6 +31,16 @@
       :marker-max-size="markerMaxSize"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
+      :icon-symbol-by-url="iconSymbolByUrl"
+    />
+
+    <location-markers
+      :markers="locationMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
+      :rest-scale="restScale"
+      :selected-marker-key="selectedMarkerKey"
+      :icon-symbol-by-url="iconSymbolByUrl"
     />
 
     <player-marker
@@ -28,7 +48,7 @@
       :player="player"
       :player-size="playerSize"
       :player-half-size="playerHalfSize"
-      :icon-url="PLAYER_ICON_URL"
+      :icon-symbol-id="playerIconSymbolId"
     />
 
     <selected-marker-label
@@ -48,7 +68,8 @@
 <script setup lang="ts">
 import { computed, ref, type StyleValue } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useMapCoordinates } from './composables/useMapCoordinates';
+import { iconUrlToSymbolId } from './composables/iconSprite';
+import { useMapProjection } from './composables/useMapProjection';
 import { useProjectedMapMarkers } from './composables/useProjectedMapMarkers';
 import {
   MARKER_BASE_SIZE_PX,
@@ -105,9 +126,9 @@ const hotspotsStore = useMapHotspotsStore();
 const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
 const playerStore = useMapPlayerStore();
 const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
-const { matrix } = useMapCoordinates();
+const { projectWorldToImage } = useMapProjection();
 const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarkers({
-  matrix,
+  projectWorldToImage,
   hotspots,
   questMarkers,
   questIconUrl: QUEST_ICON_URL,
@@ -124,6 +145,26 @@ const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarke
 // =============================================================
 
 const selectedMarkerKey = ref<string | null>(null);
+
+const iconSymbolByUrl = computed<Record<string, string>>(() => {
+  const map: Record<string, string> = {};
+  map[PLAYER_ICON_URL] = iconUrlToSymbolId(PLAYER_ICON_URL);
+  const all = markers.value;
+  for (let i = 0; i < all.length; i += 1) {
+    const marker = all[i];
+    const url = marker.iconUrl;
+    if (!map[url]) {
+      map[url] = iconUrlToSymbolId(url);
+    }
+  }
+  return map;
+});
+
+const iconSpriteSymbols = computed(() =>
+  Object.entries(iconSymbolByUrl.value).map(([url, id]) => ({ url, id }))
+);
+
+const playerIconSymbolId = computed(() => iconSymbolByUrl.value[PLAYER_ICON_URL]);
 
 const selectedMarker = computed<ProjectedMarker | null>(() => {
   if (!selectedMarkerKey.value) return null;
@@ -240,15 +281,16 @@ const selectedLabelOffset = computed(() => 4 / props.scale);
  * coordinates to plot (live `Player::Position` outside in Tamriel, or
  * cached `Player::ExteriorPosition` while in interiors / city sub-worlds);
  * this component is purely presentational. Hidden before calibration or
- * when the store has no displayable position (e.g. Solstheim).
+ * when the position does not belong to the FWMF Tamriel mesh.
  */
 const player = computed(() => {
-  const m = matrix.value;
   const dp = playerDisplayPosition.value;
-  if (!m || !dp) return null;
+  if (!dp) return null;
+  const projected = projectWorldToImage(dp);
+  if (!projected) return null;
   return {
-    x: m.a * dp.x + m.c * dp.y + m.e,
-    y: m.b * dp.x + m.d * dp.y + m.f,
+    x: projected.x,
+    y: projected.y,
     angleDeg: dp.angle * RAD_TO_DEG,
   };
 });
