@@ -69,7 +69,7 @@
 import { computed, ref, type StyleValue } from 'vue';
 import { storeToRefs } from 'pinia';
 import { iconUrlToSymbolId } from './composables/iconSprite';
-import { useMapCoordinates } from './composables/useMapCoordinates';
+import { useMapProjection } from './composables/useMapProjection';
 import { useProjectedMapMarkers } from './composables/useProjectedMapMarkers';
 import {
   MARKER_BASE_SIZE_PX,
@@ -126,9 +126,9 @@ const hotspotsStore = useMapHotspotsStore();
 const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
 const playerStore = useMapPlayerStore();
 const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
-const { matrix } = useMapCoordinates();
+const { projectWorldToImage } = useMapProjection();
 const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarkers({
-  matrix,
+  projectWorldToImage,
   hotspots,
   questMarkers,
   questIconUrl: QUEST_ICON_URL,
@@ -281,15 +281,16 @@ const selectedLabelOffset = computed(() => 4 / props.scale);
  * coordinates to plot (live `Player::Position` outside in Tamriel, or
  * cached `Player::ExteriorPosition` while in interiors / city sub-worlds);
  * this component is purely presentational. Hidden before calibration or
- * when the store has no displayable position (e.g. Solstheim).
+ * when the position does not belong to the FWMF Tamriel mesh.
  */
 const player = computed(() => {
-  const m = matrix.value;
   const dp = playerDisplayPosition.value;
-  if (!m || !dp) return null;
+  if (!dp) return null;
+  const projected = projectWorldToImage(dp);
+  if (!projected) return null;
   return {
-    x: m.a * dp.x + m.c * dp.y + m.e,
-    y: m.b * dp.x + m.d * dp.y + m.f,
+    x: projected.x,
+    y: projected.y,
     angleDeg: dp.angle * RAD_TO_DEG,
   };
 });
