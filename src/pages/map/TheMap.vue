@@ -76,7 +76,7 @@ const INITIAL_ZOOM_FACTOR = 2.5;
 /** Max zoom factor relative to home zoom. */
 const MAX_ZOOM_FACTOR = 1;
 /** Background color around the map. */
-const BACKGROUND_COLOR = 'var(--skyrim-bg-dark)';
+const BACKGROUND_COLOR = 'var(--skyrim-bg-medium)';
 
 // =============================================================
 // Torn-paper edge effect (unchanged)
@@ -84,8 +84,8 @@ const BACKGROUND_COLOR = 'var(--skyrim-bg-dark)';
 
 const TEAR_VIEWBOX = 400;
 const TEAR_INSET = 5;
-const TEAR_BASE_FREQUENCY = 0.055;
-const TEAR_OCTAVES = 3;
+const TEAR_BASE_FREQUENCY = 0.045;
+const TEAR_OCTAVES = 2;
 const TEAR_DISPLACEMENT = 32;
 const TEAR_SEED = 4;
 const TEAR_SHADOW = '0 4px 14px rgba(0, 0, 0, 0.55)';
