@@ -14,8 +14,8 @@ export const PLAYER_MIN_SIZE_PX = 24;
 export const PLAYER_MAX_SIZE_PX = 96;
 
 // Marker icon URLs.
-export const PLAYER_ICON_URL = buildIconPath('delapouite/growth.svg');
-export const QUEST_ICON_URL = buildIconPath('delapouite/human-target.svg');
+export const PLAYER_ICON_URL = buildIconPath('map/player.svg');
+export const QUEST_ICON_URL = buildIconPath('map/quest.svg');
 
 // Math helpers.
 export const RAD_TO_DEG = 180 / Math.PI;

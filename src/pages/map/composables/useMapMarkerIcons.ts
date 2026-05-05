@@ -14,7 +14,7 @@ import { buildIconPath } from '@/shared/lib/utils/iconPath';
 // =============================================================
 
 /** Default icon used when a hotspot type has no explicit mapping. */
-export const DEFAULT_MARKER_ICON = buildIconPath('delapouite/position-marker.svg');
+export const DEFAULT_MARKER_ICON = buildIconPath('map/location.svg');
 
 /**
  * Mapping from hotspot type → icon URL. Extend freely; values are plain
