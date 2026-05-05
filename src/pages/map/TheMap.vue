@@ -268,7 +268,7 @@ async function setupViewer(): Promise<void> {
     minZoomImageRatio: 1.3,
     maxZoomPixelRatio: MAX_ZOOM_FACTOR,
     animationTime: 0.3,
-    springStiffness: 5,
+    springStiffness: 3,
     // false = OSD keeps the previous LOD visible until the next one is fully
     // loaded. With `true` it would clear and re-render immediately, exposing
     // the placeholderFillStyle as a visible flash during fast zoom-out.
