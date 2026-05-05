@@ -182,19 +182,24 @@ function onMarkerClick(m: ProjectedMarker): void {
   if (isQuestMarker(m)) return;
   if (!isLocationMarker(m)) return;
   if (!m.canFastTravel) return;
-  openModal({
-    component: FastTravelModal,
-    props: { locationName: m.label },
-    on: {
-      confirm: () => {
-        // Trigger fast-travel to the selected map marker. The marker's
-        // `refId` is the hex form ID expected by the protocol.
-        wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
-        closeModal();
+  // Defer modal opening until after the current pointer-event chain is done.
+  // Without this, the synthesized `click` that follows `pointerup`/`touchend`
+  // fires at the same screen coordinates and lands on the modal button.
+  setTimeout(() => {
+    openModal({
+      component: FastTravelModal,
+      props: { locationName: m.label },
+      on: {
+        confirm: () => {
+          // Trigger fast-travel to the selected map marker. The marker's
+          // `refId` is the hex form ID expected by the protocol.
+          wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
+          closeModal();
+        },
+        cancel: () => closeModal(),
       },
-      cancel: () => closeModal(),
-    },
-  });
+    });
+  }, 0);
 }
 
 /** Clear marker selection. Called by the host map when the user taps the
@@ -213,20 +218,26 @@ function clearSelection(): void {
  * canvas always receives pan/pinch gestures uninterrupted.
  */
 function handleClickAt(imgX: number, imgY: number): boolean {
-  const halfW = markerMaxHalf.value;
-  const fullH = markerMaxSize.value;
-  if (halfW <= 0 || fullH <= 0) return false;
+  if (markerMaxSize.value <= 0) return false;
 
   // Markers are drawn anchored at (m.x, m.y) with the icon tip at the
   // anchor and the body extending up by `markerMaxSize`. Iterate from the
   // last drawn (top-most in z-order, after quest markers) back to the
   // first so a tap on overlapping markers picks the visually-topmost one.
+  //
+  // Use the actual rendered size per marker: selected → markerMaxSize,
+  // unselected → markerSize (= markerMaxSize / MARKER_SELECTED_SCALE).
+  // This prevents the ~35% invisible padding that caused mis-taps on
+  // adjacent markers.
   const all = markers.value;
   for (let i = all.length - 1; i >= 0; i -= 1) {
     const m = all[i];
+    const isSelected = m.key === selectedMarkerKey.value;
+    const renderedH = isSelected ? markerMaxSize.value : markerSize.value;
+    const renderedHalfW = renderedH / 2;
     const dx = imgX - m.x;
     const dy = imgY - m.y;
-    if (dx >= -halfW && dx <= halfW && dy >= -fullH && dy <= 0) {
+    if (dx >= -renderedHalfW && dx <= renderedHalfW && dy >= -renderedH && dy <= 0) {
       onMarkerClick(m);
       return true;
     }
