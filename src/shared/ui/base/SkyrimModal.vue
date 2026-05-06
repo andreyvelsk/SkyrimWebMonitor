@@ -1,32 +1,38 @@
 <template>
-  <skyrim-backdrop
-    :visible="isOpen"
-    role="dialog"
-    aria-modal
-    transition-name="modal-backdrop"
-    @self-click="closeModal"
-  >
-    <Transition name="modal-panel">
+  <Teleport to="body">
+    <Transition
+      name="modal-backdrop"
+      appear
+    >
       <div
         v-if="isOpen"
-        class="modal-panel"
+        class="skyrim-backdrop skyrim-backdrop--fixed skyrim-backdrop--overlay skyrim-backdrop--blocking"
+        role="dialog"
+        aria-modal="true"
+        @click.self="closeModal"
       >
-        <div class="modal-body">
-          <component
-            :is="modalComponent"
-            v-if="modalComponent"
-            v-bind="modalProps"
-            v-on="modalHandlers"
-          />
-        </div>
+        <Transition name="modal-panel">
+          <div
+            v-if="isOpen"
+            class="modal-panel"
+          >
+            <div class="modal-body">
+              <component
+                :is="modalComponent"
+                v-if="modalComponent"
+                v-bind="modalProps"
+                v-on="modalHandlers"
+              />
+            </div>
+          </div>
+        </Transition>
       </div>
     </Transition>
-  </skyrim-backdrop>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
 import { useModal } from '@/shared/lib/composables/useModal';
-import SkyrimBackdrop from './SkyrimBackdrop.vue';
 
 const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
   useModal();
@@ -36,11 +42,11 @@ const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
 /*
  * Layout & frame styles come from the design system:
  *   .modal-panel, .modal-body (components/modal.scss)
- * The full-viewport overlay is provided by <SkyrimBackdrop>.
+ * The full-viewport overlay is provided by shared .skyrim-backdrop classes.
  * Only the transitions are component-specific and live here.
  */
 
-/* Backdrop transition (overrides default skyrim-backdrop fade timing). */
+/* Backdrop transition */
 .modal-backdrop-enter-active,
 .modal-backdrop-leave-active {
   transition: opacity 0.25s ease;

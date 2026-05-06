@@ -11,8 +11,7 @@
  *   .modal-title        — heading style (Cinzel, uppercase)
  *   .modal-actions      — button row, centered, gap-md
  *
- * The full-viewport overlay (formerly `.modal-backdrop`) is now provided by
- * <SkyrimBackdrop> from `shared/ui/base`.
+ * The full-viewport overlay uses `.skyrim-backdrop`.
  */
 
 .modal-panel {
