@@ -1,24 +1,30 @@
 <template>
-  <skyrim-backdrop
-    :visible="showBackdrop"
-    role="alertdialog"
-    aria-modal
-    :z-index="'calc(var(--z-modal-backdrop) - 50)'"
-    :blur="3"
-    prevent-context-menu
-    transition-name="game-status-backdrop"
-    @self-click.stop
-  >
-    <base-icon
-      v-if="dead"
-      class="game-status-backdrop__icon"
-      icon-path="lorc/death-zone.svg"
-      :size="96"
-    />
-    <h2 v-else>
-      {{ $t('shared.ui.gameStatus.title') }}
-    </h2>
-  </skyrim-backdrop>
+  <Teleport to="body">
+    <Transition
+      name="game-status-backdrop"
+      appear
+    >
+      <div
+        v-if="showBackdrop"
+        class="skyrim-backdrop skyrim-backdrop--fixed skyrim-backdrop--overlay skyrim-backdrop--blocking game-status-backdrop"
+        style="--skyrim-backdrop-z: calc(var(--z-modal-backdrop) - 50); --skyrim-backdrop-blur: 3px"
+        role="alertdialog"
+        aria-modal="true"
+        @contextmenu.prevent
+        @click.stop
+      >
+        <base-icon
+          v-if="dead"
+          class="game-status-backdrop__icon"
+          icon-path="lorc/death-zone.svg"
+          :size="96"
+        />
+        <h2 v-else>
+          {{ $t('shared.ui.gameStatus.title') }}
+        </h2>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -27,7 +33,6 @@ import { storeToRefs } from 'pinia';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { BaseIcon } from '@/shared/ui';
-import SkyrimBackdrop from './SkyrimBackdrop.vue';
 
 const gameStatusStore = useGameStatusStore();
 const wsStore = useWebSocketStore();
@@ -45,7 +50,7 @@ const showBackdrop = computed(() => isConnected.value && !canAct.value);
   filter: drop-shadow(0 0 12px var(--skyrim-border-glow));
 }
 
-/* Custom transition keeps the original feel (overrides skyrim-backdrop default). */
+/* Backdrop transition */
 .game-status-backdrop-enter-active,
 .game-status-backdrop-leave-active {
   transition: opacity var(--transition-normal);

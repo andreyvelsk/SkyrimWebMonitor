@@ -15,30 +15,31 @@
         :cover-scale="coverScale"
         :overlay-style="overlayStyle"
       />
-      <skyrim-backdrop
-        :visible="isPrefetching"
-        :teleport="false"
-        position="absolute"
-        tone="dim"
-        :z-index="5"
-        role="status"
-        aria-live="polite"
-        blocking
-        class="map-prefetch-backdrop"
+      <Transition
+        name="map-prefetch-backdrop"
+        appear
       >
-        <div class="map-prefetch-backdrop__panel">
-          <span class="map-prefetch-backdrop__label">
-            {{ $t('pages.map.prefetch.label') }}
-          </span>
-          <div
-            class="map-prefetch-backdrop__bar"
-            :style="{ '--p': `${prefetchProgress}%` }"
-          />
-          <span class="map-prefetch-backdrop__pct">
-            {{ $t('pages.map.prefetch.progress', { progress: prefetchProgress }) }}
-          </span>
+        <div
+          v-if="isPrefetching"
+          class="skyrim-backdrop skyrim-backdrop--absolute skyrim-backdrop--dim skyrim-backdrop--blocking map-prefetch-backdrop"
+          style="--skyrim-backdrop-z: 5; --skyrim-backdrop-blur: 2px"
+          role="status"
+          aria-live="polite"
+        >
+          <div class="map-prefetch-backdrop__panel">
+            <span class="map-prefetch-backdrop__label">
+              {{ $t('pages.map.prefetch.label') }}
+            </span>
+            <div
+              class="map-prefetch-backdrop__bar"
+              :style="{ '--p': `${prefetchProgress}%` }"
+            />
+            <span class="map-prefetch-backdrop__pct">
+              {{ $t('pages.map.prefetch.progress', { progress: prefetchProgress }) }}
+            </span>
+          </div>
         </div>
-      </skyrim-backdrop>
+      </Transition>
     </div>
   </div>
 </template>
@@ -56,7 +57,6 @@ import {
   mapTilesPrefetchProgress,
 } from './preloadMap';
 import MapMarkers from './MapMarkers.vue';
-import { SkyrimBackdrop } from '@/shared/ui';
 
 // =============================================================
 // Map view configuration
@@ -469,6 +469,16 @@ onBeforeUnmount(() => {
 
 .map-prefetch-backdrop {
   cursor: progress;
+}
+
+.map-prefetch-backdrop-enter-active,
+.map-prefetch-backdrop-leave-active {
+  transition: opacity var(--transition-normal);
+}
+
+.map-prefetch-backdrop-enter-from,
+.map-prefetch-backdrop-leave-to {
+  opacity: 0;
 }
 
 .map-prefetch-backdrop__panel {

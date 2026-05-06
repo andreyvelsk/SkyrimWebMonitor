@@ -1,0 +1,32 @@
+/* ============================================
+ * BACKDROP
+ * ============================================ */
+
+.skyrim-backdrop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inset: 0;
+  z-index: var(--skyrim-backdrop-z, var(--z-modal-backdrop));
+  backdrop-filter: blur(var(--skyrim-backdrop-blur, 2px));
+}
+
+.skyrim-backdrop--fixed {
+  position: fixed;
+}
+
+.skyrim-backdrop--absolute {
+  position: absolute;
+}
+
+.skyrim-backdrop--overlay {
+  background-color: var(--bg-overlay);
+}
+
+.skyrim-backdrop--dim {
+  background-color: rgb(13 13 13 / 70%);
+}
+
+.skyrim-backdrop--blocking {
+  pointer-events: all;
+}
