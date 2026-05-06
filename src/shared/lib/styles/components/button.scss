@@ -28,16 +28,24 @@
   color: var(--skyrim-text-primary);
   background-color: var(--skyrim-bg-light);
   border: 1px solid var(--skyrim-border-dark);
+  box-shadow: inset 0 0 0 2px transparent;
   cursor: pointer;
   touch-action: manipulation;
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     color var(--transition-fast),
-    opacity var(--transition-fast);
+    opacity var(--transition-fast),
+    box-shadow 150ms ease-out,
+    transform 150ms ease-out;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   user-select: none;
+
+  /* Remove browser focus ring from mouse/touch; keep for keyboard navigation */
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
 
   @media (hover: hover) {
     &:hover:not(:disabled) {
@@ -47,11 +55,11 @@
     }
   }
 
+  /* Press feedback via transform & box-shadow — variant-agnostic, auto-returns after release */
   &:active:not(:disabled) {
-    background-color: var(--bg-accent-strong);
-    border-color: var(--skyrim-accent-gold);
-    color: var(--skyrim-accent-gold);
-    transition: none;
+    transform: scale(0.98);
+    opacity: 0.8;
+    box-shadow: inset 0 0 0 2px var(--skyrim-accent-gold);
   }
 
   &.active {
