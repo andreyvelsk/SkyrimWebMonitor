@@ -36,7 +36,7 @@ const props = withDefaults(
 const stats = computed(() => [
   {
     label: t('pages.inventory.weapons.damage'),
-    value: getRoundValue(props.data?.damage ?? props.data?.baseDamage),
+    value: getRoundValue(props.data?.damage ?? props.data?.damage),
   },
   {
     label: t('pages.inventory.weapons.weight'),
