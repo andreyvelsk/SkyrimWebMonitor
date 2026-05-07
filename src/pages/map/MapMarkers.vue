@@ -196,7 +196,12 @@ function onMarkerClick(m: ProjectedMarker): void {
           wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
           closeModal();
         },
-        cancel: () => closeModal(),
+        cancel: () => {
+          closeModal();
+        },
+      },
+      onClose: () => {
+        clearSelection();
       },
     });
   }, 0);
