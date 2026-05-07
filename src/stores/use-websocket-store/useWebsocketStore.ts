@@ -5,7 +5,7 @@ import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './types';
-import { LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse } from '@/stores/adapters/localeAdapter';
+import { SYSTEM_QUERY_ID, SYSTEM_QUERY_FIELDS, useSystemStore } from '@/stores/system/useSystemStore';
 import { applyFixturesIfEnabled } from '@/stores/fixtures/fixtureLoader';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
@@ -176,7 +176,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
       reconnectAttempt.value = 0;
       reconnectFailed.value = false;
       console.log('WebSocket connected, ready for subscriptions');
-      sendQuery(LANG_QUERY_ID, LANG_QUERY_FIELDS, handleLangQueryResponse);
+      sendQuery(SYSTEM_QUERY_ID, SYSTEM_QUERY_FIELDS, (fields) => useSystemStore().handleQueryResponse(fields));
     });
 
     unsubscribeFromClose = wsClient.on('onClose', () => {

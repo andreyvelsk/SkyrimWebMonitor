@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useSystemStore } from '../system/useSystemStore';
 import type { Tab, SubTab } from './types/types';
 
 export const useNavigationStore = defineStore('navigation', () => {
   const { t } = useI18n();
+  const systemStore = useSystemStore();
 
   const subTabsMap = ref<Record<string, SubTab[]>>({
     character: [
@@ -37,11 +39,15 @@ export const useNavigationStore = defineStore('navigation', () => {
       label: t('app.tabs.magic.label'),
       subTabs: subTabsMap.value.magic,
     },
-    {
-      id: 'map',
-      label: t('app.tabs.map.label'),
-      subTabs: subTabsMap.value.map,
-    }
+    ...(systemStore.features.includes('map')
+      ? [
+          {
+            id: 'map',
+            label: t('app.tabs.map.label'),
+            subTabs: subTabsMap.value.map,
+          },
+        ]
+      : []),
   ]);
 
   const subTabsToHide = ['favorites', 'soulgems', 'ammo', 'view'];
