@@ -15,6 +15,8 @@ interface UseProjectedMapMarkersOptions {
   questIconUrl: string;
 }
 
+const EXCLUDED_HOTSPOT_TYPES = ['DLC02ToSkyrim'];
+
 export function useProjectedMapMarkers({
   projectWorldToImage,
   hotspots,
@@ -23,7 +25,10 @@ export function useProjectedMapMarkers({
 }: UseProjectedMapMarkersOptions) {
   const locationMarkers = computed<LocationProjectedMarker[]>(() => {
     return hotspots.value
-      .filter((h) => h.isVisible)
+      .filter((h) => 
+        h.isVisible
+        && EXCLUDED_HOTSPOT_TYPES.indexOf(h.type) === -1
+    )
       .map((h) => {
         const projected = projectWorldToImage(h);
         if (!projected) return null;
