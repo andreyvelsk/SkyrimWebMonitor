@@ -1,8 +1,8 @@
 <template>
   <foreignObject
-    :x="marker.x - markerSize"
+    :x="marker.x - labelMaxWidth / 2"
     :y="marker.y + selectedLabelOffset"
-    :width="markerSize * 2"
+    :width="labelMaxWidth"
     :height="labelHeight"
     class="map-markers__label-host"
   >
@@ -23,9 +23,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { ProjectedMarker } from '../../types';
 
-defineProps<{
+const LABEL_MAX_WIDTH_EM = 15;
+const labelMaxWidthCss = `${LABEL_MAX_WIDTH_EM}em`;
+
+const props = defineProps<{
   marker: ProjectedMarker;
   markerSize: number;
   selectedLabelOffset: number;
@@ -35,6 +39,10 @@ defineProps<{
   labelPaddingX: number;
   labelPaddingY: number;
 }>();
+
+const labelMaxWidth = computed(
+  () => props.labelFontSize * LABEL_MAX_WIDTH_EM + props.labelPaddingX * 2 + 2
+);
 </script>
 
 <style scoped lang="scss">
@@ -58,8 +66,10 @@ defineProps<{
   border: 1px solid var(--skyrim-border-medium);
   color: var(--skyrim-text-primary);
   font-family: var(--font-heading);
-  white-space: nowrap;
-  text-overflow: ellipsis;
   box-shadow: var(--shadow-strong);
+  max-width: v-bind(labelMaxWidthCss);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 </style>
