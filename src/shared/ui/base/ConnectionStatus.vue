@@ -37,10 +37,16 @@
       </div>
     </div>
 
-    <p class="attribution">
-      {{ $t('shared.ui.connectionStatus.iconsBy') }}
-      <strong>game-icons.net</strong>
-    </p>
+    <div class="attribution">
+      <p>
+        {{ $t('shared.ui.connectionStatus.mapFrom') }}
+        <strong>Immersive Paper Map (3rd Edition)</strong>
+      </p>
+      <p>
+        {{ $t('shared.ui.connectionStatus.iconsBy') }}
+        <strong>game-icons.net</strong>
+      </p>
+    </div>
   </div>
 </template>
 

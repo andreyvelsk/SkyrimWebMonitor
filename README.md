@@ -98,6 +98,8 @@ The bug-report requirements mirror those of the [SkyrimWebSocket](https://github
 ## Credits
 
 - Game icons by [game-icons.net](https://game-icons.net/) — used under the [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) license. Each icon retains its original author attribution; see folder names under `public/icons/`.
+- Map from [Immersive Paper Map (3rd Edition)
+](https://www.nexusmods.com/skyrimspecialedition/mods/54710) by Ckw25
 - Fonts: **Cinzel** and **Cormorant Garamond** via [Google Fonts](https://fonts.google.com/) (Open Font License).
 - *The Elder Scrolls V: Skyrim* is © Bethesda Softworks / ZeniMax. This is an unofficial fan-made companion app and is not affiliated with or endorsed by Bethesda.
 

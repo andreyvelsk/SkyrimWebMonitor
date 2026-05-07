@@ -168,7 +168,8 @@
         "failedHint": "Reconnect attempts exhausted. Try again manually.",
         "attempt": "Attempt {current} of {total}",
         "reconnect": "Reconnect",
-        "iconsBy": "Icons by"
+        "iconsBy": "Icons by",
+        "mapFrom": "Map from"
       },
       "magicItem": {
         "ready": "Ready",
