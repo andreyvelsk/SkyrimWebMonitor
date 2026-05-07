@@ -4,6 +4,7 @@
     :style="{
       '--icon-src': `url('${iconSrc}')`,
       '--icon-size': `${size}px`,
+      '--icon-bg-color': backgroundColor,
     }"
     :class="{ 'base-icon--flipped': flipped }"
   />
@@ -17,14 +18,17 @@ interface Props {
   iconPath: string;
   size?: number;
   flipped?: boolean;
+  backgroundColor?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   size: 24,
   flipped: false,
+  backgroundColor: 'var(--skyrim-text-accent)',
 });
 
 const iconSrc = computed(() => buildIconPath(props.iconPath));
+const backgroundColor = computed(() => props.backgroundColor);
 </script>
 
 <style scoped lang="scss">
@@ -32,7 +36,8 @@ const iconSrc = computed(() => buildIconPath(props.iconPath));
   display: block;
   width: var(--icon-size);
   height: var(--icon-size);
-  background-color: var(--skyrim-text-accent);
+  background-color: var(--icon-bg-color);
+  transition: background-color var(--transition-fast);
   mask-image: var(--icon-src);
   mask-size: contain;
   mask-repeat: no-repeat;

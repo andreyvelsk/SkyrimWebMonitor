@@ -15,6 +15,18 @@
         :cover-scale="coverScale"
         :overlay-style="overlayStyle"
       />
+      <button
+        type="button"
+        class="map-follow-player-btn"
+        :class="{ 'is-active': isFollowPlayerMode }"
+        :aria-pressed="isFollowPlayerMode"
+        @click="toggleFollowPlayerMode"
+      >
+        <base-icon
+          icon-path="map/player.svg"
+          :background-color="isFollowPlayerMode ? 'var(--skyrim-accent-gold-light)' : 'var(--skyrim-text-dim)' "
+        />
+      </button>
       <Transition
         name="map-prefetch-backdrop"
         appear
@@ -45,7 +57,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, type StyleValue } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch, type StyleValue } from 'vue';
+import { storeToRefs } from 'pinia';
 import OpenSeadragon from 'openseadragon';
 import {
   MAP_IMAGE_URL,
@@ -57,6 +70,9 @@ import {
   mapTilesPrefetchProgress,
 } from './preloadMap';
 import MapMarkers from './MapMarkers.vue';
+import { BaseIcon } from '@/shared/ui';
+import { useMapProjection } from './composables/useMapProjection';
+import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 
 // =============================================================
 // Map view configuration
@@ -132,6 +148,11 @@ const translateX = ref(0);
 const translateY = ref(0);
 const containerWidth = ref(0);
 const containerHeight = ref(0);
+const isFollowPlayerMode = ref(false);
+
+const playerStore = useMapPlayerStore();
+const { displayPosition } = storeToRefs(playerStore);
+const { projectWorldToImage } = useMapProjection();
 
 /** Whether tile prefetch is still in progress (used to show a backdrop). */
 const isPrefetching = mapTilesPrefetchActive;
@@ -215,6 +236,40 @@ function syncContainerSize(): void {
 
 function logImagePxAt(imgX: number, imgY: number): void {
   console.log(`[map] image px: { x: ${imgX.toFixed(2)}, y: ${imgY.toFixed(2)} }`);
+}
+
+function centerOnPlayer(immediately = true): void {
+  if (!viewer || !isFollowPlayerMode.value) return;
+  const dp = displayPosition.value;
+  if (!dp) return;
+  const projected = projectWorldToImage(dp);
+  if (!projected) return;
+  const item = viewer.world.getItemAt(0);
+  if (!item) return;
+
+  const targetCenter = item.imageToViewportCoordinates(projected.x, projected.y, true);
+  const currentCenter = viewer.viewport.getCenter(true);
+  const dx = targetCenter.x - currentCenter.x;
+  const dy = targetCenter.y - currentCenter.y;
+  if (dx * dx + dy * dy < 1e-10) return;
+
+  viewer.viewport.panTo(targetCenter, immediately);
+  // Keep OSD constraints in charge near edges: when the player is close to a
+  // border we prefer clamped panning over exposing off-map areas.
+  viewer.viewport.applyConstraints(true);
+  syncOverlayTransform();
+}
+
+function stopFollowPlayerByUser(): void {
+  if (!isFollowPlayerMode.value) return;
+  isFollowPlayerMode.value = false;
+}
+
+function toggleFollowPlayerMode(): void {
+  isFollowPlayerMode.value = !isFollowPlayerMode.value;
+  if (isFollowPlayerMode.value) {
+    centerOnPlayer(true);
+  }
 }
 
 /**
@@ -363,13 +418,20 @@ async function setupViewer(): Promise<void> {
     syncContainerSize();
     applyHomeBounds();
     attachSharedTileCache(item);
+    centerOnPlayer(true);
   });
 
   viewer.addHandler('update-viewport', syncOverlayTransform);
   viewer.addHandler('resize', () => {
     syncContainerSize();
     syncOverlayTransform();
+    centerOnPlayer(true);
   });
+
+  // Any explicit user pan/zoom gesture exits follow mode back to free view.
+  viewer.addHandler('canvas-drag', stopFollowPlayerByUser);
+  viewer.addHandler('canvas-scroll', stopFollowPlayerByUser);
+  viewer.addHandler('canvas-pinch', stopFollowPlayerByUser);
 
   viewer.addHandler('canvas-click', (event) => {
     if (!viewer) return;
@@ -395,6 +457,10 @@ async function setupViewer(): Promise<void> {
 onMounted(() => {
   preloadMapImage();
   void setupViewer();
+});
+
+watch(displayPosition, () => {
+  centerOnPlayer(true);
 });
 
 onBeforeUnmount(() => {
@@ -465,6 +531,35 @@ onBeforeUnmount(() => {
   top: 0;
   left: 0;
   pointer-events: none;
+}
+
+.map-follow-player-btn {
+  position: absolute;
+  right: calc(var(--spacing-md) + env(safe-area-inset-right));
+  bottom: calc(var(--spacing-md) + env(safe-area-inset-bottom));
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: var(--border-thin) solid var(--skyrim-border-medium);
+  border-radius: 999px;
+  background-color: var(--skyrim-bg-medium);
+  box-shadow: var(--shadow-medium);
+  color: var(--skyrim-text-secondary);
+  cursor: pointer;
+  transform: rotate(45deg);
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+
+  &:active {
+    transform: scale(0.96);
+  }
 }
 
 .map-prefetch-backdrop {
