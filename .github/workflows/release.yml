@@ -69,10 +69,13 @@ jobs:
           test -f public/map-dzi/skyrim.dzi
 
       - name: Decode Android keystore
-        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
-          mkdir -p .ci
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > .ci/release.keystore
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            mkdir -p .ci
+            echo "$KEYSTORE_BASE64" | base64 --decode > .ci/release.keystore
+          fi
 
       - name: Build and sync Capacitor Android assets
         run: npm run cap:sync:android
