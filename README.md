@@ -47,6 +47,19 @@ Use the Chrome / Android steps above. The layout is tuned for handheld aspect ra
 
 > Updates are picked up automatically: the next time you open the app online, it fetches the new version transparently.
 
+## Install via Obtainium (Android)
+
+[![Available in Obtainium](https://img.shields.io/badge/Available%20in-Obtainium-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ImranR98/Obtainium)
+
+If you use **[Obtainium](https://github.com/ImranR98/Obtainium)**, you can install and update the APK directly from this repository's GitHub Releases.
+
+1. Open Obtainium and tap **Add App**.
+2. Choose **GitHub** as the source.
+3. Paste the repo URL: `https://github.com/andreyvelsk/SkyrimWebMonitor`.
+4. Select the latest release asset (`.apk`) and install.
+
+After that, Obtainium will notify you when a new release is published.
+
 ## Run locally / develop
 
 Requirements: Node.js 20+ and npm.
