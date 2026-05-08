@@ -21,6 +21,26 @@ const SRC_DIR = path.resolve(__dirname, 'src');
 const PUBLIC_ICONS_DIR = path.resolve(__dirname, 'public/icons');
 const USED_ICONS = collectUsedIcons(SRC_DIR, PUBLIC_ICONS_DIR);
 
+function svgToDataUrl(svg) {
+  const compact = svg
+    .replace(/\r?\n+/g, ' ')
+    .replace(/>\s+</g, '><')
+    .trim();
+
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(compact)}`;
+}
+
+function buildUsedIconDataUrls() {
+  return Object.fromEntries(
+    USED_ICONS.map((iconPath) => {
+      const svg = fs.readFileSync(path.join(PUBLIC_ICONS_DIR, iconPath), 'utf8');
+      return [iconPath, svgToDataUrl(svg)];
+    })
+  );
+}
+
+const USED_ICON_DATA_URLS = buildUsedIconDataUrls();
+
 // Vite plugin: after build, remove every SVG under dist/icons that is not in
 // USED_ICONS, then drop empty author folders. Keeps the deploy small and
 // guarantees only used icons end up on the server.
@@ -73,6 +93,7 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.VITE_APP_VERSION': JSON.stringify(getAppVersion()),
       __USED_ICON_PATHS__: JSON.stringify(USED_ICONS),
+      __USED_ICON_DATA_URLS__: JSON.stringify(USED_ICON_DATA_URLS),
     },
     resolve: {
       alias: {

@@ -19,7 +19,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        __USED_ICON_PATHS__: 'readonly'
+        __USED_ICON_PATHS__: 'readonly',
+        __USED_ICON_DATA_URLS__: 'readonly'
       }
     },
     rules: {
@@ -41,7 +42,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        __USED_ICON_PATHS__: 'readonly'
+        __USED_ICON_PATHS__: 'readonly',
+        __USED_ICON_DATA_URLS__: 'readonly'
       }
     },
     plugins: {
@@ -68,7 +70,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        __USED_ICON_PATHS__: 'readonly'
+        __USED_ICON_PATHS__: 'readonly',
+        __USED_ICON_DATA_URLS__: 'readonly'
       }
     },
     plugins: {
@@ -95,7 +98,8 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
-        __USED_ICON_PATHS__: 'readonly'
+        __USED_ICON_PATHS__: 'readonly',
+        __USED_ICON_DATA_URLS__: 'readonly'
       }
     },
     plugins: {
