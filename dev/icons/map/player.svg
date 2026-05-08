@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-50 -50 100 100">
+  <!-- Вытянутая стрелка, острие смотрит вверх (север при angleDeg=0). -->
+  <!-- Основной вытянутый треугольник: острие вверху, широкое основание внизу -->
+  <polygon
+    points="0,-46 28,18 0,6 -28,18"
+    fill="rgb(61 61 61 / 50%)"
+    stroke="#2a2a2a"
+    stroke-width="5"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+  <!-- Хвост стрелки -->
+  <polygon
+    points="0,6 18,22 0,44 -18,22"
+    fill="rgb(61 61 61 / 50%)"
+    stroke="#2a2a2a"
+    stroke-width="5"
+    stroke-linejoin="round"
+    stroke-linecap="round"
+  />
+</svg>
