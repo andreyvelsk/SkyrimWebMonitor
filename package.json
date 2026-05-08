@@ -29,14 +29,21 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:android": "BASE_PATH=./ VITE_CAPACITOR=true vite build",
     "preview": "vite preview",
     "tsc": "tsc --noEmit",
+    "cap:sync:android": "npm run build:android && npx cap sync android",
+    "android:apk": "npm run cap:sync:android && cd android && ./gradlew assembleDebug",
+    "android:open": "npm run cap:sync:android && npx cap open android",
     "export-fixtures": "node scripts/export-fixtures.js",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
     "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\" && npm run lint:css"
   },
   "dependencies": {
+    "@capacitor/android": "^7.6.3",
+    "@capacitor/app": "^7.1.2",
+    "@capacitor/core": "^7.6.3",
     "openseadragon": "^6.0.2",
     "pinia": "^3.0.4",
     "vite-plugin-pwa": "^1.2.0",
@@ -45,6 +52,7 @@
     "workbox-window": "^7.4.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^7.6.3",
     "@eslint/js": "^10.0.1",
     "@types/openseadragon": "^5.0.2",
     "@typescript-eslint/eslint-plugin": "^8.58.1",

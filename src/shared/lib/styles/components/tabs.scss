@@ -14,11 +14,16 @@
   align-items: center;
   justify-content: safe center;
   gap: var(--tab-gap);
+  padding-inline: max(var(--spacing-sm), env(safe-area-inset-left))
+    max(var(--spacing-sm), env(safe-area-inset-right));
+  scroll-padding-inline: max(var(--spacing-sm), env(safe-area-inset-left))
+    max(var(--spacing-sm), env(safe-area-inset-right));
   background-color: var(--skyrim-bg-dark);
   border-bottom: 2px solid var(--skyrim-border-dark);
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  box-sizing: border-box;
 
   &::-webkit-scrollbar {
     display: none;
@@ -76,11 +81,16 @@
   align-items: center;
   justify-content: safe center;
   gap: var(--spacing-xs);
+  padding-inline: max(var(--spacing-sm), env(safe-area-inset-left))
+    max(var(--spacing-sm), env(safe-area-inset-right));
+  scroll-padding-inline: max(var(--spacing-sm), env(safe-area-inset-left))
+    max(var(--spacing-sm), env(safe-area-inset-right));
   background-color: var(--skyrim-bg-dark);
   border-bottom: 2px solid var(--skyrim-border-dark);
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  box-sizing: border-box;
 
   &::-webkit-scrollbar {
     display: none;

@@ -1,3 +1,5 @@
+import { App as CapacitorApp } from '@capacitor/app';
+import { Capacitor, type PluginListenerHandle } from '@capacitor/core';
 import { onMounted, onUnmounted, ref } from 'vue';
 
 /**
@@ -22,9 +24,11 @@ import { onMounted, onUnmounted, ref } from 'vue';
  */
 export function useBackGuard() {
   const showToast = ref(false);
+  const isNativeCapacitor = Capacitor.isNativePlatform();
 
   const TOAST_TIMEOUT_MS = 2000;
   let toastTimer: ReturnType<typeof setTimeout> | null = null;
+  let nativeBackListener: PluginListenerHandle | null = null;
 
   function pushDummyState() {
     if (history.state?.pwaBackGuard !== true) {
@@ -51,6 +55,11 @@ export function useBackGuard() {
 
   function closeApp() {
     clearToast();
+    if (isNativeCapacitor) {
+      void CapacitorApp.exitApp();
+      return;
+    }
+
     if (isStandalone()) {
       // Chromium installed PWA closes; iOS PWA ignores (platform limit).
       window.close();
@@ -60,16 +69,13 @@ export function useBackGuard() {
     history.back();
   }
 
-  function onPopState() {
-    if (showToast.value) {
-      // Second back press within the timeout window — exit.
-      closeApp();
-      return;
+  function armExitGuard() {
+    if (!isNativeCapacitor) {
+      // Keep popstate firing on each system back in web/PWA mode.
+      pushDummyState();
     }
 
-    // First back press: re-arm dummy state so subsequent presses keep
-    // firing popstate, show the hint and start the confirmation window.
-    pushDummyState();
+    clearToast();
     showToast.value = true;
     toastTimer = setTimeout(() => {
       showToast.value = false;
@@ -77,13 +83,36 @@ export function useBackGuard() {
     }, TOAST_TIMEOUT_MS);
   }
 
+  function handleBackAttempt() {
+    if (showToast.value) {
+      // Second back press within the timeout window — exit.
+      closeApp();
+      return;
+    }
+
+    armExitGuard();
+  }
+
   onMounted(() => {
+    if (isNativeCapacitor) {
+      void CapacitorApp.addListener('backButton', handleBackAttempt).then(
+        (listener) => {
+          nativeBackListener = listener;
+        }
+      );
+      return;
+    }
+
     pushDummyState();
-    window.addEventListener('popstate', onPopState);
+    window.addEventListener('popstate', handleBackAttempt);
   });
 
   onUnmounted(() => {
-    window.removeEventListener('popstate', onPopState);
+    if (!isNativeCapacitor) {
+      window.removeEventListener('popstate', handleBackAttempt);
+    }
+
+    void nativeBackListener?.remove();
     if (toastTimer !== null) clearTimeout(toastTimer);
   });
 

@@ -72,15 +72,32 @@ function pruneUnusedIcons(distDir) {
   };
 }
 
+function pruneSourceMapImages(distDir) {
+  return {
+    name: 'prune-source-map-images',
+    apply: 'build',
+    closeBundle() {
+      for (const filename of ['skyrim.png', 'skyrim.dds']) {
+        const filePath = path.join(distDir, filename);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+          console.log(`[prune-source-map-images] removed ${filename}`);
+        }
+      }
+    },
+  };
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   const distDir = path.resolve(__dirname, 'dist');
+  const isCapacitorBuild = env.VITE_CAPACITOR === 'true';
 
   // Base path for the deployed site. Defaults to the production path on
   // GitHub Pages, but can be overridden at build time (e.g. BASE_PATH=
   // /SkyrimWebMonitor/dev/ for the dev branch preview deploy).
-  const basePath = process.env.BASE_PATH || '/SkyrimWebMonitor/';
+  const basePath = process.env.BASE_PATH || (isCapacitorBuild ? './' : '/SkyrimWebMonitor/');
 
   // The dev preview deploy must NOT cache anything: every reload should fetch
   // the latest build straight from the network. We also need to clean up any
@@ -115,7 +132,9 @@ export default defineConfig(({ mode }) => {
       vue(),
       // Must run BEFORE VitePWA so workbox sees only the pruned icon set.
       pruneUnusedIcons(distDir),
+      pruneSourceMapImages(distDir),
       VitePWA({
+        disable: isCapacitorBuild,
         registerType: 'autoUpdate',
         // On the /dev/ preview deploy, emit a self-destroying service worker
         // so any previously-registered SW unregisters itself and clears its

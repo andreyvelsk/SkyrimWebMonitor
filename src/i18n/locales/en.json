@@ -167,6 +167,10 @@
         "failed": "Connection failed",
         "failedHint": "Reconnect attempts exhausted. Try again manually.",
         "attempt": "Attempt {current} of {total}",
+        "wsEndpoint": "WS address",
+        "wsEndpointPlaceholder": "192.168.1.10:8765",
+        "saveEndpoint": "Save",
+        "invalidEndpoint": "Enter a valid WebSocket address",
         "reconnect": "Reconnect",
         "iconsBy": "Icons by",
         "mapFrom": "Map from"

@@ -168,6 +168,10 @@
         "failed": "Не удалось подключиться",
         "failedHint": "Попытки переподключения исчерпаны. Попробуйте вручную.",
         "attempt": "Попытка {current} из {total}",
+        "wsEndpoint": "Адрес WS",
+        "wsEndpointPlaceholder": "192.168.1.10:8765",
+        "saveEndpoint": "Сохранить",
+        "invalidEndpoint": "Введите корректный адрес WebSocket",
         "reconnect": "Переподключиться",
         "iconsBy": "Иконки от",
         "mapFrom": "Карта от"

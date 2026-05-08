@@ -1,4 +1,4 @@
-import { WS_CONFIG } from '@/shared/lib/config/websocket';
+import { WS_CONFIG, getConfiguredWsUrl } from '@/shared/lib/config/websocket';
 import type {
   ClientMessage,
   ServerMessage,
@@ -49,6 +49,10 @@ class WebSocketClient {
     return WS_CONFIG.MAX_RECONNECT_ATTEMPTS;
   }
 
+  getUrl(): string {
+    return this.url;
+  }
+
   /**
    * Manually trigger reconnection. Cancels any pending reconnect timer,
    * resets attempt counter and immediately tries to reconnect.
@@ -82,6 +86,7 @@ class WebSocketClient {
 
     return new Promise((resolve, reject) => {
       try {
+        this.url = getConfiguredWsUrl();
         this.ws = new WebSocket(this.url);
 
         this.ws.onopen = () => {

@@ -7,6 +7,7 @@ import i18n from './i18n';
 
 const ICON_CACHE_NAME = 'app-icons';
 const USED_ICON_PATHS = __USED_ICON_PATHS__;
+const IS_CAPACITOR_BUILD = import.meta.env.VITE_CAPACITOR === 'true';
 
 async function warmUsedIcons() {
   if (!('caches' in window) || !navigator.onLine || !USED_ICON_PATHS.length) {
@@ -39,7 +40,7 @@ async function warmUsedIcons() {
 
 // Push a guard entry immediately so the Android back gesture is intercepted
 // even before Vue mounts (prevents instant app close on first back swipe).
-if (!history.state?.pwaBackGuard) {
+if (!IS_CAPACITOR_BUILD && !history.state?.pwaBackGuard) {
   history.pushState({ pwaBackGuard: true }, '');
 }
 
@@ -48,7 +49,7 @@ if (!history.state?.pwaBackGuard) {
 // a fresh `sw.js` instead of reusing a stale HTTP-cached copy. This matters on
 // installed PWAs, where the browser can otherwise keep an old service worker
 // around even after a new GitHub Pages deploy.
-if (import.meta.env.PROD) {
+if (import.meta.env.PROD && !IS_CAPACITOR_BUILD) {
   const intervalMs = 60 * 60 * 1000; // periodic re-check while app is open
   const swUrl = `${import.meta.env.BASE_URL}sw.js`;
   const swScope = import.meta.env.BASE_URL;

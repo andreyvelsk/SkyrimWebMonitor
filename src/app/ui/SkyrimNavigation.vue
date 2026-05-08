@@ -108,4 +108,18 @@ watch(
   position: relative;
   z-index: var(--z-sticky);
 }
+
+.subtab-bar {
+  justify-content: flex-start;
+  padding-inline: var(--spacing-sm);
+  scroll-padding-inline: var(--spacing-sm);
+}
+
+.subtab-bar > .subtab:first-child {
+  margin-left: auto;
+}
+
+.subtab-bar > .subtab:last-child {
+  margin-right: auto;
+}
 </style>
