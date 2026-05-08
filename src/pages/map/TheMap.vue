@@ -61,7 +61,6 @@ import { computed, onBeforeUnmount, onMounted, ref, watch, type StyleValue } fro
 import { storeToRefs } from 'pinia';
 import OpenSeadragon from 'openseadragon';
 import {
-  MAP_IMAGE_URL,
   MAP_DZI_URL,
   preloadMapImage,
   prefetchMapTiles,
@@ -185,14 +184,10 @@ let viewer: OpenSeadragon.Viewer | null = null;
 type OsdTileSource = NonNullable<OpenSeadragon.Options['tileSources']>;
 
 async function detectTileSource(): Promise<OsdTileSource> {
-  // Try DZI first; HEAD is enough to confirm presence.
-  try {
-    const res = await fetch(MAP_DZI_URL, { method: 'HEAD', cache: 'force-cache' });
-    if (res.ok) return MAP_DZI_URL;
-  } catch {
-    // fall through
-  }
-  return { type: 'image', url: MAP_IMAGE_URL } as OsdTileSource;
+  // Always prefer DZI. The app precaches `map-dzi/**` for offline mode and
+  // a HEAD probe can fail against cache-only responses on some mobile PWAs.
+  // Using the DZI URL directly keeps map startup deterministic offline.
+  return MAP_DZI_URL;
 }
 
 function syncOverlayTransform(): void {
