@@ -72,6 +72,7 @@ export default defineConfig(({ mode }) => {
     base: basePath,
     define: {
       'import.meta.env.VITE_APP_VERSION': JSON.stringify(getAppVersion()),
+      __USED_ICON_PATHS__: JSON.stringify(USED_ICONS),
     },
     resolve: {
       alias: {
@@ -141,6 +142,21 @@ export default defineConfig(({ mode }) => {
                 cacheName: 'pages',
                 networkTimeoutSeconds: 3,
                 cacheableResponse: { statuses: [0, 200] },
+              },
+            },
+            // SVG icons are used through CSS mask-image and map overlays. Keep a
+            // dedicated cache so standalone mobile PWAs can render them offline
+            // even if the browser bypasses the precache route for image fetches.
+            {
+              urlPattern: ({ url }) => url.pathname.startsWith(`${basePath}icons/`),
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'app-icons',
+                cacheableResponse: { statuses: [0, 200] },
+                expiration: {
+                  maxEntries: USED_ICONS.length,
+                  maxAgeSeconds: 365 * 24 * 60 * 60,
+                },
               },
             },
             // Local fonts

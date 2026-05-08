@@ -18,7 +18,8 @@ export default [
       sourceType: 'module',
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        __USED_ICON_PATHS__: 'readonly'
       }
     },
     rules: {
@@ -39,7 +40,8 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        __USED_ICON_PATHS__: 'readonly'
       }
     },
     plugins: {
@@ -65,7 +67,8 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        __USED_ICON_PATHS__: 'readonly'
       }
     },
     plugins: {
@@ -91,7 +94,8 @@ export default [
       },
       globals: {
         ...globals.browser,
-        ...globals.node
+        ...globals.node,
+        __USED_ICON_PATHS__: 'readonly'
       }
     },
     plugins: {
