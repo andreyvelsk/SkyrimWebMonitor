@@ -66,10 +66,43 @@ Other useful scripts:
 npm run build           # production build into dist/
 npm run preview         # serve the production build
 npm run tsc             # type-check
+npm run release         # bump patch, create git commit+tag, push main + tags
+npm run release -- minor
 npm run lint            # ESLint with --fix
 npm run lint:css        # Stylelint with --fix
 npm run format          # Prettier + Stylelint
 ```
+
+## Releases
+
+Release orchestration is split between a local command and GitHub Actions:
+
+```bash
+npm run release
+```
+
+What it does:
+
+1. Works only on the `main` branch and requires a clean git working tree.
+2. Runs `npm run tsc` and `npm run build` as a preflight check.
+3. Bumps the npm version (`patch` by default, or `npm run release -- minor|major`).
+4. Creates the release commit and git tag via `npm version`.
+5. Pushes `main` and the new tag to `origin`.
+
+Pushing a tag like `v0.1.1` triggers `.github/workflows/release.yml`, which:
+
+1. Builds the production web assets and Capacitor Android project.
+2. Builds a release APK.
+3. Creates a GitHub Release automatically and uploads the APK.
+
+APK signing is optional but recommended. To sign release builds in CI, add these GitHub Actions secrets:
+
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+
+If those secrets are absent, the workflow still creates a GitHub Release and uploads the unsigned release APK.
 
 ## Reporting bugs
 
