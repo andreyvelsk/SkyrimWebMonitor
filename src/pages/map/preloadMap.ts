@@ -10,6 +10,8 @@ import { ref } from 'vue';
 export const MAP_IMAGE_URL = `${import.meta.env.BASE_URL}skyrim.png`;
 export const MAP_DZI_URL = `${import.meta.env.BASE_URL}map-dzi/skyrim.dzi`;
 const MAP_TILES_MANIFEST_URL = `${import.meta.env.BASE_URL}map-tiles/manifest.json`;
+const MAP_DZI_INFO_STORAGE_KEY = 'map-dzi-info-v1';
+const MAP_TILE_CACHE_NAME = 'map-dzi-tiles';
 
 export interface MapTilesManifest {
   width: number;
@@ -159,9 +161,48 @@ interface DziInfo {
   width: number;
   height: number;
   tileSize: number;
+  overlap: number;
   format: string;
   /** Base URL of the per-level tile folders (no trailing slash). */
   tilesBase: string;
+}
+
+function saveDziInfo(info: DziInfo): void {
+  try {
+    localStorage.setItem(MAP_DZI_INFO_STORAGE_KEY, JSON.stringify(info));
+  } catch {
+    // Best-effort persistence only.
+  }
+}
+
+function loadDziInfoFromStorage(): DziInfo | null {
+  try {
+    const raw = localStorage.getItem(MAP_DZI_INFO_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<DziInfo>;
+    if (
+      !parsed ||
+      typeof parsed.width !== 'number' ||
+      typeof parsed.height !== 'number' ||
+      typeof parsed.tileSize !== 'number' ||
+      typeof parsed.overlap !== 'number' ||
+      typeof parsed.format !== 'string' ||
+      typeof parsed.tilesBase !== 'string'
+    ) {
+      return null;
+    }
+
+    return {
+      width: parsed.width,
+      height: parsed.height,
+      tileSize: parsed.tileSize,
+      overlap: parsed.overlap,
+      format: parsed.format,
+      tilesBase: parsed.tilesBase,
+    };
+  } catch {
+    return null;
+  }
 }
 
 async function loadDziInfo(dziUrl: string): Promise<DziInfo | null> {
@@ -188,11 +229,13 @@ async function loadDziInfo(dziUrl: string): Promise<DziInfo | null> {
 
     const tileSize = Number(image.getAttribute('TileSize'));
     const format = (image.getAttribute('Format') || 'webp').toLowerCase();
+    const overlap = Number(image.getAttribute('Overlap') || '1');
     const width = Number(size.getAttribute('Width'));
     const height = Number(size.getAttribute('Height'));
-    if (!tileSize || !width || !height) {
+    if (!tileSize || !width || !height || Number.isNaN(overlap)) {
       console.warn('[map] DZI manifest has invalid attributes', {
         tileSize,
+        overlap,
         width,
         height,
         format,
@@ -203,8 +246,16 @@ async function loadDziInfo(dziUrl: string): Promise<DziInfo | null> {
     // Same convention OpenSeadragon uses: <name>.dzi -> <name>_files/<level>/x_y.<fmt>
     const tilesBase = dziUrl.replace(/\.dzi$/i, '_files');
 
-    return { width, height, tileSize, format, tilesBase };
+    const info = { width, height, tileSize, overlap, format, tilesBase };
+    saveDziInfo(info);
+    return info;
   } catch (err) {
+    const stored = loadDziInfoFromStorage();
+    if (stored) {
+      console.warn('[map] Using stored DZI info after load failure', err);
+      return stored;
+    }
+
     console.warn('[map] DZI manifest load threw', err);
     return null;
   }
@@ -264,15 +315,17 @@ export function prefetchMapTiles(): Promise<void> {
     let okCount = 0;
     let failCount = 0;
     let cursor = 0;
+    const cache = 'caches' in window ? await caches.open(MAP_TILE_CACHE_NAME) : null;
 
     async function worker(): Promise<void> {
       while (cursor < urls.length) {
         const url = urls[cursor++];
         if (!mapTileBlobUrls.has(url)) {
           try {
-            const response = await fetch(url, { cache: 'force-cache' });
-            if (response.ok) {
-              const blob = await response.blob();
+            const cachedResponse = cache ? await cache.match(url) : null;
+
+            if (cachedResponse && cachedResponse.ok) {
+              const blob = await cachedResponse.blob();
               const blobUrl = URL.createObjectURL(blob);
               try {
                 const img = new Image();
@@ -286,7 +339,28 @@ export function prefetchMapTiles(): Promise<void> {
               mapTileBlobUrls.set(url, blobUrl);
               okCount += 1;
             } else {
-              failCount += 1;
+              const response = await fetch(url, { cache: 'force-cache' });
+              if (response.ok) {
+                const responseForCache = response.clone();
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                try {
+                  const img = new Image();
+                  img.decoding = 'async';
+                  img.src = blobUrl;
+                  await img.decode();
+                } catch {
+                  // decode() can throw on some formats — ignore, the blob URL
+                  // is still usable and OSD's loader will decode lazily.
+                }
+                mapTileBlobUrls.set(url, blobUrl);
+                if (cache) {
+                  await cache.put(url, responseForCache);
+                }
+                okCount += 1;
+              } else {
+                failCount += 1;
+              }
             }
           } catch {
             failCount += 1;

@@ -140,7 +140,7 @@ export default defineConfig(({ mode }) => {
           // browser will swap caches automatically on next visit
           // (autoUpdate + skipWaiting + clientsClaim + cleanupOutdatedCaches).
           globPatterns: [
-            '**/*.{js,css,html,ico,png,jpg,svg,webp,webmanifest}',
+            '**/*.{js,css,html,ico,png,jpg,svg,webp,webmanifest,woff,woff2,ttf,otf,eot}',
             'map-dzi/**/*.dzi',
             ...USED_ICONS.map((p) => `icons/${p}`),
           ],
@@ -158,11 +158,25 @@ export default defineConfig(({ mode }) => {
             // SPA navigations: fresh HTML when online, precached shell when offline.
             {
               urlPattern: ({ request }) => request.mode === 'navigate',
-              handler: 'NetworkFirst',
+              handler: 'CacheFirst',
               options: {
                 cacheName: 'pages',
-                networkTimeoutSeconds: 3,
                 cacheableResponse: { statuses: [0, 200] },
+              },
+            },
+            // Map DZI manifest + tile pyramid. A dedicated CacheFirst route
+            // makes map startup deterministic offline even when browser HTTP
+            // cache eviction behavior changes after sleep/resume.
+            {
+              urlPattern: ({ url }) => url.pathname.startsWith(`${basePath}map-dzi/`),
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'map-dzi',
+                cacheableResponse: { statuses: [0, 200] },
+                expiration: {
+                  maxEntries: 5000,
+                  maxAgeSeconds: 365 * 24 * 60 * 60,
+                },
               },
             },
             // SVG icons are used through CSS mask-image and map overlays. Keep a
