@@ -1,3 +1,5 @@
+[![Available in Obtainium](https://img.shields.io/badge/Available%20in-Obtainium-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ImranR98/Obtainium)
+
 # SkyrimWebMonitor
 
 A Vue 3 + Vite PWA companion app for **The Elder Scrolls V: Skyrim**. It connects to a running Skyrim session over WebSocket and shows the player state — stats, inventory, magic, and hotkeys — in real time, on a separate screen.
@@ -22,8 +24,19 @@ This is the **client** half of the project. The **server** half — the SKSE plu
 
 1. Install the **[SkyrimWebSocket](https://github.com/andreyvelsk/SkyrimWebSocket)** SKSE plugin in your Skyrim Special Edition. Follow the install guide in that repo. By default it listens on `ws://127.0.0.1:8765`.
 2. Launch Skyrim through `skse64_loader.exe` and load a save.
-3. Open https://andreyvelsk.github.io/SkyrimWebMonitor/ in a browser on the same machine (or on a device on the same network if you set the plugin's `ListenAddress` to `0.0.0.0`).
+3. Install latest .apk [release](https://github.com/andreyvelsk/SkyrimWebMonitor/releases/latest), OR, Open https://andreyvelsk.github.io/SkyrimWebMonitor/ in a browser on the same machine
 4. Configure the WebSocket URL on first launch and connect.
+
+## Install via Obtainium (Android)
+
+If you use **[Obtainium](https://github.com/ImranR98/Obtainium)**, you can install and update the APK directly from this repository's GitHub Releases.
+
+1. Open Obtainium and tap **Add App**.
+2. Choose **GitHub** as the source.
+3. Paste the repo URL: `https://github.com/andreyvelsk/SkyrimWebMonitor`.
+4. Select the latest release asset (`.apk`) and install.
+
+After that, Obtainium will notify you when a new release is published.
 
 ## Install as a PWA
 
@@ -47,18 +60,6 @@ Use the Chrome / Android steps above. The layout is tuned for handheld aspect ra
 
 > Updates are picked up automatically: the next time you open the app online, it fetches the new version transparently.
 
-## Install via Obtainium (Android)
-
-[![Available in Obtainium](https://img.shields.io/badge/Available%20in-Obtainium-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ImranR98/Obtainium)
-
-If you use **[Obtainium](https://github.com/ImranR98/Obtainium)**, you can install and update the APK directly from this repository's GitHub Releases.
-
-1. Open Obtainium and tap **Add App**.
-2. Choose **GitHub** as the source.
-3. Paste the repo URL: `https://github.com/andreyvelsk/SkyrimWebMonitor`.
-4. Select the latest release asset (`.apk`) and install.
-
-After that, Obtainium will notify you when a new release is published.
 
 ## Run locally / develop
 
