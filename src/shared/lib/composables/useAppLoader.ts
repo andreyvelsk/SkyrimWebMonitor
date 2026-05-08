@@ -10,7 +10,7 @@ import {
 } from '@/app/config/pageRegistry';
 import { GLOBAL_SUBSCRIPTIONS } from '@/app/config/globalSubscriptions';
 import { DataRouter } from '@/stores/adapters/dataRouter';
-import { preloadMapImage, prefetchMapTiles } from '@/pages/map';
+import { prefetchMapTiles } from '@/pages/map';
 
 export function useAppLoader() {
   const navigationStore = useNavigationStore();
@@ -69,11 +69,9 @@ export function useAppLoader() {
   };
 
   onMounted(async () => {
-    // Kick off the map image preload + DZI tile prefetch in the background
-    // BEFORE awaiting the websocket connection. `connect()` can take a
-    // while (or hang while the game is not running), and we don't want
-    // that to delay the heavy map prefetch.
-    preloadMapImage();
+    // Kick off DZI tile prefetch in the background BEFORE awaiting the
+    // websocket connection. `connect()` can take a while (or hang while the
+    // game is not running), and we don't want that to delay map readiness.
     void prefetchMapTiles();
 
     try {

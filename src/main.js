@@ -48,7 +48,7 @@ if (!history.state?.pwaBackGuard) {
 // a fresh `sw.js` instead of reusing a stale HTTP-cached copy. This matters on
 // installed PWAs, where the browser can otherwise keep an old service worker
 // around even after a new GitHub Pages deploy.
-if (import.meta.env.PROD) {
+if (import.meta.env.PROD && import.meta.env.VITE_CAPACITOR !== 'true') {
   const intervalMs = 60 * 60 * 1000; // periodic re-check while app is open
   const swUrl = `${import.meta.env.BASE_URL}sw.js`;
   const swScope = import.meta.env.BASE_URL;

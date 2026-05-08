@@ -62,7 +62,6 @@ import { storeToRefs } from 'pinia';
 import OpenSeadragon from 'openseadragon';
 import {
   MAP_DZI_URL,
-  preloadMapImage,
   prefetchMapTiles,
   mapTileBlobUrls,
   mapTilesPrefetchActive,
@@ -450,7 +449,6 @@ async function setupViewer(): Promise<void> {
 // =============================================================
 
 onMounted(() => {
-  preloadMapImage();
   void setupViewer();
 });
 

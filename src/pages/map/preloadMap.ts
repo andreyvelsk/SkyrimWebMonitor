@@ -1,13 +1,5 @@
 import { ref } from 'vue';
 
-/**
- * URL of the world map image. Centralized so both the map page and the
- * preloader reference the exact same URL, ensuring the browser actually
- * reuses the cached response.
- *
- * Uses Vite's BASE_URL so it works under any deploy base path.
- */
-export const MAP_IMAGE_URL = `${import.meta.env.BASE_URL}skyrim.png`;
 export const MAP_DZI_URL = `${import.meta.env.BASE_URL}map-dzi/skyrim.dzi`;
 const MAP_TILES_MANIFEST_URL = `${import.meta.env.BASE_URL}map-tiles/manifest.json`;
 const MAP_DZI_INFO_STORAGE_KEY = 'map-dzi-info-v1';
@@ -41,38 +33,7 @@ function normalizeTilesBasePath(rawBasePath: string): string {
   return joined.endsWith('/') ? joined.slice(0, -1) : joined;
 }
 
-let preloadStarted = false;
-let preloadPromise: Promise<void> | null = null;
 let tilesManifestPromise: Promise<MapTilesManifest | null> | null = null;
-
-/**
- * Eagerly fetches the map image into the HTTP/memory cache so that opening
- * the Map tab renders instantly. Safe to call multiple times — the work is
- * performed only once per page load.
- */
-export function preloadMapImage(): Promise<void> {
-  if (preloadPromise) return preloadPromise;
-  preloadStarted = true;
-
-  preloadPromise = new Promise<void>((resolve) => {
-    const img = new Image();
-    const finish = (): void => resolve();
-    img.onload = finish;
-    img.onerror = finish;
-    img.src = MAP_IMAGE_URL;
-    // `decode()` parses the bitmap off the main thread when supported, so the
-    // first paint inside the Map tab does not need to do that work.
-    if (typeof img.decode === 'function') {
-      img.decode().then(finish, finish);
-    }
-  });
-
-  return preloadPromise;
-}
-
-export function isMapPreloadStarted(): boolean {
-  return preloadStarted;
-}
 
 function toPositiveInt(v: unknown): number | null {
   if (typeof v !== 'number' || !Number.isFinite(v)) return null;

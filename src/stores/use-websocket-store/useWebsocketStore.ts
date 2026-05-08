@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
+import { saveConfiguredWsUrl } from '@/shared/lib/config/websocket';
 import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './types';
@@ -22,6 +23,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
 
   // Get WebSocket client instance
   const wsClient = getWebSocketClient();
+  const endpointUrl = ref<string>(wsClient.getUrl());
 
   // Cleanup references
   let unsubscribeFromOpen: (() => void) | null = null;
@@ -160,6 +162,11 @@ export const useWebSocketStore = defineStore('websocket', () => {
     }
   };
 
+  const updateEndpoint = async (rawEndpoint: string): Promise<void> => {
+    endpointUrl.value = saveConfiguredWsUrl(rawEndpoint);
+    await reconnect();
+  };
+
   const disconnect = (): void => {
     stopAllSubscriptions();
     wsClient.disconnect();
@@ -237,6 +244,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     status,
     error,
     activeSubscriptions,
+    endpointUrl,
     reconnectAttempt,
     reconnectMaxAttempts,
     reconnectFailed,
@@ -245,6 +253,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     isReconnecting,
     connect,
     reconnect,
+    updateEndpoint,
     disconnect,
     startSubscription,
     stopSubscription,
