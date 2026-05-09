@@ -1,7 +1,7 @@
 {
   "name": "skyrimwebmonitor",
   "private": true,
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "module",
   "description": "A Vue 3 PWA companion app for The Elder Scrolls V: Skyrim. Monitors player stats, inventory, magic and hotkeys in real time over WebSocket. Designed primarily for the AYN Thor handheld.",
   "keywords": [
