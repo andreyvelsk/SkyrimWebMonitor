@@ -9,7 +9,7 @@
         class="skyrim-backdrop skyrim-backdrop--fixed skyrim-backdrop--overlay skyrim-backdrop--blocking"
         role="dialog"
         aria-modal="true"
-        @click.self="closeModal"
+        @click.self="onBackdropClick"
       >
         <Transition name="modal-panel">
           <div
@@ -32,10 +32,30 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import { useModal } from '@/shared/lib/composables/useModal';
 
 const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
   useModal();
+
+// Capacitor WebView can emit a delayed synthesized click after touchend.
+// If a modal opens from that touch, the ghost click may instantly close it.
+const BACKDROP_GHOST_CLICK_GUARD_MS = 350;
+const openedAtMs = ref(0);
+
+watch(isOpen, (open) => {
+  if (open) {
+    openedAtMs.value = performance.now();
+  }
+});
+
+function onBackdropClick(): void {
+  const elapsed = performance.now() - openedAtMs.value;
+  if (elapsed < BACKDROP_GHOST_CLICK_GUARD_MS) {
+    return;
+  }
+  closeModal();
+}
 </script>
 
 <style scoped lang="scss">
