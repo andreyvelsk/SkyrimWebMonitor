@@ -9,7 +9,8 @@
         class="skyrim-backdrop skyrim-backdrop--fixed skyrim-backdrop--overlay skyrim-backdrop--blocking"
         role="dialog"
         aria-modal="true"
-        @click.self="onBackdropClick"
+        @click.capture="onModalRootClickCapture"
+        @click.self="closeModal"
       >
         <Transition name="modal-panel">
           <div
@@ -32,29 +33,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useModal } from '@/shared/lib/composables/useModal';
 
-const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
-  useModal();
+const {
+  isOpen,
+  modalComponent,
+  modalProps,
+  modalHandlers,
+  openedAtMs,
+  ghostClickGuardMs,
+  closeModal,
+} = useModal();
 
-// Capacitor WebView can emit a delayed synthesized click after touchend.
-// If a modal opens from that touch, the ghost click may instantly close it.
-const BACKDROP_GHOST_CLICK_GUARD_MS = 350;
-const openedAtMs = ref(0);
-
-watch(isOpen, (open) => {
-  if (open) {
-    openedAtMs.value = performance.now();
-  }
+const isGhostClickWindowActive = computed(() => {
+  if (!isOpen.value) return false;
+  const guardMs = ghostClickGuardMs.value;
+  if (guardMs <= 0) return false;
+  return performance.now() - openedAtMs.value < guardMs;
 });
 
-function onBackdropClick(): void {
-  const elapsed = performance.now() - openedAtMs.value;
-  if (elapsed < BACKDROP_GHOST_CLICK_GUARD_MS) {
-    return;
-  }
-  closeModal();
+function onModalRootClickCapture(event: MouseEvent): void {
+  if (!isGhostClickWindowActive.value) return;
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation?.();
 }
 </script>
 

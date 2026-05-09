@@ -182,29 +182,25 @@ function onMarkerClick(m: ProjectedMarker): void {
   if (isQuestMarker(m)) return;
   if (!isLocationMarker(m)) return;
   if (!m.canFastTravel) return;
-  // Defer modal opening until after the current pointer-event chain is done.
-  // Without this, the synthesized `click` that follows `pointerup`/`touchend`
-  // fires at the same screen coordinates and lands on the modal button.
-  setTimeout(() => {
-    openModal({
-      component: FastTravelModal,
-      props: { locationName: m.label },
-      on: {
-        confirm: () => {
-          // Trigger fast-travel to the selected map marker. The marker's
-          // `refId` is the hex form ID expected by the protocol.
-          wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
-          closeModal();
-        },
-        cancel: () => {
-          closeModal();
-        },
+  openModal({
+    component: FastTravelModal,
+    ghostClickGuardMs: 420,
+    props: { locationName: m.label },
+    on: {
+      confirm: () => {
+        // Trigger fast-travel to the selected map marker. The marker's
+        // `refId` is the hex form ID expected by the protocol.
+        wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
+        closeModal();
       },
-      onClose: () => {
-        clearSelection();
+      cancel: () => {
+        closeModal();
       },
-    });
-  }, 0);
+    },
+    onClose: () => {
+      clearSelection();
+    },
+  });
 }
 
 /** Clear marker selection. Called by the host map when the user taps the
