@@ -36,6 +36,7 @@ import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationS
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useAppLoader } from '@/shared/lib/composables/useAppLoader';
 import { useBackGuard } from '@/shared/lib/composables/useBackGuard';
+import { useAutoHideCursor } from '@/shared/lib/composables/useAutoHideCursor';
 
 const navigationStore = useNavigationStore();
 const { activeTab, activeSubTab } = storeToRefs(navigationStore);
@@ -45,6 +46,7 @@ const { isConnected } = storeToRefs(websocketStore);
 
 useAppLoader();
 const { showToast } = useBackGuard();
+useAutoHideCursor();
 </script>
 
 <style scoped lang="scss">
