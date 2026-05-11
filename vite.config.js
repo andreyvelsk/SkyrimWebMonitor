@@ -3,12 +3,12 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 import fs from 'node:fs';
-import { execSync } from 'child_process';
 import { collectUsedIcons } from './scripts/collect-used-icons.js';
 
 function getAppVersion() {
   try {
-    return execSync('git rev-parse --short HEAD').toString().trim();
+    const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8'));
+    return packageJson.version || 'dev';
   } catch {
     return 'dev';
   }

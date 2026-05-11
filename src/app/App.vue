@@ -19,7 +19,6 @@
     <game-status-backdrop />
     <combat-indicator />
     <exit-toast :visible="showToast" />
-    <app-version />
   </div>
 </template>
 
@@ -27,7 +26,6 @@
 import { storeToRefs } from 'pinia';
 import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import {
-  AppVersion,
   ConnectionStatus,
   SkyrimModal,
   ExitToast,

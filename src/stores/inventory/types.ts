@@ -130,6 +130,7 @@ export interface WeaponItem extends BaseItem {
 export interface AmmoItem extends BaseItem {
   categoryType: (typeof CATEGORY_TYPES)['AMMO'];
   isEquipped: boolean;
+  damage: number;
 }
 
 export interface WeaponsState {

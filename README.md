@@ -1,3 +1,5 @@
+[![Available in Obtainium](https://img.shields.io/badge/Available%20in-Obtainium-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://github.com/ImranR98/Obtainium)
+
 # SkyrimWebMonitor
 
 A Vue 3 + Vite PWA companion app for **The Elder Scrolls V: Skyrim**. It connects to a running Skyrim session over WebSocket and shows the player state — stats, inventory, magic, and hotkeys — in real time, on a separate screen.
@@ -5,6 +7,8 @@ A Vue 3 + Vite PWA companion app for **The Elder Scrolls V: Skyrim**. It connect
 > **Live app:** https://andreyvelsk.github.io/SkyrimWebMonitor/
 
 > Designed primarily for the **[AYN Thor](https://www.ayntec.com/)** handheld as a second-screen Skyrim companion, but it runs on any modern browser (desktop, phone, tablet).
+>
+> Demo of gameplay is here - https://www.youtube.com/watch?v=6KL9jrvZpFg
 
 This is the **client** half of the project. The **server** half — the SKSE plugin that exposes Skyrim's game state over a WebSocket — lives in the companion repository:
 
@@ -22,8 +26,19 @@ This is the **client** half of the project. The **server** half — the SKSE plu
 
 1. Install the **[SkyrimWebSocket](https://github.com/andreyvelsk/SkyrimWebSocket)** SKSE plugin in your Skyrim Special Edition. Follow the install guide in that repo. By default it listens on `ws://127.0.0.1:8765`.
 2. Launch Skyrim through `skse64_loader.exe` and load a save.
-3. Open https://andreyvelsk.github.io/SkyrimWebMonitor/ in a browser on the same machine (or on a device on the same network if you set the plugin's `ListenAddress` to `0.0.0.0`).
+3. Install latest .apk [release](https://github.com/andreyvelsk/SkyrimWebMonitor/releases/latest), OR, Open https://andreyvelsk.github.io/SkyrimWebMonitor/ in a browser on the same machine
 4. Configure the WebSocket URL on first launch and connect.
+
+## Install via Obtainium (Android)
+
+If you use **[Obtainium](https://github.com/ImranR98/Obtainium)**, you can install and update the APK directly from this repository's GitHub Releases.
+
+1. Open Obtainium and tap **Add App**.
+2. Choose **GitHub** as the source.
+3. Paste the repo URL: `https://github.com/andreyvelsk/SkyrimWebMonitor`.
+4. Select the latest release asset (`.apk`) and install.
+
+After that, Obtainium will notify you when a new release is published.
 
 ## Install as a PWA
 
@@ -47,6 +62,7 @@ Use the Chrome / Android steps above. The layout is tuned for handheld aspect ra
 
 > Updates are picked up automatically: the next time you open the app online, it fetches the new version transparently.
 
+
 ## Run locally / develop
 
 Requirements: Node.js 20+ and npm.
@@ -66,10 +82,43 @@ Other useful scripts:
 npm run build           # production build into dist/
 npm run preview         # serve the production build
 npm run tsc             # type-check
+npm run release         # bump patch, create git commit+tag, push main + tags
+npm run release -- minor
 npm run lint            # ESLint with --fix
 npm run lint:css        # Stylelint with --fix
 npm run format          # Prettier + Stylelint
 ```
+
+## Releases
+
+Release orchestration is split between a local command and GitHub Actions:
+
+```bash
+npm run release
+```
+
+What it does:
+
+1. Works only on the `main` branch and requires a clean git working tree.
+2. Runs `npm run tsc` and `npm run build` as a preflight check.
+3. Bumps the npm version (`patch` by default, or `npm run release -- minor|major`).
+4. Creates the release commit and git tag via `npm version`.
+5. Pushes `main` and the new tag to `origin`.
+
+Pushing a tag like `v0.1.1` triggers `.github/workflows/release.yml`, which:
+
+1. Builds the production web assets and Capacitor Android project.
+2. Builds a release APK.
+3. Creates a GitHub Release automatically and uploads the APK.
+
+APK signing is optional but recommended. To sign release builds in CI, add these GitHub Actions secrets:
+
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_KEYSTORE_PASSWORD`
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+
+If those secrets are absent, the workflow still creates a GitHub Release and uploads the unsigned release APK.
 
 ## Reporting bugs
 

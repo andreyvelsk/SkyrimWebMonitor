@@ -26,6 +26,7 @@ export type CommandType =
   | 'player_marker_set'
   | 'player_marker_clear'
   | 'fast_travel'
+  | 'read_book'
 export type EquipHand = EquippedHand
 export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 

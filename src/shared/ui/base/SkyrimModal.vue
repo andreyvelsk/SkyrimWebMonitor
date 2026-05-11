@@ -9,6 +9,7 @@
         class="skyrim-backdrop skyrim-backdrop--fixed skyrim-backdrop--overlay skyrim-backdrop--blocking"
         role="dialog"
         aria-modal="true"
+        @click.capture="onModalRootClickCapture"
         @click.self="closeModal"
       >
         <Transition name="modal-panel">
@@ -34,8 +35,27 @@
 <script setup lang="ts">
 import { useModal } from '@/shared/lib/composables/useModal';
 
-const { isOpen, modalComponent, modalProps, modalHandlers, closeModal } =
-  useModal();
+const {
+  isOpen,
+  modalComponent,
+  modalProps,
+  modalHandlers,
+  openedAtMs,
+  ghostClickGuardMs,
+  closeModal,
+} = useModal();
+
+function onModalRootClickCapture(event: MouseEvent): void {
+  if (!isOpen.value) return;
+  const guardMs = ghostClickGuardMs.value;
+  if (guardMs <= 0) return;
+  const elapsed = performance.now() - openedAtMs.value;
+  if (elapsed >= guardMs) return;
+
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation?.();
+}
 </script>
 
 <style scoped lang="scss">
