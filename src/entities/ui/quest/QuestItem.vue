@@ -2,14 +2,22 @@
   <inventory-item
     :name="name"
     :active="active"
-    :is-favorite="isQuestActive"
     :class="{ 'quest-item--inactive': disabled }"
     @click="$emit('click')"
-  />
+  >
+    <template #status>
+      <quest-step-indicator
+        v-if="isQuestActive"
+        :completed="true"
+        :failed="false"
+      />
+    </template>
+  </inventory-item>
 </template>
 
 <script setup lang="ts">
 import { InventoryItem } from '@/shared/ui/items';
+import QuestStepIndicator from './QuestStepIndicator.vue';
 
 defineProps<{
   name: string;
