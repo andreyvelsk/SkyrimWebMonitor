@@ -250,12 +250,13 @@ class WebSocketClient {
    * Pass an options object — only provided fields are serialized.
    */
   command(id: string, options: SendCommandOptions): boolean {
-    const { command, formId, hand, count, slot, x, y, z } = options;
+    const { command, formId, active, hand, count, slot, x, y, z } = options;
     const message: CommandMessage = {
       type: 'command',
       id,
       command,
       ...(formId !== undefined && { formId }),
+      ...(active !== undefined && { active }),
       ...(hand !== undefined && { hand }),
       ...(count !== undefined && { count }),
       ...(slot !== undefined && { slot }),

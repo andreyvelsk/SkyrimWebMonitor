@@ -12,6 +12,7 @@
             :on-select="() => handleItemClick(item.formId)"
           >
             <inventory-item
+              v-if="'name' in item && 'isFavorite' in item"
               :name="item.name || $t('shared.ui.inventoryItem.unknown')"
               :is-favorite="item.isFavorite"
               :active="modelValue === item.formId"
@@ -215,7 +216,7 @@ function handleActionClick(actionEvent: string) {
 }
 
 .list-wrapper {
-  flex: 0 0 60%;
+  flex: 0 0 var(--inventory-list-wrapper-width, 60%);
   min-width: 0;
   min-height: 0;
   display: flex;

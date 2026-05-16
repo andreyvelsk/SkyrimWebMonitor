@@ -37,6 +37,12 @@
           "enchanting": "Enchanting"
         }
       },
+      "quests": {
+        "label": "Quests",
+        "subtabs": {
+          "questsList": "Journal"
+        }
+      },
       "map": {
         "label": "Map"
       }
@@ -130,6 +136,16 @@
       "powers": {
         "tab": "Powers",
         "placeholder": "Powers information to be implemented"
+      }
+    },
+    "quests": {
+      "questsList": {
+        "tab": "Journal",
+        "waitingForData": "Waiting for quest data...",
+        "unknown": "Unknown quest",
+        "sections": {
+          "misc": "Misc"
+        }
       }
     },
     "map": {

@@ -23,6 +23,7 @@ export type CommandType =
   | 'hotkey_set'
   | 'hotkey_clear'
   | 'hotkey_trigger'
+  | 'quest_set_active'
   | 'player_marker_set'
   | 'player_marker_clear'
   | 'fast_travel'
@@ -44,6 +45,7 @@ export type HotkeySlot = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
  * - hotkey_set: Binds a formId to a hotkey slot (1..8). Requires formId and slot.
  * - hotkey_clear: Removes the binding on a slot (1..8). Requires slot.
  * - hotkey_trigger: Fires the action bound to a slot (1..8). Requires slot.
+ * - quest_set_active: Sets quest tracking state. Requires formId and active.
  * - player_marker_set: Places/moves the player's custom map marker. Requires x, y; z optional.
  * - player_marker_clear: Hides the player's custom map marker. Takes no parameters.
  * - fast_travel: Teleports the player to a discovered map marker. Requires formId
@@ -99,6 +101,8 @@ export interface CommandMessage extends BaseMessage {
   count?: number
   /** Hotkey slot 1..8 (required for hotkey_set / hotkey_clear / hotkey_trigger). */
   slot?: HotkeySlot
+  /** Quest tracking state (required for `quest_set_active`). */
+  active?: boolean
   /** World X coordinate (required for `player_marker_set`). */
   x?: number
   /** World Y coordinate (required for `player_marker_set`). */
@@ -120,6 +124,7 @@ export interface CommandMessage extends BaseMessage {
  *   - equip_spell / unequip_spell:    formId (+ optional hand)
  *   - hotkey_set:                      formId, slot
  *   - hotkey_clear / hotkey_trigger:  slot
+ *   - quest_set_active:                formId, active
  *   - player_marker_set:               x, y (+ optional z)
  *   - player_marker_clear:             (no fields)
  *   - fast_travel:                     formId (refId of map marker)
@@ -127,6 +132,7 @@ export interface CommandMessage extends BaseMessage {
 export interface SendCommandOptions {
   command: CommandType
   formId?: string
+  active?: boolean
   hand?: EquipHand
   count?: number
   slot?: HotkeySlot
