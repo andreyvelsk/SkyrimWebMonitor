@@ -109,6 +109,20 @@ watch(
   z-index: var(--z-sticky);
 }
 
+.tab-bar {
+  justify-content: flex-start;
+  padding-inline: var(--spacing-sm);
+  scroll-padding-inline: var(--spacing-sm);
+}
+
+.tab-bar > .tab:first-child {
+  margin-left: auto;
+}
+
+.tab-bar > .tab:last-child {
+  margin-right: auto;
+}
+
 .subtab-bar {
   justify-content: flex-start;
   padding-inline: var(--spacing-sm);
