@@ -1,5 +1,17 @@
 <template>
-  <quest-steps-preview :steps="previewSteps" />
+  <div class="quest-preview">
+    <p
+      v-if="quest.description"
+      class="quest-preview__description"
+    >
+      {{ quest.description }}
+    </p>
+
+    <quest-steps-preview
+      :steps="previewSteps"
+      :scrollable="false"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -22,3 +34,17 @@ const previewSteps = computed(() => {
     }));
 });
 </script>
+
+<style scoped lang="scss">
+.quest-preview {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.quest-preview__description {
+  margin: 0;
+  padding: var(--spacing-md) var(--spacing-md) 0;
+  color: var(--skyrim-text-primary);
+  font-size: var(--font-size-sm);
+}
+</style>

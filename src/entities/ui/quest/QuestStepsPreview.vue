@@ -3,6 +3,7 @@
     class="quest-steps-preview"
     :class="{
       'quest-steps-preview--interactive': interactive,
+      'quest-steps-preview--scrollable': scrollable,
     }"
   >
     <ul
@@ -47,8 +48,10 @@ export interface QuestStepsPreviewItem {
 const props = withDefaults(defineProps<{
   steps: QuestStepsPreviewItem[];
   interactive?: boolean;
+  scrollable?: boolean;
 }>(), {
   interactive: false,
+  scrollable: true,
 });
 
 const emit = defineEmits<{
@@ -86,6 +89,9 @@ function selectStepItem(formId: string) {
   --quest-steps-preview-step-indicator-size: 6px;
 
   padding: var(--spacing-md);
+}
+
+.quest-steps-preview--scrollable {
   height: 100%;
   overflow-y: auto;
 }
