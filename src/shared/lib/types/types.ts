@@ -1,5 +1,6 @@
-import { InventoryItem } from "@/stores/inventory/types";
-import { SpellItem } from "@/stores/magic/types";
+import { InventoryItem } from '@/stores/inventory/types';
+import { SpellItem } from '@/stores/magic/types';
+import { QuestListEntry } from '@/stores/quests/types';
 
 export interface CategoryItem {
   categoryId: string;
@@ -11,4 +12,4 @@ export interface CategoriesData {
   categories: CategoryItem[];
 }
 
-export type ListItem = InventoryItem | SpellItem;
+export type ListItem = InventoryItem | SpellItem | QuestListEntry;

@@ -15,6 +15,9 @@ export const useNavigationStore = defineStore('navigation', () => {
     ],
     inventory: [],
     magic: [],
+    quests: [
+      { id: 'questsList', label: t('pages.quests.questsList.tab') },
+    ],
     map: [
       { id: 'view', label: '' },
     ],
@@ -39,7 +42,16 @@ export const useNavigationStore = defineStore('navigation', () => {
       label: t('app.tabs.magic.label'),
       subTabs: subTabsMap.value.magic,
     },
-    ...(systemStore.features.includes('map')
+    ...(systemStore.isFeatureProvided('player.quests')
+      ? [
+          {
+            id: 'quests',
+            label: t('app.tabs.quests.label'),
+            subTabs: subTabsMap.value.quests,
+          },
+        ]
+      : []),
+    ...(systemStore.isFeatureProvided('map')
       ? [
           {
             id: 'map',

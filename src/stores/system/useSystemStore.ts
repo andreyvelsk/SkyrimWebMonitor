@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { i18n, mapGameLanguage } from '@/i18n';
-import type { Features } from './types';
+import type { Feature, Features } from './types';
 
 export const SYSTEM_QUERY_ID = 'system';
 export const SYSTEM_QUERY_FIELDS = {
@@ -33,9 +33,14 @@ export const useSystemStore = defineStore('system', () => {
     features.value = [];
   }
 
+  function isFeatureProvided(feature: Feature): boolean {
+    return features.value.includes(feature);
+  }
+
   return {
     language,
     features,
+    isFeatureProvided,
     handleQueryResponse,
     reset,
   };

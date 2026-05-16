@@ -37,6 +37,12 @@
           "enchanting": "Чарование"
         }
       },
+      "quests": {
+        "label": "Квесты",
+        "subtabs": {
+          "questsList": "Журнал"
+        }
+      },
       "map": {
         "label": "Карта"
       }
@@ -131,6 +137,16 @@
       "powers": {
         "tab": "Силы",
         "placeholder": "Раздел сил в разработке"
+      }
+    },
+    "quests": {
+      "questsList": {
+        "tab": "Журнал",
+        "waitingForData": "Ожидание данных квестов...",
+        "unknown": "Неизвестный квест",
+        "sections": {
+          "misc": "Разное"
+        }
       }
     },
     "map": {

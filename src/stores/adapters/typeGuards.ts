@@ -24,6 +24,7 @@ import type {
 import { CATEGORY_TYPES } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
 import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
+import type { QuestsState, QuestJournalEntry, QuestListSection } from '@/stores/quests/types';
 import type { HotkeyItemsState } from '@/stores/hotkeys/types';
 import type { GameStatusData } from '@/stores/game/types';
 import type {
@@ -254,6 +255,35 @@ export function isHotkeyItemsData(data: unknown, id: string): data is HotkeyItem
     data !== null &&
     'items' in data &&
     Array.isArray((data as HotkeyItemsState).items)
+  );
+}
+
+export function isQuestsData(data: unknown, id: string): data is QuestsState {
+  return (
+    id === 'quests.questsList' &&
+    typeof data === 'object' &&
+    data !== null &&
+    'quests' in data &&
+    Array.isArray((data as QuestsState).quests)
+  );
+}
+
+export function isQuestListSection(item: unknown): item is QuestListSection {
+  if (typeof item !== 'object' || item === null) return false;
+  const section = item as Record<string, unknown>;
+  return section.type === 'section' && typeof section.formId === 'string';
+}
+
+export function isQuestJournalEntry(item: unknown): item is QuestJournalEntry {
+  if (typeof item !== 'object' || item === null) return false;
+  const quest = item as Record<string, unknown>;
+  return (
+    typeof quest.questFormId === 'string' &&
+    typeof quest.formId === 'string' &&
+    typeof quest.name === 'string' &&
+    typeof quest.isActive === 'boolean' &&
+    typeof quest.isMisc === 'boolean' &&
+    Array.isArray(quest.steps)
   );
 }
 
