@@ -24,12 +24,55 @@
         {{ subText }}
       </p>
 
+      <form
+        class="endpoint-form"
+        @submit.prevent="handleEndpointSubmit"
+      >
+        <label
+          class="endpoint-form__label"
+          for="ws-endpoint"
+        >
+          {{ $t('shared.ui.connectionStatus.wsEndpoint') }}
+        </label>
+
+        <div class="endpoint-form__controls">
+          <input
+            id="ws-endpoint"
+            v-model.trim="endpointDraft"
+            class="input endpoint-form__input"
+            type="text"
+            inputmode="url"
+            autocomplete="off"
+            autocapitalize="off"
+            spellcheck="false"
+            :aria-invalid="endpointError ? 'true' : 'false'"
+            :placeholder="$t('shared.ui.connectionStatus.wsEndpointPlaceholder')"
+          >
+
+          <button
+            class="btn btn-lg btn-primary endpoint-form__button"
+            type="submit"
+            :disabled="isConnectionActionDisabled"
+          >
+            {{ $t('shared.ui.connectionStatus.saveEndpoint') }}
+          </button>
+        </div>
+
+        <p
+          v-if="endpointError"
+          class="endpoint-form__error"
+        >
+          {{ endpointError }}
+        </p>
+      </form>
+
       <div
         v-if="canReconnect"
         class="actions"
       >
         <button
           class="btn btn-lg btn-primary"
+          :disabled="isConnectionActionDisabled"
           @click="handleReconnect"
         >
           {{ $t('shared.ui.connectionStatus.reconnect') }}
@@ -51,10 +94,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
+import { normalizeWsUrl } from '@/shared/lib/config/websocket';
 
 type StatusState =
   | 'connected'
@@ -65,6 +109,16 @@ type StatusState =
 
 const { t } = useI18n();
 const wsStore = useWebSocketStore();
+const endpointDraft = ref(wsStore.endpointUrl);
+const endpointError = ref('');
+const isSavingEndpoint = ref(false);
+
+watch(
+  () => wsStore.endpointUrl,
+  (endpointUrl) => {
+    endpointDraft.value = endpointUrl;
+  }
+);
 
 const state = computed<StatusState>(() => {
   if (wsStore.reconnectFailed) return 'failed';
@@ -96,13 +150,43 @@ const subText = computed(() => {
       total: wsStore.reconnectMaxAttempts,
     });
   }
+  if (state.value === 'failed') {
+    return wsStore.error || t('shared.ui.connectionStatus.failedHint');
+  }
+  if (state.value === 'disconnected' && wsStore.error) {
+    return wsStore.error;
+  }
   return '';
 });
 
 const canReconnect = computed(() => state.value !== 'connected');
+const isConnectionActionDisabled = computed(
+  () => wsStore.isConnecting || wsStore.isReconnecting || isSavingEndpoint.value
+);
 
-function handleReconnect(): void {
-  wsStore.reconnect();
+async function handleEndpointSubmit(): Promise<void> {
+  endpointError.value = '';
+
+  try {
+    endpointDraft.value = normalizeWsUrl(endpointDraft.value);
+  } catch {
+    endpointError.value = t('shared.ui.connectionStatus.invalidEndpoint');
+    return;
+  }
+
+  isSavingEndpoint.value = true;
+  try {
+    await wsStore.updateEndpoint(endpointDraft.value);
+  } catch (err) {
+    endpointError.value = (err as Error).message || t('shared.ui.connectionStatus.invalidEndpoint');
+  } finally {
+    isSavingEndpoint.value = false;
+  }
+}
+
+async function handleReconnect(): Promise<void> {
+  endpointError.value = '';
+  await wsStore.reconnect();
 }
 </script>
 
@@ -185,7 +269,48 @@ function handleReconnect(): void {
   margin: 0;
   font-size: var(--font-size-sm);
   color: var(--skyrim-text-secondary);
-  height: var(--font-size-sm);
+  min-height: var(--font-size-sm);
+  max-width: min(100%, 28rem);
+  text-align: center;
+}
+
+.endpoint-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  width: min(100%, 30rem);
+  margin-top: var(--spacing-sm);
+}
+
+.endpoint-form__label {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--skyrim-text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.endpoint-form__controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.endpoint-form__input {
+  min-width: 0;
+}
+
+.endpoint-form__button {
+  flex: 0 0 auto;
+  min-width: 8rem;
+  white-space: nowrap;
+}
+
+.endpoint-form__error {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-danger-light);
 }
 
 .actions {
@@ -199,6 +324,16 @@ function handleReconnect(): void {
   margin: 0;
   font-size: var(--font-size-base, 0.75rem);
   color: var(--skyrim-text-dim);
+}
+
+@media (max-width: 520px) {
+  .endpoint-form__controls {
+    flex-direction: column;
+  }
+
+  .endpoint-form__button {
+    width: 100%;
+  }
 }
 
 @keyframes status-pulse {

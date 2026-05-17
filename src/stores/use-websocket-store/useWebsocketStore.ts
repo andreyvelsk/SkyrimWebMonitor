@@ -141,6 +141,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
       status.value = CONNECTION_STATUS.CONNECTING;
       error.value = null;
       await wsClient.connect();
+      endpointUrl.value = wsClient.getUrl();
       status.value = CONNECTION_STATUS.CONNECTED;
     } catch (err) {
       status.value = CONNECTION_STATUS.DISCONNECTED;
@@ -155,6 +156,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
       reconnectFailed.value = false;
       reconnectAttempt.value = 0;
       await wsClient.reconnect();
+      endpointUrl.value = wsClient.getUrl();
       status.value = CONNECTION_STATUS.CONNECTED;
     } catch (err) {
       status.value = CONNECTION_STATUS.DISCONNECTED;
@@ -180,6 +182,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromOpen = wsClient.on('onOpen', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
+      endpointUrl.value = wsClient.getUrl();
       reconnectAttempt.value = 0;
       reconnectFailed.value = false;
       console.log('WebSocket connected, ready for subscriptions');
