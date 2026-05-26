@@ -32,6 +32,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
   let unsubscribeFromMessage: (() => void) | null = null;
   let unsubscribeFromReconnecting: (() => void) | null = null;
   let unsubscribeFromReconnectFailed: (() => void) | null = null;
+  let connectionRequestId = 0;
 
   // Computed
   const isConnected = computed(() => status.value === CONNECTION_STATUS.CONNECTED);
@@ -137,34 +138,50 @@ export const useWebSocketStore = defineStore('websocket', () => {
   };
 
   const connect = async (): Promise<void> => {
+    const requestId = ++connectionRequestId;
+
     try {
       status.value = CONNECTION_STATUS.CONNECTING;
       error.value = null;
       await wsClient.connect();
+
+      if (requestId !== connectionRequestId) return;
+
+      endpointUrl.value = wsClient.getUrl();
       status.value = CONNECTION_STATUS.CONNECTED;
     } catch (err) {
+      if (requestId !== connectionRequestId) return;
+
       status.value = CONNECTION_STATUS.DISCONNECTED;
       error.value = (err as Error).message || 'Failed to connect';
     }
   };
 
   const reconnect = async (): Promise<void> => {
+    const requestId = ++connectionRequestId;
+
     try {
       status.value = CONNECTION_STATUS.CONNECTING;
       error.value = null;
       reconnectFailed.value = false;
       reconnectAttempt.value = 0;
       await wsClient.reconnect();
+
+      if (requestId !== connectionRequestId) return;
+
+      endpointUrl.value = wsClient.getUrl();
       status.value = CONNECTION_STATUS.CONNECTED;
     } catch (err) {
+      if (requestId !== connectionRequestId) return;
+
       status.value = CONNECTION_STATUS.DISCONNECTED;
       error.value = (err as Error).message || 'Failed to reconnect';
     }
   };
 
-  const updateEndpoint = async (rawEndpoint: string): Promise<void> => {
+  const updateEndpoint = (rawEndpoint: string): void => {
     endpointUrl.value = saveConfiguredWsUrl(rawEndpoint);
-    await reconnect();
+    void reconnect();
   };
 
   const disconnect = (): void => {
@@ -180,6 +197,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromOpen = wsClient.on('onOpen', () => {
       status.value = CONNECTION_STATUS.CONNECTED;
       error.value = null;
+      endpointUrl.value = wsClient.getUrl();
       reconnectAttempt.value = 0;
       reconnectFailed.value = false;
       console.log('WebSocket connected, ready for subscriptions');

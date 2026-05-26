@@ -21,6 +21,8 @@ class WebSocketClient {
   private lastHeartbeatAckTime: number = Date.now();
   private messageHandlers: MessageHandler[] = [];
   private eventCallbacks: Map<string, EventCallback[]> = new Map();
+  private connectionGeneration: number = 0;
+  private pendingConnectReject: ((error: Error) => void) | null = null;
 
   constructor() {
     this.initEventCallbacks();
@@ -53,6 +55,15 @@ class WebSocketClient {
     return this.url;
   }
 
+  private cancelPendingConnect(message: string): void {
+    const reject = this.pendingConnectReject;
+    this.pendingConnectReject = null;
+
+    if (reject) {
+      reject(new Error(message));
+    }
+  }
+
   /**
    * Manually trigger reconnection. Cancels any pending reconnect timer,
    * resets attempt counter and immediately tries to reconnect.
@@ -64,6 +75,8 @@ class WebSocketClient {
     }
 
     this.stopHeartbeat();
+    this.connectionGeneration++;
+    this.cancelPendingConnect('Connection attempt cancelled by manual reconnect');
 
     if (this.ws) {
       try {
@@ -82,44 +95,87 @@ class WebSocketClient {
    * Connect to WebSocket server
    */
   connect(): Promise<void> {
-    if (this.ws) return Promise.resolve();
+    if (this.isConnected()) return Promise.resolve();
+
+    this.connectionGeneration++;
+    const generation = this.connectionGeneration;
+    this.cancelPendingConnect('Connection attempt superseded');
+
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
 
     return new Promise((resolve, reject) => {
+      let settled = false;
+
+      const resolveOnce = (): void => {
+        if (settled) return;
+        settled = true;
+        if (this.pendingConnectReject === rejectOnce) {
+          this.pendingConnectReject = null;
+        }
+        resolve();
+      };
+
+      const rejectOnce = (error: Error): void => {
+        if (settled) return;
+        settled = true;
+        if (this.pendingConnectReject === rejectOnce) {
+          this.pendingConnectReject = null;
+        }
+        reject(error);
+      };
+
+      this.pendingConnectReject = rejectOnce;
+
       try {
         this.url = getConfiguredWsUrl();
-        this.ws = new WebSocket(this.url);
+        const socket = new WebSocket(this.url);
+        this.ws = socket;
 
-        this.ws.onopen = () => {
+        socket.onopen = () => {
+          if (this.ws !== socket || generation !== this.connectionGeneration) return;
+
           console.log('WebSocket connected');
           this.reconnectAttempts = 0;
           this.lastHeartbeatAckTime = Date.now();
           this.startHeartbeat();
           this.emit('onOpen');
-          resolve();
+          resolveOnce();
         };
 
-        this.ws.onmessage = (event) => {
+        socket.onmessage = (event) => {
+          if (this.ws !== socket || generation !== this.connectionGeneration) return;
+
           // Update heartbeat ack time on any message from server
           this.lastHeartbeatAckTime = Date.now();
           this.handleMessage(event.data);
         };
 
-        this.ws.onerror = (error) => {
+        socket.onerror = (error) => {
+          if (this.ws !== socket || generation !== this.connectionGeneration) return;
+
+          const connectionError = new Error(`Failed to connect to ${this.url}`);
           console.error('WebSocket error:', error);
           this.stopHeartbeat();
-          this.emit('onError', error);
+          this.emit('onError', connectionError);
+          rejectOnce(connectionError);
         };
 
-        this.ws.onclose = () => {
+        socket.onclose = (event) => {
+          if (this.ws !== socket || generation !== this.connectionGeneration) return;
+
           console.log('WebSocket closed');
           this.stopHeartbeat();
-          this.emit('onClose');
+          this.emit('onClose', event);
           this.ws = null;
+          rejectOnce(new Error(`WebSocket closed before connection was established: ${this.url}`));
           this.attemptReconnect();
         };
       } catch (error) {
         console.error('WebSocket connection error:', error);
-        reject(error);
+        rejectOnce(error as Error);
       }
     });
   }
@@ -129,6 +185,8 @@ class WebSocketClient {
    */
   disconnect(): void {
     this.stopHeartbeat();
+    this.connectionGeneration++;
+    this.cancelPendingConnect('Connection attempt cancelled by disconnect');
 
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
