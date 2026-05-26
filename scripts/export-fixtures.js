@@ -40,6 +40,7 @@ const SUBSCRIPTIONS = {
     'magic.illusion': { items: 'Magic::Items::Illusion' },
     'magic.restoration': { items: 'Magic::Items::Restoration' },
     'magic.enchanting': { items: 'Magic::Items::Enchanting' },
+    'magic.shouts': { items: 'Magic::Items::Shouts' },
 
     // Character / hotkeys
     'hotkeys.items': { items: 'Hotkey::Items' },

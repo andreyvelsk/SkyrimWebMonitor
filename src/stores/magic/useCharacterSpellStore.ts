@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { MagicSchoolState, MagicCategory } from './types';
+import type { MagicSchoolState, MagicCategory, ShoutsState } from './types';
 
 export const useMagicStore = defineStore('magic', () => {
   // State for magic categories
@@ -31,6 +31,10 @@ export const useMagicStore = defineStore('magic', () => {
     items: undefined,
   });
 
+  const shouts = ref<ShoutsState>({
+    items: undefined,
+  });
+
   // Computed lists for each school
   const destructionList = computed(() => (destruction.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const alterationList = computed(() => (alteration.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
@@ -38,6 +42,7 @@ export const useMagicStore = defineStore('magic', () => {
   const illusionList = computed(() => (illusion.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const restorationList = computed(() => (restoration.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
   const enchantingList = computed(() => (enchanting.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
+  const shoutsList = computed(() => (shouts.value.items || []).sort((a, b) => a.name.localeCompare(b.name)));
 
   // Setters
   const setCategories = (newCategories: MagicCategory[] | undefined) => {
@@ -68,6 +73,10 @@ export const useMagicStore = defineStore('magic', () => {
     enchanting.value = newSpells;
   };
 
+  const setShouts = (newShouts: ShoutsState) => {
+    shouts.value = newShouts;
+  };
+
   return {
     categories,
     destruction,
@@ -76,12 +85,14 @@ export const useMagicStore = defineStore('magic', () => {
     illusion,
     restoration,
     enchanting,
+    shouts,
     destructionList,
     alterationList,
     conjurationList,
     illusionList,
     restorationList,
     enchantingList,
+    shoutsList,
     setCategories,
     setDestruction,
     setAlteration,
@@ -89,5 +100,7 @@ export const useMagicStore = defineStore('magic', () => {
     setIllusion,
     setRestoration,
     setEnchanting,
+    setShouts,
   };
 });
+

@@ -4,6 +4,7 @@ export const MAGIC_SCHOOL_ICON_PATHS: Record<string, string> = {
   Destruction: 'lorc/flaming-claw.svg',
   Illusion: 'delapouite/sparkles.svg',
   Restoration: 'delapouite/nested-hearts.svg',
+  Shouts: 'lorc/screaming.svg',
 };
 
 export function getMagicSchoolIconPath(school?: string | null): string {

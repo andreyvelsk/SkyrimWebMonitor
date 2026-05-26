@@ -127,6 +127,10 @@
         "tab": "Enchanting",
         "waitingForData": "Waiting for enchanting spells data..."
       },
+      "shouts": {
+        "tab": "Shouts",
+        "waitingForData": "Waiting for shouts data..."
+      },
       "spells": {
         "tab": "Spells"
       },
@@ -246,6 +250,10 @@
         "master": "Master",
         "unknown": "Unknown"
       }
+    },
+    "shout": {
+      "wordsKnown": "Words known",
+      "seconds": "s"
     }
   },
   "modals": {

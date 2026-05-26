@@ -23,7 +23,7 @@ import type {
 } from '@/stores/inventory/types';
 import { CATEGORY_TYPES } from '@/stores/inventory/types';
 import type { CategoriesData } from '@/shared/lib/types/types';
-import type { MagicState, MagicSchoolState, SpellItem } from '@/stores/magic/types';
+import type { MagicState, MagicSchoolState, SpellItem, ShoutsState, ShoutItem } from '@/stores/magic/types';
 import type { QuestsState, QuestJournalEntry, QuestListSection } from '@/stores/quests/types';
 import type { HotkeyItemsState } from '@/stores/hotkeys/types';
 import type { GameStatusData } from '@/stores/game/types';
@@ -234,6 +234,21 @@ export function isRestorationData(data: unknown, id: string): data is MagicSchoo
 
 export function isEnchantingData(data: unknown, id: string): data is MagicSchoolState {
   return id === 'magic.enchanting' && typeof data === 'object' && data !== null;
+}
+
+export function isShoutsData(data: unknown, id: string): data is ShoutsState {
+  return id === 'magic.shouts' && typeof data === 'object' && data !== null;
+}
+
+export function isShoutItem(item: unknown): item is ShoutItem {
+  if (typeof item !== 'object' || item === null) return false;
+  const shout = item as Record<string, unknown>;
+  return (
+    typeof shout.formId === 'string' &&
+    typeof shout.name === 'string' &&
+    typeof shout.description === 'string' &&
+    Array.isArray(shout.words)
+  );
 }
 
 export function isSpellItem(item: unknown): item is SpellItem {
