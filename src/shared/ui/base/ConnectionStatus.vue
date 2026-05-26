@@ -174,11 +174,15 @@ function handleReconnect(): void {
 .connection-status {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
   height: 100%;
   padding: var(--spacing-lg);
+
+  > :first-child {
+    flex: 1;
+  }
 }
 
 .connection-panel {
@@ -298,9 +302,7 @@ function handleReconnect(): void {
 }
 
 .attribution {
-  position: absolute;
-  bottom: 2px;
-  left: 2px;
+  align-self: flex-start;
   margin: 0;
   font-size: var(--font-size-base, 0.75rem);
   color: var(--skyrim-text-dim);
