@@ -11,6 +11,7 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         super.onCreate(savedInstanceState);
         getBridge().getWebView().setBackgroundColor(Color.parseColor("#0d0d0d"));
         hideSystemBars();
