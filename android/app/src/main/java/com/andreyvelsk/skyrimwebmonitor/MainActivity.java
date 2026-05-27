@@ -1,5 +1,6 @@
 package com.andreyvelsk.skyrimwebmonitor;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -11,6 +12,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getBridge().getWebView().setBackgroundColor(Color.parseColor("#0d0d0d"));
         hideSystemBars();
     }
 
