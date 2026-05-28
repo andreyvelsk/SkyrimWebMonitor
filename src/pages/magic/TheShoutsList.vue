@@ -11,11 +11,6 @@
             event: 'favorite',
             icon: 'delapouite/round-star.svg',
           },
-          {
-            id: 'hotkey',
-            event: 'hotkey',
-            icon: 'delapouite/keyboard.svg',
-          },
         ],
       },
     ]"

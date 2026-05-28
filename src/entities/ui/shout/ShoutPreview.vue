@@ -22,25 +22,6 @@
           </div>
         </div>
       </div>
-
-      <div
-        v-if="data?.words?.length"
-        class="words"
-      >
-        <div
-          v-for="(word, index) in data.words"
-          :key="word.formId"
-          class="word"
-          :class="{ 'word--unknown': !word.isKnown }"
-        >
-          <span class="word-index">{{ index + 1 }}.</span>
-          <span class="word-name">{{ word.name }}</span>
-          <span
-            v-if="word.isKnown && word.recoveryTime"
-            class="word-recovery"
-          >{{ word.recoveryTime }}{{ $t('entities.shout.seconds') }}</span>
-        </div>
-      </div>
     </template>
   </base-preview>
 </template>
@@ -74,42 +55,3 @@ const stats = computed(() => {
   ];
 });
 </script>
-
-<style scoped lang="scss">
-.words {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-  padding: var(--spacing-sm);
-  background-color: var(--skyrim-bg-dark);
-  border: 1px solid var(--skyrim-border-dark);
-}
-
-.word {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-  font-size: var(--font-size-sm);
-  color: var(--skyrim-text-primary);
-
-  &.word--unknown {
-    color: var(--skyrim-text-muted);
-    opacity: 0.5;
-  }
-}
-
-.word-index {
-  color: var(--skyrim-text-muted);
-  font-size: var(--font-size-xs);
-}
-
-.word-name {
-  font-weight: bold;
-  flex: 1;
-}
-
-.word-recovery {
-  font-size: var(--font-size-xs);
-  color: var(--skyrim-text-secondary);
-}
-</style>
