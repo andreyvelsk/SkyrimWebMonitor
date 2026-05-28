@@ -1,8 +1,9 @@
 {
   "name": "skyrimwebmonitor",
   "private": true,
-  "version": "0.1.8",
+  "version": "0.1.9",
   "type": "module",
+  "main": "electron/main.cjs",
   "description": "A Vue 3 PWA companion app for The Elder Scrolls V: Skyrim. Monitors player stats, inventory, magic and hotkeys in real time over WebSocket. Designed primarily for the AYN Thor handheld.",
   "keywords": [
     "skyrim",
@@ -40,6 +41,9 @@
     "android:apk": "npm run cap:sync:android && cd android && ./gradlew assembleDebug",
     "android:open": "npm run cap:sync:android && npx cap open android",
     "export-fixtures": "node scripts/export-fixtures.js",
+    "build:electron": "BASE_PATH=./ vite build",
+    "electron:preview": "npm run build:electron && electron .",
+    "electron:dist": "npm run build:electron && electron-builder --linux AppImage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
     "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\" && npm run lint:css"
@@ -63,6 +67,8 @@
     "@typescript-eslint/parser": "^8.58.1",
     "@vitejs/plugin-vue": "^6.0.5",
     "autoprefixer": "^10.4.27",
+    "electron": "^41.7.0",
+    "electron-builder": "^26.8.1",
     "eslint": "^10.2.0",
     "eslint-plugin-vue": "^10.8.0",
     "globals": "^17.4.0",
@@ -78,5 +84,23 @@
     "vite": "^7.3.2",
     "vue-eslint-parser": "^10.4.0",
     "ws": "^8.13.0"
+  },
+  "build": {
+    "appId": "com.andreyvelsk.skyrimwebmonitor",
+    "productName": "SkyrimWebMonitor",
+    "icon": "public/pwa-svg.svg",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "directories": {
+      "output": "dist-electron"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    }
   }
 }

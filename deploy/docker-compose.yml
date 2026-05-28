@@ -1,0 +1,24 @@
+services:
+  skyrim-monitor:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    image: skyrim-web-monitor:latest
+    container_name: skyrim-monitor
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    environment:
+      # IP или hostname машины с Skyrim в локальной сети
+      SKYRIM_HOST: ${SKYRIM_HOST:-192.168.1.100}
+      SKYRIM_WS_PORT: ${SKYRIM_WS_PORT:-8765}
+    networks:
+      - skyrim-net
+
+networks:
+  skyrim-net:
+    driver: bridge
