@@ -134,7 +134,7 @@ jobs:
         run: npm ci
 
       - name: Build Electron Linux x64
-        run: npm run electron:dist:linux-x64
+        run: npx electron-builder --linux AppImage --x64 --publish never
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
@@ -168,7 +168,7 @@ jobs:
         run: npx vite build
 
       - name: Build Electron Windows x64
-        run: npx electron-builder --win nsis --x64
+        run: npx electron-builder --win nsis --x64 --publish never
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
