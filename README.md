@@ -2,6 +2,8 @@
 
 # SkyrimWebMonitor
 
+This is the **client** half of the project. The **server** half — the SKSE plugin that exposes Skyrim's game state over a WebSocket — lives in the companion repository:
+
 **[andreyvelsk/SkyrimWebSocket](https://github.com/andreyvelsk/SkyrimWebSocket)** — **install it inside Skyrim first; without it the monitor has nothing to talk to.**
 
 A Vue 3 + Vite PWA + capacitor + electron companion app for **The Elder Scrolls V: Skyrim**. It connects to a running Skyrim session over WebSocket and shows the player state — stats, inventory, magic, and hotkeys — in real time, on a separate screen.
@@ -13,8 +15,6 @@ A Vue 3 + Vite PWA + capacitor + electron companion app for **The Elder Scrolls 
 > Demo of gameplay is here - https://www.youtube.com/watch?v=6KL9jrvZpFg
 
 > *if you have troubles launching the app, feel free to ask for a help in youtube video comments*
-
-This is the **client** half of the project. The **server** half — the SKSE plugin that exposes Skyrim's game state over a WebSocket — lives in the companion repository:
 
 
 ## Features
