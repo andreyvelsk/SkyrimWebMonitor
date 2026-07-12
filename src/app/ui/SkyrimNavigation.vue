@@ -36,9 +36,7 @@
         @click="nav.setActiveSubTab(sub.id)"
       >
         {{
-          $te(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`)
-            ? $t(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`)
-            : sub.label
+          getSubtabLabel(sub)
         }}
       </button>
     </nav>
@@ -47,11 +45,15 @@
 
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
+import type { SubTab } from '@/stores/use-navigation-store/types/types';
 
 const tabsRef = ref<HTMLElement | null>(null);
 const subtabsRef = ref<HTMLElement | null>(null);
 const nav = useNavigationStore();
+const { t } = useI18n();
+
 
 const visibleSubTabs = computed(() => nav.getVisibleSubTabs());
 
@@ -73,6 +75,13 @@ function centerActive(container: HTMLElement | null, activeSelector: string) {
     left: Math.max(0, Math.min(targetLeft, maxLeft)),
     behavior: 'smooth',
   });
+}
+
+function getSubtabLabel(sub: SubTab) {
+  if (nav.activeTab === 'magic') {
+    return sub.label;
+  }
+  return t(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`);
 }
 
 watch(

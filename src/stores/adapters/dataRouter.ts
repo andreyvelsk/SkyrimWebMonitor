@@ -8,7 +8,7 @@ import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { useQuestStore } from '@/stores/quests/useQuestStore';
 import type { RouterResult } from './types';
-import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isHotkeyItemsData, isQuestsData, isGameStatusData, isMapHotspotsData, isMapQuestMarkersData, isPlayerPositionData } from './typeGuards';
+import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isShoutsData, isHotkeyItemsData, isQuestsData, isGameStatusData, isMapHotspotsData, isMapQuestMarkersData, isPlayerPositionData } from './typeGuards';
 export class DataRouter {
   static routeDataById(subscriptionId: string, data: unknown): RouterResult {
     const characterStore = useCharacterStore();
@@ -166,6 +166,12 @@ export class DataRouter {
         console.log('[DataRouter] Routing enchanting spells to magic store');
         useMagicStore().setEnchanting(data);
         return { success: true, message: 'Data routed to magic store (enchanting)' };
+      }
+
+      if (isShoutsData(data, subscriptionId)) {
+        console.log('[DataRouter] Routing shouts to magic store');
+        useMagicStore().setShouts(data);
+        return { success: true, message: 'Data routed to magic store (shouts)' };
       }
 
       if (isHotkeyItemsData(data, subscriptionId)) {
