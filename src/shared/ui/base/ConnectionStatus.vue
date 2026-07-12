@@ -85,6 +85,8 @@
         <strong>game-icons.net</strong>
       </p>
     </div>
+
+    <display-controls />
   </div>
 </template>
 
@@ -94,6 +96,7 @@ import { useI18n } from 'vue-i18n';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { normalizeWsUrl } from '@/shared/lib/config/websocket';
+import DisplayControls from './DisplayControls.vue';
 
 type StatusState =
   | 'connected'

@@ -12,8 +12,8 @@ permissions:
   contents: write
 
 concurrency:
-  # Serialize deploys per branch so main and dev don't race for gh-pages.
-  group: pages-${{ github.ref }}
+  # Serialize ALL deploys globally so main and dev don't race for gh-pages.
+  group: pages
   cancel-in-progress: false
 
 jobs:
@@ -30,6 +30,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
+        # ELECTRON_SKIP_BINARY_DOWNLOAD prevents the electron postinstall script
+        # from downloading the ~120 MB electron binary — not needed for web builds.
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
         run: npm ci
 
       - name: Download pre-built map tiles
@@ -71,7 +75,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist

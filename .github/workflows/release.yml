@@ -1,4 +1,4 @@
-name: Release Android APK
+name: Release
 
 on:
   push:
@@ -19,8 +19,11 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
+  resolve-ref:
     runs-on: ubuntu-latest
+    outputs:
+      git_ref: ${{ steps.ref.outputs.git_ref }}
+      tag_name: ${{ steps.ref.outputs.tag_name }}
     steps:
       - name: Resolve ref
         id: ref
@@ -33,10 +36,14 @@ jobs:
             echo "tag_name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
           fi
 
+  build-android:
+    needs: resolve-ref
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.ref.outputs.git_ref }}
+          ref: ${{ needs.resolve-ref.outputs.git_ref }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -91,22 +98,102 @@ jobs:
           cd android
           ./gradlew assembleRelease
 
-      - name: Prepare release asset
-        id: asset
+      - name: Prepare APK artifact
         run: |
           VERSION=$(node -p "require('./package.json').version")
           mkdir -p release-assets
           if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
-            cp android/app/build/outputs/apk/release/app-release.apk "release-assets/skyrim-web-monitor-${VERSION}.apk"
-            echo "asset_name=skyrim-web-monitor-${VERSION}.apk" >> "$GITHUB_OUTPUT"
+            cp android/app/build/outputs/apk/release/app-release.apk "release-assets/SkyrimWebMonitor-${VERSION}-android.apk"
           else
-            cp android/app/build/outputs/apk/release/app-release-unsigned.apk "release-assets/skyrim-web-monitor-${VERSION}-unsigned.apk"
-            echo "asset_name=skyrim-web-monitor-${VERSION}-unsigned.apk" >> "$GITHUB_OUTPUT"
+            cp android/app/build/outputs/apk/release/app-release-unsigned.apk "release-assets/SkyrimWebMonitor-${VERSION}-android-unsigned.apk"
           fi
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: release-assets/
+          if-no-files-found: error
+
+  build-electron-linux:
+    needs: resolve-ref
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-ref.outputs.git_ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron Linux x64
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --linux AppImage --x64 --publish never
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-linux-x64
+          path: dist-electron/*.AppImage
+          if-no-files-found: error
+
+  build-electron-windows:
+    needs: resolve-ref
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-ref.outputs.git_ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web assets
+        shell: bash
+        env:
+          BASE_PATH: "./"
+        run: npx vite build
+
+      - name: Build Electron Windows x64
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx electron-builder --win nsis --x64 --publish never
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-windows-x64
+          path: dist-electron/*.exe
+          if-no-files-found: error
+
+  release:
+    needs: [resolve-ref, build-android, build-electron-linux, build-electron-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.ref.outputs.tag_name }}
+          tag_name: ${{ needs.resolve-ref.outputs.tag_name }}
           generate_release_notes: true
-          files: release-assets/${{ steps.asset.outputs.asset_name }}
+          files: release-assets/**

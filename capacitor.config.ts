@@ -6,6 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   android: {
     allowMixedContent: true,
+    edgeToEdge: true,
   },
   server: {
     androidScheme: 'http',

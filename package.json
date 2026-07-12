@@ -1,7 +1,7 @@
 {
   "name": "skyrimwebmonitor",
   "private": true,
-  "version": "0.1.9",
+  "version": "0.1.10",
   "type": "module",
   "main": "electron/main.cjs",
   "description": "A Vue 3 PWA companion app for The Elder Scrolls V: Skyrim. Monitors player stats, inventory, magic and hotkeys in real time over WebSocket. Designed primarily for the AYN Thor handheld.",
@@ -43,7 +43,10 @@
     "export-fixtures": "node scripts/export-fixtures.js",
     "build:electron": "BASE_PATH=./ vite build",
     "electron:preview": "npm run build:electron && electron .",
-    "electron:dist": "npm run build:electron && electron-builder --linux AppImage",
+    "electron:dist:linux-x64": "npm run build:electron && electron-builder --linux AppImage --x64",
+    "electron:dist:linux-arm64": "npm run build:electron && electron-builder --linux AppImage --arm64",
+    "electron:dist:mac": "npm run build:electron && electron-builder --mac dmg",
+    "electron:dist": "npm run build:electron && electron-builder --linux AppImage --x64",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx --fix",
     "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
     "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\" && npm run lint:css"
@@ -88,7 +91,8 @@
   "build": {
     "appId": "com.andreyvelsk.skyrimwebmonitor",
     "productName": "SkyrimWebMonitor",
-    "icon": "public/pwa-svg.svg",
+    "icon": "build/icon.png",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}",
     "files": [
       "dist/**/*",
       "electron/**/*"
@@ -98,9 +102,24 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        }
       ],
       "category": "Utility"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
     }
   }
 }
