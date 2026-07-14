@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 
-export const MAP_DZI_URL = `${import.meta.env.BASE_URL}map-dzi/skyrim.dzi`;
 const MAP_TILES_MANIFEST_URL = `${import.meta.env.BASE_URL}map-tiles/manifest.json`;
 const MAP_DZI_INFO_STORAGE_KEY = 'map-dzi-info-v1';
 const MAP_TILE_CACHE_NAME = 'map-dzi-tiles';
@@ -115,7 +114,6 @@ export const mapTilesPrefetchActive = ref(false);
 /** 0..100 — overall completion of the background tile prefetch. */
 export const mapTilesPrefetchProgress = ref(0);
 
-let prefetchTilesPromise: Promise<void> | null = null;
 const PREFETCH_CONCURRENCY = 12;
 
 interface DziInfo {
@@ -226,13 +224,17 @@ async function loadDziInfo(dziUrl: string): Promise<DziInfo | null> {
  * Eagerly downloads every DZI tile into a shared blob-URL cache so the
  * Map page renders instantly the first time the user opens it. Safe to
  * call multiple times — the heavy work is performed only once per page
- * load. If the DZI manifest is unreachable, this is a no-op.
+ * load per unique `dziUrl`. If the DZI manifest is unreachable, this is
+ * a no-op.
  */
-export function prefetchMapTiles(): Promise<void> {
-  if (prefetchTilesPromise) return prefetchTilesPromise;
+export function prefetchMapTiles(dziUrl: string): Promise<void> {
+  // Re-use an existing prefetch for the same DZI URL.
+  const key = `prefetch:${dziUrl}`;
+  const existing = prefetchByUrl.get(key);
+  if (existing) return existing;
 
-  prefetchTilesPromise = (async () => {
-    const info = await loadDziInfo(MAP_DZI_URL);
+  const promise = (async () => {
+    const info = await loadDziInfo(dziUrl);
     if (!info) return;
 
     const { width, height, tileSize, format, tilesBase } = info;
@@ -350,5 +352,9 @@ export function prefetchMapTiles(): Promise<void> {
     });
   })();
 
-  return prefetchTilesPromise;
+  prefetchByUrl.set(key, promise);
+  return promise;
 }
+
+/** Per-DZI-URL prefetch deduplication map. */
+const prefetchByUrl = new Map<string, Promise<void>>();

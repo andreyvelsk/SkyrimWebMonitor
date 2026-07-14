@@ -14,6 +14,7 @@
         :scale="scale"
         :cover-scale="coverScale"
         :overlay-style="overlayStyle"
+        :project-world-to-image="projectWorldToImage"
       />
       <button
         type="button"
@@ -61,7 +62,6 @@ import { computed, onBeforeUnmount, onMounted, ref, watch, type StyleValue } fro
 import { storeToRefs } from 'pinia';
 import OpenSeadragon from 'openseadragon';
 import {
-  MAP_DZI_URL,
   prefetchMapTiles,
   mapTileBlobUrls,
   mapTilesPrefetchActive,
@@ -69,8 +69,10 @@ import {
 } from './preloadMap';
 import MapMarkers from './MapMarkers.vue';
 import { BaseIcon } from '@/shared/ui';
-import { useMapProjection } from './composables/useMapProjection';
+import { useMapProjection, type MapProjectionFn } from './composables/useMapProjection';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
+import { getMapConfig } from './config/mapRegistry';
+import type { MapConfig } from './config/types';
 
 // =============================================================
 // Map view configuration
@@ -79,7 +81,7 @@ import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 /*
 to generate tiles use command
 
-vips dzsave public/skyrim.png public/map-dzi/skyrim \
+vips dzsave public/maps/<name>.png public/map-dzi/<name> \
   --layout dz \
   --tile-size 512 \
   --overlap 1 \
@@ -91,15 +93,6 @@ const INITIAL_ZOOM_FACTOR = 2.5;
 const MAX_ZOOM_FACTOR = 1;
 /** Background color around the map. */
 const BACKGROUND_COLOR = 'var(--skyrim-bg-medium)';
-/**
- * Pixels to hide on the LEFT and RIGHT edges of the map image (same on both sides).
- * Increase to push the dark horizontal borders out of view.
- */
-const MAP_CROP_X = 500;
-/** Pixels to hide on the TOP edge of the map image. */
-const MAP_CROP_Y_TOP = 1500;
-/** Pixels to hide on the BOTTOM edge of the map image. */
-const MAP_CROP_Y_BOTTOM = 2000;
 
 // =============================================================
 // Torn-paper edge effect (unchanged)
@@ -149,8 +142,21 @@ const containerHeight = ref(0);
 const isFollowPlayerMode = ref(false);
 
 const playerStore = useMapPlayerStore();
-const { displayPosition } = storeToRefs(playerStore);
-const { projectWorldToImage } = useMapProjection();
+const { displayPosition, position } = storeToRefs(playerStore);
+
+/**
+ * Resolve the active map config from the player's current worldspace.
+ * Falls back to Tamriel when the worldspace is unknown or null.
+ */
+const currentWorldspace = computed(() => position.value?.worldspace ?? null);
+const mapConfig = computed<MapConfig>(() => getMapConfig(currentWorldspace.value));
+
+/**
+ * Per-map projection engine. Re-created when the map config changes
+ * (i.e. when the player crosses a worldspace boundary).
+ */
+const projection = computed(() => useMapProjection(mapConfig.value));
+const projectWorldToImage = computed<MapProjectionFn>(() => projection.value.projectWorldToImage);
 
 /** Whether tile prefetch is still in progress (used to show a backdrop). */
 const isPrefetching = mapTilesPrefetchActive;
@@ -182,11 +188,11 @@ let viewer: OpenSeadragon.Viewer | null = null;
 
 type OsdTileSource = NonNullable<OpenSeadragon.Options['tileSources']>;
 
-async function detectTileSource(): Promise<OsdTileSource> {
+async function detectTileSource(config: MapConfig): Promise<OsdTileSource> {
   // Always prefer DZI. The app precaches `map-dzi/**` for offline mode and
   // a HEAD probe can fail against cache-only responses on some mobile PWAs.
   // Using the DZI URL directly keeps map startup deterministic offline.
-  return MAP_DZI_URL;
+  return config.dziUrl;
 }
 
 function syncOverlayTransform(): void {
@@ -236,7 +242,7 @@ function centerOnPlayer(immediately = true): void {
   if (!viewer || !isFollowPlayerMode.value) return;
   const dp = displayPosition.value;
   if (!dp) return;
-  const projected = projectWorldToImage(dp);
+  const projected = projectWorldToImage.value(dp);
   if (!projected) return;
   const item = viewer.world.getItemAt(0);
   if (!item) return;
@@ -296,7 +302,7 @@ function attachSharedTileCache(item: OpenSeadragon.TiledImage): void {
 
   // Make sure the background prefetch is running. Idempotent: a no-op if it
   // was already started by useAppLoader.
-  void prefetchMapTiles();
+  void prefetchMapTiles(mapConfig.value.dziUrl);
 }
 
 function applyHomeBounds(): void {
@@ -313,7 +319,8 @@ async function setupViewer(): Promise<void> {
   const host = osdContainerRef.value;
   if (!host) return;
 
-  const tileSources = await detectTileSource();
+  const config = mapConfig.value;
+  const tileSources = await detectTileSource(config);
 
   viewer = OpenSeadragon({
     element: host,
@@ -394,19 +401,22 @@ async function setupViewer(): Promise<void> {
     // the "world" by OSD. This makes homeFillsViewer, visibilityRatio and
     // constrainDuringPan all work relative to the cropped region, which
     // naturally prevents the user from panning into the dark edges.
-    if (MAP_CROP_X > 0 || MAP_CROP_Y_TOP > 0 || MAP_CROP_Y_BOTTOM > 0) {
+    const cropX = config.cropX;
+    const cropYTop = config.cropYTop;
+    const cropYBottom = config.cropYBottom;
+    if (cropX > 0 || cropYTop > 0 || cropYBottom > 0) {
       const W = size.x;
-      const croppedW = W - 2 * MAP_CROP_X;
-      const croppedH = size.y - MAP_CROP_Y_TOP - MAP_CROP_Y_BOTTOM;
+      const croppedW = W - 2 * cropX;
+      const croppedH = size.y - cropYTop - cropYBottom;
       // In OSD viewport space the item default width is 1.0. We scale it so
       // the cropped region spans exactly 1.0 viewport unit.
       const newWidth = W / croppedW;
       item.setWidth(newWidth);
       item.setPosition(
-        new OpenSeadragon.Point(-MAP_CROP_X / croppedW, -MAP_CROP_Y_TOP / croppedW),
+        new OpenSeadragon.Point(-cropX / croppedW, -cropYTop / croppedW),
       );
       // Also clip rendering so OSD won't bother loading tiles for the dark area.
-      item.setClip(new OpenSeadragon.Rect(MAP_CROP_X, MAP_CROP_Y_TOP, croppedW, croppedH));
+      item.setClip(new OpenSeadragon.Rect(cropX, cropYTop, croppedW, croppedH));
     }
 
     syncContainerSize();
@@ -444,6 +454,18 @@ async function setupViewer(): Promise<void> {
   });
 }
 
+function destroyViewer(): void {
+  if (viewer) {
+    viewer.destroy();
+    viewer = null;
+  }
+  imgNaturalW.value = 0;
+  imgNaturalH.value = 0;
+  scale.value = 0;
+  translateX.value = 0;
+  translateY.value = 0;
+}
+
 // =============================================================
 // Lifecycle
 // =============================================================
@@ -456,11 +478,19 @@ watch(displayPosition, () => {
   centerOnPlayer(true);
 });
 
-onBeforeUnmount(() => {
-  if (viewer) {
-    viewer.destroy();
-    viewer = null;
+/**
+ * When the player crosses a worldspace boundary, destroy the current
+ * viewer and create a new one for the target map.
+ */
+watch(currentWorldspace, (next, prev) => {
+  if (next !== prev) {
+    destroyViewer();
+    void setupViewer();
   }
+});
+
+onBeforeUnmount(() => {
+  destroyViewer();
   // Note: blob URLs in the shared `mapTileBlobUrls` cache are intentionally
   // NOT revoked here. They live for the lifetime of the page so that
   // re-entering the Map tab is instant.
@@ -503,7 +533,7 @@ onBeforeUnmount(() => {
   background-color: v-bind(BACKGROUND_COLOR);
 
   -webkit-mask-image: v-bind(TEAR_MASK_URL);
-  mask-image: v-bind(TEAR_MASK_URL);
+  mask-image: v-bIND(TEAR_MASK_URL);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
