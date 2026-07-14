@@ -8,7 +8,6 @@ export const MAGIC_SCHOOLS = {
   ILLUSION: 'Illusion',
   RESTORATION: 'Restoration',
   ENCHANTING: 'Enchanting',
-  SHOUTS: 'Shouts',
 } as const;
 
 export type MagicSchool = (typeof MAGIC_SCHOOLS)[keyof typeof MAGIC_SCHOOLS];
@@ -96,30 +95,6 @@ export interface MagicSchoolState {
   items?: SpellItem[] | null;
 }
 
-// Shout word-of-power entry
-export interface ShoutWord {
-  name: string;
-  formId: string;
-  recoveryTime: number;
-  isKnown: boolean;
-}
-
-// Shout item (dragon shout)
-export interface ShoutItem {
-  name: string;
-  formId: string;
-  description: string;
-  words: ShoutWord[];
-  isEquipped: boolean;
-  isFavorite: boolean;
-  hotkeys: number[];
-}
-
-// State for shouts
-export interface ShoutsState {
-  items?: ShoutItem[] | null;
-}
-
 // State for all magic categories and items
 export interface MagicState {
   categories?: MagicCategory[] | null;
@@ -129,6 +104,5 @@ export interface MagicState {
   illusion?: MagicSchoolState;
   restoration?: MagicSchoolState;
   enchanting?: MagicSchoolState;
-  shouts?: ShoutsState;
 }
 

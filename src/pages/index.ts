@@ -14,7 +14,7 @@ export { default as TheBooks } from './inventory/TheBooks.vue';
 export { default as TheScrolls } from './inventory/TheScrolls.vue';
 
 // Magic pages
-export { TheDestruction, TheAlteration, TheConjuration, TheIllusion, TheRestoration, TheEnchanting, TheShouts } from './magic';
+export { TheDestruction, TheAlteration, TheConjuration, TheIllusion, TheRestoration, TheEnchanting } from './magic';
 
 // Quests pages
 export { default as TheQuests } from './quests/TheQuests.vue';

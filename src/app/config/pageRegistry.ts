@@ -23,7 +23,6 @@ import {
   TheIllusion,
   TheRestoration,
   TheEnchanting,
-  TheShouts,
   TheQuests,
   TheMap,
 } from '@/pages';
@@ -281,20 +280,6 @@ export const pagesRegistry: PagesRegistry = {
           id: 'magic.enchanting',
           fields: {
             items: 'Magic::Items::Enchanting',
-          },
-          settings: {
-            frequency: INVENTORY_FREQUENCY,
-          },
-        },
-      ],
-    },
-    shouts: {
-      component: TheShouts,
-      subscriptions: [
-        {
-          id: 'magic.shouts',
-          fields: {
-            items: 'Magic::Items::Shouts',
           },
           settings: {
             frequency: INVENTORY_FREQUENCY,

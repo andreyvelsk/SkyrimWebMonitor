@@ -470,11 +470,6 @@
                 "categoryId": "Restoration",
                 "count": 1,
                 "name": "Restoration"
-            },
-            {
-                "categoryId": "Shouts",
-                "count": 2,
-                "name": "Shouts"
             }
         ]
     },
@@ -567,66 +562,6 @@
     },
     "magic.enchanting": {
         "items": []
-    },
-    "magic.shouts": {
-        "items": [
-            {
-                "description": "Thu'um unbalances the very force of gravity, sending your hapless target flying.",
-                "formId": "0x00013E08",
-                "hotkeys": [],
-                "isEquipped": true,
-                "isFavorite": true,
-                "name": "Unrelenting Force",
-                "words": [
-                    {
-                        "formId": "0x0001362A",
-                        "isKnown": true,
-                        "name": "FUS",
-                        "recoveryTime": 15.0
-                    },
-                    {
-                        "formId": "0x00017E22",
-                        "isKnown": true,
-                        "name": "RO",
-                        "recoveryTime": 20.0
-                    },
-                    {
-                        "formId": "0x00017E23",
-                        "isKnown": false,
-                        "name": "DAH",
-                        "recoveryTime": 45.0
-                    }
-                ]
-            },
-            {
-                "description": "Inhale air, exhale flame, and behold the Thu'um as inferno.",
-                "formId": "0x00013F06",
-                "hotkeys": [],
-                "isEquipped": false,
-                "isFavorite": false,
-                "name": "Fire Breath",
-                "words": [
-                    {
-                        "formId": "0x0004DD79",
-                        "isKnown": true,
-                        "name": "YOL",
-                        "recoveryTime": 30.0
-                    },
-                    {
-                        "formId": "0x0004DD7A",
-                        "isKnown": false,
-                        "name": "TOR",
-                        "recoveryTime": 50.0
-                    },
-                    {
-                        "formId": "0x0004DD7B",
-                        "isKnown": false,
-                        "name": "SHUL",
-                        "recoveryTime": 100.0
-                    }
-                ]
-            }
-        ]
     },
     "hotkeys.items": {
         "items": [

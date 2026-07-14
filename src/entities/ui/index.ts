@@ -7,5 +7,4 @@ export { ApparelItem, ApparelPreview } from './apparel';
 export { IngredientPreview } from './ingredients';
 export { MiscPreview, GemPreview } from './misc';
 export { SpellItem, SpellPreview } from './spell';
-export { ShoutItem, ShoutPreview } from './shout';
 export { QuestItem, QuestPreview, QuestMiscPreview } from './quest';
