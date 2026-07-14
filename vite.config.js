@@ -118,7 +118,6 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      host: '0.0.0.0',
       proxy: {
         '/ws': {
           // target must be http://, not ws:// — Vite handles the WS upgrade internally
