@@ -117,6 +117,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
+import {
+  currentZoom,
+  ZOOM_STEP,
+  ZOOM_MIN,
+  ZOOM_MAX,
+  ZOOM_KEY,
+  persistZoom,
+} from '@/shared/lib/composables/useAppZoom';
 
 interface ElectronAPI {
   setZoom: (_factor: number) => void;
@@ -134,12 +142,6 @@ function getElectronAPI(): ElectronAPI {
   return (window as unknown as { electronAPI: ElectronAPI }).electronAPI;
 }
 
-const ZOOM_STEP = 0.1;
-const ZOOM_MIN = 0.6;
-const ZOOM_MAX = 1.8;
-const ZOOM_KEY = 'skyrim-monitor-zoom';
-
-const currentZoom = ref(parseFloat(localStorage.getItem(ZOOM_KEY) ?? '1'));
 const isFullscreen = ref(false);
 
 function applyZoom(value: number): void {
@@ -166,7 +168,7 @@ function applyZoom(value: number): void {
       }
     }
   }
-  localStorage.setItem(ZOOM_KEY, String(currentZoom.value));
+  persistZoom(currentZoom.value);
 }
 
 function zoomIn(): void {

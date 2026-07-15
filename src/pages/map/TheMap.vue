@@ -73,6 +73,7 @@ import { useMapProjection, type MapProjectionFn } from './composables/useMapProj
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { getMapConfig } from './config/mapRegistry';
 import type { MapConfig } from './config/types';
+import { currentZoom } from '@/shared/lib/composables/useAppZoom';
 
 // =============================================================
 // Map view configuration
@@ -442,7 +443,15 @@ async function setupViewer(): Promise<void> {
     if (!event.quick) return;
     const item = viewer.world.getItemAt(0);
     if (!item) return;
-    const viewportPoint = viewer.viewport.pointFromPixel(event.position);
+    // CSS zoom on .handheld-device causes getBoundingClientRect() to return
+    // zoomed dimensions while clientWidth/clientHeight (used by OSD for
+    // viewport containerSize) stay at layout (unzoomed) size. OSD computes
+    // event.position from getBoundingClientRect (zoomed space) but
+    // pointFromPixel maps against containerSize (unzoomed space). Divide by
+    // currentZoom to bring the position into the same coordinate space.
+    const z = currentZoom.value;
+    const pos = z !== 1 ? event.position.divide(z) : event.position;
+    const viewportPoint = viewer.viewport.pointFromPixel(pos);
     const imgPoint = item.viewportToImageCoordinates(viewportPoint);
     // First let the marker overlay try to handle the tap (selection /
     // fast-travel). Only deselect when the tap landed on empty map area.
@@ -487,6 +496,24 @@ watch(currentWorldspace, (next, prev) => {
     destroyViewer();
     void setupViewer();
   }
+});
+
+/**
+ * When the app zoom changes, .handheld-device height is adjusted to
+ * (100/z)vh which changes the layout size of the OSD container. Force
+ * OSD to re-read its container dimensions and sync the overlay.
+ *
+ * Note: CSS zoom itself does NOT affect clientWidth/clientHeight, so
+ * updateSize() only picks up the layout change from the height adjustment.
+ * The canvas-click handler separately compensates for the zoom coordinate
+ * mismatch (getBoundingClientRect vs clientWidth).
+ */
+watch(currentZoom, () => {
+  if (!viewer) return;
+  (viewer as unknown as { updateSize: () => void }).updateSize();
+  syncContainerSize();
+  syncOverlayTransform();
+  centerOnPlayer(true);
 });
 
 onBeforeUnmount(() => {
