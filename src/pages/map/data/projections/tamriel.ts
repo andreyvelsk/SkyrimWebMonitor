@@ -16,12 +16,12 @@ export const TAMRIEL_IMAGE_CORRECTION = {
 };
 
 /**
- * FWMF-проекция карты Тамриэля (материк Skyrim).
+ * FWMF projection for the Tamriel map (Skyrim continent).
  *
- * Размер текстуры: 16384×16384.
- * Координаты игрового мира: ~ ±267k единиц.
+ * Texture size: 16384×16384.
+ * World-space coordinates: ~ ±267k units.
  *
- * Формат vertices: [x, y, u, v] для 4 вершин quad-меша:
+ * Vertex format: [x, y, u, v] for 4 vertices of a quad mesh:
  *   (maxX, maxY, maxU, minV)  — top-right
  *   (minX, maxY, minU, minV)  — top-left
  *   (minX, minY, minU, maxV)  — bottom-left

@@ -1,38 +1,38 @@
 import type { ProjectionData } from '../../config/types';
 
 /**
- * Общие константы проекций FWMF-карт.
- * Эти значения идентичны для всех карт, использующих FWMF-формат
- * (Tamriel, Vyn и т.д.), и вынесены сюда для устранения дублирования.
+ * Common constants for FWMF map projections.
+ * These values are identical for all maps using the FWMF format
+ * (Tamriel, Vyn, etc.) and are extracted here to eliminate duplication.
  */
 
-/** Источник BTR-файла (относительный путь внутри FWMF-архива). */
+/** BTR file source (relative path inside FWMF archive). */
 export const PROJECTION_SOURCE = 'tamriel/tamriel.32.0.0.btr';
 
-/** Имя меша в BTR-файле, содержащего данные проекции. */
+/** Mesh name in the BTR file containing projection data. */
 export const PROJECTION_MESH_NAME = 'chunk:6';
 
-/** Индекс блока данных внутри меша. */
+/** Data block index inside the mesh. */
 export const PROJECTION_BLOCK_INDEX = 5;
 
-/** Пути к текстурам карты. */
+/** Map texture paths. */
 export const PROJECTION_TEXTURE_PATHS: string[] = ['textures\\terrain\\tamriel\\skyrim.dds'];
 
-/** Количество чисел, описывающих одну вершину (x, y, u, v). */
+/** Number of values describing a single vertex (x, y, u, v). */
 export const PROJECTION_VERTEX_STRIDE = 4 as const;
 
-/** Количество индексов на один треугольник. */
+/** Number of indices per triangle. */
 export const PROJECTION_TRIANGLE_STRIDE = 3 as const;
 
 /**
- * Индексы треугольников для прямоугольного меша из двух треугольников.
- * Порядок: 0-1-2 и 0-2-3 (стандартный quad, разбитый по диагонали).
+ * Triangle indices for a rectangular mesh made of two triangles.
+ * Order: 0-1-2 and 0-2-3 (standard quad split diagonally).
  */
 export const PROJECTION_TRIANGLES: [number, number, number, number, number, number] = [0, 1, 2, 0, 2, 3];
 
 /**
- * Базовые поля проекции, общие для всех FWMF-карт.
- * Используется как основа для построения конкретных проекций.
+ * Base projection fields common to all FWMF maps.
+ * Used as a foundation for building specific projections.
  */
 export const BASE_PROJECTION: Pick<
   ProjectionData,

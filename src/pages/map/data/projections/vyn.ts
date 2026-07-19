@@ -17,12 +17,12 @@ export const VYN_IMAGE_CORRECTION = {
 };
 
 /**
- * FWMF-проекция карты Вин (материк Винтерсанд / Beyond Skyrim).
+ * FWMF projection for the Vyn map (Wintersand continent / Beyond Skyrim).
  *
- * Размер текстуры: 4096×4096.
- * Координаты игрового мира: ~ ±164k единиц.
+ * Texture size: 4096×4096.
+ * World-space coordinates: ~ ±164k units.
  *
- * Формат vertices: [x, y, u, v] для 4 вершин quad-меша:
+ * Vertex format: [x, y, u, v] for 4 vertices of a quad mesh:
  *   (maxX, maxY, maxU, minV)  — top-right
  *   (minX, maxY, minU, minV)  — top-left
  *   (minX, minY, minU, maxV)  — bottom-left
