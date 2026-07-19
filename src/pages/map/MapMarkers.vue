@@ -118,6 +118,8 @@ const props = defineProps<{
   overlayStyle: StyleValue;
   /** World→image projection function for the active map. */
   projectWorldToImage: MapProjectionFn;
+  /** Worldspace of the currently active map (e.g. "Tamriel", "DLC2SolstheimWorld"). */
+  currentWorldspace: string;
 }>();
 
 // =============================================================
@@ -133,6 +135,7 @@ const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarke
   hotspots,
   questMarkers,
   questIconUrl: QUEST_ICON_URL,
+  currentWorldspace: props.currentWorldspace,
 });
 
 // =============================================================

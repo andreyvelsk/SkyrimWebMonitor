@@ -15,6 +15,7 @@
         :cover-scale="coverScale"
         :overlay-style="overlayStyle"
         :project-world-to-image="projectWorldToImage"
+        :current-worldspace="currentMapWorldspace"
       />
       <button
         type="button"
@@ -149,8 +150,14 @@ const { displayPosition, position } = storeToRefs(playerStore);
  * Resolve the active map config from the player's current worldspace.
  * Falls back to Tamriel when the worldspace is unknown or null.
  */
-const currentWorldspace = computed(() => position.value?.worldspace ?? null);
+const currentWorldspace = computed(() => position.value?.parentWorldspace ?? null);
 const mapConfig = computed<MapConfig>(() => getMapConfig(currentWorldspace.value));
+
+/**
+ * The effective worldspace of the currently displayed map.
+ * Always matches the map config's worldspace (never null).
+ */
+const currentMapWorldspace = computed<string>(() => mapConfig.value.worldspace);
 
 /**
  * Per-map projection engine. Re-created when the map config changes
@@ -489,7 +496,9 @@ watch(displayPosition, () => {
 
 /**
  * When the player crosses a worldspace boundary, destroy the current
- * viewer and create a new one for the target map.
+ * viewer and create a new one for the target map. Also sync the
+ * effective map worldspace to the player store so position-renderability
+ * checks use the correct worldspace.
  */
 watch(currentWorldspace, (next, prev) => {
   if (next !== prev) {
@@ -497,6 +506,15 @@ watch(currentWorldspace, (next, prev) => {
     void setupViewer();
   }
 });
+
+/**
+ * Keep the player store's currentMapWorldspace in sync with the
+ * active map config. This ensures isLivePositionRenderable and
+ * displayPosition use the correct worldspace for position checks.
+ */
+watch(mapConfig, (config) => {
+  playerStore.setCurrentMapWorldspace(config.worldspace);
+}, { immediate: true });
 
 /**
  * When the app zoom changes, .handheld-device height is adjusted to

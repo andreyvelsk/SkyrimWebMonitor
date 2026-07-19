@@ -1,24 +1,7 @@
 import type { MapConfig, MapRegistry } from './types';
-import tamrielProjection from '../data/projections/tamriel.json';
-import type { ProjectionData } from './types';
+import { tamrielProjection, TAMRIEL_IMAGE_CORRECTION } from '../data/projections/tamriel.ts';
+import { vynProjection, VYN_IMAGE_CORRECTION } from '../data/projections/vyn.ts';
 
-// =============================================================
-// Per-map image correction matrices
-// =============================================================
-
-/**
- * Affine correction for the Tamriel hand-painted map texture.
- * Compensates for slight artistic distortion between the FWMF mesh UVs
- * and the actual pixel positions on the painted map.
- */
-const TAMRIEL_IMAGE_CORRECTION = {
-  a: 1.0009632654426412,
-  c: 0.0024280042349955015,
-  e: -7.934611523904017,
-  b: -0.001708694270502052,
-  d: 1.010553408600275,
-  f: -37.5297259438135,
-};
 
 // =============================================================
 // Map configurations
@@ -27,11 +10,21 @@ const TAMRIEL_IMAGE_CORRECTION = {
 const tamrielConfig: MapConfig = {
   worldspace: 'Tamriel',
   dziUrl: `${import.meta.env.BASE_URL}map-dzi/tamriel.dzi`,
-  projectionData: tamrielProjection as ProjectionData,
+  projectionData: tamrielProjection,
   imageCorrection: TAMRIEL_IMAGE_CORRECTION,
   cropX: 500,
   cropYTop: 1500,
   cropYBottom: 2000,
+};
+
+const vynConfig: MapConfig = {
+  worldspace: 'Vyn',
+  dziUrl: `${import.meta.env.BASE_URL}map-dzi/vyn.dzi`,
+  projectionData: vynProjection,
+  imageCorrection: VYN_IMAGE_CORRECTION,
+  cropX: 0,
+  cropYTop: 0,
+  cropYBottom: 0,
 };
 
 // =============================================================
@@ -40,8 +33,7 @@ const tamrielConfig: MapConfig = {
 
 export const mapRegistry: MapRegistry = {
   Tamriel: tamrielConfig,
-  // Future maps:
-  // DLC2SolstheimWorld: { ... },
+  Vyn: vynConfig,
 };
 
 /** Fallback worldspace when the player's worldspace is unknown or null. */

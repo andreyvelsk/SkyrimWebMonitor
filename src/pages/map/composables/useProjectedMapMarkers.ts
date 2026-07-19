@@ -13,19 +13,24 @@ interface UseProjectedMapMarkersOptions {
   hotspots: Ref<MapHotspot[]>;
   questMarkers: Ref<MapQuestMarker[]>;
   questIconUrl: string;
+  /** Worldspace of the currently active map (e.g. "Tamriel", "DLC2SolstheimWorld"). */
+  currentWorldspace: string;
 }
 
-const EXCLUDED_HOTSPOT_TYPES = ['DLC02ToSkyrim'];
+const EXCLUDED_HOTSPOT_TYPES: string[] = [
+  // 'DLC02ToSkyrim'
+];
 
 export function useProjectedMapMarkers({
   projectWorldToImage,
   hotspots,
   questMarkers,
   questIconUrl,
+  currentWorldspace,
 }: UseProjectedMapMarkersOptions) {
   const locationMarkers = computed<LocationProjectedMarker[]>(() => {
     return hotspots.value
-      .filter((h) => 
+      .filter((h) =>
         h.isVisible
         && EXCLUDED_HOTSPOT_TYPES.indexOf(h.type) === -1
     )
@@ -51,7 +56,7 @@ export function useProjectedMapMarkers({
     return questMarkers.value
       .filter(
         (marker) =>
-          isRenderableTamrielQuestMarker(marker) &&
+          isRenderableQuestMarker(marker, currentWorldspace) &&
           Number.isFinite(marker.x) &&
           Number.isFinite(marker.y)
       )
@@ -89,10 +94,15 @@ function isProjectedMarker<T extends ProjectedMarker>(marker: T | null): marker 
   return marker !== null;
 }
 
-function isRenderableTamrielQuestMarker(marker: MapQuestMarker): boolean {
+/**
+ * Check whether a quest marker can be projected onto a map for the given
+ * worldspace. The marker must be non-interior and its worldspace must match
+ * the active map's worldspace (or be a sub-world rooted in it).
+ */
+function isRenderableQuestMarker(marker: MapQuestMarker, mapWorldspace: string): boolean {
   return (
     !marker.isInterior &&
-    marker.worldspace === 'Tamriel' &&
-    (marker.parentWorldspace === null || marker.parentWorldspace === 'Tamriel')
+    marker.worldspace === mapWorldspace &&
+    (marker.parentWorldspace === null || marker.parentWorldspace === mapWorldspace)
   );
 }
