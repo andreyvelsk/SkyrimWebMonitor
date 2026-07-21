@@ -17,9 +17,8 @@ const tamrielConfig: MapConfig = {
   cropYBottom: 2000,
 };
 
-const vynConfig: MapConfig = {
+const vynCommon = {
   worldspace: 'Vyn',
-  dziUrl: `${import.meta.env.BASE_URL}map-dzi/vyn.dzi`,
   projectionData: vynProjection,
   imageCorrection: VYN_IMAGE_CORRECTION,
   cropX: 0,
@@ -27,26 +26,59 @@ const vynConfig: MapConfig = {
   cropYBottom: 0,
 };
 
+const vynConfig: MapConfig = {
+  dziUrl: `${import.meta.env.BASE_URL}map-dzi/vyn.dzi`,
+  ...vynCommon,
+};
+
+const vynRUConfig: MapConfig = {
+  language: 'RU',
+  dziUrl: `${import.meta.env.BASE_URL}map-dzi/vyn_ru.dzi`,
+  ...vynCommon,
+};
+
 // =============================================================
 // Registry
 // =============================================================
 
 export const mapRegistry: MapRegistry = {
-  Tamriel: tamrielConfig,
-  Vyn: vynConfig,
+  Tamriel: [tamrielConfig],
+  Vyn: [vynConfig, vynRUConfig],
 };
 
 /** Fallback worldspace when the player's worldspace is unknown or null. */
 export const DEFAULT_MAP_WORLDSPACE = 'Tamriel';
 
 /**
- * Resolve a worldspace string to its MapConfig.
- * Returns the Tamriel config as a safe default when the worldspace is
- * not recognised or is null/undefined.
+ * Pick the best config from a list: prefer one whose `language` matches
+ * `locale`, falling back to the first config without a `language` (the
+ * default), and finally to the first entry in the list.
  */
-export function getMapConfig(worldspace: string | null | undefined): MapConfig {
-  if (worldspace && mapRegistry[worldspace]) {
-    return mapRegistry[worldspace];
+function findBestConfig(configs: MapConfig[], locale?: string): MapConfig {
+  if (locale) {
+    const upperLocale = locale.toUpperCase();
+    const langMatch = configs.find((c) => c.language?.toUpperCase() === upperLocale);
+    if (langMatch) return langMatch;
   }
-  return mapRegistry[DEFAULT_MAP_WORLDSPACE];
+  return configs.find((c) => !c.language) ?? configs[0];
+}
+
+/**
+ * Resolve a worldspace string to its MapConfig.
+ *
+ * When `locale` is provided (e.g. `'ru'` / `'en'` from i18n), configs
+ * whose `language` field matches the locale take priority. Otherwise the
+ * first language-less ("default") config is returned.
+ *
+ * Falls back to the Tamriel default when the worldspace is not recognised
+ * or is null/undefined.
+ */
+export function getMapConfig(
+  worldspace: string | null | undefined,
+  locale?: string,
+): MapConfig {
+  if (worldspace && mapRegistry[worldspace]) {
+    return findBestConfig(mapRegistry[worldspace], locale);
+  }
+  return findBestConfig(mapRegistry[DEFAULT_MAP_WORLDSPACE], locale);
 }

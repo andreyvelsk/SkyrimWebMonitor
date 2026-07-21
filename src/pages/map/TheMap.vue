@@ -72,6 +72,7 @@ import MapMarkers from './MapMarkers.vue';
 import { BaseIcon } from '@/shared/ui';
 import { useMapProjection, type MapProjectionFn } from './composables/useMapProjection';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
+import { i18n } from '@/i18n';
 import { getMapConfig } from './config/mapRegistry';
 import type { MapConfig } from './config/types';
 import { currentZoom } from '@/shared/lib/composables/useAppZoom';
@@ -151,7 +152,9 @@ const { displayPosition, position } = storeToRefs(playerStore);
  * Falls back to Tamriel when the worldspace is unknown or null.
  */
 const currentWorldspace = computed(() => position.value?.parentWorldspace ?? null);
-const mapConfig = computed<MapConfig>(() => getMapConfig(currentWorldspace.value));
+const mapConfig = computed<MapConfig>(() =>
+  getMapConfig(currentWorldspace.value, i18n.global.locale.value),
+);
 
 /**
  * The effective worldspace of the currently displayed map.

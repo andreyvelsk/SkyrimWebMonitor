@@ -49,6 +49,8 @@ export interface ImageCorrectionMatrix {
 export interface MapConfig {
   /** Game worldspace EditorID (e.g. "Tamriel"). */
   worldspace: string;
+  /** Language of the game, needed for this map */
+  language?: string;
   /** URL to the DZI manifest, relative to the app base (e.g. "/map-dzi/tamriel.dzi"). */
   dziUrl: string;
   /** FWMF projection mesh data extracted from the game's BTR file. */
@@ -73,5 +75,12 @@ export interface MapConfig {
   referencePoints?: ReferencePoint[];
 }
 
-/** Worldspace → MapConfig lookup. */
-export type MapRegistry = Record<string, MapConfig>;
+/**
+ * Worldspace → MapConfig[] lookup.
+ *
+ * Each worldspace may have multiple configs differentiated by `language`.
+ * When looking up a config, the first entry whose `language` matches the
+ * current game locale wins; if no language-specific config is found, the
+ * first entry without a `language` (the default) is used.
+ */
+export type MapRegistry = Record<string, MapConfig[]>;
