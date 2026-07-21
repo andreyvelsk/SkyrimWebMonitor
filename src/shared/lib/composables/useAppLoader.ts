@@ -10,7 +10,7 @@ import {
 } from '@/app/config/pageRegistry';
 import { GLOBAL_SUBSCRIPTIONS } from '@/app/config/globalSubscriptions';
 import { DataRouter } from '@/stores/adapters/dataRouter';
-import { prefetchMapTiles } from '@/pages/map';
+import { prefetchMapTiles, getMapConfig } from '@/pages/map';
 
 export function useAppLoader() {
   const navigationStore = useNavigationStore();
@@ -72,7 +72,7 @@ export function useAppLoader() {
     // Kick off DZI tile prefetch in the background BEFORE awaiting the
     // websocket connection. `connect()` can take a while (or hang while the
     // game is not running), and we don't want that to delay map readiness.
-    void prefetchMapTiles();
+    void prefetchMapTiles(getMapConfig(null).dziUrl);
 
     try {
       console.log('App mounted - initializing WebSocket connection...');

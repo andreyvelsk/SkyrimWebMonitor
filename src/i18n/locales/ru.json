@@ -194,8 +194,11 @@
         "saveEndpoint": "Сохранить",
         "invalidEndpoint": "Введите корректный адрес WebSocket",
         "reconnect": "Переподключиться",
-        "iconsBy": "Иконки от",
-        "mapFrom": "Карта от"
+        "credits": "Credits",
+        "iconsBy": "Иконки -",
+        "mapFrom": "Карта Тамриэля -",
+        "enderal_attr": "за разработку и ресурсы мода",
+        "thanks": "Благодарности"
       },
       "magicItem": {
         "ready": "Готово",

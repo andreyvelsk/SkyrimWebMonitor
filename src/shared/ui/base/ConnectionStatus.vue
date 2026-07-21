@@ -75,16 +75,7 @@
       </div>
     </div>
 
-    <div class="attribution">
-      <p>
-        {{ $t('shared.ui.connectionStatus.mapFrom') }}
-        <strong>Immersive Paper Map (3rd Edition)</strong>
-      </p>
-      <p>
-        {{ $t('shared.ui.connectionStatus.iconsBy') }}
-        <strong>game-icons.net</strong>
-      </p>
-    </div>
+    <attribution-credits />
 
     <display-controls />
   </div>
@@ -96,6 +87,7 @@ import { useI18n } from 'vue-i18n';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { normalizeWsUrl } from '@/shared/lib/config/websocket';
+import AttributionCredits from './AttributionCredits.vue';
 import DisplayControls from './DisplayControls.vue';
 
 type StatusState =
@@ -302,14 +294,6 @@ function handleReconnect(): void {
 
 .actions {
   margin-top: var(--spacing-sm);
-}
-
-.attribution {
-  align-self: flex-start;
-  margin: 0;
-  font-size: var(--font-size-base, 0.75rem);
-  color: var(--skyrim-text-dim);
-  margin: calc(-1 * var(--spacing-md));
 }
 
 @media (max-width: 520px) {

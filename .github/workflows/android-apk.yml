@@ -52,7 +52,12 @@ jobs:
             --output map-dzi.tar.gz
           tar -xzf map-dzi.tar.gz -C public
           rm map-dzi.tar.gz
-          test -f public/map-dzi/skyrim.dzi
+          for dzi in tamriel vyn vyn_ru; do
+            test -f "public/map-dzi/${dzi}.dzi" || {
+              echo "ERROR: Missing expected DZI: ${dzi}.dzi"
+              exit 1
+            }
+          done
           echo "Tiles extracted: $(find public/map-dzi -name '*.webp' | wc -l) webp files"
 
       - name: Build and sync Capacitor Android assets

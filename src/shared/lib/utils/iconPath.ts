@@ -1,6 +1,6 @@
 /**
- * Получить базовый путь для иконок на основе конфига Vite
- * Использует import.meta.env.BASE_URL, которая берется из vite.config.js (base: '/SkyrimWebMonitor/')
+ * Get the base path for icons based on Vite config
+ * Uses import.meta.env.BASE_URL which comes from vite.config.js (base: '/SkyrimWebMonitor/')
  */
 declare const __USED_ICON_DATA_URLS__: Record<string, string>;
 
@@ -11,8 +11,8 @@ export function getIconBasePath(): string {
 }
 
 /**
- * Построить полный путь до иконки
- * @param iconPath - относительный путь иконки (например: 'lorc/piercing-sword.svg')
+ * Build the full path to an icon
+ * @param iconPath - relative icon path (e.g. 'lorc/piercing-sword.svg')
  */
 export function buildIconPath(iconPath: string): string {
   const embeddedIconUrl = EMBEDDED_ICON_URLS[iconPath];
