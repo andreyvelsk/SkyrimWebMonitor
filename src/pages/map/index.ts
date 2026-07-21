@@ -4,14 +4,9 @@ export {
   mapTileBlobUrls,
   mapTilesPrefetchActive,
   mapTilesPrefetchProgress,
-  MAP_DZI_URL,
 } from './preloadMap';
 export {
-  FWMF_MAP_BOUNDS,
-  FWMF_MAP_IMAGE_HEIGHT,
-  FWMF_MAP_IMAGE_WIDTH,
-  FWMF_MAP_MESH_NAME,
-  projectWorldToImage,
+  createMapProjection,
   useMapProjection,
 } from './composables/useMapProjection';
 export type {
@@ -24,3 +19,5 @@ export {
   MARKER_ICON_MAP,
   resolveMarkerIcon,
 } from './composables/useMapMarkerIcons';
+export { getMapConfig, mapRegistry, DEFAULT_MAP_WORLDSPACE } from './config/mapRegistry';
+export type { MapConfig, MapRegistry, ProjectionData, ImageCorrectionMatrix } from './config/types';

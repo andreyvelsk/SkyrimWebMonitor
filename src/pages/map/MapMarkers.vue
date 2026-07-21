@@ -69,7 +69,7 @@
 import { computed, ref, type StyleValue } from 'vue';
 import { storeToRefs } from 'pinia';
 import { iconUrlToSymbolId } from './composables/iconSprite';
-import { useMapProjection } from './composables/useMapProjection';
+import type { MapProjectionFn } from './composables/useMapProjection';
 import { useProjectedMapMarkers } from './composables/useProjectedMapMarkers';
 import {
   MARKER_BASE_SIZE_PX,
@@ -116,6 +116,10 @@ const props = defineProps<{
   scale: number;
   coverScale: number;
   overlayStyle: StyleValue;
+  /** World→image projection function for the active map. */
+  projectWorldToImage: MapProjectionFn;
+  /** Worldspace of the currently active map (e.g. "Tamriel", "DLC2SolstheimWorld"). */
+  currentWorldspace: string;
 }>();
 
 // =============================================================
@@ -126,12 +130,12 @@ const hotspotsStore = useMapHotspotsStore();
 const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
 const playerStore = useMapPlayerStore();
 const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
-const { projectWorldToImage } = useMapProjection();
 const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarkers({
-  projectWorldToImage,
+  projectWorldToImage: props.projectWorldToImage,
   hotspots,
   questMarkers,
   questIconUrl: QUEST_ICON_URL,
+  currentWorldspace: props.currentWorldspace,
 });
 
 // =============================================================
@@ -298,7 +302,7 @@ const selectedLabelOffset = computed(() => 4 / props.scale);
 const player = computed(() => {
   const dp = playerDisplayPosition.value;
   if (!dp) return null;
-  const projected = projectWorldToImage(dp);
+  const projected = props.projectWorldToImage(dp);
   if (!projected) return null;
   return {
     x: projected.x,

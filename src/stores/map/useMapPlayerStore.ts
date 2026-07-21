@@ -33,19 +33,38 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
   /**
    * Last known `Player::ExteriorPosition`. Refreshed on-demand the moment
    * the player steps into an interior / sub-world; cleared once the player
-   * is back outside in Tamriel and the live feed is renderable again.
+   * is back outside in the current map's worldspace and the live feed is
+   * renderable again.
    */
   const exteriorPosition = ref<ExteriorPosition | null>(null);
+
+  /**
+   * The worldspace of the currently active map (e.g. "Tamriel",
+   * "DLC2SolstheimWorld", "fyn"). Set by TheMap.vue whenever the map
+   * config changes. Defaults to "Tamriel" for backward compatibility.
+   */
+  const currentMapWorldspace = ref<string>('Tamriel');
 
   /** Single in-flight guard so high-frequency ticks don't spam the server. */
   let pendingExteriorQuery = false;
 
   /**
+   * Update the current map's worldspace. Called by TheMap.vue whenever the
+   * map config changes (player crosses a worldspace boundary). Controls which
+   * worldspace is considered "renderable" for live position and exterior
+   * position pinning.
+   */
+  const setCurrentMapWorldspace = (ws: string): void => {
+    currentMapWorldspace.value = ws;
+  };
+
+  /**
    * `true` when `Player::Position` itself can be plotted directly on the
-   * global Tamriel map (player is outside, in Tamriel proper).
+   * current map (player is outside, in the map's worldspace proper).
    */
   const isLivePositionRenderable = (p: PlayerPosition): boolean =>
-    !p.isInterior && p.worldspace === 'Tamriel' && p.parentWorldspace === 'Tamriel';
+    !p.isInterior
+    && p.parentWorldspace === currentMapWorldspace.value;
 
   /**
    * Fire a one-shot query for `Player::ExteriorPosition`. Safe to call
@@ -94,14 +113,14 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
   };
 
   /**
-   * Resolved player position to render on the global Tamriel map, following
+   * Resolved player position to render on the current map, following
    * the recommended client logic (see docs/Player.md → "Recommended client
    * logic for a global Tamriel map"):
    *
-   *  - Outside in Tamriel proper → use live `(x, y)`.
-   *  - Interior / Tamriel sub-world with a Tamriel-rooted `extPos` →
-   *    pin to the cached entrance `(x, y)` (`pinned = true`).
-   *  - Solstheim or other non-Tamriel top-level world → `null` (caller
+   *  - Outside in the current map's worldspace → use live `(x, y)`.
+   *  - Interior / sub-world with an entrance rooted in the current map's
+   *    worldspace → pin to the cached entrance `(x, y)` (`pinned = true`).
+   *  - Worldspace that doesn't match the current map → `null` (caller
    *    should hide the marker or switch maps).
    *
    * `angle` always comes from the live feed so the icon's heading stays
@@ -119,7 +138,7 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
       return { x: p.x, y: p.y, angle: p.angle, pinned: false };
     }
     const ext = exteriorPosition.value;
-    if (ext && ext.parentWorldspace === 'Tamriel') {
+    if (ext && ext.parentWorldspace === currentMapWorldspace.value) {
       return { x: ext.x, y: ext.y, angle: p.angle, pinned: true };
     }
     return null;
@@ -129,7 +148,9 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
     position,
     exteriorPosition,
     displayPosition,
+    currentMapWorldspace,
     setPosition,
+    setCurrentMapWorldspace,
     requestExteriorPosition,
   };
 });

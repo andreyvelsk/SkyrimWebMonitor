@@ -1,5 +1,5 @@
 import { computed, type ComputedRef } from 'vue';
-import tamrielProjection from '../data/tamrielProjection.json';
+import type { MapConfig, ProjectionData, ImageCorrectionMatrix } from '../config/types';
 
 export interface Point {
   x: number;
@@ -13,27 +13,21 @@ export interface ProjectedPoint extends Point {
 
 export type MapProjectionFn = (point: Point) => ProjectedPoint | null;
 
-interface ProjectionBounds {
-  minX: number;
-  minY: number;
-  maxX: number;
-  maxY: number;
-  minU: number;
-  minV: number;
-  maxU: number;
-  maxV: number;
-}
-
-interface ProjectionData {
-  meshName: string;
+export interface UseMapProjection {
+  projectWorldToImage: MapProjectionFn;
   imageWidth: number;
   imageHeight: number;
-  bounds: ProjectionBounds;
-  vertexStride: 4;
-  triangleStride: 3;
-  vertices: number[];
-  triangles: number[];
+  meshName: string;
+  bounds: ProjectionData['bounds'];
+  isReady: ComputedRef<boolean>;
 }
+
+// =============================================================
+// Internal state (per-instance, set by createMapProjection)
+// =============================================================
+
+const GRID_SIZE = 128;
+const BARYCENTRIC_EPSILON = -1e-6;
 
 interface TriangleGrid {
   cellWidth: number;
@@ -41,106 +35,102 @@ interface TriangleGrid {
   buckets: number[][];
 }
 
-interface ImageCorrectionMatrix {
-  a: number;
-  b: number;
-  c: number;
-  d: number;
-  e: number;
-  f: number;
-}
+/**
+ * Create a self-contained map projection engine from a MapConfig.
+ *
+ * All state (vertices, triangles, grid, correction matrix) is captured
+ * at creation time — no global mutable state. Call this once per map
+ * and pass the returned `projectWorldToImage` to markers / player overlay.
+ */
+export function createMapProjection(config: MapConfig): UseMapProjection {
+  const projectionData = config.projectionData;
+  const imageCorrection: ImageCorrectionMatrix | undefined = config.imageCorrection;
 
-export interface UseMapProjection {
-  projectWorldToImage: MapProjectionFn;
-  imageWidth: number;
-  imageHeight: number;
-  meshName: string;
-  bounds: ProjectionBounds;
-  isReady: ComputedRef<boolean>;
-}
+  const vertices = Float64Array.from(projectionData.vertices);
+  const triangles = Uint32Array.from(projectionData.triangles);
+  const triangleGrid = buildTriangleGrid(projectionData, vertices, triangles);
 
-const projectionData = tamrielProjection as ProjectionData;
-const GRID_SIZE = 128;
-const BARYCENTRIC_EPSILON = -1e-6;
-export const ENABLE_IMAGE_CORRECTION = true;
-const IMAGE_CORRECTION: ImageCorrectionMatrix = {
-  "a": 1.0009632654426412,
-  "c": 0.0024280042349955015,
-  "e": -7.934611523904017,
-  "b": -0.001708694270502052,
-  "d": 1.010553408600275,
-  "f": -37.5297259438135
-};
-const vertices = Float64Array.from(projectionData.vertices);
-const triangles = Uint32Array.from(projectionData.triangles);
-const triangleGrid = buildTriangleGrid();
+  function projectWorldToImage(point: Point): ProjectedPoint | null {
+    if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return null;
+    if (!isInsideBounds(point.x, point.y, projectionData.bounds)) return null;
 
-export const FWMF_MAP_IMAGE_WIDTH = projectionData.imageWidth;
-export const FWMF_MAP_IMAGE_HEIGHT = projectionData.imageHeight;
-export const FWMF_MAP_MESH_NAME = projectionData.meshName;
-export const FWMF_MAP_BOUNDS = projectionData.bounds;
+    const bucket = getBucket(point.x, point.y, projectionData.bounds, triangleGrid);
+    if (!bucket) return null;
 
-export function useMapProjection(): UseMapProjection {
+    for (let i = 0; i < bucket.length; i += 1) {
+      const triangleOffset = bucket[i];
+      const ia = triangles[triangleOffset] * projectionData.vertexStride;
+      const ib = triangles[triangleOffset + 1] * projectionData.vertexStride;
+      const ic = triangles[triangleOffset + 2] * projectionData.vertexStride;
+      const weights = getBarycentricWeights(point.x, point.y, ia, ib, ic, vertices);
+
+      if (!weights) continue;
+
+      const u =
+        weights.a * vertices[ia + 2] +
+        weights.b * vertices[ib + 2] +
+        weights.c * vertices[ic + 2];
+      const v =
+        weights.a * vertices[ia + 3] +
+        weights.b * vertices[ib + 3] +
+        weights.c * vertices[ic + 3];
+
+      const rawPoint = {
+        x: u * projectionData.imageWidth,
+        y: v * projectionData.imageHeight,
+      };
+      const corrected = imageCorrection ? applyImageCorrection(rawPoint, imageCorrection) : rawPoint;
+
+      return {
+        x: corrected.x,
+        y: corrected.y,
+        u,
+        v,
+      };
+    }
+
+    return null;
+  }
+
   return {
     projectWorldToImage,
-    imageWidth: FWMF_MAP_IMAGE_WIDTH,
-    imageHeight: FWMF_MAP_IMAGE_HEIGHT,
-    meshName: FWMF_MAP_MESH_NAME,
-    bounds: FWMF_MAP_BOUNDS,
+    imageWidth: projectionData.imageWidth,
+    imageHeight: projectionData.imageHeight,
+    meshName: projectionData.meshName,
+    bounds: projectionData.bounds,
     isReady: computed(() => true),
   };
 }
 
-export function projectWorldToImage(point: Point): ProjectedPoint | null {
-  if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return null;
-  if (!isInsideBounds(point.x, point.y)) return null;
+// =============================================================
+// Vue composable — thin wrapper for reactive usage in components
+// =============================================================
 
-  const bucket = getBucket(point.x, point.y);
-  if (!bucket) return null;
-
-  for (let i = 0; i < bucket.length; i += 1) {
-    const triangleOffset = bucket[i];
-    const ia = triangles[triangleOffset] * projectionData.vertexStride;
-    const ib = triangles[triangleOffset + 1] * projectionData.vertexStride;
-    const ic = triangles[triangleOffset + 2] * projectionData.vertexStride;
-    const weights = getBarycentricWeights(point.x, point.y, ia, ib, ic);
-
-    if (!weights) continue;
-
-    const u =
-      weights.a * vertices[ia + 2] +
-      weights.b * vertices[ib + 2] +
-      weights.c * vertices[ic + 2];
-    const v =
-      weights.a * vertices[ia + 3] +
-      weights.b * vertices[ib + 3] +
-      weights.c * vertices[ic + 3];
-
-    const rawPoint = {
-      x: u * projectionData.imageWidth,
-      y: v * projectionData.imageHeight,
-    };
-    const corrected = ENABLE_IMAGE_CORRECTION ? applyImageCorrection(rawPoint) : rawPoint;
-
-    return {
-      x: corrected.x,
-      y: corrected.y,
-      u,
-      v,
-    };
-  }
-
-  return null;
+/**
+ * Vue composable that creates (or reuses) a projection engine for the
+ * given MapConfig. In a typical SPA the config is stable per map, so
+ * the engine is created once and held by the component's setup scope.
+ */
+export function useMapProjection(config: MapConfig): UseMapProjection {
+  return createMapProjection(config);
 }
 
-function applyImageCorrection(point: Point): Point {
+// =============================================================
+// Pure helpers (no global state)
+// =============================================================
+
+function applyImageCorrection(point: Point, m: ImageCorrectionMatrix): Point {
   return {
-    x: IMAGE_CORRECTION.a * point.x + IMAGE_CORRECTION.c * point.y + IMAGE_CORRECTION.e,
-    y: IMAGE_CORRECTION.b * point.x + IMAGE_CORRECTION.d * point.y + IMAGE_CORRECTION.f,
+    x: m.a * point.x + m.c * point.y + m.e,
+    y: m.b * point.x + m.d * point.y + m.f,
   };
 }
 
-function buildTriangleGrid(): TriangleGrid {
+function buildTriangleGrid(
+  projectionData: ProjectionData,
+  vertices: Float64Array,
+  triangles: Uint32Array,
+): TriangleGrid {
   const { bounds } = projectionData;
   const cellWidth = (bounds.maxX - bounds.minX) / GRID_SIZE;
   const cellHeight = (bounds.maxY - bounds.minY) / GRID_SIZE;
@@ -169,11 +159,15 @@ function buildTriangleGrid(): TriangleGrid {
   return { cellWidth, cellHeight, buckets };
 }
 
-function getBucket(x: number, y: number): number[] | null {
-  const { bounds } = projectionData;
-  const gridX = getGridIndex(x, bounds.minX, triangleGrid.cellWidth);
-  const gridY = getGridIndex(y, bounds.minY, triangleGrid.cellHeight);
-  return triangleGrid.buckets[gridY * GRID_SIZE + gridX] ?? null;
+function getBucket(
+  x: number,
+  y: number,
+  bounds: ProjectionData['bounds'],
+  grid: TriangleGrid,
+): number[] | null {
+  const gridX = getGridIndex(x, bounds.minX, grid.cellWidth);
+  const gridY = getGridIndex(y, bounds.minY, grid.cellHeight);
+  return grid.buckets[gridY * GRID_SIZE + gridX] ?? null;
 }
 
 function getGridIndex(value: number, min: number, cellSize: number): number {
@@ -181,8 +175,7 @@ function getGridIndex(value: number, min: number, cellSize: number): number {
   return clamp(index, 0, GRID_SIZE - 1);
 }
 
-function isInsideBounds(x: number, y: number): boolean {
-  const { bounds } = projectionData;
+function isInsideBounds(x: number, y: number, bounds: ProjectionData['bounds']): boolean {
   return x >= bounds.minX && x <= bounds.maxX && y >= bounds.minY && y <= bounds.maxY;
 }
 
@@ -191,7 +184,8 @@ function getBarycentricWeights(
   y: number,
   ia: number,
   ib: number,
-  ic: number
+  ic: number,
+  vertices: Float64Array,
 ): { a: number; b: number; c: number } | null {
   const ax = vertices[ia];
   const ay = vertices[ia + 1];
@@ -217,3 +211,14 @@ function getBarycentricWeights(
 function clamp(value: number, min: number, max: number): number {
   return value < min ? min : value > max ? max : value;
 }
+
+// =============================================================
+// Backward-compatible re-exports (deprecated — use MapConfig)
+// =============================================================
+
+export {
+  /** @deprecated Import from `mapRegistry` instead. */
+  type ProjectionData,
+  /** @deprecated Import from `mapRegistry` instead. */
+  type ImageCorrectionMatrix,
+};

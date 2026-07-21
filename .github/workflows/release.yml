@@ -73,7 +73,12 @@ jobs:
             --output map-dzi.tar.gz
           tar -xzf map-dzi.tar.gz -C public
           rm map-dzi.tar.gz
-          test -f public/map-dzi/skyrim.dzi
+          for dzi in tamriel vyn vyn_ru; do
+            test -f "public/map-dzi/${dzi}.dzi" || {
+              echo "ERROR: Missing expected DZI: ${dzi}.dzi"
+              exit 1
+            }
+          done
 
       - name: Decode Android keystore
         env:
