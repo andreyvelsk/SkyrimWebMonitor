@@ -193,8 +193,11 @@
         "saveEndpoint": "Save",
         "invalidEndpoint": "Enter a valid WebSocket address",
         "reconnect": "Reconnect",
-        "iconsBy": "Icons by",
-        "mapFrom": "Map from"
+        "credits": "Credits",
+        "iconsBy": "Icons -",
+        "mapFrom": "Tamriel map -",
+        "enderal_attr": "for development and assets of",
+        "thanks": "Thanks"
       },
       "magicItem": {
         "ready": "Ready",
