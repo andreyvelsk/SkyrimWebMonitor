@@ -64,6 +64,27 @@ jobs:
           echo "Pyramid size: $(du -sh map-build/map-dzi | cut -f1)"
           ls -la map-build/map-dzi/
 
+      - name: Validate generated DZI files
+        run: |
+          echo "=== Validating DZI output ==="
+          FAILED=0
+          for png in map-build/maps/*.png; do
+            name=$(basename "$png" .png)
+            dzi="map-build/map-dzi/${name}.dzi"
+            if [ -f "$dzi" ]; then
+              tile_count=$(find "map-build/map-dzi/${name}_files" -name '*.webp' 2>/dev/null | wc -l)
+              echo "  ✓ ${name}.dzi (${tile_count} tiles)"
+            else
+              echo "  ✗ MISSING: ${name}.dzi — vips dzsave may have failed"
+              FAILED=1
+            fi
+          done
+          if [ "$FAILED" -ne 0 ]; then
+            echo "ERROR: One or more DZI files are missing. Check vips dzsave output above."
+            exit 1
+          fi
+          echo "All DZI files present."
+
       - name: Package tiles
         run: |
           cd map-build
