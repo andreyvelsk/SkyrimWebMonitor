@@ -39,8 +39,8 @@ const V_MAX = 1.0;
 
 export const tamrielProjection: ProjectionData = {
   ...BASE_PROJECTION,
-  imageWidth: 16384,
-  imageHeight: 16384,
+  imageWidth: 8192,
+  imageHeight: 8192,
   bounds: {
     minX: X_MIN,
     minY: Y_MIN,
