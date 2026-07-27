@@ -164,7 +164,7 @@ export default defineConfig(({ mode }) => {
             'map-dzi/**/*.dzi',
             ...USED_ICONS.map((p) => `icons/${p}`),
           ],
-          globIgnores: ['**/node_modules/**/*', 'fixtures.json', 'skyrim.png', 'skyrim.dds'],
+          globIgnores: ['**/node_modules/**/*', 'fixtures.json', 'skyrim.png', 'skyrim.dds', 'maps/**'],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           // Serve index.html from precache for any SPA navigation when
           // offline; online requests still hit the network first via the
