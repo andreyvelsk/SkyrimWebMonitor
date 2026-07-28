@@ -24,6 +24,7 @@ A Vue 3 + Vite PWA + capacitor + electron companion app for **The Elder Scrolls 
 - Multilingual UI (English / Russian) via `vue-i18n`
 - Skyrim-themed responsive design, optimized for handhelds
 - Works fully client-side — no backend besides the in-game plugin
+- Now app also has **[Enderal SE](http://sureai.net/games/enderal/)** support, with game map! (tested on latest GOG version)
 
 ## Quick start (use the public app)
 
