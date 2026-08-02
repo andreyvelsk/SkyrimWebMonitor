@@ -1,8 +1,8 @@
 /**
  * Dev-only logger.
  *
- * Используйте `logger.log(...)` вместо `console.log(...)`.
- * В production-сборке вызовы не попадут в бандл (tree-shaking через `import.meta.env.DEV`).
+ * Use `logger.log(...)` instead of `console.log(...)`.
+ * In production builds, calls are tree-shaken out of the bundle (via `import.meta.env.DEV`).
  *
  * @example
  * ```ts

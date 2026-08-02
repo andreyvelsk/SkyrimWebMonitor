@@ -1,28 +1,28 @@
-# Калибровка проекции для новой карты
+# Projection Calibration for a New Map
 
-## Обзор
+## Overview
 
-Когда нет BTR-файла с FWMF-мешем (или меш состоит из множества файлов), проекцию можно вычислить **калибровкой по опорным точкам**. Метод подбирает параметры квад-проекции (`minX`, `maxX`, `minY`, `maxY`) напрямую, минимизируя ошибку на всех точках, и вычисляет остаточную `imageCorrection`-матрицу.
+When there is no BTR file with an FWMF mesh (or the mesh consists of many files), the projection can be computed via **reference point calibration**. The method fits quad projection parameters (`minX`, `maxX`, `minY`, `maxY`) directly, minimizing error across all points, and computes the residual `imageCorrection` matrix.
 
-## Необходимые данные
+## Required Data
 
-1. **Размер изображения** карты в пикселях (`imageWidth` × `imageHeight`)
-2. **Минимум 3 опорные точки** (рекомендуется 5–9 для лучшей точности). Каждая точка — пара:
-   - **Игровые координаты** `(gameX, gameY)` — из данных сервера (hotspots) или консоли игры (`player.getpos x/y`)
-   - **Пиксельные координаты** `(imageX, imageY)` — клик по локации на карте в приложении; координаты выводятся в консоль браузера: `[map] image px: { x: ..., y: ... }`
+1. **Image dimensions** of the map in pixels (`imageWidth` × `imageHeight`)
+2. **At least 3 reference points** (5–9 recommended for better accuracy). Each point is a pair:
+   - **Game coordinates** `(gameX, gameY)` — from server data (hotspots) or the game console (`player.getpos x/y`)
+   - **Pixel coordinates** `(imageX, imageY)` — click on a location on the map in the app; coordinates are printed to the browser console: `[map] image px: { x: ..., y: ... }`
 
-   **Важно**: точки должны быть равномерно распределены по карте (центр + 4 угла/края). Точки только в центре дадут плохую экстраполяцию к краям.
+   **Important**: points should be evenly distributed across the map (center + 4 corners/edges). Points only in the center will give poor extrapolation to the edges.
 
-## Шаги
+## Steps
 
-### 1. Собрать опорные точки
+### 1. Collect reference points
 
-Запустите приложение, откройте нужную карту. Для каждой известной локации:
-- Запишите её игровые координаты (из данных сервера — поле `x`, `y` в hotspots)
-- Кликните по ней на карте — в консоли появится `[map] image px: { x: ..., y: ... }`
-- Запишите пару: `gameX, gameY → imageX, imageY`
+Launch the app, open the desired map. For each known location:
+- Record its game coordinates (from server data — `x`, `y` fields in hotspots)
+- Click on it on the map — the console will show `[map] image px: { x: ..., y: ... }`
+- Record the pair: `gameX, gameY → imageX, imageY`
 
-### 2. Запустить скрипт калибровки
+### 2. Run the calibration script
 
 ```bash
 python scripts/calibrate-map-projection.py \
@@ -34,7 +34,7 @@ python scripts/calibrate-map-projection.py \
   --worldspace Vyn
 ```
 
-Формат `calibration_points.json`:
+Format of `calibration_points.json`:
 
 ```json
 [
@@ -44,20 +44,20 @@ python scripts/calibrate-map-projection.py \
 ]
 ```
 
-### 3. Проверить результат
+### 3. Verify the result
 
-Скрипт выведет:
-- Вычисленные bounds (`X_MIN`, `X_MAX`, `Y_MIN`, `Y_MAX`)
-- Матрицу `imageCorrection`
-- Ошибку на каждой точке (должна быть < 1 пикселя)
+The script will output:
+- Computed bounds (`X_MIN`, `X_MAX`, `Y_MIN`, `Y_MAX`)
+- `imageCorrection` matrix
+- Error at each point (should be < 1 pixel)
 
-Если ошибка на каких-то точках > 2–3 пикселей — добавьте ещё точек в проблемных областях и перезапустите.
+If the error at any point is > 2–3 pixels — add more points in problem areas and re-run.
 
-## Как работает метод (математика)
+## How the Method Works (Math)
 
-### Квад-проекция
+### Quad Projection
 
-4 вершины меша задают отображение игрового прямоугольника на текстурный:
+The 4 mesh vertices define a mapping from the game rectangle to the texture rectangle:
 
 ```
 X_MAX, Y_MAX, U_MAX(1), V_MIN(0)  — top-right
@@ -66,30 +66,30 @@ X_MIN, Y_MIN, U_MIN(0), V_MAX(1)  — bottom-left
 X_MAX, Y_MIN, U_MAX(1), V_MAX(1)  — bottom-right
 ```
 
-Барицентрическая интерполяция внутри quad сводится к линейной:
+Barycentric interpolation inside the quad reduces to linear:
 
 ```
 rawX = (gameX - minX) / (maxX - minX) * imageWidth
 rawY = (maxY - gameY) / (maxY - minY) * imageHeight
 ```
 
-### Подгонка bounds (метод наименьших квадратов)
+### Bounds Fitting (Least Squares)
 
-Переписываем проекцию как линейную функцию:
+Rewrite the projection as a linear function:
 
 ```
-rawX = sx * gameX + ox,   где sx = IW / (maxX - minX),  ox = -minX * sx
-rawY = sy * gameY + oy,   где sy = -IH / (maxY - minY), oy = maxY * IH / (maxY - minY)
+rawX = sx * gameX + ox,   where sx = IW / (maxX - minX),  ox = -minX * sx
+rawY = sy * gameY + oy,   where sy = -IH / (maxY - minY), oy = maxY * IH / (maxY - minY)
 ```
 
-Для каждой оси решаем линейную регрессию `(gameCoord) → (imageCoord)`:
+For each axis, solve linear regression `(gameCoord) → (imageCoord)`:
 
 ```
 sx = (n*Σ(gx*ix) - Σgx*Σix) / (n*Σ(gx²) - (Σgx)²)
 ox = (Σix - sx*Σgx) / n
 ```
 
-Из `sx, ox` восстанавливаем bounds:
+Recover bounds from `sx, ox`:
 
 ```
 maxX - minX = IW / sx
@@ -101,22 +101,22 @@ maxY = -oy / sy
 minY = maxY - (maxY - minY)
 ```
 
-### Остаточная imageCorrection
+### Residual imageCorrection
 
-После подгонки bounds ошибка на точках < 1–2 px. Остаточная аффинная матрица убирает и её:
+After bounds fitting, the error at points is < 1–2 px. The residual affine matrix eliminates it:
 
 ```
 correctedX = a*rawX + c*rawY + e
 correctedY = b*rawX + d*rawY + f
 ```
 
-Вычисляется методом наименьших квадратов по парам `(rawX, rawY) → (imageX, imageY)`.
+Computed via least squares on pairs `(rawX, rawY) → (imageX, imageY)`.
 
-## Сравнение с BTR-методом
+## Comparison with BTR Method
 
-| | BTR (Tamriel) | Калибровка (Vyn) |
+| | BTR (Tamriel) | Calibration (Vyn) |
 |---|---|---|
-| Источник bounds | FWMF-меш из .btr | Подгонка по опорным точкам |
-| Точность | Абсолютная (меш из игры) | ~1 px при 5+ точках |
-| Требуется .btr | Да (один файл) | Нет |
-| imageCorrection | Компенсирует artist distortion | Компенсирует остаток ~1 px |
+| Bounds source | FWMF mesh from .btr | Fitting via reference points |
+| Accuracy | Absolute (mesh from game) | ~1 px with 5+ points |
+| Requires .btr | Yes (single file) | No |
+| imageCorrection | Compensates for artist distortion | Compensates for ~1 px residual |
