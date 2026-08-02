@@ -34,7 +34,7 @@ jobs:
         # from downloading the ~120 MB electron binary — not needed for web builds.
         env:
           ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
-        run: npm ci --legacy-peer-deps
+        run: npm ci
 
       - name: Lint
         run: npm run lint
