@@ -1,4 +1,4 @@
-import type { ProjectionData } from '../../config/types';
+import type { ProjectionData } from '../../config/lib/types';
 import { BASE_PROJECTION } from './constants';
 
 /**

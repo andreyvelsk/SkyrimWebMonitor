@@ -1,5 +1,5 @@
-import type { HotkeySlotEntry } from '@/stores/hotkeys/types';
-import type { CategoryType } from '@/stores/inventory/types';
+import type { HotkeySlotEntry } from '@/stores/hotkeys/lib/types';
+import type { CategoryType } from '@/stores/inventory/lib/types';
 import { getWeaponIconPath } from '@/shared/lib/constants/weaponIcons';
 import { getApparelIconPath } from '@/shared/lib/constants/apparelIcons';
 import { MAGIC_SCHOOL_ICON_PATHS } from '@/shared/lib/constants/magicSchoolIcons';

@@ -5,7 +5,7 @@ import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { saveConfiguredWsUrl } from '@/shared/lib/config/websocket';
 import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
-import type { Subscription } from './types';
+import type { Subscription } from './lib/types';
 import { SYSTEM_QUERY_ID, SYSTEM_QUERY_FIELDS, useSystemStore } from '@/stores/system/useSystemStore';
 import { applyFixturesIfEnabled } from '@/stores/fixtures/fixtureLoader';
 import { logger } from '@/shared/lib/utils/logger';

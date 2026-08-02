@@ -1,1 +1,1 @@
-export { default as IngredientPreview } from './IngredientPreview.vue';
+export { default as IngredientPreview } from './ingredient-preview/IngredientPreview.vue';

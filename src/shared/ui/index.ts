@@ -11,5 +11,4 @@ export * from './items/index';
 export * from './base/index';
 
 // Equipped hand icon
-export { default as EquippedHandIcon } from './EquippedHandIcon.vue';
-
+export { default as EquippedHandIcon } from './equipped-hand-icon/EquippedHandIcon.vue';

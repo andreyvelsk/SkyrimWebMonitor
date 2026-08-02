@@ -9,8 +9,10 @@ import type {
   QueryMessage,
   CommandMessage,
   SendCommandOptions,
-} from './protocol';
-import type { MessageHandler, EventCallback, RegistrationCleanup } from './types';
+  MessageHandler,
+  EventCallback,
+  RegistrationCleanup,
+} from './lib/types';
 import { logger } from '@/shared/lib/utils/logger';
 
 class WebSocketClient {

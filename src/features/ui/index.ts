@@ -1,1 +1,1 @@
-export { default as InventoryList } from './items/InventoryList.vue';
+export { default as InventoryList } from './items/inventory-list/InventoryList.vue';

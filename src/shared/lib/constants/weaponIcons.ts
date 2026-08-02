@@ -1,4 +1,4 @@
-import { WEAPON_TYPES, type WeaponType } from '@/stores/inventory/types';
+import { WEAPON_TYPES, type WeaponType } from '@/stores/inventory/lib/types';
 
 export const WEAPON_ICON_PATHS: Record<Exclude<WeaponType, null>, string> = {
   [WEAPON_TYPES.ONE_HAND_SWORD]: 'lorc/piercing-sword.svg',

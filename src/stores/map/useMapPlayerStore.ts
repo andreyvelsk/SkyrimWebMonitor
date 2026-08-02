@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { ExteriorPosition, PlayerPosition } from './types';
+import type { ExteriorPosition, PlayerPosition } from './lib/types';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 
 /**

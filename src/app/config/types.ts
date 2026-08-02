@@ -29,3 +29,14 @@ export interface CategorySubscriptionConfig {
   subscriptionId: string;
   fields: Record<string, string>;
 }
+
+export interface GlobalSubscriptionConfig {
+  subscriptionId: string;
+  fields: Record<string, string>;
+  settings?: {
+    /** Push interval in milliseconds. Defaults to the WS client's default when omitted. */
+    frequency?: number;
+    /** Only push when values change. */
+    sendOnChange?: boolean;
+  };
+}

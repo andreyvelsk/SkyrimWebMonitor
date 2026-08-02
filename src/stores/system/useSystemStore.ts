@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { i18n, mapGameLanguage } from '@/i18n';
 import { logger } from '@/shared/lib/utils/logger';
-import type { Feature, Features } from './types';
+import type { Feature, Features } from './lib/types';
 
 export const SYSTEM_QUERY_ID = 'system';
 export const SYSTEM_QUERY_FIELDS = {

@@ -5,7 +5,7 @@ import type {
   MapHotspotsState,
   MapQuestMarker,
   MapQuestMarkersState,
-} from './types';
+} from './lib/types';
 
 export const useMapHotspotsStore = defineStore('mapHotspots', () => {
   /** Current list of hotspots. Empty until the server delivers a payload. */

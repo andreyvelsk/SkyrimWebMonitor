@@ -1,4 +1,4 @@
-import type { ProjectionData } from '../../config/types';
+import type { ProjectionData } from '../../config/lib/types';
 
 /**
  * Common constants for FWMF map projections.

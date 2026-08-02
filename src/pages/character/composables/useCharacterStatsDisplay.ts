@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useCharacterStore } from '@/stores/character/useCharacterStore';
-import type { CharacterStatsDisplay } from './types';
+import type { CharacterStatsDisplay } from '@/pages/character/lib/types';
 
 /**
  * Use character stats display

@@ -1,8 +1,9 @@
-export { default as TheWeapons } from './TheWeapons.vue';
-export { default as TheApparel } from './TheApparel.vue';
-export { default as TheFood } from './TheFood.vue';
-export { default as TheIngredients } from './TheIngredients.vue';
-export { default as TheBooks } from './TheBooks.vue';
-export { default as ThePotions } from './ThePotions.vue';
-export { default as TheMisc } from './TheMisc.vue';
-export { default as TheScrolls } from './TheScrolls.vue';
+export { default as TheWeapons } from './the-weapons/TheWeapons.vue';
+export { default as TheApparel } from './the-apparel/TheApparel.vue';
+export { default as TheFood } from './the-food/TheFood.vue';
+export { default as TheIngredients } from './the-ingredients/TheIngredients.vue';
+export { default as TheBooks } from './the-books/TheBooks.vue';
+export { default as ThePotions } from './the-potions/ThePotions.vue';
+export { default as TheMisc } from './the-misc/TheMisc.vue';
+export { default as TheScrolls } from './the-scrolls/TheScrolls.vue';
+export { default as TheKeys } from './the-keys/TheKeys.vue';

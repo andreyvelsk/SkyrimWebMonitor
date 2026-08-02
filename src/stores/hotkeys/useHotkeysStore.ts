@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { HotkeySlot } from '@/api/websocket';
-import type { HotkeyItemsState, HotkeySlotEntry } from './types';
+import type { HotkeyItemsState, HotkeySlotEntry } from './lib/types';
 
 const EMPTY_SLOTS: HotkeySlotEntry[] = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- values are hardcoded 1..8, guaranteed valid

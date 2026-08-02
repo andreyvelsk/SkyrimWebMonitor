@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { CharacterStats } from './types';
+import type { CharacterStats } from './lib/types';
 
 export const useCharacterStore = defineStore('character', () => {
   // State for character/stats page

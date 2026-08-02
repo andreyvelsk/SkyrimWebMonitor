@@ -1,4 +1,4 @@
-import type { MapHotspotType } from '@/stores/map/types';
+import type { MapHotspotType } from '@/stores/map/lib/types';
 import { buildIconPath } from '@/shared/lib/utils/iconPath';
 
 // =============================================================

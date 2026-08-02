@@ -1,4 +1,4 @@
-import type { CharacterStats } from '@/stores/character/types';
+import type { CharacterStats } from '@/stores/character/lib/types';
 import type {
   WeaponsState,
   ApparelState,
@@ -20,18 +20,18 @@ import type {
   MiscItem,
   GemItem,
   AmmoItem,
-} from '@/stores/inventory/types';
-import { CATEGORY_TYPES } from '@/stores/inventory/types';
-import type { CategoriesData } from '@/shared/lib/types/types';
-import type { MagicState, MagicSchoolState, SpellItem, ShoutsState, ShoutItem } from '@/stores/magic/types';
-import type { QuestsState, QuestJournalEntry, QuestListSection } from '@/stores/quests/types';
-import type { HotkeyItemsState } from '@/stores/hotkeys/types';
-import type { GameStatusData } from '@/stores/game/types';
+} from '@/stores/inventory/lib/types';
+import { CATEGORY_TYPES } from '@/stores/inventory/lib/types';
+import type { CategoriesData } from '@/shared/lib/types';
+import type { MagicState, MagicSchoolState, SpellItem, ShoutsState, ShoutItem } from '@/stores/magic/lib/types';
+import type { QuestsState, QuestJournalEntry, QuestListSection } from '@/stores/quests/lib/types';
+import type { HotkeyItemsState } from '@/stores/hotkeys/lib/types';
+import type { GameStatusData } from '@/stores/game/lib/types';
 import type {
   MapHotspotsState,
   MapQuestMarkersState,
   PlayerPosition,
-} from '@/stores/map/types';
+} from '@/stores/map/lib/types';
 
 /** Type guard: narrows `unknown` to `Record<string, unknown>` for safe property access without `as`. */
 function isRecord(obj: unknown): obj is Record<string, unknown> {

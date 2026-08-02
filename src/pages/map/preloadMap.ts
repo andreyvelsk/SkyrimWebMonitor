@@ -1,19 +1,10 @@
 import { ref } from 'vue';
 import { logger } from '@/shared/lib/utils/logger';
+import type { MapTilesManifest, DziInfo } from './lib/types';
 
 const MAP_TILES_MANIFEST_URL = `${import.meta.env.BASE_URL}map-tiles/manifest.json`;
 const MAP_DZI_INFO_STORAGE_KEY = 'map-dzi-info-v1';
 const MAP_TILE_CACHE_NAME = 'map-dzi-tiles';
-
-export interface MapTilesManifest {
-  width: number;
-  height: number;
-  tileSize: number;
-  cols: number;
-  rows: number;
-  format: 'webp' | 'jpg' | 'png';
-  basePath: string;
-}
 
 function normalizeTilesBasePath(rawBasePath: string): string {
   const trimmed = rawBasePath.trim();
@@ -117,16 +108,6 @@ export const mapTilesPrefetchActive = ref(false);
 export const mapTilesPrefetchProgress = ref(0);
 
 const PREFETCH_CONCURRENCY = 12;
-
-interface DziInfo {
-  width: number;
-  height: number;
-  tileSize: number;
-  overlap: number;
-  format: string;
-  /** Base URL of the per-level tile folders (no trailing slash). */
-  tilesBase: string;
-}
 
 function saveDziInfo(info: DziInfo): void {
   try {

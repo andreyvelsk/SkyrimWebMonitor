@@ -1,4 +1,4 @@
-export { default as TheMap } from './TheMap.vue';
+export { default as TheMap } from './the-map/TheMap.vue';
 export {
   prefetchMapTiles,
   mapTileBlobUrls,
@@ -13,11 +13,11 @@ export type {
   MapProjectionFn,
   ProjectedPoint,
   UseMapProjection,
-} from './composables/useMapProjection';
+} from './lib/types';
 export {
   DEFAULT_MARKER_ICON,
   MARKER_ICON_MAP,
   resolveMarkerIcon,
 } from './composables/useMapMarkerIcons';
 export { getMapConfig, mapRegistry, DEFAULT_MAP_WORLDSPACE } from './config/mapRegistry';
-export type { MapConfig, MapRegistry, ProjectionData, ImageCorrectionMatrix } from './config/types';
+export type { MapConfig, MapRegistry, ProjectionData, ImageCorrectionMatrix } from './config/lib/types';

@@ -1,4 +1,4 @@
-import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
+import type { ItemEnchantmentEffect } from '@/shared/lib/types';
 
 function escapeHtml(input: string): string {
   return input

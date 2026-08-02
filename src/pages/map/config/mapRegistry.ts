@@ -1,4 +1,4 @@
-import type { MapConfig, MapRegistry } from './types';
+import type { MapConfig, MapRegistry } from './lib/types';
 import { tamrielProjection, TAMRIEL_IMAGE_CORRECTION } from '../data/projections/tamriel.ts';
 import { vynProjection, VYN_IMAGE_CORRECTION } from '../data/projections/vyn.ts';
 

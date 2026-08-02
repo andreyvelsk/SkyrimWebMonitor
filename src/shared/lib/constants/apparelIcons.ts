@@ -1,4 +1,4 @@
-import { BODY_SLOTS, type BodySlot } from '@/stores/inventory/types';
+import { BODY_SLOTS, type BodySlot } from '@/stores/inventory/lib/types';
 
 export const APPAREL_ICON_PATHS: Record<BodySlot, string> = {
   [BODY_SLOTS.HEAD]: 'caro-asercion/warlord-helmet.svg',

@@ -7,7 +7,7 @@ import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { useQuestStore } from '@/stores/quests/useQuestStore';
-import type { RouterResult } from './types';
+import type { RouterResult } from './lib/types';
 import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isShoutsData, isHotkeyItemsData, isQuestsData, isGameStatusData, isMapHotspotsData, isMapQuestMarkersData, isPlayerPositionData } from './typeGuards';
 import { logger } from '@/shared/lib/utils/logger';
 
