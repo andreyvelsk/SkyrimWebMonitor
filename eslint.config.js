@@ -1,9 +1,14 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import fs from 'node:fs';
 import js from '@eslint/js';
 import pluginVue from 'eslint-plugin-vue';
+import vueEslintParser from 'vue-eslint-parser';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import globals from 'globals';
 import importX from 'eslint-plugin-import-x';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 
 // ============================================================
 // Shared settings
@@ -15,16 +20,73 @@ const commonGlobals = {
   __USED_ICON_DATA_URLS__: 'readonly'
 };
 
+// ============================================================
+// Custom resolver for @/ alias
+// eslint-import-resolver-typescript v4 does not resolve tsconfig
+// `paths` (e.g. `@/*` → `./src/*`), so we handle it ourselves.
+// ============================================================
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const SRC_ROOT = path.resolve(__dirname, 'src');
+
+/**
+ * Try to resolve a path with each extension in `extensions`.
+ * Returns the absolute path if found, otherwise null.
+ */
+function tryExtensions(basePath, extensions) {
+  // Direct file match
+  if (fs.existsSync(basePath)) {
+    const stat = fs.statSync(basePath);
+    if (stat.isFile()) return basePath;
+    // It's a directory — try index files
+    for (const ext of extensions) {
+      const indexPath = path.join(basePath, `index${ext}`);
+      if (fs.existsSync(indexPath)) return indexPath;
+    }
+    return null;
+  }
+  // Try appending extensions
+  for (const ext of extensions) {
+    const withExt = `${basePath}${ext}`;
+    if (fs.existsSync(withExt)) return withExt;
+  }
+  return null;
+}
+
+function createAliasResolver() {
+  return {
+    name: 'skyrim-alias-resolver',
+    interfaceVersion: 3,
+    resolve(modulePath, _sourceFile) {
+      if (!modulePath.startsWith('@/')) {
+        return { found: false };
+      }
+      const relativePath = modulePath.slice(2); // remove '@/'
+      const basePath = path.join(SRC_ROOT, relativePath);
+      const resolved = tryExtensions(basePath, ['.ts', '.tsx', '.vue', '.js', '/index.ts', '/index.vue', '/index.js']);
+      if (resolved) {
+        return { found: true, path: resolved };
+      }
+      return { found: false };
+    }
+  };
+}
+
 const importXSettings = {
-  'import-x/resolver': {
-    typescript: {
+  // Chain: custom @/ resolver first, then TypeScript resolver for everything else.
+  // eslint-import-resolver-typescript v4 is incompatible with the legacy resolver
+  // path (it lacks `resolveImport`), so we use resolver-next (interfaceVersion 3).
+  'import-x/resolver-next': [
+    createAliasResolver(),
+    createTypeScriptImportResolver({
       alwaysTryTypes: true,
       project: './tsconfig.json'
-    }
-  },
-  'import-x/extensions': ['.ts', '.tsx', '.js', '.jsx', '.vue'],
+    })
+  ],
+  'import-x/extensions': ['.ts', '.tsx', '.cts', '.mts', '.js', '.jsx', '.cjs', '.mjs', '.vue'],
+  'import-x/external-module-folders': ['node_modules', 'node_modules/@types'],
   'import-x/parsers': {
-    '@typescript-eslint/parser': ['.ts', '.tsx']
+    '@typescript-eslint/parser': ['.ts', '.tsx', '.cts', '.mts']
   }
 };
 
@@ -103,21 +165,27 @@ const tsTypeAwareRules = {
 };
 
 // ============================================================
-// Import rules (without no-unresolved — tsc handles that)
+// Import rules
 // ============================================================
 const importRules = {
-  'import-x/no-cycle': 'warn',
+  // import-x/no-cycle is disabled because it recursively parses imported .vue
+  // files via vue-eslint-parser which causes "parseForESLint is invalid" errors
+  // when multiple files are linted simultaneously. Circular dependency detection
+  // is covered by TypeScript compiler (tsc --noEmit).
+  'import-x/no-cycle': 'off',
   'import-x/no-self-import': 'error',
   'import-x/no-useless-path-segments': 'error',
-  // Disabled: buggy with @/ aliases in eslint-import-resolver-typescript v4
-  'import-x/no-unresolved': 'off',
+  'import-x/no-unresolved': 'error',
   'import-x/extensions': 'off',
   // Disabled: false positives with CJS modules
   'import-x/default': 'off',
   'import-x/no-named-as-default': 'off',
   'import-x/no-named-as-default-member': 'off',
   'import-x/named': 'off',
-  'import-x/namespace': 'off'
+  'import-x/namespace': 'off',
+  // Disabled: triggers recursive .vue file parsing via vue-eslint-parser
+  // which causes "parseForESLint is invalid" errors when linting multiple files.
+  'import-x/export': 'off'
 };
 
 // ============================================================
@@ -170,19 +238,51 @@ export default [
   // so that plugin parsers can override the default parser)
   // ============================================================
   {
+    name: 'skyrim/global-ignore-patterns',
+    ignores: [
+      '**/*.scss',
+      '**/*.css',
+      '**/*.json',
+      '**/*.md',
+      '**/*.svg',
+      '**/*.png',
+      '**/*.jpg',
+      '**/*.webp',
+      '**/*.ico',
+      '**/*.xml',
+      '**/*.toml',
+      '**/*.lock',
+      '**/*.gradle',
+      '**/*.properties',
+      '**/*.keystore',
+      '**/*.crt',
+      '**/*.key',
+      '**/*.pem'
+    ]
+  },
+  {
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: commonGlobals
-    },
-    settings: importXSettings
+    }
   },
 
-  // Base configs (these set their own parsers for specific file types)
+  // Base configs
   js.configs.recommended,
-  ...pluginVue.configs['flat/recommended'],
   importX.flatConfigs.recommended,
-  importX.flatConfigs.typescript,
+  // NOTE: importX.flatConfigs.typescript is NOT used because it overrides
+  // 'import-x/resolver' with `{ typescript: true }` (no project), which
+  // breaks @/ path alias resolution. All its settings are inlined in
+  // importXSettings above instead.
+  // NOTE: pluginVue.configs['flat/recommended'] is NOT spread here because
+  // it sets its own parser for .vue files which conflicts with our explicit
+  // vueEslintParser. Vue rules are applied manually in the .vue block below.
+
+  // Apply import-x settings AFTER base configs so they take precedence
+  {
+    settings: importXSettings
+  },
 
   // ============================================================
   // JavaScript files
@@ -222,23 +322,22 @@ export default [
   },
 
   // ============================================================
-  // Vue files — parser is set by pluginVue.configs['flat/recommended']
-  // Only add parserOptions (TypeScript inside Vue) and rules
+  // Vue files
   // ============================================================
   {
-    files: ['**/*.vue'],
+    files: ['src/**/*.vue'],
     languageOptions: {
+      parser: vueEslintParser,
       parserOptions: {
         parser: typescriptParser,
         ecmaVersion: 'latest',
         sourceType: 'module',
         ecmaFeatures: { jsx: true },
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
         extraFileExtensions: ['.vue']
       }
     },
     plugins: {
+      vue: pluginVue,
       '@typescript-eslint': typescriptEslint
     },
     rules: {
@@ -246,7 +345,20 @@ export default [
       ...tsStrictRules,
       ...importRules,
 
-      // Vue-specific
+      // Vue base setup rules (comment-directive, jsx-uses-vars)
+      ...pluginVue.configs['flat/essential'][1].rules,
+
+      // Vue essential rules
+      ...pluginVue.configs['flat/essential'][2].rules,
+
+      // Vue strongly-recommended rules
+      ...pluginVue.configs['flat/strongly-recommended'][2].rules,
+
+      // Vue recommended rules
+      ...pluginVue.configs['flat/recommended'][4].rules,
+
+      // Vue-specific overrides
+      'vue/comment-directive': 'off',
       'vue/multi-word-component-names': 'off',
       'vue/component-name-in-template-casing': ['error', 'kebab-case'],
       'vue/block-order': ['error', { order: ['template', 'script', 'style'] }],
@@ -306,5 +418,6 @@ export default [
     rules: {
       'vue/no-v-html': 'off'
     }
-  }
+  },
+
 ];
