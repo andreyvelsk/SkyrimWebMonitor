@@ -125,6 +125,8 @@ vips dzsave public/maps/<worldspace>.png public/map-dzi/<worldspace> \
 
 ### Шаг 3: Извлечь проекцию
 
+**Способ A (есть BTR-файл):** использовать [`extract-fwmf-projection.py`](scripts/extract-fwmf-projection.py):
+
 ```bash
 python scripts/extract-fwmf-projection.py \
   --input <путь к .btr файлу> \
@@ -133,6 +135,23 @@ python scripts/extract-fwmf-projection.py \
   --image-width <ширина PNG> \
   --image-height <высота PNG>
 ```
+
+**Способ B (нет BTR-файла):** калибровка по опорным точкам — см. [map-projection-calibration.md](map-projection-calibration.md). Кратко:
+
+1. Собрать 3+ точек (игровые координаты → пиксельные координаты) в JSON-файл
+2. Запустить [`calibrate-map-projection.py`](scripts/calibrate-map-projection.py):
+
+```bash
+python scripts/calibrate-map-projection.py \
+  --image-width <ширина PNG> \
+  --image-height <высота PNG> \
+  --points calibration_points.json \
+  --output-projection src/pages/map/data/projections/<worldspace>.ts \
+  --worldspace <WorldspaceEditorID> \
+  --print-correction
+```
+
+Скрипт выведет bounds, `imageCorrection` и ошибку на каждой точке (должна быть < 1 px).
 
 ### Шаг 4: Зарегистрировать карту
 
