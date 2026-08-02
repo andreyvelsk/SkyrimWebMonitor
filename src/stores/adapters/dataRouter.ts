@@ -9,67 +9,69 @@ import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { useQuestStore } from '@/stores/quests/useQuestStore';
 import type { RouterResult } from './types';
 import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isShoutsData, isHotkeyItemsData, isQuestsData, isGameStatusData, isMapHotspotsData, isMapQuestMarkersData, isPlayerPositionData } from './typeGuards';
+import { logger } from '@/shared/lib/utils/logger';
+
 export class DataRouter {
   static routeDataById(subscriptionId: string, data: unknown): RouterResult {
     const characterStore = useCharacterStore();
     const inventoryStore = useInventoryStore();
     try {
       if (isCharacterStatsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing character stats to character store');
+        logger.log('[DataRouter] Routing character stats to character store');
         characterStore.setStats(data);
         return { success: true, message: 'Data routed to character store' };
       }
 
       if (isWeaponsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing weapons data to inventory store');
+        logger.log('[DataRouter] Routing weapons data to inventory store');
         inventoryStore.setWeapons(data);
         return { success: true, message: 'Data routed to inventory store (weapons)' };
       }
 
       if (isApparelData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing apparel data to inventory store');
+        logger.log('[DataRouter] Routing apparel data to inventory store');
         inventoryStore.setApparel(data);
         return { success: true, message: 'Data routed to inventory store (apparel)' };
       }
 
       if (isFoodData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing food data to inventory store');
+        logger.log('[DataRouter] Routing food data to inventory store');
         inventoryStore.setFood(data);
         return { success: true, message: 'Data routed to inventory store (food)' };
       }
 
       if (isPotionsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing potions data to inventory store');
+        logger.log('[DataRouter] Routing potions data to inventory store');
         inventoryStore.setPotions(data);
         return { success: true, message: 'Data routed to inventory store (potions)' };
       }
 
       if (isIngredientsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing ingredients data to inventory store');
+        logger.log('[DataRouter] Routing ingredients data to inventory store');
         inventoryStore.setIngredients(data);
         return { success: true, message: 'Data routed to inventory store (ingredients)' };
       }
 
       if (isScrollsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing scrolls data to inventory store');
+        logger.log('[DataRouter] Routing scrolls data to inventory store');
         inventoryStore.setScrolls(data);
         return { success: true, message: 'Data routed to inventory store (scrolls)' };
       }
 
       if (isKeysData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing keys data to inventory store');
+        logger.log('[DataRouter] Routing keys data to inventory store');
         inventoryStore.setKeys(data);
         return { success: true, message: 'Data routed to inventory store (keys)' };
       }
 
       if (isBooksData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing books data to inventory store');
+        logger.log('[DataRouter] Routing books data to inventory store');
         inventoryStore.setBooks(data);
         return { success: true, message: 'Data routed to inventory store (books)' };
       }
 
       if (isMiscData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing misc data to inventory store');
+        logger.log('[DataRouter] Routing misc data to inventory store');
         inventoryStore.setMisc(data);
         return { success: true, message: 'Data routed to inventory store (misc)' };
       }
@@ -99,7 +101,7 @@ export class DataRouter {
 
         if (remaining.length) ordered.push(...remaining);
 
-        console.log('[DataRouter] Routing categories to navigation store', ordered);
+        logger.log('[DataRouter] Routing categories to navigation store', ordered);
         navigationStore.setTabSubTabs('inventory', ordered);
         return { success: true, message: 'Data routed to navigation store (inventory categories)' };
       }
@@ -129,79 +131,79 @@ export class DataRouter {
 
         if (remaining.length) ordered.push(...remaining);
 
-        console.log('[DataRouter] Routing magic categories to navigation store', ordered);
+        logger.log('[DataRouter] Routing magic categories to navigation store', ordered);
         navigationStore.setTabSubTabs('magic', ordered);
         return { success: true, message: 'Data routed to navigation store (magic categories)' };
       }
 
       if (isDestructionData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing destruction spells to magic store');
+        logger.log('[DataRouter] Routing destruction spells to magic store');
         useMagicStore().setDestruction(data);
         return { success: true, message: 'Data routed to magic store (destruction)' };
       }
 
       if (isAlterationData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing alteration spells to magic store');
+        logger.log('[DataRouter] Routing alteration spells to magic store');
         useMagicStore().setAlteration(data);
         return { success: true, message: 'Data routed to magic store (alteration)' };
       }
 
       if (isConjurationData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing conjuration spells to magic store');
+        logger.log('[DataRouter] Routing conjuration spells to magic store');
         useMagicStore().setConjuration(data);
         return { success: true, message: 'Data routed to magic store (conjuration)' };
       }
 
       if (isIllusionData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing illusion spells to magic store');
+        logger.log('[DataRouter] Routing illusion spells to magic store');
         useMagicStore().setIllusion(data);
         return { success: true, message: 'Data routed to magic store (illusion)' };
       }
 
       if (isRestorationData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing restoration spells to magic store');
+        logger.log('[DataRouter] Routing restoration spells to magic store');
         useMagicStore().setRestoration(data);
         return { success: true, message: 'Data routed to magic store (restoration)' };
       }
 
       if (isEnchantingData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing enchanting spells to magic store');
+        logger.log('[DataRouter] Routing enchanting spells to magic store');
         useMagicStore().setEnchanting(data);
         return { success: true, message: 'Data routed to magic store (enchanting)' };
       }
 
       if (isShoutsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing shouts to magic store');
+        logger.log('[DataRouter] Routing shouts to magic store');
         useMagicStore().setShouts(data);
         return { success: true, message: 'Data routed to magic store (shouts)' };
       }
 
       if (isHotkeyItemsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing hotkey items to hotkeys store');
+        logger.log('[DataRouter] Routing hotkey items to hotkeys store');
         useHotkeysStore().setHotkeys(data);
         return { success: true, message: 'Data routed to hotkeys store' };
       }
 
       if (isQuestsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing quests data to quests store');
+        logger.log('[DataRouter] Routing quests data to quests store');
         useQuestStore().setQuests(data);
         return { success: true, message: 'Data routed to quests store' };
       }
 
       if (isGameStatusData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing game status to game status store');
+        logger.log('[DataRouter] Routing game status to game status store');
         useGameStatusStore().setStatus(data.status);
         return { success: true, message: 'Data routed to game status store' };
       }
 
       if (isMapHotspotsData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing map hotspots to map store');
+        logger.log('[DataRouter] Routing map hotspots to map store');
         useMapHotspotsStore().setHotspots(data);
         return { success: true, message: 'Data routed to map store (hotspots)' };
       }
 
       if (isMapQuestMarkersData(data, subscriptionId)) {
-        console.log('[DataRouter] Routing map quest markers to map store');
+        logger.log('[DataRouter] Routing map quest markers to map store');
         useMapHotspotsStore().setQuestMarkers(data);
         return { success: true, message: 'Data routed to map store (quest markers)' };
       }
@@ -223,4 +225,3 @@ export class DataRouter {
     }
   }
 }
-

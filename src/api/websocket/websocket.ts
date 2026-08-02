@@ -11,6 +11,7 @@ import type {
   SendCommandOptions,
 } from './protocol';
 import type { MessageHandler, EventCallback, RegistrationCleanup } from './types';
+import { logger } from '@/shared/lib/utils/logger';
 
 class WebSocketClient {
   private ws: WebSocket | null = null;
@@ -137,7 +138,7 @@ class WebSocketClient {
         socket.onopen = () => {
           if (this.ws !== socket || generation !== this.connectionGeneration) return;
 
-          console.log('WebSocket connected');
+          logger.log('WebSocket connected');
           this.reconnectAttempts = 0;
           this.lastHeartbeatAckTime = Date.now();
           this.startHeartbeat();
@@ -168,7 +169,7 @@ class WebSocketClient {
         socket.onclose = (event) => {
           if (this.ws !== socket || generation !== this.connectionGeneration) return;
 
-          console.log('WebSocket closed');
+          logger.log('WebSocket closed');
           this.stopHeartbeat();
           this.emit('onClose', event);
           this.ws = null;
@@ -392,7 +393,7 @@ class WebSocketClient {
     }
 
     this.reconnectAttempts++;
-    console.log(
+    logger.log(
       `Attempting to reconnect... (${this.reconnectAttempts}/${WS_CONFIG.MAX_RECONNECT_ATTEMPTS})`
     );
 

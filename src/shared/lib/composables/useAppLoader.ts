@@ -11,6 +11,7 @@ import {
 import { GLOBAL_SUBSCRIPTIONS } from '@/app/config/globalSubscriptions';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import { prefetchMapTiles, getMapConfig } from '@/pages/map';
+import { logger } from '@/shared/lib/utils/logger';
 
 export function useAppLoader() {
   const navigationStore = useNavigationStore();
@@ -75,7 +76,7 @@ export function useAppLoader() {
     void prefetchMapTiles(getMapConfig(null).dziUrl);
 
     try {
-      console.log('App mounted - initializing WebSocket connection...');
+      logger.log('App mounted - initializing WebSocket connection...');
       await connect();
     } catch (err) {
       console.error('Failed to initialize websocket connection', err);
@@ -89,14 +90,14 @@ export function useAppLoader() {
   // on `canAct` below.
   watch(isConnected, (connected, prev) => {
     if (connected && !prev) {
-      console.log('WebSocket connected, re-arming global subscriptions');
+      logger.log('WebSocket connected, re-arming global subscriptions');
       startGlobalSubscriptions();
 
       // If we reconnected WHILE the player is still in-game, the server has
       // cleared its subscription table on disconnect. The canAct watcher only
       // fires on transitions, so we must re-arm gameplay subs explicitly here.
       if (canAct.value) {
-        console.log('Reconnected while in-game — re-arming gameplay subscriptions');
+        logger.log('Reconnected while in-game — re-arming gameplay subscriptions');
         loadInitialDataAndStartActiveSubs();
       }
     }
@@ -107,7 +108,7 @@ export function useAppLoader() {
   watch(canAct, () => {
     if (!isConnected.value) return;
 
-    console.log('Player is in-game (canAct=true) — loading initial data');
+    logger.log('Player is in-game (canAct=true) — loading initial data');
     loadInitialDataAndStartActiveSubs();
   }, { once: true});
 
@@ -122,7 +123,7 @@ export function useAppLoader() {
       [oldTab, oldSubTab]
     ) => {
       if (!isConnected.value) {
-        console.log('WebSocket not connected, skipping subscription update');
+        logger.log('WebSocket not connected, skipping subscription update');
         return;
       }
 
@@ -138,17 +139,17 @@ export function useAppLoader() {
       // Stop subs from the previous page that the new page does not need.
       oldSubs.forEach((s) => {
         if (!newIds.has(s.id)) {
-          console.log(`Unsubscribing from old page sub: ${s.id}`);
+          logger.log(`Unsubscribing from old page sub: ${s.id}`);
           stopSubscription(s.id);
         }
       });
 
       if (!newSubTab) {
-        console.log('No sub-tab selected, skipping subscription update');
+        logger.log('No sub-tab selected, skipping subscription update');
         return;
       }
 
-      console.log(`Subscription update: ${newTab} - ${newSubTab}`);
+      logger.log(`Subscription update: ${newTab} - ${newSubTab}`);
       newSubs.forEach((s) => {
         startSubscription(s.id, s.fields, s.settings?.frequency, s.settings?.sendOnChange);
       });

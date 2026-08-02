@@ -35,7 +35,7 @@ const commonRules = {
   'semi': ['error', 'always'],
   'eqeqeq': ['error', 'always'],
   'no-eval': 'error',
-  'no-console': 'warn',
+  'no-console': ['error', { allow: ['warn', 'error'] }],
   'no-debugger': 'error',
   'no-alert': 'error',
   'no-var': 'error',
@@ -191,6 +191,7 @@ export default [
     files: ['**/*.{js,jsx,cjs,mjs}'],
     rules: {
       ...commonRules,
+      ...importRules,
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
     }
   },

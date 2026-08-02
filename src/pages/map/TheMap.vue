@@ -76,6 +76,7 @@ import { i18n } from '@/i18n';
 import { getMapConfig } from './config/mapRegistry';
 import type { MapConfig } from './config/types';
 import { currentZoom } from '@/shared/lib/composables/useAppZoom';
+import { logger } from '@/shared/lib/utils/logger';
 
 // =============================================================
 // Map view configuration
@@ -246,7 +247,7 @@ function syncContainerSize(): void {
 }
 
 function logImagePxAt(imgX: number, imgY: number): void {
-  console.log(`[map] image px: { x: ${imgX.toFixed(2)}, y: ${imgY.toFixed(2)} }`);
+  logger.log(`[map] image px: { x: ${imgX.toFixed(2)}, y: ${imgY.toFixed(2)} }`);
 }
 
 function centerOnPlayer(immediately = true): void {

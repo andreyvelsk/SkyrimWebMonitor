@@ -67,6 +67,7 @@ function pruneUnusedIcons(distDir) {
       };
       walk(iconsDir);
 
+      // eslint-disable-next-line no-console
       console.log(`[prune-unused-icons] kept ${USED_ICONS.length}, removed ${removed}`);
     },
   };
@@ -81,6 +82,7 @@ function pruneSourceMapImages(distDir) {
         const filePath = path.join(distDir, filename);
         if (fs.existsSync(filePath)) {
           fs.unlinkSync(filePath);
+          // eslint-disable-next-line no-console
           console.log(`[prune-source-map-images] removed ${filename}`);
         }
       }

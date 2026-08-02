@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { i18n, mapGameLanguage } from '@/i18n';
+import { logger } from '@/shared/lib/utils/logger';
 import type { Feature, Features } from './types';
 
 export const SYSTEM_QUERY_ID = 'system';
@@ -19,13 +20,13 @@ export const useSystemStore = defineStore('system', () => {
     if (gameLang) {
       language.value = gameLang;
       i18n.global.locale.value = mapGameLanguage(gameLang);
-      console.log(`[SystemStore] Game language: ${gameLang} → locale: ${i18n.global.locale.value}`);
+      logger.log(`[SystemStore] Game language: ${gameLang} → locale: ${i18n.global.locale.value}`);
     }
 
     const rawFeatures = fields.features;
     if (Array.isArray(rawFeatures)) {
       features.value = rawFeatures;
-      console.log('[SystemStore] Features:', features.value);
+      logger.log('[SystemStore] Features:', features.value);
     }
   }
 

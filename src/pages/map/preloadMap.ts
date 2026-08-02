@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { logger } from '@/shared/lib/utils/logger';
 
 const MAP_TILES_MANIFEST_URL = `${import.meta.env.BASE_URL}map-tiles/manifest.json`;
 const MAP_DZI_INFO_STORAGE_KEY = 'map-dzi-info-v1';
@@ -270,7 +271,7 @@ export function prefetchMapTiles(dziUrl: string): Promise<void> {
     mapTilesPrefetchActive.value = true;
     mapTilesPrefetchProgress.value = 0;
     const total = urls.length;
-    console.info('[map] background prefetch starting', {
+    logger.log('[map] background prefetch starting', {
       maxLevel,
       totalTiles: total,
       sampleUrl: urls[0],
@@ -347,7 +348,7 @@ export function prefetchMapTiles(dziUrl: string): Promise<void> {
 
     mapTilesPrefetchActive.value = false;
     mapTilesPrefetchProgress.value = 100;
-    console.info('[map] background prefetch done', {
+    logger.log('[map] background prefetch done', {
       cached: okCount,
       failed: failCount,
       total,
