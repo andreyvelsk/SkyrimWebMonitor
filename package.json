@@ -32,7 +32,7 @@
     "build": "vite build",
     "build:android": "BASE_PATH=./ VITE_CAPACITOR=true vite build",
     "preview": "vite preview",
-    "tsc": "tsc --noEmit",
+    "tsc": "vue-tsc --noEmit",
     "release": "node ./scripts/release.js",
     "release:patch": "node ./scripts/release.js patch",
     "release:minor": "node ./scripts/release.js minor",
@@ -47,7 +47,7 @@
     "electron:dist:linux-arm64": "npm run build:electron && electron-builder --linux AppImage --arm64",
     "electron:dist:mac": "npm run build:electron && electron-builder --mac dmg",
     "electron:dist": "npm run build:electron && electron-builder --linux AppImage --x64",
-    "lint": "tsc --noEmit && eslint . --fix",
+    "lint": "vue-tsc --noEmit && eslint . --fix",
     "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
     "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\" && npm run lint:css"
   },
@@ -88,6 +88,7 @@
     "typescript": "^6.0.2",
     "vite": "^7.3.2",
     "vue-eslint-parser": "^10.4.0",
+    "vue-tsc": "^3.3.9",
     "ws": "^8.13.0"
   },
   "build": {

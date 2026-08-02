@@ -23,7 +23,7 @@
     </div>
     <div class="info">
       <div class="name">
-        {{ data.name ?? $t('common.unknown') }}
+        {{ displayName ?? $t('common.unknown') }}
       </div>
 
       <div
@@ -62,7 +62,7 @@ import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { getEffectHtml } from '@/shared/lib/utils/getEffectHtml';
 import type { ItemEnchantmentEffect, ListItem } from '@/shared/lib/types';
-import type { PreviewStats } from './lib/types';
+import type { PreviewStats } from '../lib/types';
 
 const props = withDefaults(
   defineProps<{
@@ -80,6 +80,11 @@ const props = withDefaults(
 const isStolen = computed(() => {
   if (!props.data) return false;
   return 'isStolen' in props.data && props.data.isStolen;
+});
+
+const displayName = computed(() => {
+  if (!props.data) return null;
+  return 'name' in props.data ? props.data.name : null;
 });
 </script>
 
