@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import { InventoryItem } from '@/shared/ui/items';
-import { EquippedHandIcon } from '@/features/ui';
+import { EquippedHandIcon } from '@/shared/ui';
 import type { SpellItem as SpellItemType } from '@/stores/magic/types';
 
 defineProps<{

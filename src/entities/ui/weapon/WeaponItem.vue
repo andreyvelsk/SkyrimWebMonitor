@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { InventoryItem } from '@/shared/ui/items';
-import { EquippedHandIcon } from '@/features/ui';
+import { EquippedHandIcon } from '@/shared/ui';
 import type { WeaponType } from '@/stores/inventory/types';
 import type { EquippedHand } from '@/shared/lib/types/common';
 

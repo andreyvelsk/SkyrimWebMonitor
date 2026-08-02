@@ -10,3 +10,6 @@ export * from './items/index';
 // Base components
 export * from './base/index';
 
+// Equipped hand icon
+export { default as EquippedHandIcon } from './EquippedHandIcon.vue';
+
