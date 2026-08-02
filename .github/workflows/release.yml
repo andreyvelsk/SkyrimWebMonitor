@@ -36,7 +36,7 @@ jobs:
             echo "tag_name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
           fi
 
-  build-android:
+  lint:
     needs: resolve-ref
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +48,31 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npm run tsc
+
+  build-android:
+    needs: [resolve-ref, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.resolve-ref.outputs.git_ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
           cache: npm
 
       - name: Set up Java
@@ -121,7 +145,7 @@ jobs:
           if-no-files-found: error
 
   build-electron-linux:
-    needs: resolve-ref
+    needs: [resolve-ref, lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -132,7 +156,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
           cache: npm
 
       - name: Install dependencies
@@ -151,7 +175,7 @@ jobs:
           if-no-files-found: error
 
   build-electron-windows:
-    needs: resolve-ref
+    needs: [resolve-ref, lint]
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -162,7 +186,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: lts/*
           cache: npm
 
       - name: Install dependencies
