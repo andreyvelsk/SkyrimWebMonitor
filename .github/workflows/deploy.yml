@@ -42,6 +42,9 @@ jobs:
       - name: Type check
         run: npm run tsc
 
+      - name: Test
+        run: npm run test
+
       - name: Download pre-built map tiles
         # Tiles are produced once by `.github/workflows/build-map.yml` and
         # stored in the `map-assets` release. Every deploy just pulls the

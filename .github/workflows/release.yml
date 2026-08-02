@@ -60,6 +60,9 @@ jobs:
       - name: Type check
         run: npm run tsc
 
+      - name: Test
+        run: npm run test
+
   build-android:
     needs: [resolve-ref, lint]
     runs-on: ubuntu-latest
