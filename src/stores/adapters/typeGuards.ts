@@ -1,22 +1,22 @@
 import type { CharacterStats } from '@/stores/character/types';
 import type {
-  WeaponsState, 
-  ApparelState, 
-  FoodState, 
-  BookState, 
-  KeysState, 
-  IngredientsState, 
-  PotionsState, 
-  WeaponItem, 
-  ApparelItem, 
-  FoodItem, 
-  PotionItem, 
-  IngredientItem, 
-  BookItem, 
+  WeaponsState,
+  ApparelState,
+  FoodState,
+  BookState,
+  KeysState,
+  IngredientsState,
+  PotionsState,
+  WeaponItem,
+  ApparelItem,
+  FoodItem,
+  PotionItem,
+  IngredientItem,
+  BookItem,
   KeyItem,
-  ScrollsState, 
-  ScrollItem, 
-  MiscState, 
+  ScrollsState,
+  ScrollItem,
+  MiscState,
   MiscItem,
   GemItem,
   AmmoItem,
@@ -32,6 +32,11 @@ import type {
   MapQuestMarkersState,
   PlayerPosition,
 } from '@/stores/map/types';
+
+/** Type guard: narrows `unknown` to `Record<string, unknown>` for safe property access without `as`. */
+function isRecord(obj: unknown): obj is Record<string, unknown> {
+  return typeof obj === 'object' && obj !== null;
+}
 
 export function isCharacterStatsData(data: unknown, id: string): data is CharacterStats {
   return id === 'character.stats' && typeof data === 'object' && data !== null;
@@ -72,10 +77,9 @@ export function isKeysData(data: unknown, id: string): data is KeysState {
 export function isInventoryCategories(data: unknown, id: string): data is CategoriesData {
   return (
     id === 'inventory.categories' &&
-    typeof data === 'object' &&
-    data !== null &&
+    isRecord(data) &&
     'categories' in data &&
-    Array.isArray((data as CategoriesData).categories)
+    Array.isArray(data.categories)
   );
 }
 
@@ -84,120 +88,109 @@ export function isMiscData(data: unknown, id: string): data is MiscState {
 }
 
 export function isWeaponItem(item: unknown): item is WeaponItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const weapon = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof weapon.formId === 'string' &&
-    typeof weapon.name === 'string' &&
-    weapon.categoryType === CATEGORY_TYPES.WEAPON
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    item.categoryType === CATEGORY_TYPES.WEAPON
   );
 }
 
 export function isAmmoItem(item: unknown): item is AmmoItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const ammo = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof ammo.formId === 'string' &&
-    typeof ammo.name === 'string' &&
-    ammo.categoryType === CATEGORY_TYPES.AMMO
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    item.categoryType === CATEGORY_TYPES.AMMO
   );
 }
 
 export function isApparelItem(item: unknown): item is ApparelItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const apparel = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof apparel.formId === 'string' &&
-    typeof apparel.name === 'string' &&
-    Array.isArray(apparel.bodySlots) &&
-    apparel.categoryType === CATEGORY_TYPES.APPAREL
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    Array.isArray(item.bodySlots) &&
+    item.categoryType === CATEGORY_TYPES.APPAREL
   );
 }
 
 export function isFoodItem(item: unknown): item is FoodItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const food = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof food.formId === 'string' &&
-    typeof food.name === 'string' &&
-    Array.isArray(food.effects) &&
-    food.categoryType === CATEGORY_TYPES.FOOD
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    Array.isArray(item.effects) &&
+    item.categoryType === CATEGORY_TYPES.FOOD
   );
 }
 
 export function isPotionItem(item: unknown): item is PotionItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const potion = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof potion.formId === 'string' &&
-    typeof potion.name === 'string' &&
-    Array.isArray(potion.effects) &&
-    potion.categoryType === CATEGORY_TYPES.POTION
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    Array.isArray(item.effects) &&
+    item.categoryType === CATEGORY_TYPES.POTION
   );
 }
 
 export function isIngredientItem(item: unknown): item is IngredientItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const ing = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof ing.formId === 'string' &&
-    typeof ing.name === 'string' &&
-    Array.isArray(ing.effects) &&
-    ing.categoryType === CATEGORY_TYPES.INGREDIENT
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    Array.isArray(item.effects) &&
+    item.categoryType === CATEGORY_TYPES.INGREDIENT
   );
 }
 
 export function isScrollItem(item: unknown): item is ScrollItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const scroll = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof scroll.formId === 'string' &&
-    typeof scroll.name === 'string' &&
-    Array.isArray(scroll.effects) &&
-    scroll.categoryType === CATEGORY_TYPES.SCROLL
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    Array.isArray(item.effects) &&
+    item.categoryType === CATEGORY_TYPES.SCROLL
   );
 }
 
 export function isBookItem(item: unknown): item is BookItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const book = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof book.formId === 'string' &&
-    typeof book.name === 'string' &&
-    typeof book.description === 'string' &&
-    book.categoryType === CATEGORY_TYPES.BOOK
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    typeof item.description === 'string' &&
+    item.categoryType === CATEGORY_TYPES.BOOK
   );
 }
 
 export function isKeyItem(item: unknown): item is KeyItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const key = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof key.formId === 'string' &&
-    typeof key.name === 'string' &&
-    key.categoryType === CATEGORY_TYPES.KEY
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    item.categoryType === CATEGORY_TYPES.KEY
   );
 }
 
 export function isMiscItem(item: unknown): item is MiscItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const misc = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof misc.formId === 'string' &&
-    typeof misc.name === 'string' &&
-    misc.categoryType === CATEGORY_TYPES.MISC
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    item.categoryType === CATEGORY_TYPES.MISC
   );
 }
 
 export function isGem(item: unknown): item is GemItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const gem = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof gem.formId === 'string' &&
-    typeof gem.name === 'string' &&
-    typeof gem.capacity === 'string' &&
-    typeof gem.containedSoul === 'string' &&
-    gem.categoryType === CATEGORY_TYPES.SOUL_GEM
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    typeof item.capacity === 'string' &&
+    typeof item.containedSoul === 'string' &&
+    item.categoryType === CATEGORY_TYPES.SOUL_GEM
   );
 }
 
@@ -205,10 +198,9 @@ export function isGem(item: unknown): item is GemItem {
 export function isMagicCategoriesData(data: unknown, id: string): data is { categories: MagicState['categories'] } {
   return (
     id === 'magic.categories' &&
-    typeof data === 'object' &&
-    data !== null &&
+    isRecord(data) &&
     'categories' in data &&
-    Array.isArray((data as { categories?: unknown }).categories)
+    Array.isArray(data.categories)
   );
 }
 
@@ -241,80 +233,74 @@ export function isShoutsData(data: unknown, id: string): data is ShoutsState {
 }
 
 export function isShoutItem(item: unknown): item is ShoutItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const shout = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof shout.formId === 'string' &&
-    typeof shout.name === 'string' &&
-    typeof shout.description === 'string' &&
-    Array.isArray(shout.words)
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    typeof item.description === 'string' &&
+    Array.isArray(item.words)
   );
 }
 
 export function isSpellItem(item: unknown): item is SpellItem {
-  if (typeof item !== 'object' || item === null) return false;
-  const spell = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof spell.formId === 'string' &&
-    typeof spell.name === 'string' &&
-    typeof spell.cost === 'number' &&
-    typeof spell.level === 'number' &&
-    Array.isArray(spell.effects)
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    typeof item.cost === 'number' &&
+    typeof item.level === 'number' &&
+    Array.isArray(item.effects)
   );
 }
 
 export function isHotkeyItemsData(data: unknown, id: string): data is HotkeyItemsState {
   return (
     id === 'hotkeys.items' &&
-    typeof data === 'object' &&
-    data !== null &&
+    isRecord(data) &&
     'items' in data &&
-    Array.isArray((data as HotkeyItemsState).items)
+    Array.isArray(data.items)
   );
 }
 
 export function isQuestsData(data: unknown, id: string): data is QuestsState {
   return (
     id === 'quests.questsList' &&
-    typeof data === 'object' &&
-    data !== null &&
+    isRecord(data) &&
     'quests' in data &&
-    Array.isArray((data as QuestsState).quests)
+    Array.isArray(data.quests)
   );
 }
 
 export function isQuestListSection(item: unknown): item is QuestListSection {
-  if (typeof item !== 'object' || item === null) return false;
-  const section = item as Record<string, unknown>;
-  return section.type === 'section' && typeof section.formId === 'string';
+  if (!isRecord(item)) return false;
+  return item.type === 'section' && typeof item.formId === 'string';
 }
 
 export function isQuestJournalEntry(item: unknown): item is QuestJournalEntry {
-  if (typeof item !== 'object' || item === null) return false;
-  const quest = item as Record<string, unknown>;
+  if (!isRecord(item)) return false;
   return (
-    typeof quest.questFormId === 'string' &&
-    typeof quest.formId === 'string' &&
-    typeof quest.name === 'string' &&
-    typeof quest.isActive === 'boolean' &&
-    typeof quest.isMisc === 'boolean' &&
-    Array.isArray(quest.steps)
+    typeof item.questFormId === 'string' &&
+    typeof item.formId === 'string' &&
+    typeof item.name === 'string' &&
+    typeof item.isActive === 'boolean' &&
+    typeof item.isMisc === 'boolean' &&
+    Array.isArray(item.steps)
   );
 }
 
 export function isGameStatusData(data: unknown, id: string): data is GameStatusData {
-  if (id !== 'game.status' || typeof data !== 'object' || data === null) return false;
-  const status = (data as { status?: unknown }).status;
-  return typeof status === 'object' && status !== null && typeof (status as { canAct?: unknown }).canAct === 'boolean';
+  if (id !== 'game.status' || !isRecord(data)) return false;
+  const status = data.status;
+  if (!isRecord(status)) return false;
+  return typeof status.canAct === 'boolean';
 }
 
 export function isMapHotspotsData(data: unknown, id: string): data is MapHotspotsState {
   return (
     id === 'map.hotspots' &&
-    typeof data === 'object' &&
-    data !== null &&
+    isRecord(data) &&
     'hot' in data &&
-    Array.isArray((data as MapHotspotsState).hot)
+    Array.isArray(data.hot)
   );
 }
 
@@ -324,10 +310,9 @@ export function isMapQuestMarkersData(
 ): data is MapQuestMarkersState {
   return (
     id === 'map.questMarkers' &&
-    typeof data === 'object' &&
-    data !== null &&
+    isRecord(data) &&
     'marker' in data &&
-    Array.isArray((data as MapQuestMarkersState).marker)
+    Array.isArray(data.marker)
   );
 }
 
@@ -335,13 +320,12 @@ export function isPlayerPositionData(
   data: unknown,
   id: string
 ): data is { position: PlayerPosition } {
-  if (id !== 'map.player' || typeof data !== 'object' || data === null) return false;
-  const pos = (data as { position?: unknown }).position;
-  if (typeof pos !== 'object' || pos === null) return false;
-  const p = pos as Record<string, unknown>;
+  if (id !== 'map.player' || !isRecord(data)) return false;
+  const pos = data.position;
+  if (!isRecord(pos)) return false;
   return (
-    typeof p.x === 'number' &&
-    typeof p.y === 'number' &&
-    typeof p.angle === 'number'
+    typeof pos.x === 'number' &&
+    typeof pos.y === 'number' &&
+    typeof pos.angle === 'number'
   );
 }

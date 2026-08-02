@@ -296,6 +296,7 @@ function toggleFollowPlayerMode(): void {
  * a blob URL is instant.
  */
 function attachSharedTileCache(item: OpenSeadragon.TiledImage): void {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const source = item.source as OpenSeadragon.TileSource & {
     getTileUrl?: (_level: number, _x: number, _y: number) => string | (() => string);
   };
@@ -305,11 +306,11 @@ function attachSharedTileCache(item: OpenSeadragon.TiledImage): void {
   }
 
   const originalGetTileUrl = source.getTileUrl.bind(source);
-  source.getTileUrl = ((level: number, x: number, y: number): string => {
+  source.getTileUrl = (level: number, x: number, y: number): string => {
     const raw = originalGetTileUrl(level, x, y);
     const realUrl = typeof raw === 'function' ? raw() : raw;
     return mapTileBlobUrls.get(realUrl) ?? realUrl;
-  }) as typeof source.getTileUrl;
+  };
 
   // Make sure the background prefetch is running. Idempotent: a no-op if it
   // was already started by useAppLoader.
@@ -372,8 +373,10 @@ async function setupViewer(): Promise<void> {
     // them ready instead of starting a request only when they enter view.
     preload: true,
     // Avoid sub-pixel half-transparent seams between adjacent tiles.
+    /* eslint-disable @typescript-eslint/consistent-type-assertions */
     subPixelRoundingForTransparency:
       OpenSeadragon.SUBPIXEL_ROUNDING_OCCURRENCES.ALWAYS as unknown as object,
+    /* eslint-enable @typescript-eslint/consistent-type-assertions */
     smoothTileEdgesMinZoom: Infinity,
     gestureSettingsMouse: {
       clickToZoom: false,
@@ -531,6 +534,7 @@ watch(mapConfig, (config) => {
  */
 watch(currentZoom, () => {
   if (!viewer) return;
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   (viewer as unknown as { updateSize: () => void }).updateSize();
   syncContainerSize();
   syncOverlayTransform();

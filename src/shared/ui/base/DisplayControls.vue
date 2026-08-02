@@ -139,7 +139,10 @@ function isElectron(): boolean {
 
 function getElectronAPI(): ElectronAPI {
   // Cast through unknown: electronAPI is injected by preload at runtime.
-  return (window as unknown as { electronAPI: ElectronAPI }).electronAPI;
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  const win = window as Window & { electronAPI?: ElectronAPI };
+  if (!win.electronAPI) throw new Error('electronAPI not available');
+  return win.electronAPI;
 }
 
 const isFullscreen = ref(false);

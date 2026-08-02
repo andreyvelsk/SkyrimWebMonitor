@@ -105,8 +105,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
-import { InventoryItem } from '@/shared/ui/items';
-import { BasePreview } from '@/shared/ui/items';
+import { InventoryItem, BasePreview  } from '@/shared/ui/items';
 import type { ItemEnchantmentEffect } from '@/shared/lib/types/common';
 import type { PreviewStats } from '@/shared/ui/items/types/types';
 import type { ListItem } from '@/shared/lib/types/types';
@@ -196,7 +195,9 @@ function handleItemClick(formId: string) {
 }
 
 function handleActionClick(actionEvent: string) {
-  emit(actionEvent as any);
+  if (actionEvent === 'favorite') emit('favorite');
+  else if (actionEvent === 'drop') emit('drop');
+  else if (actionEvent === 'hotkey') emit('hotkey');
 }
 </script>
 

@@ -6,4 +6,4 @@ export type Feature =
 'magic' | 
 'map';
 
-export type Features = Array<Feature>;
+export type Features = Feature[];

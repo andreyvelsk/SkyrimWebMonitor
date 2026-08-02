@@ -20,7 +20,7 @@ function formatEffectHtml(e: ItemEnchantmentEffect, isSurvivalMode: boolean): st
   const survRe = /\[SURV=(.*?)\]/g;
   if (survRe.test(tpl)) {
     if (isSurvivalMode) {
-      tpl = tpl.replace(survRe, (_m, inner) => inner ?? '');
+      tpl = tpl.replace(survRe, (_m: string, inner: string) => inner ?? '');
     } else {
       tpl = tpl.replace(survRe, '');
       if (!tpl.trim()) return '';

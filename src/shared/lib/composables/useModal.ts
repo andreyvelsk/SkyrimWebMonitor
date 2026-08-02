@@ -5,7 +5,8 @@ export interface ModalOptions {
   /** props of child component */
   props?: Record<string, unknown>;
   /** event handlers of child component */
-  on?: Record<string, (...args: any[]) => any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on?: Record<string, (...args: any[]) => unknown>;
   /** callback when modal is closed */
   onClose?: () => void;
   /**
@@ -18,7 +19,8 @@ export interface ModalOptions {
 const isOpen = ref(false);
 const modalComponent = shallowRef<Component | null>(null);
 const modalProps = ref<Record<string, unknown>>({});
-const modalHandlers = ref<Record<string, (...args: any[]) => any>>({});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const modalHandlers = ref<Record<string, (...args: any[]) => unknown>>({});
 const openedAtMs = ref(0);
 const ghostClickGuardMs = ref(0);
 let onCloseCallback: (() => void) | null = null;

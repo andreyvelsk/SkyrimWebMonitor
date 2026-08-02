@@ -51,7 +51,8 @@ export async function loadMapTilesManifest(): Promise<MapTilesManifest | null> {
     try {
       const res = await fetch(MAP_TILES_MANIFEST_URL, { cache: 'force-cache' });
       if (!res.ok) return null;
-      const data = await res.json() as Record<string, unknown>;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- res.json() returns any
+      const data: Record<string, unknown> = await res.json();
 
       const width = toPositiveInt(data.width);
       const height = toPositiveInt(data.height);
@@ -138,7 +139,8 @@ function loadDziInfoFromStorage(): DziInfo | null {
   try {
     const raw = localStorage.getItem(MAP_DZI_INFO_STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<DziInfo>;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- JSON.parse returns any
+    const parsed: Partial<DziInfo> = JSON.parse(raw);
     if (
       !parsed ||
       typeof parsed.width !== 'number' ||

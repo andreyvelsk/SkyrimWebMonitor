@@ -62,9 +62,7 @@ const visibleSubTabs = computed(() => nav.getVisibleSubTabs());
 // scrollWidth <= clientWidth, so scrollTo is clamped to 0 (no-op).
 function centerActive(container: HTMLElement | null, activeSelector: string) {
   if (!container) return;
-  const activeBtn = container.querySelector(
-    activeSelector
-  ) as HTMLElement | null;
+  const activeBtn: HTMLElement | null = container.querySelector(activeSelector);
   if (!activeBtn) return;
 
   const btnCenter = activeBtn.offsetLeft + activeBtn.offsetWidth / 2;

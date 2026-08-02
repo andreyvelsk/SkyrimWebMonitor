@@ -83,7 +83,8 @@ export class DataRouter {
 
         // Order subTabs according to navigation store ordering map (if present),
         // using the same logic as `currentSubTabs` (ordered by map, then append rest).
-        const order = (navigationStore.subTabsOrderMap as any)?.inventory ?? (navigationStore.subTabsOrderMap as any)?.value?.inventory ?? [];
+        const orderMap = navigationStore.subTabsOrderMap;
+        const order = orderMap?.inventory ?? [];
         const ordered: typeof subTabs = [];
         const remaining = [...subTabs];
 
@@ -112,7 +113,8 @@ export class DataRouter {
           label: cat.name,
         }));
 
-        const order = (navigationStore.subTabsOrderMap as any)?.magic ?? (navigationStore.subTabsOrderMap as any)?.value?.magic ?? [];
+        const orderMap = navigationStore.subTabsOrderMap;
+        const order = orderMap?.magic ?? [];
         const ordered: typeof subTabs = [];
         const remaining = [...subTabs];
 

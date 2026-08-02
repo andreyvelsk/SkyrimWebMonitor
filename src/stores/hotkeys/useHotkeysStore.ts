@@ -3,10 +3,11 @@ import { ref, computed } from 'vue';
 import type { HotkeySlot } from '@/api/websocket';
 import type { HotkeyItemsState, HotkeySlotEntry } from './types';
 
-const EMPTY_SLOTS: HotkeySlotEntry[] = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
-  slot: n as HotkeySlot,
-  bound: false,
-}));
+const EMPTY_SLOTS: HotkeySlotEntry[] = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- values are hardcoded 1..8, guaranteed valid
+  const slot: HotkeySlot = n as HotkeySlot;
+  return { slot, bound: false };
+});
 
 export const useHotkeysStore = defineStore('hotkeys', () => {
   const slots = ref<HotkeySlotEntry[]>(EMPTY_SLOTS);
@@ -22,7 +23,7 @@ export const useHotkeysStore = defineStore('hotkeys', () => {
   const getSlotForFormId = (formId: string | null | undefined): HotkeySlot | null => {
     if (!formId) return null;
     const found = slots.value.find((entry) => entry.bound && entry.formId === formId);
-    return found ? (found.slot as HotkeySlot) : null;
+    return found ? (found.slot) : null;
   };
 
   const setHotkeys = (data: HotkeyItemsState): void => {
@@ -32,7 +33,10 @@ export const useHotkeysStore = defineStore('hotkeys', () => {
     // Normalize to exactly 8 ordered slots
     const normalized: HotkeySlotEntry[] = [1, 2, 3, 4, 5, 6, 7, 8].map((slot) => {
       const entry = incoming.find((e) => e.slot === slot);
-      return entry ?? ({ slot: slot as HotkeySlot, bound: false } as HotkeySlotEntry);
+      if (entry) return entry;
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- values are hardcoded 1..8, guaranteed valid
+      const fallback: HotkeySlotEntry = { slot: slot as HotkeySlot, bound: false };
+      return fallback;
     });
     slots.value = normalized;
   };

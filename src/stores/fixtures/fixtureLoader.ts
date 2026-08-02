@@ -10,7 +10,7 @@ export async function applyFixturesIfEnabled(): Promise<void> {
     const useFixtures = import.meta.env.VITE_USE_FIXTURES === 'true';
     if (!useFixtures) return;
 
-    const path = import.meta.env.VITE_FIXTURES_PATH ?? '/SkyrimWebMonitor/fixtures.json';
+    const path: string = import.meta.env.VITE_FIXTURES_PATH ?? '/SkyrimWebMonitor/fixtures.json';
     console.log(`[FixtureLoader] VITE_USE_FIXTURES enabled — loading fixtures from ${path}`);
 
     const res = await fetch(path, { cache: 'no-store' });
@@ -19,7 +19,7 @@ export async function applyFixturesIfEnabled(): Promise<void> {
       return;
     }
 
-    const data = await res.json();
+    const data: unknown = await res.json();
     if (!data || typeof data !== 'object') {
       console.warn('[FixtureLoader] Invalid fixture format, expected object mapping id->fields');
       return;

@@ -150,7 +150,9 @@ class WebSocketClient {
 
           // Update heartbeat ack time on any message from server
           this.lastHeartbeatAckTime = Date.now();
-          this.handleMessage(event.data);
+          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+          const data: string = event.data as string;
+          this.handleMessage(data);
         };
 
         socket.onerror = (error) => {
@@ -175,7 +177,8 @@ class WebSocketClient {
         };
       } catch (error) {
         console.error('WebSocket connection error:', error);
-        rejectOnce(error as Error);
+        const err = error instanceof Error ? error : new Error(String(error));
+        rejectOnce(err);
       }
     });
   }
@@ -283,7 +286,8 @@ class WebSocketClient {
    */
   private handleMessage(rawData: string): void {
     try {
-      const message = JSON.parse(rawData) as ServerMessage;
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      const message: ServerMessage = JSON.parse(rawData) as ServerMessage;
 
       if (!message.type) {
         console.warn('Received message without type field:', message);
@@ -352,7 +356,7 @@ class WebSocketClient {
       this.eventCallbacks.set(event, []);
     }
 
-    const callbacks = this.eventCallbacks.get(event)!;
+    const callbacks = this.eventCallbacks.get(event) ?? [];
     callbacks.push(callback);
 
     // Return cleanup function
@@ -367,7 +371,7 @@ class WebSocketClient {
   /**
    * Emit event to all listeners
    */
-  private emit(event: string, data?: any): void {
+  private emit(event: string, data?: unknown): void {
     const callbacks = this.eventCallbacks.get(event);
     if (callbacks) {
       callbacks.forEach(callback => callback(data));

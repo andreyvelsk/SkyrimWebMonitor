@@ -134,7 +134,7 @@ function buildTriangleGrid(
   const { bounds } = projectionData;
   const cellWidth = (bounds.maxX - bounds.minX) / GRID_SIZE;
   const cellHeight = (bounds.maxY - bounds.minY) / GRID_SIZE;
-  const buckets = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => [] as number[]);
+  const buckets: number[][] = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => []);
 
   for (let triangleOffset = 0; triangleOffset < triangles.length; triangleOffset += 3) {
     const ia = triangles[triangleOffset] * projectionData.vertexStride;

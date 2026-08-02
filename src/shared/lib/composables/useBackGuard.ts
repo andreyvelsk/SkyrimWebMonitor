@@ -31,7 +31,9 @@ export function useBackGuard() {
   let nativeBackListener: PluginListenerHandle | null = null;
 
   function pushDummyState() {
-    if (history.state?.pwaBackGuard !== true) {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const state = history.state as Record<string, unknown> | null;
+    if (state?.pwaBackGuard !== true) {
       history.pushState({ pwaBackGuard: true }, '');
     }
   }
@@ -41,7 +43,8 @@ export function useBackGuard() {
       window.matchMedia?.('(display-mode: standalone)').matches ||
       window.matchMedia?.('(display-mode: fullscreen)').matches ||
       window.matchMedia?.('(display-mode: minimal-ui)').matches ||
-      (navigator as Navigator & { standalone?: boolean }).standalone === true
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      (navigator as { standalone?: boolean }).standalone === true
     );
   }
 

@@ -79,8 +79,13 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
       { exteriorPosition: 'Player::ExteriorPosition' },
       (fields) => {
         pendingExteriorQuery = false;
-        const ext = fields.exteriorPosition as ExteriorPosition | null | undefined;
-        exteriorPosition.value = ext ?? null;
+        const raw = fields.exteriorPosition;
+        if (raw !== null && raw !== undefined && typeof raw === 'object' && 'x' in raw && 'y' in raw) {
+          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- validated by runtime checks above
+          exteriorPosition.value = raw as ExteriorPosition;
+        } else {
+          exteriorPosition.value = null;
+        }
       }
     );
   };

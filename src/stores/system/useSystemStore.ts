@@ -14,7 +14,8 @@ export const useSystemStore = defineStore('system', () => {
   const features = ref<Features>([]);
 
   function handleQueryResponse(fields: Record<string, unknown>): void {
-    const gameLang = (fields.language ?? fields.lang) as string | undefined;
+    const rawLang = fields.language ?? fields.lang;
+    const gameLang: string | undefined = typeof rawLang === 'string' ? rawLang : undefined;
     if (gameLang) {
       language.value = gameLang;
       i18n.global.locale.value = mapGameLanguage(gameLang);

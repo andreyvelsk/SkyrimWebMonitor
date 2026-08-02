@@ -153,7 +153,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
       if (requestId !== connectionRequestId) return;
 
       status.value = CONNECTION_STATUS.DISCONNECTED;
-      error.value = (err as Error).message || 'Failed to connect';
+      error.value = err instanceof Error ? err.message : String(err);
     }
   };
 
@@ -175,7 +175,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
       if (requestId !== connectionRequestId) return;
 
       status.value = CONNECTION_STATUS.DISCONNECTED;
-      error.value = (err as Error).message || 'Failed to reconnect';
+      error.value = err instanceof Error ? err.message : String(err);
     }
   };
 
@@ -216,12 +216,21 @@ export const useWebSocketStore = defineStore('websocket', () => {
       if (status.value !== CONNECTION_STATUS.RECONNECTING) {
         status.value = CONNECTION_STATUS.DISCONNECTED;
       }
-      error.value = (err as { message?: string })?.message || 'Connection error';
+      error.value = err instanceof Error
+        ? err.message
+        : typeof err === 'object' && err !== null && 'message' in err
+          ? String(err.message)
+          : 'Connection error';
       activeSubscriptions.value.clear();
     });
 
     unsubscribeFromReconnecting = wsClient.on('onReconnecting', (data: unknown) => {
-      const info = data as { attempt: number; max: number } | undefined;
+      /* eslint-disable @typescript-eslint/consistent-type-assertions */
+      const info: { attempt: number; max: number } | undefined =
+        typeof data === 'object' && data !== null && 'attempt' in data
+          ? (data as { attempt: number; max: number })
+          : undefined;
+      /* eslint-enable @typescript-eslint/consistent-type-assertions */
       status.value = CONNECTION_STATUS.RECONNECTING;
       reconnectAttempt.value = info?.attempt ?? 0;
       reconnectMaxAttempts.value = info?.max ?? 0;
@@ -235,11 +244,12 @@ export const useWebSocketStore = defineStore('websocket', () => {
 
     unsubscribeFromMessage = wsClient.onMessage((message: ServerMessage) => {
       if (message.type === 'data') {
-        handleDataMessage(message as DataMessage);
+        handleDataMessage(message);
       } else if (message.type === 'error') {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         console.error('Server error:', (message as { message?: string }).message);
       } else if (message.type === 'commandResult') {
-        handleCommandResultMessage(message as CommandResultMessage);
+        handleCommandResultMessage(message);
       }
     });
   };

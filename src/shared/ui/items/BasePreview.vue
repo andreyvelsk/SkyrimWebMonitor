@@ -79,7 +79,8 @@ const props = withDefaults(
 );
 
 const isStolen = computed(() => {
-  return 'isStolen' in props.data! && props.data!.isStolen;
+  if (!props.data) return false;
+  return 'isStolen' in props.data && props.data.isStolen;
 });
 </script>
 

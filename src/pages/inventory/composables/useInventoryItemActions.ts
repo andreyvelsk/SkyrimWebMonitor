@@ -69,7 +69,9 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
         },
         on: {
           drop: (qty: number) => {
-            wsStore.sendCommand({ command: 'drop', formId: activeItem.value!, count: qty });
+            const formId = activeItem.value;
+            if (!formId) return;
+            wsStore.sendCommand({ command: 'drop', formId, count: qty });
             closeModal();
           },
         },
