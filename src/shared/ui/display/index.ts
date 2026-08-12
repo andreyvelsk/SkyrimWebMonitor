@@ -1,2 +1,2 @@
-export { default as StatBar } from './StatBar.vue';
-export { default as AttributeRow } from './AttributeRow.vue';
+export { default as StatBar } from './stat-bar/StatBar.vue';
+export { default as AttributeRow } from './attribute-row/AttributeRow.vue';

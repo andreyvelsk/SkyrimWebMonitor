@@ -1,2 +1,2 @@
-export { default as SkyrimNavigation } from './SkyrimNavigation.vue';
-export { default as SkyrimContent } from './SkyrimContent.vue';
+export { default as SkyrimNavigation } from './skyrim-navigation/SkyrimNavigation.vue';
+export { default as SkyrimContent } from './skyrim-content/SkyrimContent.vue';

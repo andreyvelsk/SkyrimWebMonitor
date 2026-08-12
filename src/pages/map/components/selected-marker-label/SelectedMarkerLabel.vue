@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { ProjectedMarker } from '../../types';
+import type { ProjectedMarker } from '../../lib/types';
 
 const LABEL_MAX_WIDTH_EM = 15;
 const labelMaxWidthCss = `${LABEL_MAX_WIDTH_EM}em`;

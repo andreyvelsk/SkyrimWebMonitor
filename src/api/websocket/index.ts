@@ -19,9 +19,7 @@ export {
   type EquipHand,
   type HotkeySlot,
   type SendCommandOptions,
-} from './protocol';
-export {
   type MessageHandler,
   type EventCallback,
   type RegistrationCleanup,
-} from './types';
+} from './lib/types';

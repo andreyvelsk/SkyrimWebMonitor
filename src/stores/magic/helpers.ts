@@ -1,6 +1,6 @@
-import type { SpellItem } from './types';
-import type { EquippedHand } from '@/shared/lib/types/common';
-import { SPELL_LEVELS } from './types';
+import type { SpellItem } from './lib/types';
+import type { EquippedHand } from '@/shared/lib/types';
+import { SPELL_LEVELS } from './lib/types';
 
 export function isMasterLevelSpell(spell: SpellItem): boolean {
   return spell.level >= SPELL_LEVELS.MASTER;

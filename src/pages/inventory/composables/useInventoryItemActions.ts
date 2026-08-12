@@ -4,7 +4,7 @@ import { useModal } from '@/shared/lib/composables/useModal';
 import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import { DropItemsModal, HotkeyPickerModal } from '@/shared/ui';
-import type { InventoryItem } from '@/stores/inventory/types';
+import type { InventoryItem } from '@/stores/inventory/lib/types';
 import type { HotkeySlot } from '@/api/websocket';
 
 export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
@@ -69,7 +69,9 @@ export function useInventoryItemActions(itemsList: () => InventoryItem[]) {
         },
         on: {
           drop: (qty: number) => {
-            wsStore.sendCommand({ command: 'drop', formId: activeItem.value!, count: qty });
+            const formId = activeItem.value;
+            if (!formId) return;
+            wsStore.sendCommand({ command: 'drop', formId, count: qty });
             closeModal();
           },
         },

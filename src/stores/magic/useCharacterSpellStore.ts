@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { MagicSchoolState, MagicCategory, ShoutsState } from './types';
+import type { MagicSchoolState, MagicCategory, ShoutsState } from './lib/types';
 
 export const useMagicStore = defineStore('magic', () => {
   // State for magic categories

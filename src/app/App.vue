@@ -34,7 +34,7 @@ import {
 } from '@/shared/ui';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
-import { useAppLoader } from '@/shared/lib/composables/useAppLoader';
+import { useAppLoader } from '@/app/lib/composables/useAppLoader';
 import { useBackGuard } from '@/shared/lib/composables/useBackGuard';
 
 const navigationStore = useNavigationStore();

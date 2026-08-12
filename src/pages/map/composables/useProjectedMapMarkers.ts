@@ -1,21 +1,12 @@
-import { computed, type Ref } from 'vue';
-import type { MapHotspot, MapQuestMarker } from '@/stores/map/types';
+import { computed } from 'vue';
+import type { MapQuestMarker } from '@/stores/map/lib/types';
 import type {
   LocationProjectedMarker,
   ProjectedMarker,
   QuestProjectedMarker,
-} from '../types';
+  UseProjectedMapMarkersOptions,
+} from '../lib/types';
 import { resolveMarkerIcon } from './useMapMarkerIcons';
-import type { MapProjectionFn } from './useMapProjection';
-
-interface UseProjectedMapMarkersOptions {
-  projectWorldToImage: MapProjectionFn;
-  hotspots: Ref<MapHotspot[]>;
-  questMarkers: Ref<MapQuestMarker[]>;
-  questIconUrl: string;
-  /** Worldspace of the currently active map (e.g. "Tamriel", "DLC2SolstheimWorld"). */
-  currentWorldspace: string;
-}
 
 const EXCLUDED_HOTSPOT_TYPES: string[] = [
   // 'DLC02ToSkyrim'

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-import type { GameStatus } from './types';
+import type { GameStatus } from './lib/types';
 
 export const useGameStatusStore = defineStore('gameStatus', () => {
   // Full server-provided status payload. `null` means we have not yet received any data.

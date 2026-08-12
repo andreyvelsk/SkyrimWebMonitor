@@ -5,7 +5,7 @@ import type {
   QuestJournalEntry,
   QuestListEntry,
   QuestListSection,
-} from './types';
+} from './lib/types';
 
 const MISC_SECTION: QuestListSection = {
   type: 'section',

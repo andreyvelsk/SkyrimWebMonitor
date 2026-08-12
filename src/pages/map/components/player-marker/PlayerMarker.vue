@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PlayerOverlayPosition } from '../../types';
+import type { PlayerOverlayPosition } from '../../lib/types';
 
 defineProps<{
   player: PlayerOverlayPosition;

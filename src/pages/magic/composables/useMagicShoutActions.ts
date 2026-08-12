@@ -4,7 +4,7 @@ import { useModal } from '@/shared/lib/composables/useModal';
 import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import { HotkeyPickerModal } from '@/shared/ui';
-import type { ShoutItem } from '@/stores/magic/types';
+import type { ShoutItem } from '@/stores/magic/lib/types';
 import type { HotkeySlot } from '@/api/websocket';
 
 export function useMagicShoutActions(shoutsList: () => ShoutItem[]) {

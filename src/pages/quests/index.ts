@@ -1,1 +1,1 @@
-export { default as TheQuests } from './TheQuests.vue';
+export { default as TheQuests } from './the-quests/TheQuests.vue';

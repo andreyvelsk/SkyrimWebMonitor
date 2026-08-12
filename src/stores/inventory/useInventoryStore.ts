@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState, WeaponInventoryItem, MiscInventoryItem } from './types';
+import type { WeaponsState, ApparelState, FoodState, BookState, KeysState, ScrollsState, IngredientsState, PotionsState, MiscState, WeaponInventoryItem, MiscInventoryItem } from './lib/types';
 
 export const useInventoryStore = defineStore('inventory', () => {
   // State for inventory/weapons page

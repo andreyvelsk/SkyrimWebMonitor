@@ -1,18 +1,10 @@
 import { ref } from 'vue';
+import { logger } from '@/shared/lib/utils/logger';
+import type { MapTilesManifest, DziInfo } from './lib/types';
 
 const MAP_TILES_MANIFEST_URL = `${import.meta.env.BASE_URL}map-tiles/manifest.json`;
 const MAP_DZI_INFO_STORAGE_KEY = 'map-dzi-info-v1';
 const MAP_TILE_CACHE_NAME = 'map-dzi-tiles';
-
-export interface MapTilesManifest {
-  width: number;
-  height: number;
-  tileSize: number;
-  cols: number;
-  rows: number;
-  format: 'webp' | 'jpg' | 'png';
-  basePath: string;
-}
 
 function normalizeTilesBasePath(rawBasePath: string): string {
   const trimmed = rawBasePath.trim();
@@ -51,7 +43,8 @@ export async function loadMapTilesManifest(): Promise<MapTilesManifest | null> {
     try {
       const res = await fetch(MAP_TILES_MANIFEST_URL, { cache: 'force-cache' });
       if (!res.ok) return null;
-      const data = await res.json() as Record<string, unknown>;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- res.json() returns any
+      const data: Record<string, unknown> = await res.json();
 
       const width = toPositiveInt(data.width);
       const height = toPositiveInt(data.height);
@@ -116,16 +109,6 @@ export const mapTilesPrefetchProgress = ref(0);
 
 const PREFETCH_CONCURRENCY = 12;
 
-interface DziInfo {
-  width: number;
-  height: number;
-  tileSize: number;
-  overlap: number;
-  format: string;
-  /** Base URL of the per-level tile folders (no trailing slash). */
-  tilesBase: string;
-}
-
 function saveDziInfo(info: DziInfo): void {
   try {
     localStorage.setItem(MAP_DZI_INFO_STORAGE_KEY, JSON.stringify(info));
@@ -138,7 +121,8 @@ function loadDziInfoFromStorage(): DziInfo | null {
   try {
     const raw = localStorage.getItem(MAP_DZI_INFO_STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as Partial<DziInfo>;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- JSON.parse returns any
+    const parsed: Partial<DziInfo> = JSON.parse(raw);
     if (
       !parsed ||
       typeof parsed.width !== 'number' ||
@@ -268,7 +252,7 @@ export function prefetchMapTiles(dziUrl: string): Promise<void> {
     mapTilesPrefetchActive.value = true;
     mapTilesPrefetchProgress.value = 0;
     const total = urls.length;
-    console.info('[map] background prefetch starting', {
+    logger.log('[map] background prefetch starting', {
       maxLevel,
       totalTiles: total,
       sampleUrl: urls[0],
@@ -345,7 +329,7 @@ export function prefetchMapTiles(dziUrl: string): Promise<void> {
 
     mapTilesPrefetchActive.value = false;
     mapTilesPrefetchProgress.value = 100;
-    console.info('[map] background prefetch done', {
+    logger.log('[map] background prefetch done', {
       cached: okCount,
       failed: failCount,
       total,

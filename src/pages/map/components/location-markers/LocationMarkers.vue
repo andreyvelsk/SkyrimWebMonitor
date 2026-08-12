@@ -29,7 +29,7 @@
 </template>
 
 <script setup lang="ts">
-import type { LocationProjectedMarker } from '../../types';
+import type { LocationProjectedMarker } from '../../lib/types';
 
 defineProps<{
   markers: LocationProjectedMarker[];

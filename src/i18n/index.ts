@@ -1,8 +1,9 @@
 import { createI18n } from 'vue-i18n';
 import en from './locales/en.json';
 import ru from './locales/ru.json';
+import type { SupportedLocale } from './lib/types';
 
-export type SupportedLocale = 'en' | 'ru';
+export type { SupportedLocale };
 
 export const SUPPORTED_LOCALES: SupportedLocale[] = ['en', 'ru'];
 

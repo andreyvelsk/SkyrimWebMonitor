@@ -4,8 +4,8 @@ import { useModal } from '@/shared/lib/composables/useModal';
 import { useHotkeysStore } from '@/stores/hotkeys/useHotkeysStore';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import { HandPicker, HotkeyPickerModal } from '@/shared/ui';
-import type { SpellItem } from '@/stores/magic/types';
-import type { EquipSlot } from '@/shared/lib/types/common';
+import type { SpellItem } from '@/stores/magic/lib/types';
+import type { EquipSlot } from '@/shared/lib/types';
 import type { HotkeySlot } from '@/api/websocket';
 import { isMasterLevelSpell } from '@/stores/magic/helpers';
 

@@ -1,4 +1,7 @@
-import { computed, type ComputedRef } from 'vue';
+import { computed } from 'vue';
+import type { Point, AffineMatrix, ReferencePoint, UseMapCoordinates } from '../lib/types';
+
+export type { Point, AffineMatrix, ReferencePoint, UseMapCoordinates };
 
 // =============================================================
 // Map ↔ game coordinate system
@@ -29,29 +32,6 @@ import { computed, type ComputedRef } from 'vue';
 // `imagePx` field of the corresponding entry in REFERENCE_POINTS. To add a
 // new landmark, push another entry — no other code changes are needed.
 // =============================================================
-
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface AffineMatrix {
-  a: number;
-  b: number;
-  c: number;
-  d: number;
-  e: number;
-  f: number;
-}
-
-export interface ReferencePoint {
-  /** Display name — used for debugging / dev-overlays only. */
-  name: string;
-  /** Coordinates in game space, or null if unknown. */
-  game: Point | null;
-  /** Coordinates in NATURAL pixels of map.jpg, or null if not yet calibrated. */
-  imagePx: Point | null;
-}
 
 // -----------------------------------------------------------------
 // Reference landmarks
@@ -188,20 +168,6 @@ export function solveAffine(
 // -----------------------------------------------------------------
 // Composable
 // -----------------------------------------------------------------
-
-export interface UseMapCoordinates {
-  /** Affine matrix from game coords to image-pixel coords, or null until calibrated. */
-  matrix: ComputedRef<AffineMatrix | null>;
-  /**
-   * SVG transform attribute string that turns a child group's local
-   * coordinate system into raw game coordinates.
-   */
-  overlayTransform: ComputedRef<string>;
-  /** True iff at least 3 reference points are fully calibrated. */
-  isCalibrated: ComputedRef<boolean>;
-  /** Number of points actually used for the current fit. */
-  calibrationPointCount: ComputedRef<number>;
-}
 
 function isFinitePoint(p: Point | null): p is Point {
   return p !== null && Number.isFinite(p.x) && Number.isFinite(p.y);

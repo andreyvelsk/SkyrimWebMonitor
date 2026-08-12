@@ -1,0 +1,31 @@
+<template>
+  <inventory-item
+    :name="name"
+    :quantity="quantity"
+    :is-favorite="isFavorite"
+    :active="active"
+    @click="$emit('click')"
+  >
+    <template #status>
+      <equip-status :is-equipped="isEquipped" />
+    </template>
+  </inventory-item>
+</template>
+
+<script setup lang="ts">
+import { InventoryItem, EquipStatus } from '@/shared/ui/items';
+import type { ArmorType } from '@/stores/inventory/lib/types';
+
+defineProps<{
+  name: string;
+  armorType: ArmorType;
+  quantity?: number;
+  isFavorite?: boolean;
+  isEquipped?: boolean;
+  active?: boolean;
+}>();
+
+defineEmits<{
+  click: [];
+}>();
+</script>

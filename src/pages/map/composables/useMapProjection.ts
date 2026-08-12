@@ -1,26 +1,8 @@
-import { computed, type ComputedRef } from 'vue';
-import type { MapConfig, ProjectionData, ImageCorrectionMatrix } from '../config/types';
+import { computed } from 'vue';
+import type { MapConfig, ProjectionData, ImageCorrectionMatrix } from '../config/lib/types';
+import type { Point, ProjectedPoint, MapProjectionFn, UseMapProjection, TriangleGrid } from '../lib/types';
 
-export interface Point {
-  x: number;
-  y: number;
-}
-
-export interface ProjectedPoint extends Point {
-  u: number;
-  v: number;
-}
-
-export type MapProjectionFn = (point: Point) => ProjectedPoint | null;
-
-export interface UseMapProjection {
-  projectWorldToImage: MapProjectionFn;
-  imageWidth: number;
-  imageHeight: number;
-  meshName: string;
-  bounds: ProjectionData['bounds'];
-  isReady: ComputedRef<boolean>;
-}
+export type { Point, ProjectedPoint, MapProjectionFn, UseMapProjection };
 
 // =============================================================
 // Internal state (per-instance, set by createMapProjection)
@@ -28,12 +10,6 @@ export interface UseMapProjection {
 
 const GRID_SIZE = 128;
 const BARYCENTRIC_EPSILON = -1e-6;
-
-interface TriangleGrid {
-  cellWidth: number;
-  cellHeight: number;
-  buckets: number[][];
-}
 
 /**
  * Create a self-contained map projection engine from a MapConfig.
@@ -134,7 +110,7 @@ function buildTriangleGrid(
   const { bounds } = projectionData;
   const cellWidth = (bounds.maxX - bounds.minX) / GRID_SIZE;
   const cellHeight = (bounds.maxY - bounds.minY) / GRID_SIZE;
-  const buckets = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => [] as number[]);
+  const buckets: number[][] = Array.from({ length: GRID_SIZE * GRID_SIZE }, () => []);
 
   for (let triangleOffset = 0; triangleOffset < triangles.length; triangleOffset += 3) {
     const ia = triangles[triangleOffset] * projectionData.vertexStride;

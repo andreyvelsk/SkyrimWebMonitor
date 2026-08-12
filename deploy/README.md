@@ -1,80 +1,80 @@
-# Развёртывание SkyrimWebMonitor на Linux (Docker)
+# Deploying SkyrimWebMonitor on Linux (Docker)
 
-Решает проблему **mixed content**: браузер отказывается подключаться
-по `ws://` со страницы, открытой по `https://`.
+Solves the **mixed content** problem: the browser refuses to connect
+via `ws://` from a page served over `https://`.
 
-## Архитектура
+## Architecture
 
 ```
-Браузер ──wss://LINUX_IP/ws──▶ nginx (Docker) ──ws://──▶ Skyrim PC (Windows :8765)
+Browser ──wss://LINUX_IP/ws──▶ nginx (Docker) ──ws://──▶ Skyrim PC (Windows :8765)
                                       │
-                               раздаёт Vue.js SPA
+                               serves Vue.js SPA
 ```
 
-## Быстрый старт
+## Quick Start
 
-### 1. Требования на Linux-машине
+### 1. Requirements on the Linux machine
 
 - Docker Engine ≥ 24
 - Docker Compose v2
 
-### 2. Настройка
+### 2. Configuration
 
 ```bash
 cd deploy/
 cp .env.example .env
-# Отредактируйте .env: укажите IP/hostname PC с запущенным Skyrim
+# Edit .env: set the IP/hostname of the PC running Skyrim
 nano .env
 ```
 
-### 3. Генерация SSL сертификата
+### 3. Generate SSL certificate
 
 ```bash
-# Аргумент — IP или hostname вашей Linux-машины (тот, с которого откроют браузер)
+# Argument — IP or hostname of your Linux machine (the one browsers will connect to)
 bash gen-ssl.sh 192.168.1.200
 ```
 
-Сертификат попадёт в `deploy/ssl/`. После этого **один раз** добавьте
-`ssl/cert.pem` как доверенный в браузере или ОС (инструкция выводится скриптом).
+The certificate will be placed in `deploy/ssl/`. After that, **once** add
+`ssl/cert.pem` as trusted in your browser or OS (instructions are printed by the script).
 
-### 4. Сборка и запуск
+### 4. Build and run
 
 ```bash
 docker compose up -d --build
 ```
 
-Приложение будет доступно по адресу: `https://192.168.1.200`
+The application will be available at: `https://192.168.1.200`
 
-### 5. Открыть в браузере
+### 5. Open in browser
 
-При первом открытии браузер покажет предупреждение о сертификате.
-Добавьте исключение или предварительно импортируйте `cert.pem` как trusted CA.
+On first open, the browser will show a certificate warning.
+Add an exception or pre-import `cert.pem` as a trusted CA.
 
 ---
 
-## Обновление
+## Updating
 
 ```bash
 docker compose up -d --build
 ```
 
-## Остановка
+## Stopping
 
 ```bash
 docker compose down
 ```
 
-## Переменные окружения (`.env`)
+## Environment variables (`.env`)
 
-| Переменная      | По умолчанию    | Описание                              |
-|-----------------|-----------------|---------------------------------------|
-| `SKYRIM_HOST`   | `192.168.1.100` | IP/hostname PC с запущенным Skyrim    |
-| `SKYRIM_WS_PORT`| `8765`          | Порт WebSocket сервера Skyrim-мода    |
+| Variable        | Default         | Description                                |
+|-----------------|-----------------|--------------------------------------------|
+| `SKYRIM_HOST`   | `192.168.1.100` | IP/hostname of the PC running Skyrim       |
+| `SKYRIM_WS_PORT`| `8765`          | WebSocket port of the Skyrim mod server    |
 
-## Альтернатива без Docker: nginx напрямую
+## Alternative without Docker: nginx directly
 
-Если Docker не нужен, установите nginx и:
-1. Разместите `nginx/nginx.conf` в `/etc/nginx/conf.d/skyrim.conf`
-2. Укажите в нём реальные значения вместо `${SKYRIM_HOST}` и `${SKYRIM_WS_PORT}`
-3. Скопируйте `dist/` в `/usr/share/nginx/html`
+If Docker is not needed, install nginx and:
+1. Place `nginx/nginx.conf` in `/etc/nginx/conf.d/skyrim.conf`
+2. Replace `${SKYRIM_HOST}` and `${SKYRIM_WS_PORT}` with real values
+3. Copy `dist/` to `/usr/share/nginx/html`
 4. `sudo nginx -t && sudo systemctl reload nginx`

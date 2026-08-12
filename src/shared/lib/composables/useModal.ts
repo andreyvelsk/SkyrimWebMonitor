@@ -1,24 +1,11 @@
 import { shallowRef, ref, type Component } from 'vue';
-
-export interface ModalOptions {
-  component: Component;
-  /** props of child component */
-  props?: Record<string, unknown>;
-  /** event handlers of child component */
-  on?: Record<string, (...args: any[]) => any>;
-  /** callback when modal is closed */
-  onClose?: () => void;
-  /**
-   * Ignore click events for a short time after opening.
-   * Helps block delayed synthesized "ghost click" on mobile WebViews.
-   */
-  ghostClickGuardMs?: number;
-}
+import type { ModalOptions } from '@/shared/lib/types';
 
 const isOpen = ref(false);
 const modalComponent = shallowRef<Component | null>(null);
 const modalProps = ref<Record<string, unknown>>({});
-const modalHandlers = ref<Record<string, (...args: any[]) => any>>({});
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const modalHandlers = ref<Record<string, (...args: any[]) => unknown>>({});
 const openedAtMs = ref(0);
 const ghostClickGuardMs = ref(0);
 let onCloseCallback: (() => void) | null = null;

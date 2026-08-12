@@ -1,0 +1,356 @@
+<template>
+  <svg
+    v-if="imgNaturalW && imgNaturalH"
+    class="map-markers"
+    :style="overlayStyle"
+    :viewBox="`0 0 ${imgNaturalW} ${imgNaturalH}`"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <symbol
+        v-for="icon in iconSpriteSymbols"
+        :id="icon.id"
+        :key="icon.id"
+        viewBox="0 0 1 1"
+      >
+        <image
+          :href="icon.url"
+          x="0"
+          y="0"
+          width="1"
+          height="1"
+          preserveAspectRatio="xMidYMax meet"
+        />
+      </symbol>
+    </defs>
+
+    <quest-markers
+      :markers="questObjectiveMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
+      :rest-scale="restScale"
+      :selected-marker-key="selectedMarkerKey"
+      :icon-symbol-by-url="iconSymbolByUrl"
+    />
+
+    <location-markers
+      :markers="locationMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
+      :rest-scale="restScale"
+      :selected-marker-key="selectedMarkerKey"
+      :icon-symbol-by-url="iconSymbolByUrl"
+    />
+
+    <player-marker
+      v-if="player"
+      :player="player"
+      :player-size="playerSize"
+      :player-half-size="playerHalfSize"
+      :icon-symbol-id="playerIconSymbolId"
+    />
+
+    <selected-marker-label
+      v-if="selectedMarker"
+      :marker="selectedMarker"
+      :marker-size="markerSize"
+      :selected-label-offset="selectedLabelOffset"
+      :label-height="labelHeight"
+      :label-font-size="labelFontSize"
+      :label-line-height="labelLineHeight"
+      :label-padding-x="labelPaddingX"
+      :label-padding-y="labelPaddingY"
+    />
+  </svg>
+</template>
+
+<script setup lang="ts">
+import { computed, ref, type StyleValue } from 'vue';
+import { storeToRefs } from 'pinia';
+import { iconUrlToSymbolId } from '../composables/iconSprite';
+import type { MapProjectionFn } from '../composables/useMapProjection';
+import { useProjectedMapMarkers } from '../composables/useProjectedMapMarkers';
+import {
+  MARKER_BASE_SIZE_PX,
+  MARKER_MAX_SIZE_PX,
+  MARKER_MIN_SIZE_PX,
+  MARKER_SELECTED_SCALE,
+  MARKER_ZOOM_INFLUENCE,
+  PLAYER_BASE_SIZE_PX,
+  PLAYER_ICON_URL,
+  PLAYER_MAX_SIZE_PX,
+  PLAYER_MIN_SIZE_PX,
+  PLAYER_ZOOM_INFLUENCE,
+  QUEST_ICON_URL,
+  RAD_TO_DEG,
+} from '../constants';
+import FastTravelModal from '../fast-travel-modal/FastTravelModal.vue';
+import LocationMarkers from '../components/location-markers/LocationMarkers.vue';
+import QuestMarkers from '../components/quest-markers/QuestMarkers.vue';
+import PlayerMarker from '../components/player-marker/PlayerMarker.vue';
+import SelectedMarkerLabel from '../components/selected-marker-label/SelectedMarkerLabel.vue';
+import {
+  isLocationMarker,
+  isQuestMarker,
+  type ProjectedMarker,
+} from '../lib/types';
+import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
+import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
+import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
+import { useModal } from '@/shared/lib/composables/useModal';
+
+void [LocationMarkers, QuestMarkers, PlayerMarker, SelectedMarkerLabel];
+
+// =============================================================
+// Props
+// The overlay is positioned and transformed identically to the underlying
+// map image. The host passes the natural image dimensions, current absolute
+// scale (CSS-px per natural-px), the cover scale (floor of `scale`), and an
+// inline style object mirroring the image's transform.
+// =============================================================
+
+const props = defineProps<{
+  imgNaturalW: number;
+  imgNaturalH: number;
+  scale: number;
+  coverScale: number;
+  overlayStyle: StyleValue;
+  /** World→image projection function for the active map. */
+  projectWorldToImage: MapProjectionFn;
+  /** Worldspace of the currently active map (e.g. "Tamriel", "DLC2SolstheimWorld"). */
+  currentWorldspace: string;
+}>();
+
+// =============================================================
+// Data sources
+// =============================================================
+
+const hotspotsStore = useMapHotspotsStore();
+const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
+const playerStore = useMapPlayerStore();
+const { displayPosition: playerDisplayPosition } = storeToRefs(playerStore);
+const { locationMarkers, questObjectiveMarkers, markers } = useProjectedMapMarkers({
+  projectWorldToImage: props.projectWorldToImage,
+  hotspots,
+  questMarkers,
+  questIconUrl: QUEST_ICON_URL,
+  currentWorldspace: props.currentWorldspace,
+});
+
+// =============================================================
+// Selection + fast-travel flow
+// =============================================================
+//
+// Tapping a marker first "selects" it: the icon scales up and a label with
+// the location name appears below. A second tap on the same marker triggers
+// fast-travel — but only if the hotspot reports `canFastTravel`. If the
+// player taps a different marker, selection moves to that one (no modal).
+// =============================================================
+
+const selectedMarkerKey = ref<string | null>(null);
+
+const iconSymbolByUrl = computed<Record<string, string>>(() => {
+  const map: Record<string, string> = {};
+  map[PLAYER_ICON_URL] = iconUrlToSymbolId(PLAYER_ICON_URL);
+  const all = markers.value;
+  for (let i = 0; i < all.length; i += 1) {
+    const marker = all[i];
+    const url = marker.iconUrl;
+    if (!map[url]) {
+      map[url] = iconUrlToSymbolId(url);
+    }
+  }
+  return map;
+});
+
+const iconSpriteSymbols = computed(() =>
+  Object.entries(iconSymbolByUrl.value).map(([url, id]) => ({ url, id }))
+);
+
+const playerIconSymbolId = computed(() => iconSymbolByUrl.value[PLAYER_ICON_URL]);
+
+const selectedMarker = computed<ProjectedMarker | null>(() => {
+  if (!selectedMarkerKey.value) return null;
+  return markers.value.find((m) => m.key === selectedMarkerKey.value) ?? null;
+});
+
+const { openModal, closeModal } = useModal();
+const wsStore = useWebSocketStore();
+
+function onMarkerClick(m: ProjectedMarker): void {
+  if (selectedMarkerKey.value !== m.key) {
+    selectedMarkerKey.value = m.key;
+    return;
+  }
+  if (isQuestMarker(m)) return;
+  if (!isLocationMarker(m)) return;
+  if (!m.canFastTravel) return;
+  openModal({
+    component: FastTravelModal,
+    ghostClickGuardMs: 420,
+    props: { locationName: m.label },
+    on: {
+      confirm: () => {
+        // Trigger fast-travel to the selected map marker. The marker's
+        // `refId` is the hex form ID expected by the protocol.
+        wsStore.sendCommand({ command: 'fast_travel', formId: m.refId });
+        closeModal();
+      },
+      cancel: () => {
+        closeModal();
+      },
+    },
+    onClose: () => {
+      clearSelection();
+    },
+  });
+}
+
+/** Clear marker selection. Called by the host map when the user taps the
+ *  empty area of the map (those clicks bypass the marker `@click.stop`). */
+function clearSelection(): void {
+  selectedMarkerKey.value = null;
+}
+
+/**
+ * Hit-test a tap at image-pixel coordinates against currently rendered
+ * markers and, if hit, run the same selection / fast-travel flow as a
+ * direct marker click. Returns `true` when a marker was hit so the host
+ * can skip its own "deselect on empty tap" logic.
+ *
+ * Markers themselves are `pointer-events: none` so the underlying OSD
+ * canvas always receives pan/pinch gestures uninterrupted.
+ */
+function handleClickAt(imgX: number, imgY: number): boolean {
+  if (markerMaxSize.value <= 0) return false;
+
+  // Markers are drawn anchored at (m.x, m.y) with the icon tip at the
+  // anchor and the body extending up by `markerMaxSize`. Iterate from the
+  // last drawn (top-most in z-order, after quest markers) back to the
+  // first so a tap on overlapping markers picks the visually-topmost one.
+  //
+  // Use the actual rendered size per marker: selected → markerMaxSize,
+  // unselected → markerSize (= markerMaxSize / MARKER_SELECTED_SCALE).
+  // This prevents the ~35% invisible padding that caused mis-taps on
+  // adjacent markers.
+  const all = markers.value;
+  for (let i = all.length - 1; i >= 0; i -= 1) {
+    const m = all[i];
+    const isSelected = m.key === selectedMarkerKey.value;
+    const renderedH = isSelected ? markerMaxSize.value : markerSize.value;
+    const renderedHalfW = renderedH / 2;
+    const dx = imgX - m.x;
+    const dy = imgY - m.y;
+    if (dx >= -renderedHalfW && dx <= renderedHalfW && dy >= -renderedH && dy <= 0) {
+      onMarkerClick(m);
+      return true;
+    }
+  }
+  return false;
+}
+
+defineExpose({ clearSelection, handleClickAt });
+
+/**
+ * Marker size in image-natural-pixel units. Pre-divided by current scale so
+ * that the on-screen size follows the configured `MARKER_ZOOM_INFLUENCE`
+ * curve regardless of how the user zooms or pans.
+ */
+const markerSize = computed(() => {
+  const s = props.scale;
+  const cover = props.coverScale;
+  if (!s || !cover) return 0;
+  const zoomFactor = s / cover; // ≥ 1 by construction
+  const screenPx = clamp(
+    MARKER_BASE_SIZE_PX * Math.pow(zoomFactor, MARKER_ZOOM_INFLUENCE),
+    MARKER_MIN_SIZE_PX,
+    MARKER_MAX_SIZE_PX
+  );
+  return screenPx / s;
+});
+
+/** Per-marker rendered size — selected markers are drawn larger. */
+const markerMaxSize = computed(() => markerSize.value * MARKER_SELECTED_SCALE);
+const markerMaxHalf = computed(() => markerMaxSize.value / 2);
+/** CSS variable shared by every marker — non-selected markers shrink to this. */
+const restScale = computed(() => (1 / MARKER_SELECTED_SCALE).toFixed(4));
+
+/**
+ * Label is anchored just below the marker's baseline (the marker is drawn
+ * with `mask-position: center bottom`, so its tip sits at the hotspot's y).
+ * All sizes are derived from `markerSize` so the label scales together with
+ * the icon as the user zooms.
+ */
+const labelFontSize = computed(() => Math.max(10, markerSize.value * 0.35));
+const labelLineHeight = computed(() => labelFontSize.value * 1.2);
+const labelPaddingX = computed(() => labelFontSize.value * 0.6);
+const labelPaddingY = computed(() => labelFontSize.value * 0.18);
+const labelHeight = computed(
+  () => labelLineHeight.value + labelPaddingY.value * 2 + 4
+);
+const selectedLabelOffset = computed(() => 4 / props.scale);
+
+/**
+ * Player marker projected into image-pixel coords with screen-rotated
+ * heading already pre-converted to degrees. The store decides which
+ * coordinates to plot (live `Player::Position` outside in Tamriel, or
+ * cached `Player::ExteriorPosition` while in interiors / city sub-worlds);
+ * this component is purely presentational. Hidden before calibration or
+ * when the position does not belong to the FWMF Tamriel mesh.
+ */
+const player = computed(() => {
+  const dp = playerDisplayPosition.value;
+  if (!dp) return null;
+  const projected = props.projectWorldToImage(dp);
+  if (!projected) return null;
+  return {
+    x: projected.x,
+    y: projected.y,
+    angleDeg: dp.angle * RAD_TO_DEG,
+  };
+});
+
+const playerSize = computed(() => {
+  const s = props.scale;
+  const cover = props.coverScale;
+  if (!s || !cover) return 0;
+  const zoomFactor = s / cover;
+  const screenPx = clamp(
+    PLAYER_BASE_SIZE_PX * Math.pow(zoomFactor, PLAYER_ZOOM_INFLUENCE),
+    PLAYER_MIN_SIZE_PX,
+    PLAYER_MAX_SIZE_PX
+  );
+  return screenPx / s;
+});
+
+const playerHalfSize = computed(() => playerSize.value / 2);
+
+function clamp(v: number, lo: number, hi: number): number {
+  return v < lo ? lo : v > hi ? hi : v;
+}
+</script>
+
+<style scoped lang="scss">
+.map-markers {
+  position: absolute;
+  top: 0;
+  left: 0;
+  // Make the SVG and every descendant transparent to pointer/touch events.
+  // On iOS Safari `pointer-events: none` on the <svg> alone does NOT
+  // propagate to <foreignObject> HTML children, so they keep stealing
+  // touches from the OSD canvas underneath. The :deep selector forces
+  // every nested node to be event-transparent.
+  pointer-events: none;
+  touch-action: none;
+  will-change: transform;
+  /* `overlayStyle` provides width/height inline; explicit dims here would
+     override and break the transform sync with the map image. */
+  overflow: visible;
+
+  :deep(*) {
+    pointer-events: none;
+    touch-action: none;
+  }
+}
+</style>

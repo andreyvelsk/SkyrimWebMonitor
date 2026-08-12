@@ -1,4 +1,5 @@
 import { DataRouter } from '@/stores/adapters/dataRouter';
+import { logger } from '@/shared/lib/utils/logger';
 
 /**
  * Loads fixtures from a public file and applies them to stores via the DataRouter.
@@ -10,8 +11,8 @@ export async function applyFixturesIfEnabled(): Promise<void> {
     const useFixtures = import.meta.env.VITE_USE_FIXTURES === 'true';
     if (!useFixtures) return;
 
-    const path = import.meta.env.VITE_FIXTURES_PATH ?? '/SkyrimWebMonitor/fixtures.json';
-    console.log(`[FixtureLoader] VITE_USE_FIXTURES enabled — loading fixtures from ${path}`);
+    const path: string = import.meta.env.VITE_FIXTURES_PATH ?? '/SkyrimWebMonitor/fixtures.json';
+    logger.log(`[FixtureLoader] VITE_USE_FIXTURES enabled — loading fixtures from ${path}`);
 
     const res = await fetch(path, { cache: 'no-store' });
     if (!res.ok) {
@@ -19,7 +20,7 @@ export async function applyFixturesIfEnabled(): Promise<void> {
       return;
     }
 
-    const data = await res.json();
+    const data: unknown = await res.json();
     if (!data || typeof data !== 'object') {
       console.warn('[FixtureLoader] Invalid fixture format, expected object mapping id->fields');
       return;
@@ -39,14 +40,14 @@ export async function applyFixturesIfEnabled(): Promise<void> {
         if (!result.success) {
           console.warn(`[FixtureLoader] Routing fixture for ${subscriptionId} failed: ${result.message}`);
         } else {
-          console.log(`[FixtureLoader] Applied fixture for ${subscriptionId}`);
+          logger.log(`[FixtureLoader] Applied fixture for ${subscriptionId}`);
         }
       } catch (err) {
         console.error(`[FixtureLoader] Error applying fixture ${subscriptionId}:`, err);
       }
     }
 
-    console.log('[FixtureLoader] All fixtures processed');
+    logger.log('[FixtureLoader] All fixtures processed');
   } catch (err) {
     console.error('[FixtureLoader] Failed to load/apply fixtures:', err);
   }

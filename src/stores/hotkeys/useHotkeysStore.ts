@@ -1,12 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type { HotkeySlot } from '@/api/websocket';
-import type { HotkeyItemsState, HotkeySlotEntry } from './types';
+import type { HotkeyItemsState, HotkeySlotEntry } from './lib/types';
 
-const EMPTY_SLOTS: HotkeySlotEntry[] = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({
-  slot: n as HotkeySlot,
-  bound: false,
-}));
+const EMPTY_SLOTS: HotkeySlotEntry[] = ([1, 2, 3, 4, 5, 6, 7, 8] as const).map((slot) => ({ slot, bound: false }));
 
 export const useHotkeysStore = defineStore('hotkeys', () => {
   const slots = ref<HotkeySlotEntry[]>(EMPTY_SLOTS);
@@ -22,7 +19,7 @@ export const useHotkeysStore = defineStore('hotkeys', () => {
   const getSlotForFormId = (formId: string | null | undefined): HotkeySlot | null => {
     if (!formId) return null;
     const found = slots.value.find((entry) => entry.bound && entry.formId === formId);
-    return found ? (found.slot as HotkeySlot) : null;
+    return found ? (found.slot) : null;
   };
 
   const setHotkeys = (data: HotkeyItemsState): void => {
@@ -30,9 +27,11 @@ export const useHotkeysStore = defineStore('hotkeys', () => {
     if (!Array.isArray(incoming)) return;
 
     // Normalize to exactly 8 ordered slots
-    const normalized: HotkeySlotEntry[] = [1, 2, 3, 4, 5, 6, 7, 8].map((slot) => {
+    const normalized: HotkeySlotEntry[] = ([1, 2, 3, 4, 5, 6, 7, 8] as const).map((slot) => {
       const entry = incoming.find((e) => e.slot === slot);
-      return entry ?? ({ slot: slot as HotkeySlot, bound: false } as HotkeySlotEntry);
+      if (entry) return entry;
+      const fallback: HotkeySlotEntry = { slot, bound: false };
+      return fallback;
     });
     slots.value = normalized;
   };

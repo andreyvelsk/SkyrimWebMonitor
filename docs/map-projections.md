@@ -1,46 +1,46 @@
-# Извлечение проекций FWMF для карт
+# Extracting FWMF Projections for Maps
 
-## Обзор
+## Overview
 
-Каждая карта в `public/maps/` требует соответствующий файл проекции в `src/pages/map/data/projections/`. Файл проекции описывает, как игровые координаты (X, Y worldspace) преобразуются в пиксельные координаты на изображении карты.
+Each map in `public/maps/` requires a corresponding projection file in `src/pages/map/data/projections/`. The projection file describes how game coordinates (X, Y worldspace) are transformed into pixel coordinates on the map image.
 
-Проекция извлекается из `.btr`-файлов игры (формат NIF), которые содержат FWMF-меш — плоскую сетку, связывающую игровые координаты с UV-координатами текстуры карты.
+The projection is extracted from the game's `.btr` files (NIF format), which contain the FWMF mesh — a flat grid linking game coordinates to UV coordinates of the map texture.
 
-## Зависимости
+## Dependencies
 
-Скрипт требует Python 3 и библиотеку `pyffi`:
+The script requires Python 3 and the `pyffi` library:
 
 ```bash
 pip install pyffi
 ```
 
-> **Примечание:** `pyffi` может требовать Python ≤ 3.11. Для Python 3.12+ используйте виртуальное окружение с Python 3.11.
+> **Note:** `pyffi` may require Python ≤ 3.11. For Python 3.12+, use a virtual environment with Python 3.11.
 
-## Использование
+## Usage
 
 ```bash
 python scripts/extract-fwmf-projection.py \
-  --input <путь к .btr файлу> \
+  --input <path to .btr file> \
   --output src/pages/map/data/projections/<worldspace>.json \
-  --texture <фрагмент пути к текстуре> \
-  --image-width <ширина PNG карты в пикселях> \
-  --image-height <высота PNG карты в пикселях>
+  --texture <texture path fragment> \
+  --image-width <PNG map width in pixels> \
+  --image-height <PNG map height in pixels>
 ```
 
-### Параметры
+### Parameters
 
-| Параметр | По умолчанию | Описание |
+| Parameter | Default | Description |
 |---|---|---|
-| `--input` | `tamriel/tamriel.32.0.0.btr` | Путь к исходному BTR-файлу |
-| `--output` | `src/pages/map/data/tamrielProjection.json` | Путь для сохранения JSON |
-| `--texture` | `skyrim.dds` | Фрагмент пути к текстуре для поиска нужного NiTriShape |
-| `--shape` | `chunk:16` | Имя NiTriShape (используется только если `--texture` не задан) |
-| `--image-width` | `16384` | Ширина PNG-файла карты в пикселях |
-| `--image-height` | `16384` | Высота PNG-файла карты в пикселях |
+| `--input` | `tamriel/tamriel.32.0.0.btr` | Path to the source BTR file |
+| `--output` | `src/pages/map/data/tamrielProjection.json` | Path to save the JSON output |
+| `--texture` | `skyrim.dds` | Texture path fragment to find the correct NiTriShape |
+| `--shape` | `chunk:16` | NiTriShape name (used only if `--texture` is not set) |
+| `--image-width` | `16384` | Width of the map PNG file in pixels |
+| `--image-height` | `16384` | Height of the map PNG file in pixels |
 
-### Примеры
+### Examples
 
-#### Tamriel (основная карта Скайрима)
+#### Tamriel (main Skyrim map)
 
 ```bash
 python scripts/extract-fwmf-projection.py \
@@ -62,11 +62,11 @@ python scripts/extract-fwmf-projection.py \
   --image-height 8192
 ```
 
-## Формат выходного JSON
+## Output JSON Format
 
 ```json
 {
-  "source": "путь/к/файлу.btr",
+  "source": "path/to/file.btr",
   "meshName": "chunk:6",
   "blockIndex": 5,
   "texturePaths": ["textures\\terrain\\tamriel\\skyrim.dds"],
@@ -85,27 +85,27 @@ python scripts/extract-fwmf-projection.py \
 }
 ```
 
-- `vertices` — плоский массив, по 4 значения на вершину: `[gameX, gameY, texU, texV]`
-- `triangles` — плоский массив индексов вершин, по 3 на треугольник
-- `bounds` — ограничивающий прямоугольник в игровых и текстурных координатах
+- `vertices` — flat array, 4 values per vertex: `[gameX, gameY, texU, texV]`
+- `triangles` — flat array of vertex indices, 3 per triangle
+- `bounds` — bounding rectangle in game and texture coordinates
 
-## Добавление новой карты
+## Adding a New Map
 
-### Шаг 1: Поместить PNG
+### Step 1: Place the PNG
 
-Скопировать PNG-файл карты в `public/maps/<worldspace>.png`.
+Copy the map PNG file to `public/maps/<worldspace>.png`.
 
-### Шаг 2: Сгенерировать DZI-тайлы
+### Step 2: Generate DZI tiles
 
-#### Локально (macOS)
+#### Locally (macOS)
 
-Установить `libvips`:
+Install `libvips`:
 
 ```bash
 brew install vips
 ```
 
-Сгенерировать тайлы:
+Generate tiles:
 
 ```bash
 vips dzsave public/maps/<worldspace>.png public/map-dzi/<worldspace> \
@@ -115,28 +115,47 @@ vips dzsave public/maps/<worldspace>.png public/map-dzi/<worldspace> \
   --suffix '.webp[Q=80]'
 ```
 
-После выполнения в `public/map-dzi/` появятся:
-- `<worldspace>.dzi` — XML-манифест
-- `<worldspace>_files/` — каталог с тайлами WebP по уровням
+After execution, the following will appear in `public/map-dzi/`:
+- `<worldspace>.dzi` — XML manifest
+- `<worldspace>_files/` — directory with WebP tiles by level
 
-#### Через CI/CD
+#### Via CI/CD
 
-Запустить workflow [`build-map.yml`](.github/workflows/build-map.yml) вручную (workflow_dispatch) — он скачает все PNG из релиза `map-source`, сгенерирует DZI для каждого и загрузит архив в релиз `map-assets`.
+Run the [`build-map.yml`](.github/workflows/build-map.yml) workflow manually (workflow_dispatch) — it will download all PNGs from the `map-source` release, generate DZI for each, and upload the archive to the `map-assets` release.
 
-### Шаг 3: Извлечь проекцию
+### Step 3: Extract the projection
+
+**Method A (BTR file available):** use [`extract-fwmf-projection.py`](scripts/extract-fwmf-projection.py):
 
 ```bash
 python scripts/extract-fwmf-projection.py \
-  --input <путь к .btr файлу> \
+  --input <path to .btr file> \
   --output src/pages/map/data/projections/<worldspace>.json \
-  --texture <фрагмент пути к текстуре> \
-  --image-width <ширина PNG> \
-  --image-height <высота PNG>
+  --texture <texture path fragment> \
+  --image-width <PNG width> \
+  --image-height <PNG height>
 ```
 
-### Шаг 4: Зарегистрировать карту
+**Method B (no BTR file):** calibration via reference points — see [map-projection-calibration.md](map-projection-calibration.md). In short:
 
-Добавить запись в [`mapRegistry.ts`](src/pages/map/config/mapRegistry.ts):
+1. Collect 3+ points (game coordinates → pixel coordinates) in a JSON file
+2. Run [`calibrate-map-projection.py`](scripts/calibrate-map-projection.py):
+
+```bash
+python scripts/calibrate-map-projection.py \
+  --image-width <PNG width> \
+  --image-height <PNG height> \
+  --points calibration_points.json \
+  --output-projection src/pages/map/data/projections/<worldspace>.ts \
+  --worldspace <WorldspaceEditorID> \
+  --print-correction
+```
+
+The script will output bounds, `imageCorrection`, and error at each point (should be < 1 px).
+
+### Step 4: Register the map
+
+Add an entry to [`mapRegistry.ts`](src/pages/map/config/mapRegistry.ts):
 
 ```ts
 import newMapProjection from '../data/projections/<worldspace>.json';
@@ -145,8 +164,8 @@ const newMapConfig: MapConfig = {
   worldspace: '<WorldspaceEditorID>',
   dziUrl: `${import.meta.env.BASE_URL}map-dzi/<worldspace>.dzi`,
   projectionData: newMapProjection as ProjectionData,
-  // imageCorrection — опционально, калибруется вручную (см. ниже)
-  cropX: 0,         // подобрать по границам изображения
+  // imageCorrection — optional, calibrated manually (see below)
+  cropX: 0,         // adjust based on image edges
   cropYTop: 0,
   cropYBottom: 0,
 };
@@ -157,29 +176,29 @@ export const mapRegistry: MapRegistry = {
 };
 ```
 
-### Шаг 5: Откалибровать (опционально)
+### Step 5: Calibrate (optional)
 
-При необходимости откалибровать `imageCorrection` и `referencePoints` (см. секцию «Калибровка imageCorrection»).
+If needed, calibrate `imageCorrection` and `referencePoints` (see "imageCorrection Calibration" section).
 
-## Калибровка imageCorrection
+## imageCorrection Calibration
 
-Матрица `imageCorrection` компенсирует расхождение между UV-координатами FWMF-меша и реальными пиксельными координатами на hand-painted карте.
+The `imageCorrection` matrix compensates for the discrepancy between FWMF mesh UV coordinates and actual pixel coordinates on the hand-painted map.
 
-Для калибровки:
-1. Открыть карту в приложении
-2. Кликнуть по известным локациям (городам) и записать игровые координаты и пиксельные координаты из консоли (`[map] image px: { x: ..., y: ... }`)
-3. Вычислить аффинную матрицу коррекции методом наименьших квадратов
-4. Добавить матрицу в конфиг карты
+To calibrate:
+1. Open the map in the application
+2. Click on known locations (cities) and record game coordinates and pixel coordinates from the console (`[map] image px: { x: ..., y: ... }`)
+3. Compute the affine correction matrix using least squares
+4. Add the matrix to the map config
 
-## Проверка скрипта
+## Script Verification
 
-Скрипт [`extract-fwmf-projection.py`](scripts/extract-fwmf-projection.py) проверен:
+The [`extract-fwmf-projection.py`](scripts/extract-fwmf-projection.py) script has been verified:
 
-- ✅ Корректно парсит BTR/NIF файлы через `pyffi`
-- ✅ Находит `NiTriShape` по текстуре или имени
-- ✅ Применяет трансформацию вершины (rotation × scale + translation)
-- ✅ Извлекает UV-координаты
-- ✅ Формат выхода совместим с `useMapProjection.ts`
-- ⚠️ `imageWidth`/`imageHeight` задаются вручную — должны совпадать с размерами PNG
-- ⚠️ `imageCorrection` не извлекается автоматически — калибруется отдельно
-- ⚠️ Зависимость от `pyffi` — рекомендуется Python ≤ 3.11
+- ✅ Correctly parses BTR/NIF files via `pyffi`
+- ✅ Finds `NiTriShape` by texture or name
+- ✅ Applies vertex transformation (rotation × scale + translation)
+- ✅ Extracts UV coordinates
+- ✅ Output format is compatible with `useMapProjection.ts`
+- ⚠️ `imageWidth`/`imageHeight` are set manually — must match PNG dimensions
+- ⚠️ `imageCorrection` is not extracted automatically — calibrated separately
+- ⚠️ Dependency on `pyffi` — Python ≤ 3.11 recommended

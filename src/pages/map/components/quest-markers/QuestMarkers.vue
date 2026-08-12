@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import type { QuestProjectedMarker } from '../../types';
+import type { QuestProjectedMarker } from '../../lib/types';
 
 defineProps<{
   markers: QuestProjectedMarker[];
