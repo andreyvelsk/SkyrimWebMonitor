@@ -54,23 +54,24 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
    * worldspace is considered "renderable" for live position and exterior
    * position pinning.
    */
-  const setCurrentMapWorldspace = (ws: string): void => {
+  function setCurrentMapWorldspace(ws: string): void {
     currentMapWorldspace.value = ws;
-  };
+  }
 
   /**
    * `true` when `Player::Position` itself can be plotted directly on the
    * current map (player is outside, in the map's worldspace proper).
    */
-  const isLivePositionRenderable = (p: PlayerPosition): boolean =>
-    !p.isInterior
-    && p.parentWorldspace === currentMapWorldspace.value;
+  function isLivePositionRenderable(p: PlayerPosition): boolean {
+    return !p.isInterior
+      && p.parentWorldspace === currentMapWorldspace.value;
+  }
 
   /**
    * Fire a one-shot query for `Player::ExteriorPosition`. Safe to call
    * repeatedly — the in-flight guard collapses calls into a single request.
    */
-  const requestExteriorPosition = (): void => {
+  function requestExteriorPosition(): void {
     if (pendingExteriorQuery) return;
     pendingExteriorQuery = true;
     const ws = useWebSocketStore();
@@ -88,7 +89,7 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
         }
       }
     );
-  };
+  }
 
   /**
    * High-frequency `Player::Position` setter. Detects boundary transitions
@@ -97,7 +98,7 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
    *  - Player came back out into Tamriel proper → drop the stale cache so
    *    we fall through to live coordinates immediately.
    */
-  const setPosition = (data: PlayerPosition | null | undefined): void => {
+  function setPosition(data: PlayerPosition | null | undefined): void {
     const next = data ?? null;
     const prev = position.value;
     position.value = next;
@@ -115,7 +116,7 @@ export const useMapPlayerStore = defineStore('mapPlayer', () => {
       // dropping it lets `displayPosition` fall straight back to live coords.
       exteriorPosition.value = null;
     }
-  };
+  }
 
   /**
    * Resolved player position to render on the current map, following
