@@ -26,7 +26,7 @@
       >
         <base-icon
           icon-path="map/player.svg"
-          :background-color="isFollowPlayerMode ? 'var(--skyrim-accent-gold-light)' : 'var(--skyrim-text-dim)' "
+          :background-color="isFollowPlayerMode ? 'var(--skyrim-accent-main-light)' : 'var(--skyrim-text-dim)' "
         />
       </button>
       <Transition
@@ -689,8 +689,8 @@ onBeforeUnmount(() => {
     width: var(--p, 0%);
     background: linear-gradient(
       90deg,
-      var(--skyrim-accent-gold-dim),
-      var(--skyrim-accent-gold-light)
+      var(--skyrim-accent-main-dim),
+      var(--skyrim-accent-main-light)
     );
     transition: width var(--transition-fast);
   }

@@ -4,48 +4,48 @@
 
 :root {
   /* PRIMARY COLORS - Main interface colors */
-  --skyrim-bg-dark: #0d0d0d;
-  --skyrim-bg-medium: #1a1a1a;
-  --skyrim-bg-light: #252525;
+  --skyrim-bg-dark: #0a0a0a;
+  --skyrim-bg-medium: #151515;
+  --skyrim-bg-light: #202020;
 
   /* TEXT COLORS - Typography hierarchy */
-  --skyrim-text-primary: #d4c4a8;
-  --skyrim-text-secondary: #9a8b70;
-  --skyrim-text-accent: #f5e6c8;
-  --skyrim-text-dim: #5a5040;
+  --skyrim-text-primary: #d0d0d0;
+  --skyrim-text-secondary: #909090;
+  --skyrim-text-accent: #f0f0f0;
+  --skyrim-text-dim: #606060;
 
   /* ACCENT COLORS - Interactive elements */
-  --skyrim-accent-gold: #c9a227;
-  --skyrim-accent-gold-light: #e5c44d;
-  --skyrim-accent-gold-dim: #8b7220;
+  --skyrim-accent-main: #e8e8e8;
+  --skyrim-accent-main-light: #ffffff;
+  --skyrim-accent-main-dim: #a8a8a8;
 
   /* BORDER & DIVIDER COLORS */
-  --skyrim-border-dark: #2a2a2a;
-  --skyrim-border-medium: #3d3d3d;
-  --skyrim-border-accent: #c9a227;
-  --skyrim-border-glow: rgb(201 162 39 / 30%);
+  --skyrim-border-dark: #303030;
+  --skyrim-border-medium: #505050;
+  --skyrim-border-accent: #e8e8e8;
+  --skyrim-border-glow: rgb(232 232 232 / 30%);
 
   /* TAB SPECIFIC COLORS */
   --tab-bg-inactive: transparent;
-  --tab-bg-hover: rgb(201 162 39 / 8%);
-  --tab-bg-active: rgb(201 162 39 / 15%);
+  --tab-bg-hover: rgb(232 232 232 / 8%);
+  --tab-bg-active: rgb(232 232 232 / 15%);
   --tab-text-inactive: var(--skyrim-text-secondary);
   --tab-text-hover: var(--skyrim-text-primary);
-  --tab-text-active: var(--skyrim-accent-gold);
-  --tab-border-active: var(--skyrim-accent-gold);
+  --tab-text-active: var(--skyrim-accent-main);
+  --tab-border-active: var(--skyrim-accent-main);
 
   /* SUB-TAB SPECIFIC COLORS */
   --subtab-bg-inactive: transparent;
-  --subtab-bg-hover: rgb(212 196 168 / 5%);
-  --subtab-bg-active: rgb(212 196 168 / 10%);
+  --subtab-bg-hover: rgb(208 208 208 / 5%);
+  --subtab-bg-active: rgb(208 208 208 / 10%);
   --subtab-text-inactive: var(--skyrim-text-dim);
   --subtab-text-hover: var(--skyrim-text-secondary);
   --subtab-text-active: var(--skyrim-text-primary);
-  --subtab-indicator-active: var(--skyrim-accent-gold-dim);
+  --subtab-indicator-active: var(--skyrim-accent-main-dim);
 
   /* ORNAMENT & DECORATION */
   --ornament-color: var(--skyrim-text-accent);
-  --ornament-glow: rgb(201 162 39 / 20%);
+  --ornament-glow: rgb(232 232 232 / 20%);
 
   /* SHADOW & EFFECTS */
   --shadow-soft: 0 2px 8px rgb(0 0 0 / 40%);
@@ -117,16 +117,16 @@
   /* SEMANTIC STATE COLORS (success / warning / danger / info) */
   --color-success: #4caf50;
   --color-success-glow: rgb(76 175 80 / 60%);
-  --color-warning: var(--skyrim-accent-gold);
+  --color-warning: var(--skyrim-accent-main);
   --color-danger: #c04a4a;
   --color-danger-dim: #7a2a2a;
   --color-danger-light: #d08a8a;
 
-  /* INTERACTIVE STATE BACKGROUNDS (gold accent transparency steps) */
-  --bg-accent-faint: rgb(201 162 39 / 4%);
-  --bg-accent-soft: rgb(201 162 39 / 8%);
-  --bg-accent-medium: rgb(201 162 39 / 12%);
-  --bg-accent-strong: rgb(201 162 39 / 20%);
+  /* INTERACTIVE STATE BACKGROUNDS (silver accent transparency steps) */
+  --bg-accent-faint: rgb(232 232 232 / 4%);
+  --bg-accent-soft: rgb(232 232 232 / 8%);
+  --bg-accent-medium: rgb(232 232 232 / 12%);
+  --bg-accent-strong: rgb(232 232 232 / 20%);
   --bg-overlay: rgb(0 0 0 / 75%);
   --bg-inset-dark: inset 0 0 60px rgb(0 0 0 / 30%);
 }

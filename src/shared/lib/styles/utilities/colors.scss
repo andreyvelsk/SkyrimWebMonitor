@@ -16,13 +16,13 @@
   color: var(--skyrim-text-dim);
 }
 .text-gold {
-  color: var(--skyrim-accent-gold);
+  color: var(--skyrim-accent-main);
 }
 .text-gold-light {
-  color: var(--skyrim-accent-gold-light);
+  color: var(--skyrim-accent-main-light);
 }
 .text-gold-dim {
-  color: var(--skyrim-accent-gold-dim);
+  color: var(--skyrim-accent-main-dim);
 }
 .text-success {
   color: var(--color-success);
@@ -74,10 +74,10 @@
   border-color: var(--skyrim-border-accent);
 }
 .border-gold {
-  border-color: var(--skyrim-accent-gold);
+  border-color: var(--skyrim-accent-main);
 }
 .border-gold-dim {
-  border-color: var(--skyrim-accent-gold-dim);
+  border-color: var(--skyrim-accent-main-dim);
 }
 .border-danger {
   border-color: var(--color-danger-dim);

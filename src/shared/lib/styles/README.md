@@ -69,7 +69,7 @@ styles/
 ### Colors
 - Background: `--skyrim-bg-dark/medium/light`
 - Text: `--skyrim-text-primary/secondary/accent/dim`
-- Accent: `--skyrim-accent-gold/-light/-dim`
+- Accent: `--skyrim-accent-main/-light/-dim`
 - Semantic: `--color-success`, `--color-danger`, `--color-warning`
 - Translucent overlays: `--bg-accent-faint/-soft/-medium/-strong`
 
@@ -281,7 +281,7 @@ Every Vue component contains its own `<style scoped>` blocks with CSS nesting fo
   gap: var(--spacing-md);
 
   &:hover {
-    color: var(--skyrim-accent-gold);
+    color: var(--skyrim-accent-main);
   }
 
   & .child-element {
@@ -289,7 +289,7 @@ Every Vue component contains its own `<style scoped>` blocks with CSS nesting fo
   }
 
   &.modifier {
-    border-left: 3px solid var(--skyrim-accent-gold);
+    border-left: 3px solid var(--skyrim-accent-main);
   }
 }
 </style>
@@ -341,9 +341,9 @@ Every Vue component contains its own `<style scoped>` blocks with CSS nesting fo
 --skyrim-text-dim: #5a5040;
 
 /* Accent colors */
---skyrim-accent-gold: #c9a227;
---skyrim-accent-gold-light: #e5c44d;
---skyrim-accent-gold-dim: #8b7220;
+--skyrim-accent-main: #c9a227;
+--skyrim-accent-main-light: #e5c44d;
+--skyrim-accent-main-dim: #8b7220;
 ```
 
 ### Sizes and spacing

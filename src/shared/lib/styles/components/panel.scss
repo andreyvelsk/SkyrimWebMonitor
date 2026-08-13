@@ -22,7 +22,7 @@
 }
 
 .panel--accent {
-  border-color: var(--skyrim-accent-gold-dim);
+  border-color: var(--skyrim-accent-main-dim);
 }
 
 .panel--danger {
@@ -39,13 +39,13 @@
   @media (hover: hover) {
     &:hover:not(:disabled) {
       background-color: var(--bg-accent-soft);
-      border-color: var(--skyrim-accent-gold-dim);
+      border-color: var(--skyrim-accent-main-dim);
     }
   }
 
   &.active {
     background-color: var(--bg-accent-strong);
-    border-color: var(--skyrim-accent-gold-dim);
+    border-color: var(--skyrim-accent-main-dim);
   }
 
   &:disabled {

@@ -254,13 +254,13 @@ function handleActionClick(actionEvent: string) {
 
     &.favorite:hover:not(:disabled),
     &.hotkey-bound:hover:not(:disabled) {
-      --skyrim-text-accent: var(--skyrim-accent-gold);
+      --skyrim-text-accent: var(--skyrim-accent-main);
     }
   }
 
   &.favorite,
   &.hotkey-bound {
-    --skyrim-text-accent: var(--skyrim-accent-gold);
+    --skyrim-text-accent: var(--skyrim-accent-main);
   }
 }
 </style>
