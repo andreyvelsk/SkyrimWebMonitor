@@ -43,3 +43,5 @@ public/maps/
 *.sln
 *.sw?
 .env
+.roo/*
+.zoo/*
