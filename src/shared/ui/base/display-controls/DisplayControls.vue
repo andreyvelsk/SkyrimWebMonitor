@@ -1,6 +1,10 @@
 <template>
-  <!-- Teleport to body so position:fixed works outside any zoom context -->
-  <Teleport to="body">
+  <!-- Teleport to body so position:fixed works outside any zoom context.
+       Disabled when embedded in a modal (e.g. settings) so it renders in place. -->
+  <Teleport
+    to="body"
+    :disabled="teleport === false"
+  >
     <div class="display-controls">
       <button
         class="display-controls__btn"
@@ -122,9 +126,13 @@ import {
   ZOOM_STEP,
   ZOOM_MIN,
   ZOOM_MAX,
-  ZOOM_KEY,
   persistZoom,
 } from '@/shared/lib/composables/useAppZoom';
+
+// Whether to teleport the controls to <body>. Defaults to true so the
+// fixed-position controls stay outside any zoom/transform context.
+// Set to false when the controls are rendered inside a modal.
+defineProps<{ teleport?: boolean }>();
 
 interface ElectronAPI {
   setZoom: (_factor: number) => void;
@@ -200,11 +208,10 @@ function onFullscreenChange(): void {
 let removeElectronFsListener: (() => void) | null = null;
 
 onMounted(() => {
-  // Restore zoom from previous session
-  const saved = localStorage.getItem(ZOOM_KEY);
-  if (saved) {
-    applyZoom(parseFloat(saved));
-  }
+  // Restore zoom from previous session. `currentZoom` is already initialised
+  // safely from localStorage at module load (see useAppZoom.ts), so just
+  // re-apply its value to the DOM.
+  applyZoom(currentZoom.value);
 
   if (isElectron()) {
     const api = getElectronAPI();

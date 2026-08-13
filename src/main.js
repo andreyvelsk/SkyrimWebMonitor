@@ -4,6 +4,11 @@ import '@/shared/lib/styles/skyrim-theme.scss';
 import './style.css';
 import App from './app/App.vue';
 import i18n from './i18n';
+import { initThemeGamut } from '@/shared/lib';
+
+// Apply the persisted theme gamut before mounting so the app never flashes
+// with the default gamut when a different one was saved.
+initThemeGamut();
 
 const ICON_CACHE_NAME = 'app-icons';
 const USED_ICON_PATHS = __USED_ICON_PATHS__;

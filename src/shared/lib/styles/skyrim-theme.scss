@@ -3,17 +3,20 @@
  * ============================================
  *
  * Layered design system:
- *   1. variables    — design tokens (colors, spacing, typography, z-index, ...)
- *   2. base         — element resets, body, scrollbars
- *   3. utilities/   — Bootstrap-like atomic utilities (p-md, d-flex, gap-sm, ...)
- *   4. components/  — reusable UI primitives (.btn, .modal-panel, .tab, ...)
- *   5. animations   — global keyframes & .animate-* helpers
+ *   1. variables    — design tokens (spacing, typography, z-index, ...)
+ *   2. themes/      — colour gamuts (silver, gold, ...)
+ *   3. base         — element resets, body, scrollbars
+ *   4. utilities/   — Bootstrap-like atomic utilities (p-md, d-flex, gap-sm, ...)
+ *   5. components/  — reusable UI primitives (.btn, .modal-panel, .tab, ...)
+ *   6. animations   — global keyframes & .animate-* helpers
  *
  * Component-specific layout MUST live inside the consuming
  * .vue file's <style scoped>.
  */
 
+@use './fonts';
 @use './variables';
+@use './themes/index';
 @use './base';
 @use './utilities/index' as *;
 @use './components/index' as *;

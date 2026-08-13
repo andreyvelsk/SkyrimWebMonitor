@@ -8,7 +8,6 @@ export { default as QuantityPicker } from './quantity-picker/QuantityPicker.vue'
 export { default as DropItemsModal } from './drop-items-modal/DropItemsModal.vue';
 export { default as HotkeyPickerModal } from './hotkey-picker-modal/HotkeyPickerModal.vue';
 export { default as HotkeySlotsGrid } from './hotkey-slots-grid/HotkeySlotsGrid.vue';
-export { default as ExitConfirmModal } from './exit-confirm-modal/ExitConfirmModal.vue';
 export { default as ExitToast } from './exit-toast/ExitToast.vue';
 export { default as GameStatusBackdrop } from './game-status-backdrop/GameStatusBackdrop.vue';
 export { default as CombatIndicator } from './combat-indicator/CombatIndicator.vue';

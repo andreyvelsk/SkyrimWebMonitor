@@ -10,10 +10,25 @@ export const ZOOM_MIN = 0.6;
 export const ZOOM_MAX = 1.8;
 export const ZOOM_KEY = 'skyrim-monitor-zoom';
 
+function readStoredZoom(): number {
+  try {
+    const raw = localStorage.getItem(ZOOM_KEY);
+    const parsed = raw === null ? NaN : parseFloat(raw);
+    return Number.isFinite(parsed) ? parsed : 1;
+  } catch {
+    /* localStorage can be unavailable in restricted WebViews */
+    return 1;
+  }
+}
+
 /** Singleton reactive zoom factor. Initialised from localStorage at module load. */
-export const currentZoom = ref(parseFloat(localStorage.getItem(ZOOM_KEY) ?? '1'));
+export const currentZoom = ref(readStoredZoom());
 
 /** Persist the current zoom factor to localStorage. */
 export function persistZoom(value: number): void {
-  localStorage.setItem(ZOOM_KEY, String(value));
+  try {
+    localStorage.setItem(ZOOM_KEY, String(value));
+  } catch {
+    /* localStorage can be unavailable in restricted WebViews */
+  }
 }

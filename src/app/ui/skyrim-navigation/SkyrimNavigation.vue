@@ -1,23 +1,34 @@
 <template>
   <header class="navigation-header">
-    <nav
-      ref="tabsRef"
-      class="tab-bar"
-      role="tablist"
-      :aria-label="$t('app.navigation.mainAriaLabel')"
-    >
-      <button
-        v-for="tab in nav.tabs"
-        :key="tab.id"
-        class="tab"
-        :class="{ active: nav.activeTab === tab.id }"
-        role="tab"
-        :aria-selected="nav.activeTab === tab.id"
-        @click="nav.setActiveTab(tab.id)"
+    <div class="tab-bar-row">
+      <nav
+        ref="tabsRef"
+        class="tab-bar"
+        role="tablist"
+        :aria-label="$t('app.navigation.mainAriaLabel')"
       >
-        {{ tab.label }}
+        <button
+          v-for="tab in nav.tabs"
+          :key="tab.id"
+          class="tab"
+          :class="{ active: nav.activeTab === tab.id }"
+          role="tab"
+          :aria-selected="nav.activeTab === tab.id"
+          @click="nav.setActiveTab(tab.id)"
+        >
+          {{ tab.label }}
+        </button>
+      </nav>
+
+      <button
+        type="button"
+        class="settings-button"
+        :aria-label="$t('app.settings.open')"
+        @click="openSettings"
+      >
+        <base-icon icon-path="lorc/cog.svg" />
       </button>
-    </nav>
+    </div>
 
     <nav
       v-if="visibleSubTabs.length > 0"
@@ -46,6 +57,9 @@
 <script setup lang="ts">
 import { computed, ref, watch, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { BaseIcon } from '@/shared/ui';
+import { useModal } from '@/shared/lib';
+import { SettingsModalContent } from '@/features/settings';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import type { SubTab } from '@/stores/use-navigation-store/lib/types';
 
@@ -53,7 +67,7 @@ const tabsRef = ref<HTMLElement | null>(null);
 const subtabsRef = ref<HTMLElement | null>(null);
 const nav = useNavigationStore();
 const { t } = useI18n();
-
+const { openModal } = useModal();
 
 const visibleSubTabs = computed(() => nav.getVisibleSubTabs());
 
@@ -80,6 +94,10 @@ function getSubtabLabel(sub: SubTab) {
     return sub.label;
   }
   return t(`app.tabs.${nav.activeTab}.subtabs.${sub.id}`);
+}
+
+function openSettings(): void {
+  openModal({ component: SettingsModalContent });
 }
 
 watch(
@@ -116,10 +134,22 @@ watch(
   z-index: var(--z-sticky);
 }
 
+.tab-bar-row {
+  display: flex;
+  align-items: stretch;
+  background-color: var(--skyrim-bg-dark);
+  border-bottom: 2px solid var(--skyrim-border-dark);
+  box-sizing: border-box;
+}
+
 .tab-bar {
+  flex: 1 1 auto;
+  min-width: 0;
   justify-content: flex-start;
   padding-inline: var(--spacing-sm);
   scroll-padding-inline: var(--spacing-sm);
+  background-color: transparent;
+  border-bottom: none;
 }
 
 .tab-bar > .tab:first-child {
@@ -128,6 +158,32 @@ watch(
 
 .tab-bar > .tab:last-child {
   margin-right: auto;
+}
+
+.settings-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--spacing-sm)
+    max(var(--spacing-sm), env(safe-area-inset-right));
+  background-color: transparent;
+  border: none;
+  border-left: 1px solid var(--skyrim-border-dark);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color var(--transition-normal);
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: var(--tab-bg-hover);
+    }
+  }
+
+  &:active {
+    background-color: var(--tab-bg-active);
+    transition: none;
+  }
 }
 
 .subtab-bar {

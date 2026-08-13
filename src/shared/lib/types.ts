@@ -4,6 +4,17 @@ import type { SpellItem, ShoutItem } from '@/stores/magic/lib/types';
 import type { QuestListEntry } from '@/stores/quests/lib/types';
 
 // =============================================================
+// Theme gamut types
+// =============================================================
+
+export interface ThemeGamut {
+  /** Unique id; also used as the `data-theme-gamut` attribute value. */
+  id: string;
+  /** i18n key for the gamut name shown in the settings UI. */
+  labelKey: string;
+}
+
+// =============================================================
 // Common / shared types (formerly types/common.ts)
 // =============================================================
 

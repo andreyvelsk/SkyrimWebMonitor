@@ -23,17 +23,17 @@ defineProps<{ visible: boolean }>();
   transform: translateX(-50%);
   max-width: calc(100% - 32px);
   padding: 10px 18px;
-  background: rgb(20 20 20 / 92%);
-  color: #f0e6d2;
-  border: 1px solid rgb(255 255 255 / 10%);
+  background: color-mix(in srgb, var(--skyrim-bg-medium) 92%, transparent);
+  color: var(--skyrim-text-accent);
+  border: var(--border-thin) solid var(--skyrim-border-dark);
   border-radius: 999px;
-  font-size: 14px;
+  font-size: var(--font-size-sm);
   line-height: 1.3;
   text-align: center;
   white-space: nowrap;
   pointer-events: none;
-  z-index: 9999;
-  box-shadow: 0 4px 16px rgb(0 0 0 / 50%);
+  z-index: var(--z-tooltip);
+  box-shadow: var(--shadow-medium);
 }
 
 .exit-toast-enter-active,

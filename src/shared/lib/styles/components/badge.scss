@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   padding: 2px 6px;
-  background-color: var(--skyrim-accent-gold);
+  background-color: var(--skyrim-accent-main);
   color: var(--skyrim-bg-dark);
   font-family: var(--font-heading);
   font-size: var(--font-size-xs);
@@ -23,11 +23,11 @@
 }
 
 .badge--gold {
-  background-color: var(--skyrim-accent-gold);
+  background-color: var(--skyrim-accent-main);
 }
 
 .badge--dim {
-  background-color: var(--skyrim-accent-gold-dim);
+  background-color: var(--skyrim-accent-main-dim);
 }
 
 .badge--danger {

@@ -12,6 +12,7 @@
 .tab-bar {
   display: flex;
   align-items: center;
+  justify-content: center;
   justify-content: safe center;
   gap: var(--tab-gap);
   padding-inline: max(var(--spacing-sm), env(safe-area-inset-left))
@@ -79,6 +80,7 @@
 .subtab-bar {
   display: flex;
   align-items: center;
+  justify-content: center;
   justify-content: safe center;
   gap: var(--spacing-xs);
   padding-inline: max(var(--spacing-sm), env(safe-area-inset-left))
@@ -115,7 +117,7 @@
   transition:
     background-color var(--transition-normal),
     color var(--transition-normal);
-  text-wrap-mode: nowrap;
+  white-space: nowrap;
 
   @media (hover: hover) {
     &:hover {

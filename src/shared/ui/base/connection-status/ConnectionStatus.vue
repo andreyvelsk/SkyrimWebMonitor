@@ -208,12 +208,12 @@ function handleReconnect(): void {
     }
 
     &--connecting {
-      background-color: var(--skyrim-accent-gold);
+      background-color: var(--skyrim-accent-main);
       animation: status-pulse 1.2s ease-in-out infinite;
     }
 
     &--reconnecting {
-      background-color: var(--skyrim-accent-gold-light);
+      background-color: var(--skyrim-accent-main-light);
       animation: status-pulse 0.8s ease-in-out infinite;
     }
 

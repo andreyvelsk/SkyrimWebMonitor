@@ -11,7 +11,7 @@ export async function applyFixturesIfEnabled(): Promise<void> {
     const useFixtures = import.meta.env.VITE_USE_FIXTURES === 'true';
     if (!useFixtures) return;
 
-    const path: string = import.meta.env.VITE_FIXTURES_PATH ?? '/SkyrimWebMonitor/fixtures.json';
+    const path: string = import.meta.env.VITE_FIXTURES_PATH ?? `${import.meta.env.BASE_URL}fixtures.json`;
     logger.log(`[FixtureLoader] VITE_USE_FIXTURES enabled — loading fixtures from ${path}`);
 
     const res = await fetch(path, { cache: 'no-store' });

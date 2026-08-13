@@ -66,6 +66,13 @@
     "vue-i18n": "^11.3.2",
     "workbox-window": "^7.4.1"
   },
+  "browserslist": [
+    "Chrome >= 90",
+    "Android >= 8",
+    "and_chr >= 90",
+    "iOS >= 15",
+    "Safari >= 15"
+  ],
   "devDependencies": {
     "@capacitor/cli": "^7.6.3",
     "@eslint/js": "^9.39.5",

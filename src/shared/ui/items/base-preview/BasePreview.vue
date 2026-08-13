@@ -95,6 +95,7 @@ const displayName = computed(() => {
   height: 100%;
   max-height: 100%;
   min-height: 0;
+  overflow-y: auto;
 
   .state-icons {
     position: absolute;
@@ -142,7 +143,6 @@ const displayName = computed(() => {
   .enchant-desc {
     flex: 1 1 auto;
     min-height: 0;
-    overflow-y: auto;
     color: var(--skyrim-text-secondary);
     font-size: var(--font-size-base);
 

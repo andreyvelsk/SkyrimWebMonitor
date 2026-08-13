@@ -40,19 +40,22 @@ defineProps<{
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  background-color: var(--skyrim-bg-light);
-  border: 1px solid var(--skyrim-border-dark);
+  background-color: transparent;
+  border: none;
   cursor: pointer;
   transition: all var(--transition-fast);
   padding: 0;
 
   &.inv-item--favorite {
-    box-shadow: inset 3px 0 0 0 var(--skyrim-accent-gold);
+    box-shadow: inset 3px 0 0 0 var(--skyrim-accent-main);
   }
 
   &.inv-item--active {
-    background-color: var(--tab-bg-active);
-    border-color: var(--skyrim-accent-gold-dim);
+    background: linear-gradient(
+      to right,
+      var(--bg-accent-soft),
+      var(--bg-accent-strong)
+    );
 
     .inv-name {
       color: var(--skyrim-text-primary);
@@ -123,7 +126,7 @@ defineProps<{
   top: 2px;
   width: 4px;
   height: 4px;
-  background-color: var(--skyrim-accent-gold);
+  background-color: var(--skyrim-accent-main);
   border-radius: 1px;
 }
 </style>
