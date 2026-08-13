@@ -1,6 +1,10 @@
 <template>
-  <!-- Teleport to body so position:fixed works outside any zoom context -->
-  <Teleport to="body">
+  <!-- Teleport to body so position:fixed works outside any zoom context.
+       Disabled when embedded in a modal (e.g. settings) so it renders in place. -->
+  <Teleport
+    to="body"
+    :disabled="teleport === false"
+  >
     <div class="display-controls">
       <button
         class="display-controls__btn"
@@ -124,6 +128,11 @@ import {
   ZOOM_MAX,
   persistZoom,
 } from '@/shared/lib/composables/useAppZoom';
+
+// Whether to teleport the controls to <body>. Defaults to true so the
+// fixed-position controls stay outside any zoom/transform context.
+// Set to false when the controls are rendered inside a modal.
+defineProps<{ teleport?: boolean }>();
 
 interface ElectronAPI {
   setZoom: (_factor: number) => void;

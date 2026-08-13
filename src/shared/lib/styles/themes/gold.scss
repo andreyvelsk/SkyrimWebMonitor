@@ -1,0 +1,55 @@
+/* ============================================
+ * THEME GAMUT: GOLD
+ * ============================================
+ * Applied when <html data-theme-gamut="gold">.
+ * Overrides the default silver gamut variables.
+ */
+
+$gold-accent: #c9a227;
+
+:root[data-theme-gamut='gold'] {
+  /* PRIMARY COLORS */
+  --skyrim-bg-dark: #0d0d0d;
+  --skyrim-bg-medium: #1a1a1a;
+  --skyrim-bg-light: #252525;
+
+  /* TEXT COLORS */
+  --skyrim-text-primary: #d4c4a8;
+  --skyrim-text-secondary: #9a8b70;
+  --skyrim-text-accent: #f5e6c8;
+  --skyrim-text-dim: #5a5040;
+
+  /* ACCENT COLORS */
+  --skyrim-accent-main: #{$gold-accent};
+  --skyrim-accent-main-light: #e5c44d;
+  --skyrim-accent-main-dim: #8b7220;
+
+  /* BORDER & DIVIDER COLORS */
+  --skyrim-border-dark: #2a2a2a;
+  --skyrim-border-medium: #3d3d3d;
+  --skyrim-border-accent: #{$gold-accent};
+  --skyrim-border-glow: rgb(201 162 39 / 30%);
+
+  /* TAB SPECIFIC COLORS */
+  --tab-bg-hover: rgb(201 162 39 / 8%);
+  --tab-bg-active: rgb(201 162 39 / 15%);
+
+  /* SUB-TAB SPECIFIC COLORS */
+  --subtab-bg-hover: rgb(212 196 168 / 5%);
+  --subtab-bg-active: rgb(212 196 168 / 10%);
+
+  /* ORNAMENT & DECORATION */
+  --ornament-glow: rgb(201 162 39 / 20%);
+
+  /* INTERACTIVE STATE BACKGROUNDS */
+  --bg-accent-faint: rgb(201 162 39 / 4%);
+  --bg-accent-soft: rgb(201 162 39 / 8%);
+  --bg-accent-medium: rgb(201 162 39 / 12%);
+  --bg-accent-strong: rgb(201 162 39 / 20%);
+}
+
+:root {
+  /* GAMUT SWATCH — always available so the settings picker can preview
+     this gamut even when another gamut is active. */
+  --gamut-swatch-gold: #{$gold-accent};
+}

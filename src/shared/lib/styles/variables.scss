@@ -1,34 +1,14 @@
 /* ============================================
  * SKYRIM HANDHELD INTERFACE - CSS VARIABLES
- * ============================================ */
+ * ============================================
+ *
+ * Static design tokens that do NOT change between
+ * theme gamuts. Colour tokens live in themes/.
+ */
 
 :root {
-  /* PRIMARY COLORS - Main interface colors */
-  --skyrim-bg-dark: #0a0a0a;
-  --skyrim-bg-medium: #151515;
-  --skyrim-bg-light: #202020;
-
-  /* TEXT COLORS - Typography hierarchy */
-  --skyrim-text-primary: #d0d0d0;
-  --skyrim-text-secondary: #909090;
-  --skyrim-text-accent: #f0f0f0;
-  --skyrim-text-dim: #606060;
-
-  /* ACCENT COLORS - Interactive elements */
-  --skyrim-accent-main: #e8e8e8;
-  --skyrim-accent-main-light: #ffffff;
-  --skyrim-accent-main-dim: #a8a8a8;
-
-  /* BORDER & DIVIDER COLORS */
-  --skyrim-border-dark: #303030;
-  --skyrim-border-medium: #505050;
-  --skyrim-border-accent: #e8e8e8;
-  --skyrim-border-glow: rgb(232 232 232 / 30%);
-
-  /* TAB SPECIFIC COLORS */
+  /* TAB SPECIFIC COLORS (references auto-update with gamut) */
   --tab-bg-inactive: transparent;
-  --tab-bg-hover: rgb(232 232 232 / 8%);
-  --tab-bg-active: rgb(232 232 232 / 15%);
   --tab-text-inactive: var(--skyrim-text-secondary);
   --tab-text-hover: var(--skyrim-text-primary);
   --tab-text-active: var(--skyrim-accent-main);
@@ -36,8 +16,6 @@
 
   /* SUB-TAB SPECIFIC COLORS */
   --subtab-bg-inactive: transparent;
-  --subtab-bg-hover: rgb(208 208 208 / 5%);
-  --subtab-bg-active: rgb(208 208 208 / 10%);
   --subtab-text-inactive: var(--skyrim-text-dim);
   --subtab-text-hover: var(--skyrim-text-secondary);
   --subtab-text-active: var(--skyrim-text-primary);
@@ -45,7 +23,6 @@
 
   /* ORNAMENT & DECORATION */
   --ornament-color: var(--skyrim-text-accent);
-  --ornament-glow: rgb(232 232 232 / 20%);
 
   /* SHADOW & EFFECTS */
   --shadow-soft: 0 2px 8px rgb(0 0 0 / 40%);
@@ -122,11 +99,7 @@
   --color-danger-dim: #7a2a2a;
   --color-danger-light: #d08a8a;
 
-  /* INTERACTIVE STATE BACKGROUNDS (silver accent transparency steps) */
-  --bg-accent-faint: rgb(232 232 232 / 4%);
-  --bg-accent-soft: rgb(232 232 232 / 8%);
-  --bg-accent-medium: rgb(232 232 232 / 12%);
-  --bg-accent-strong: rgb(232 232 232 / 20%);
+  /* INTERACTIVE STATE BACKGROUNDS (gamut-agnostic) */
   --bg-overlay: rgb(0 0 0 / 75%);
   --bg-inset-dark: inset 0 0 60px rgb(0 0 0 / 30%);
 }

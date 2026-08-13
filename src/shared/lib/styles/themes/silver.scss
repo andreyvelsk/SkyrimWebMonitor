@@ -1,0 +1,53 @@
+/* ============================================
+ * THEME GAMUT: SILVER (default)
+ * ============================================
+ * Applied to :root — the default gamut when no
+ * data-theme-gamut attribute is present.
+ */
+
+$silver-accent: #e8e8e8;
+
+:root {
+  /* PRIMARY COLORS */
+  --skyrim-bg-dark: #0a0a0a;
+  --skyrim-bg-medium: #151515;
+  --skyrim-bg-light: #202020;
+
+  /* TEXT COLORS */
+  --skyrim-text-primary: #d0d0d0;
+  --skyrim-text-secondary: #909090;
+  --skyrim-text-accent: #f0f0f0;
+  --skyrim-text-dim: #606060;
+
+  /* ACCENT COLORS */
+  --skyrim-accent-main: #{$silver-accent};
+  --skyrim-accent-main-light: #ffffff;
+  --skyrim-accent-main-dim: #a8a8a8;
+
+  /* BORDER & DIVIDER COLORS */
+  --skyrim-border-dark: #303030;
+  --skyrim-border-medium: #505050;
+  --skyrim-border-accent: #{$silver-accent};
+  --skyrim-border-glow: rgb(232 232 232 / 30%);
+
+  /* TAB SPECIFIC COLORS */
+  --tab-bg-hover: rgb(232 232 232 / 8%);
+  --tab-bg-active: rgb(232 232 232 / 15%);
+
+  /* SUB-TAB SPECIFIC COLORS */
+  --subtab-bg-hover: rgb(208 208 208 / 5%);
+  --subtab-bg-active: rgb(208 208 208 / 10%);
+
+  /* ORNAMENT & DECORATION */
+  --ornament-glow: rgb(232 232 232 / 20%);
+
+  /* INTERACTIVE STATE BACKGROUNDS */
+  --bg-accent-faint: rgb(232 232 232 / 4%);
+  --bg-accent-soft: rgb(232 232 232 / 8%);
+  --bg-accent-medium: rgb(232 232 232 / 12%);
+  --bg-accent-strong: rgb(232 232 232 / 20%);
+
+  /* GAMUT SWATCH — always available so the settings picker can preview
+     this gamut even when another gamut is active. */
+  --gamut-swatch-silver: #{$silver-accent};
+}

@@ -1,0 +1,13 @@
+/* ============================================
+ * THEME GAMUTS — INDEX
+ * ============================================
+ * Import every gamut SCSS file here.
+ * To add a new gamut:
+ *   1. Create `themes/{id}.scss` with the gamut's
+ *      CSS variable overrides.
+ *   2. Add `@use './{id}';` below.
+ *   3. Register the gamut in `src/shared/lib/themes/gamuts.ts`.
+ */
+
+@use './silver';
+@use './gold';

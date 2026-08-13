@@ -50,6 +50,17 @@
     },
     "content": {
       "emptyState": "Select an option to view details"
+    },
+    "settings": {
+      "open": "Open settings",
+      "title": "Settings",
+      "theme": {
+        "title": "Color Theme",
+        "gamuts": {
+          "silver": "Silver",
+          "gold": "Gold"
+        }
+      }
     }
   },
   "pages": {
@@ -134,9 +145,6 @@
       },
       "spells": {
         "tab": "Spells"
-      },
-      "shouts": {
-        "tab": "Shouts"
       },
       "powers": {
         "tab": "Powers",
