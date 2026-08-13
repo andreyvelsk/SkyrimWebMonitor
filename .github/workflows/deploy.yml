@@ -2,8 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
+    tags:
+      - 'v*'
     branches:
-      - main
       - dev
 
   workflow_dispatch:
@@ -12,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  # Serialize ALL deploys globally so main and dev don't race for gh-pages.
+  # Serialize all deploys so tag and dev don't race for gh-pages.
   group: pages
   cancel-in-progress: false
 
@@ -70,7 +71,7 @@ jobs:
       - name: Compute deploy paths
         id: paths
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "base_path=/SkyrimWebMonitor/" >> "$GITHUB_OUTPUT"
             echo "destination_dir=." >> "$GITHUB_OUTPUT"
           else
@@ -90,7 +91,7 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           destination_dir: ${{ steps.paths.outputs.destination_dir }}
-          # Preserve the other branch's deploy (main keeps /dev/, dev keeps root).
+          # Preserve the other deploy (tag keeps /dev/, dev keeps root).
           keep_files: true
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
