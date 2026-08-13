@@ -1,27 +1,25 @@
 <template>
   <Teleport to="body">
     <Transition
-      name="game-status-backdrop"
+      name="game-status-indicator"
       appear
     >
       <div
-        v-if="showBackdrop"
-        class="skyrim-backdrop skyrim-backdrop--fixed skyrim-backdrop--overlay skyrim-backdrop--blocking game-status-backdrop"
-        style="--skyrim-backdrop-z: calc(var(--z-modal-backdrop) - 50); --skyrim-backdrop-blur: 3px"
-        role="alertdialog"
-        aria-modal="true"
-        @contextmenu.prevent
-        @click.stop
+        v-if="showIndicator"
+        class="game-status-indicator"
+        role="status"
+        aria-live="polite"
+        :aria-label="$t('shared.ui.gameStatus.title')"
       >
-        <base-icon
-          v-if="dead"
-          class="game-status-backdrop__icon"
-          icon-path="lorc/death-zone.svg"
-          :size="96"
+        <div
+          class="game-status-indicator__arc"
+          aria-hidden="true"
         />
-        <h2 v-else>
-          {{ $t('shared.ui.gameStatus.title') }}
-        </h2>
+        <base-icon
+          class="game-status-indicator__icon"
+          :icon-path="indicatorIconPath"
+          :size="40"
+        />
       </div>
     </Transition>
   </Teleport>
@@ -39,25 +37,73 @@ const wsStore = useWebSocketStore();
 const { isConnected } = storeToRefs(wsStore);
 const { canAct, dead } = storeToRefs(gameStatusStore);
 
-const showBackdrop = computed(() => isConnected.value && !canAct.value);
+// Non-blocking indicator: visible whenever the connection is live but the game
+// cannot accept actions. Navigation and data updates stay fully usable.
+const showIndicator = computed(() => isConnected.value && !canAct.value);
+
+const indicatorIconPath = computed(() =>
+  dead.value ? 'lorc/death-zone.svg' : 'lorc/sands-of-time.svg'
+);
 </script>
 
 <style scoped lang="scss">
-.game-status-backdrop__icon {
-  // BaseIcon paints itself with --skyrim-text-accent via mask-image.
-  // No extra color override here — keeps the icon consistent with the rest
-  // of the project (WeaponIcon, EquippedHandIcon, etc.).
+/*
+ * Bottom, non-blocking "actions unavailable" indicator.
+ *
+ * A full-width frosted backdrop that fades upward via a radial mask,
+ * anchored at the very bottom of the screen. The icon sits centred
+ * above the arc. Pointer events are not intercepted — the app remains
+ * fully interactive (view-only).
+ */
+.game-status-indicator {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: var(--spacing-lg);
+  pointer-events: none;
+  z-index: var(--z-fixed);
+}
+
+.game-status-indicator__arc {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 180px;
+  background-color: var(--bg-overlay);
+  -webkit-mask-image: radial-gradient(
+    ellipse 120% 100% at 50% 100%,
+    #000 20%,
+    transparent 70%
+  );
+  mask-image: radial-gradient(
+    ellipse 120% 100% at 50% 100%,
+    #000 20%,
+    transparent 70%
+  );
+}
+
+.game-status-indicator__icon {
+  position: relative;
+  z-index: 1;
   filter: drop-shadow(0 0 12px var(--skyrim-border-glow));
 }
 
-/* Backdrop transition */
-.game-status-backdrop-enter-active,
-.game-status-backdrop-leave-active {
-  transition: opacity var(--transition-normal);
+/* Indicator transition */
+.game-status-indicator-enter-active,
+.game-status-indicator-leave-active {
+  transition:
+    opacity var(--transition-normal),
+    transform var(--transition-normal);
 }
 
-.game-status-backdrop-enter-from,
-.game-status-backdrop-leave-to {
+.game-status-indicator-enter-from,
+.game-status-indicator-leave-to {
   opacity: 0;
+  transform: translateY(var(--spacing-sm));
 }
 </style>

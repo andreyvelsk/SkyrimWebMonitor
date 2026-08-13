@@ -527,16 +527,8 @@ watch(mapConfig, (config) => {
  * When the app zoom changes, .handheld-device height is adjusted to
  * (100/z)vh which changes the layout size of the OSD container. Force
  * OSD to re-read its container dimensions and sync the overlay.
- *
- * Note: CSS zoom itself does NOT affect clientWidth/clientHeight, so
- * updateSize() only picks up the layout change from the height adjustment.
- * The canvas-click handler separately compensates for the zoom coordinate
- * mismatch (getBoundingClientRect vs clientWidth).
  */
 watch(currentZoom, () => {
-  if (!viewer) return;
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  (viewer as unknown as { updateSize: () => void }).updateSize();
   syncContainerSize();
   syncOverlayTransform();
   centerOnPlayer(true);
@@ -586,7 +578,7 @@ onBeforeUnmount(() => {
   background-color: v-bind(BACKGROUND_COLOR);
 
   -webkit-mask-image: v-bind(TEAR_MASK_URL);
-  mask-image: v-bIND(TEAR_MASK_URL);
+  mask-image: v-bind(TEAR_MASK_URL);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;

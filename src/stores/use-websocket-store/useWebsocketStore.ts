@@ -128,6 +128,10 @@ export const useWebSocketStore = defineStore('websocket', () => {
     }
   };
 
+  const setCommandsEnabled = (enabled: boolean): void => {
+    wsClient.setCommandsEnabled(enabled);
+  };
+
   const sendCommand = (options: SendCommandOptions): void => {
     if (!wsClient.isConnected()) {
       console.warn('WebSocket is not connected, cannot send command');
@@ -288,6 +292,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     stopSubscription,
     sendQuery,
     sendCommand,
+    setCommandsEnabled,
     $dispose: cleanup,
   };
 });
