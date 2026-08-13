@@ -26,6 +26,7 @@ class WebSocketClient {
   private eventCallbacks: Map<string, EventCallback[]> = new Map();
   private connectionGeneration: number = 0;
   private pendingConnectReject: ((error: Error) => void) | null = null;
+  private commandsEnabled: boolean = true;
 
   constructor() {
     this.initEventCallbacks();
@@ -311,10 +312,24 @@ class WebSocketClient {
   }
 
   /**
+   * Enable or disable game commands. While disabled, `command()` refuses to
+   * send anything to the server — the app stays interactive but cannot
+   * mutate the game state (used when `canAct` is false).
+   */
+  setCommandsEnabled(enabled: boolean): void {
+    this.commandsEnabled = enabled;
+  }
+
+  /**
    * Send an inventory/hotkey command to the game.
    * Pass an options object — only provided fields are serialized.
    */
   command(id: string, options: SendCommandOptions): boolean {
+    if (!this.commandsEnabled) {
+      console.warn('Commands are currently disabled (canAct=false), ignoring command');
+      return false;
+    }
+
     const { command, formId, active, hand, count, slot, x, y, z } = options;
     const message: CommandMessage = {
       type: 'command',

@@ -14,7 +14,7 @@ const tamrielConfig: MapConfig = {
   imageCorrection: TAMRIEL_IMAGE_CORRECTION,
   cropX: 500,
   cropYTop: 1500,
-  cropYBottom: 2000,
+  cropYBottom: 2200,
 };
 
 const vynCommon = {

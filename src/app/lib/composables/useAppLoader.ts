@@ -18,7 +18,7 @@ export function useAppLoader() {
   const { activeTab, activeSubTab } = storeToRefs(navigationStore);
 
   const websocketStore = useWebSocketStore();
-  const { connect, startSubscription, stopSubscription, sendQuery } = websocketStore;
+  const { connect, startSubscription, stopSubscription, sendQuery, setCommandsEnabled } = websocketStore;
   const { isConnected } = storeToRefs(websocketStore);
 
   const gameStatusStore = useGameStatusStore();
@@ -111,6 +111,17 @@ export function useAppLoader() {
     logger.log('Player is in-game (canAct=true) — loading initial data');
     loadInitialDataAndStartActiveSubs();
   }, { once: true});
+
+  // Keep the WebSocket command gate in sync with `canAct`. While actions are
+  // unavailable the app stays fully navigable (tabs, item browsing) and keeps
+  // receiving data, but every `command` sent to the server is dropped.
+  watch(
+    canAct,
+    (enabled) => {
+      setCommandsEnabled(enabled);
+    },
+    { immediate: true }
+  );
 
   // React to tab/sub-tab changes only. Initial/reconnect subscription bootstrap
   // is owned by the `isConnected` and `canAct` watchers above — including this
