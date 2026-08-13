@@ -122,7 +122,6 @@ import {
   ZOOM_STEP,
   ZOOM_MIN,
   ZOOM_MAX,
-  ZOOM_KEY,
   persistZoom,
 } from '@/shared/lib/composables/useAppZoom';
 
@@ -200,11 +199,10 @@ function onFullscreenChange(): void {
 let removeElectronFsListener: (() => void) | null = null;
 
 onMounted(() => {
-  // Restore zoom from previous session
-  const saved = localStorage.getItem(ZOOM_KEY);
-  if (saved) {
-    applyZoom(parseFloat(saved));
-  }
+  // Restore zoom from previous session. `currentZoom` is already initialised
+  // safely from localStorage at module load (see useAppZoom.ts), so just
+  // re-apply its value to the DOM.
+  applyZoom(currentZoom.value);
 
   if (isElectron()) {
     const api = getElectronAPI();
