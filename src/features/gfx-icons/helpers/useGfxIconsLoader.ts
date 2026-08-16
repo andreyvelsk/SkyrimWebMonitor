@@ -2,7 +2,7 @@ import { base64ToBytes, generateSvgByShapeId } from '@/shared/lib/gfx';
 import { logger } from '@/shared/lib/utils/logger';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
-import { readManifest, readSvg, writeManifest, writeSvg } from './gfxStorage';
+import { readManifest, readSvg, writeManifest, writeSvg, clearAll } from './gfxStorage';
 import { GFX_FILE_PATH } from '../config/gfxIcons';
 import type { GfxIconsManifest } from '../lib/types';
 
@@ -14,16 +14,16 @@ export function useGfxIconsLoader() {
   const websocketStore = useWebSocketStore();
 
   /**
-   * Restore the icon set from localStorage. Returns false when no valid,
+   * Restore the icon set from IndexedDB. Returns false when no valid,
    * complete cache exists.
    */
-  function hydrateFromStorage(): boolean {
-    const manifest = readManifest();
+  async function hydrateFromStorage(): Promise<boolean> {
+    const manifest = await readManifest();
     if (!manifest || !manifest.ready) return false;
 
     const restored: Record<number, string> = {};
     for (const shapeId of manifest.shapeIds) {
-      const svg = readSvg(shapeId);
+      const svg = await readSvg(shapeId);
       if (!svg) {
         console.warn(`[GfxIcons] Incomplete cache: missing shapeId ${shapeId}`);
         return false;
@@ -32,7 +32,7 @@ export function useGfxIconsLoader() {
     }
 
     gfxIconsStore.setIcons(restored);
-    logger.log(`[GfxIcons] Hydrated ${manifest.shapeIds.length} icons from localStorage`);
+    logger.log(`[GfxIcons] Hydrated ${manifest.shapeIds.length} icons from IndexedDB`);
     return true;
   }
 
@@ -49,7 +49,7 @@ export function useGfxIconsLoader() {
 
     const loadPromise = (async () => {
       try {
-        if (hydrateFromStorage()) return;
+        if (await hydrateFromStorage()) return;
 
         const result = await websocketStore.downloadFile(GFX_FILE_PATH);
         const svgMap = await generateSvgByShapeId(base64ToBytes(result.dataBase64));
@@ -57,7 +57,7 @@ export function useGfxIconsLoader() {
         const shapeIds: number[] = [];
         for (const [shapeIdText, svg] of Object.entries(svgMap)) {
           const shapeId = Number(shapeIdText);
-          writeSvg(shapeId, svg);
+          await writeSvg(shapeId, svg);
           shapeIds.push(shapeId);
         }
 
@@ -67,7 +67,7 @@ export function useGfxIconsLoader() {
           shapeIds,
           generatedAt: new Date().toISOString(),
         };
-        writeManifest(manifest);
+        await writeManifest(manifest);
 
         gfxIconsStore.setIcons(svgMap);
         logger.log(`[GfxIcons] Downloaded and cached ${shapeIds.length} icons`);
@@ -90,5 +90,24 @@ export function useGfxIconsLoader() {
     return ensurePromise;
   }
 
-  return { ensureLoaded };
+  /**
+   * Clear the cached icon set and re-download everything from the server.
+   * Safe to call at any time — waits for any in-flight load to settle first.
+   */
+  async function reinitialize(): Promise<void> {
+    // Wait for any in-flight load to settle before resetting.
+    if (ensurePromise) {
+      try {
+        await ensurePromise;
+      } catch {
+        // Ignore errors from the previous load.
+      }
+    }
+    ensurePromise = null;
+    gfxIconsStore.reset();
+    await clearAll();
+    await ensureLoaded();
+  }
+
+  return { ensureLoaded, reinitialize };
 }

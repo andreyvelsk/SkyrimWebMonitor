@@ -13,3 +13,19 @@ export interface GfxIconsManifest {
   /** ISO-8601 timestamp of when the cache was generated. */
   generatedAt: string;
 }
+
+/** A single cached SVG icon record in the `icons` object store. */
+export interface GfxIconRecord {
+  /** Shape id (characterId) — the primary key. */
+  shapeId: number;
+  /** SVG markup string. */
+  svg: string;
+  /** ISO-8601 timestamp of when this record was last written. */
+  updatedAt: string;
+}
+
+/** The manifest record stored in the `manifest` object store. */
+export interface GfxManifestRecord extends GfxIconsManifest {
+  /** Fixed key identifying the single manifest record. */
+  id: string;
+}

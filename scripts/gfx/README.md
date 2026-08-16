@@ -2,6 +2,10 @@
 
 Parsing Scaleform GFX files (Skyrim HUD) with extraction of vector graphics into SVG.
 
+> In the app, the generated SVGs are cached in **IndexedDB** (database
+> `gfx-icons`), not `localStorage`. See
+> [`src/features/gfx-icons/README.md`](../src/features/gfx-icons/README.md).
+
 ## Structure
 
 ```

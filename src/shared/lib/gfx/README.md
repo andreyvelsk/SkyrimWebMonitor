@@ -82,6 +82,13 @@ Converts a parsed shape into an SVG string.
 - **Fill logic**: for contours with fill0 and fill1 at the same time, both are rendered (may create extra contours)
 - **LineStyle2**: the placeholder is read, but not all flags are interpreted
 
+## Caching in the app
+
+The generated SVG set is cached by the `gfx-icons` feature in **IndexedDB**
+(database `gfx-icons`), not in `localStorage`. See
+[`src/features/gfx-icons/README.md`](../../features/gfx-icons/README.md) for the
+storage schema, load lifecycle and the manual re-initialization flow.
+
 ## Dependencies
 
 - `DecompressionStream` (browser API, available in Chrome 80+, Safari 16.4+, Firefox 113+)
