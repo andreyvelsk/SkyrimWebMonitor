@@ -9,6 +9,7 @@
       v-for="m in markers"
       :key="m.key"
       class="hotspot-marker-group"
+      :class="{ 'is-marker-hidden': m.key === selectedMarkerKey }"
       :transform="`translate(${m.x} ${m.y})`"
     >
       <g class="hotspot-marker-scale">
@@ -81,9 +82,20 @@ function markerHalf(m: LocationProjectedMarker): number {
 </script>
 
 <style scoped lang="scss">
+$marker-select-duration: 180ms;
+
 .hotspot-marker-group {
   pointer-events: none;
-  transition: opacity var(--transition-fast);
+  // The resting copy reappears only after the enlarged overlay finishes its
+  // leave animation, so the two never overlap on the way out.
+  transition: opacity $marker-select-duration ease-out $marker-select-duration;
+
+  // Hide the resting copy while the enlarged overlay is on screen, so it
+  // doesn't peek out from underneath the enlarged marker.
+  &.is-marker-hidden {
+    opacity: 0;
+    transition: opacity $marker-select-duration ease-out 0ms;
+  }
 }
 
 .hotspot-marker {
@@ -106,7 +118,7 @@ function markerHalf(m: LocationProjectedMarker): number {
 .marker-select-enter-active,
 .marker-select-leave-active {
   .marker-select-scale {
-    transition: transform 180ms ease-out;
+    transition: transform $marker-select-duration ease-out;
   }
 }
 
