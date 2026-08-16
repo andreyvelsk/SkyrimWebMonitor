@@ -7,3 +7,4 @@ export { currentZoom, ZOOM_STEP, ZOOM_MIN, ZOOM_MAX, ZOOM_KEY, persistZoom } fro
 export { logger } from './utils/logger';
 export { THEME_GAMUTS, DEFAULT_THEME_GAMUT_ID } from './themes/gamuts';
 export { currentThemeGamutId, applyThemeGamut, initThemeGamut, THEME_GAMUT_KEY, THEME_GAMUT_ATTRIBUTE } from './themes/applyTheme';
+export { gfxIconsDisabled, persistGfxIconsDisabled, GFX_ICONS_DISABLED_KEY } from './settings/gfxIconsPreference';

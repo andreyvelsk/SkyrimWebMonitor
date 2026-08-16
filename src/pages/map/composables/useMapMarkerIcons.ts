@@ -1,6 +1,7 @@
 import { buildIconPath } from '@/shared/lib/utils/iconPath';
+import { gfxIconsDisabled } from '@/shared/lib';
 import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
-import { getGfxShapeId } from '@/features/gfx-icons/config/typeIdToGfxId';
+import { getGfxShapeId } from '@/features/gfx-icons';
 
 // =============================================================
 // Map marker icons
@@ -36,6 +37,7 @@ export function resolveMarkerIcon(canFastTravel: boolean = true): string {
  * been loaded into the gfx-icons store.
  */
 export function resolveGfxIconUrl(typeId: number, canFastTravel: boolean): string | null {
+  if (gfxIconsDisabled.value) return null;
   const shapeId = getGfxShapeId(typeId, canFastTravel);
   if (shapeId === null) return null;
   return useGfxIconsStore().resolveIconUrl(shapeId);

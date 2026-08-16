@@ -1,7 +1,5 @@
-import {
-  getMapHotspotType,
-  type KnownMapHotspotType,
-} from '@/stores/map/lib/types';
+import { getMapHotspotType } from '@/stores/map/lib/types';
+import type { TypeToGfxShapeIdMap } from '../lib/types';
 
 /**
  * Mapping from a hotspot `type` to GFX shape ids.
@@ -14,17 +12,6 @@ import {
  * `MAP_HOTSPOT_ID_BY_TYPE`). Extend this map as new type → shapeId
  * correspondences are identified.
  */
-
-export interface GfxShapeIdByFastTravel {
-  /** Shape id for discovered locations (canFastTravel: true). */
-  known: number;
-  /** Shape id for undiscovered locations (canFastTravel: false). */
-  undiscovered: number;
-}
-
-export type TypeToGfxShapeIdMap = Readonly<
-  Partial<Record<KnownMapHotspotType, GfxShapeIdByFastTravel>>
->;
 
 export const GFX_SHAPE_ID_BY_TYPE: TypeToGfxShapeIdMap = {
   City: { known: 271, undiscovered: 264 },
@@ -86,15 +73,13 @@ export const GFX_SHAPE_ID_BY_TYPE: TypeToGfxShapeIdMap = {
   // DLC02MiraakTemple
   // 53: { known: null, undiscovered: 162 },
   // DLC02RavenRock
-  // 54: { known: null, undiscovered: 160 },
+  DLC02RavenRock: { known: 375, undiscovered: 160 },
   // DLC02BeastStone
   // 55: { known: null, undiscovered: 158 },
   // DLC02TelMithryn
   // 56: { known: null, undiscovered: 156 },
-  // DLC02ToSkyrim
-  // 57: { known: null, undiscovered: 154 },
-  // DLC02StalhrimSource
-  // 58: { known: null, undiscovered: null },
+  DLC02ToSkyrim: { known: 381, undiscovered: 154 },
+  DLC02ToSolstheim: { known: 383, undiscovered: 152 },
   // DLC02CastleKarstaag
   // 59: { known: null, undiscovered: 150 },
 };

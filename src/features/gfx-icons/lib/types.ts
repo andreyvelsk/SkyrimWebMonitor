@@ -1,6 +1,21 @@
+import type { KnownMapHotspotType } from '@/stores/map/lib/types';
+
 /**
  * Types for the gfx-icons feature.
  */
+
+/** Shape ids for a single hotspot type, split by fast-travel state. */
+export interface GfxShapeIdByFastTravel {
+  /** Shape id for discovered locations (canFastTravel: true). */
+  known: number;
+  /** Shape id for undiscovered locations (canFastTravel: false). */
+  undiscovered: number;
+}
+
+/** Mapping from hotspot type to GFX shape ids. */
+export type TypeToGfxShapeIdMap = Readonly<
+  Partial<Record<KnownMapHotspotType, GfxShapeIdByFastTravel>>
+>;
 
 /** Metadata stored alongside cached icons to track readiness. */
 export interface GfxIconsManifest {

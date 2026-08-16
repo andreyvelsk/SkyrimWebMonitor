@@ -18,6 +18,7 @@ export const MARKER_SELECTED_SCALE = 1.35;
 export const MARKER_SIZE_MODIFIER_BY_TYPE: Readonly<
   Partial<Record<KnownMapHotspotType, number>>
 > = {
+  Altar: 0.7,
   Cave: 0.7,
   Camp: 0.7,
   Shack: 0.7,
@@ -44,7 +45,7 @@ export function getMarkerSizeModifier(typeId: number): number {
 }
 
 // Player marker tuning.
-export const PLAYER_BASE_SIZE_PX = 28;
+export const PLAYER_BASE_SIZE_PX = 20;
 export const PLAYER_ZOOM_INFLUENCE = 0.3;
 export const PLAYER_MIN_SIZE_PX = 24;
 export const PLAYER_MAX_SIZE_PX = 96;

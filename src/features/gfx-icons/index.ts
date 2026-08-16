@@ -3,4 +3,3 @@ export { readManifest, writeManifest, readSvg, writeSvg, clearAll } from './help
 export { GFX_FILE_PATH } from './config/gfxIcons';
 export { GFX_SHAPE_ID_BY_TYPE, getGfxShapeId } from './config/typeIdToGfxId';
 export type * from './lib/types';
-export type * from './config/typeIdToGfxId';

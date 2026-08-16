@@ -82,7 +82,7 @@ export const MAP_HOTSPOT_TYPE_BY_ID: Readonly<Record<number, KnownMapHotspotType
   55: 'DLC02BeastStone',
   56: 'DLC02TelMithryn',
   57: 'DLC02ToSkyrim',
-  58: 'DLC02StalhrimSource',
+  58: 'DLC02ToSolstheim',
   59: 'DLC02CastleKarstaag',
   60: 'Unknown',
   61: 'Door',
@@ -157,7 +157,7 @@ export const MAP_HOTSPOT_ID_BY_TYPE = {
   DLC02BeastStone: 55,
   DLC02TelMithryn: 56,
   DLC02ToSkyrim: 57,
-  DLC02StalhrimSource: 58,
+  DLC02ToSolstheim: 58,
   DLC02CastleKarstaag: 59,
   Unknown: 60,
   Door: 61,
@@ -170,7 +170,7 @@ export const MAP_HOTSPOT_ID_BY_TYPE = {
  * Type guard: whether a string is a known {@link KnownMapHotspotType}.
  */
 export function isKnownMapHotspotType(value: string): value is KnownMapHotspotType {
-  return value in MAP_HOTSPOT_ID_BY_TYPE;
+  return Object.prototype.hasOwnProperty.call(MAP_HOTSPOT_ID_BY_TYPE, value);
 }
 
 /**
