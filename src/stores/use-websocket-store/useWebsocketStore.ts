@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { saveConfiguredWsUrl } from '@/shared/lib/config/websocket';
-import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions } from '@/api/websocket';
+import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions, FileDownloadResultData } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './lib/types';
 import { SYSTEM_QUERY_ID, SYSTEM_QUERY_FIELDS, useSystemStore } from '@/stores/system/useSystemStore';
@@ -21,6 +21,13 @@ export const useWebSocketStore = defineStore('websocket', () => {
   const reconnectFailed = ref<boolean>(false);
   const activeSubscriptions = ref<Map<string, Subscription>>(new Map());
   const pendingQueries = new Map<string, (fields: Record<string, unknown>) => void>();
+  const pendingCommands = new Map<
+    string,
+    {
+      onResult: (result: CommandResultMessage) => void;
+      onFail: (error: Error) => void;
+    }
+  >();
 
   // Get WebSocket client instance
   const wsClient = getWebSocketClient();
@@ -123,23 +130,79 @@ export const useWebSocketStore = defineStore('websocket', () => {
   };
 
   const handleCommandResultMessage = (message: CommandResultMessage): void => {
+    const pending = pendingCommands.get(message.id);
+    if (pending) {
+      pendingCommands.delete(message.id);
+      pending.onResult(message);
+      return;
+    }
+
     if (!message.success) {
       console.error(`[WebSocket] Command [${message.id}] failed:`, message.error);
     }
+  };
+
+  const failAllPendingCommands = (reason: string): void => {
+    for (const pending of pendingCommands.values()) {
+      pending.onFail(new Error(reason));
+    }
+    pendingCommands.clear();
   };
 
   const setCommandsEnabled = (enabled: boolean): void => {
     wsClient.setCommandsEnabled(enabled);
   };
 
-  const sendCommand = (options: SendCommandOptions): void => {
+  const sendCommand = (
+    options: SendCommandOptions,
+    onResult?: (result: CommandResultMessage) => void
+  ): void => {
     if (!wsClient.isConnected()) {
       console.warn('WebSocket is not connected, cannot send command');
       return;
     }
     const { command, formId, slot } = options;
     const commandId = `cmd-${command}-${formId ?? 'noform'}-${slot ?? 'noslot'}-${Date.now()}`;
+    if (onResult) {
+      pendingCommands.set(commandId, {
+        onResult,
+        onFail: () => undefined,
+      });
+    }
     wsClient.command(commandId, options);
+  };
+
+  const downloadFile = (path: string): Promise<FileDownloadResultData> => {
+    return new Promise((resolve, reject) => {
+      if (!wsClient.isConnected()) {
+        reject(new Error('WebSocket is not connected, cannot download file'));
+        return;
+      }
+
+      const commandId = `cmd-file_download-${Date.now()}`;
+      pendingCommands.set(commandId, {
+        onResult: (result) => {
+          if (!result.success) {
+            reject(new Error(result.error ?? 'file_download failed'));
+            return;
+          }
+          if (!result.data) {
+            reject(new Error('file_download response is missing data'));
+            return;
+          }
+          resolve(result.data);
+        },
+        onFail: (error) => reject(error),
+      });
+
+      // file_download is a background read-only task: bypass the commands gate
+      // (canAct) so it works even before the player is in-game.
+      const sent = wsClient.command(commandId, { command: 'file_download', path }, false);
+      if (!sent) {
+        pendingCommands.delete(commandId);
+        reject(new Error('Failed to send file_download command'));
+      }
+    });
   };
 
   const connect = async (): Promise<void> => {
@@ -191,6 +254,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
 
   const disconnect = (): void => {
     stopAllSubscriptions();
+    failAllPendingCommands('WebSocket disconnected');
     wsClient.disconnect();
     status.value = CONNECTION_STATUS.DISCONNECTED;
     error.value = null;
@@ -215,6 +279,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
         status.value = CONNECTION_STATUS.DISCONNECTED;
       }
       activeSubscriptions.value.clear();
+      failAllPendingCommands('WebSocket connection closed');
     });
 
     unsubscribeFromError = wsClient.on('onError', (err: unknown) => {
@@ -227,6 +292,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
           ? String(err.message)
           : 'Connection error';
       activeSubscriptions.value.clear();
+      failAllPendingCommands('WebSocket connection error');
     });
 
     unsubscribeFromReconnecting = wsClient.on('onReconnecting', (data: unknown) => {
@@ -266,6 +332,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     unsubscribeFromMessage?.();
     unsubscribeFromReconnecting?.();
     unsubscribeFromReconnectFailed?.();
+    failAllPendingCommands('WebSocket store disposed');
   };
 
   setupListeners();
@@ -292,6 +359,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     stopSubscription,
     sendQuery,
     sendCommand,
+    downloadFile,
     setCommandsEnabled,
     $dispose: cleanup,
   };

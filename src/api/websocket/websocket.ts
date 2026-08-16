@@ -323,14 +323,16 @@ class WebSocketClient {
   /**
    * Send an inventory/hotkey command to the game.
    * Pass an options object — only provided fields are serialized.
+   * Background commands (e.g. file_download) may bypass the commands-enabled
+   * gate by passing `respectCommandsGate = false`.
    */
-  command(id: string, options: SendCommandOptions): boolean {
-    if (!this.commandsEnabled) {
+  command(id: string, options: SendCommandOptions, respectCommandsGate: boolean = true): boolean {
+    if (respectCommandsGate && !this.commandsEnabled) {
       console.warn('Commands are currently disabled (canAct=false), ignoring command');
       return false;
     }
 
-    const { command, formId, active, hand, count, slot, x, y, z } = options;
+    const { command, formId, active, hand, count, slot, x, y, z, path } = options;
     const message: CommandMessage = {
       type: 'command',
       id,
@@ -343,6 +345,7 @@ class WebSocketClient {
       ...(x !== undefined && { x }),
       ...(y !== undefined && { y }),
       ...(z !== undefined && { z }),
+      ...(path !== undefined && { path }),
     };
     return this.send(message);
   }

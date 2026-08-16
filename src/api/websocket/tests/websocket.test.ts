@@ -468,6 +468,28 @@ describe('WebSocketClient', () => {
         expect(parsed).not.toHaveProperty('x');
         expect(parsed).not.toHaveProperty('y');
         expect(parsed).not.toHaveProperty('z');
+        expect(parsed).not.toHaveProperty('path');
+      }
+    });
+
+    it('sends command with file_download and path', async () => {
+      const connectPromise = client.connect();
+      const socket = currentSocket();
+      if (socket) socket.simulateOpen();
+      await connectPromise;
+
+      const result = client.command('cmd.download', {
+        command: 'file_download',
+        path: 'interface/exported/hudmenu.gfx',
+      });
+      expect(result).toBe(true);
+
+      const sent = currentSocket()?.getSentMessages() ?? [];
+      const parsed: unknown = JSON.parse(sent[0]);
+      if (isRecord(parsed)) {
+        expect(parsed.type).toBe('command');
+        expect(getString(parsed, 'command')).toBe('file_download');
+        expect(getString(parsed, 'path')).toBe('interface/exported/hudmenu.gfx');
       }
     });
   });

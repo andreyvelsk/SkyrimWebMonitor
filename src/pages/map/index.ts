@@ -16,7 +16,6 @@ export type {
 } from './lib/types';
 export {
   DEFAULT_MARKER_ICON,
-  MARKER_ICON_MAP,
   resolveMarkerIcon,
 } from './composables/useMapMarkerIcons';
 export { getMapConfig, mapRegistry, DEFAULT_MAP_WORLDSPACE } from './config/mapRegistry';

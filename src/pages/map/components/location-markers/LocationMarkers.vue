@@ -5,7 +5,6 @@
       :key="m.key"
       class="hotspot-marker-group"
       :class="{
-        'hotspot-marker-group--dim': !m.canFastTravel,
         'hotspot-marker-group--selected': m.key === selectedMarkerKey,
       }"
       :transform="`translate(${m.x} ${m.y})`"
@@ -64,9 +63,5 @@ defineProps<{
 .hotspot-marker {
   transform-box: fill-box;
   transform-origin: center bottom;
-}
-
-.hotspot-marker-group--dim {
-  opacity: 0.45;
 }
 </style>
