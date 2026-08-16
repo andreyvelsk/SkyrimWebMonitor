@@ -36,8 +36,7 @@
 
     <location-markers
       :markers="locationMarkers"
-      :marker-max-half="markerMaxHalf"
-      :marker-max-size="markerMaxSize"
+      :marker-max-size-by-key="markerMaxSizeByKey"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
       :icon-symbol-by-url="iconSymbolByUrl"
@@ -54,7 +53,7 @@
     <selected-marker-label
       v-if="selectedMarker"
       :marker="selectedMarker"
-      :marker-size="markerSize"
+      :marker-size="selectedMarkerSize"
       :selected-label-offset="selectedLabelOffset"
       :label-height="labelHeight"
       :label-font-size="labelFontSize"
@@ -72,6 +71,7 @@ import { iconUrlToSymbolId } from '../composables/iconSprite';
 import type { MapProjectionFn } from '../composables/useMapProjection';
 import { useProjectedMapMarkers } from '../composables/useProjectedMapMarkers';
 import {
+  getMarkerSizeModifier,
   MARKER_BASE_SIZE_PX,
   MARKER_MAX_SIZE_PX,
   MARKER_MIN_SIZE_PX,
@@ -238,7 +238,8 @@ function handleClickAt(imgX: number, imgY: number): boolean {
   for (let i = all.length - 1; i >= 0; i -= 1) {
     const m = all[i];
     const isSelected = m.key === selectedMarkerKey.value;
-    const renderedH = isSelected ? markerMaxSize.value : markerSize.value;
+    const baseSize = markerSizeByKey.value[m.key] ?? markerSize.value;
+    const renderedH = isSelected ? baseSize * MARKER_SELECTED_SCALE : baseSize;
     const renderedHalfW = renderedH / 2;
     const dx = imgX - m.x;
     const dy = imgY - m.y;
@@ -253,26 +254,57 @@ function handleClickAt(imgX: number, imgY: number): boolean {
 defineExpose({ clearSelection, handleClickAt });
 
 /**
- * Marker size in image-natural-pixel units. Pre-divided by current scale so
- * that the on-screen size follows the configured `MARKER_ZOOM_INFLUENCE`
- * curve regardless of how the user zooms or pans.
+ * Marker size in image-natural-pixel units for a given icon size modifier.
+ * Pre-divided by current scale so that the on-screen size follows the
+ * configured `MARKER_ZOOM_INFLUENCE` curve regardless of how the user zooms
+ * or pans. `modifier` scales `MARKER_BASE_SIZE_PX` before clamping so the
+ * min/max bounds still apply to the final per-type size.
  */
-const markerSize = computed(() => {
+function computeMarkerSize(modifier: number): number {
   const s = props.scale;
   const cover = props.coverScale;
   if (!s || !cover) return 0;
   const zoomFactor = s / cover; // ≥ 1 by construction
   const screenPx = clamp(
-    MARKER_BASE_SIZE_PX * Math.pow(zoomFactor, MARKER_ZOOM_INFLUENCE),
+    MARKER_BASE_SIZE_PX * modifier * Math.pow(zoomFactor, MARKER_ZOOM_INFLUENCE),
     MARKER_MIN_SIZE_PX,
     MARKER_MAX_SIZE_PX
   );
   return screenPx / s;
+}
+
+/** Base marker size (modifier 1) — used for labels, quest markers and fallbacks. */
+const markerSize = computed(() => computeMarkerSize(1));
+
+/** Per-marker non-selected size, keyed by marker key. */
+const markerSizeByKey = computed<Record<string, number>>(() => {
+  const map: Record<string, number> = {};
+  for (const m of markers.value) {
+    const modifier = isLocationMarker(m) ? getMarkerSizeModifier(m.typeId) : 1;
+    map[m.key] = computeMarkerSize(modifier);
+  }
+  return map;
 });
 
 /** Per-marker rendered size — selected markers are drawn larger. */
 const markerMaxSize = computed(() => markerSize.value * MARKER_SELECTED_SCALE);
 const markerMaxHalf = computed(() => markerMaxSize.value / 2);
+
+/** Per-marker selected (max) size, keyed by marker key. */
+const markerMaxSizeByKey = computed<Record<string, number>>(() => {
+  const map: Record<string, number> = {};
+  for (const key of Object.keys(markerSizeByKey.value)) {
+    map[key] = markerSizeByKey.value[key] * MARKER_SELECTED_SCALE;
+  }
+  return map;
+});
+
+/** Non-selected size of the currently selected marker (for label sizing). */
+const selectedMarkerSize = computed(() => {
+  if (!selectedMarker.value) return markerSize.value;
+  return markerSizeByKey.value[selectedMarker.value.key] ?? markerSize.value;
+});
+
 /** CSS variable shared by every marker — non-selected markers shrink to this. */
 const restScale = computed(() => (1 / MARKER_SELECTED_SCALE).toFixed(4));
 

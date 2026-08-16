@@ -33,6 +33,7 @@ export function useProjectedMapMarkers({
           kind: 'location',
           refId: h.refId,
           type: h.type,
+          typeId: h.typeId,
           label: h.name,
           canFastTravel: h.canFastTravel,
           x: projected.x,

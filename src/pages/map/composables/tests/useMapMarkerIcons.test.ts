@@ -8,7 +8,7 @@ import {
   DEFAULT_UNDISCOVERED_MARKER_ICON
 } from '@/pages/map/composables/useMapMarkerIcons';
 import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
-import { TYPE_ID_TO_GFX_SHAPE_ID } from '@/features/gfx-icons/config/typeIdToGfxId';
+import { GFX_SHAPE_ID_BY_TYPE } from '@/features/gfx-icons/config/typeIdToGfxId';
 
 // =============================================================
 // Map Marker Icons tests
@@ -28,13 +28,13 @@ describe('DEFAULT_MARKER_ICON', () => {
   });
 });
 
-describe('TYPE_ID_TO_GFX_SHAPE_ID', () => {
-  it('maps typeId 15 to known=299 and undiscovered=236', () => {
-    expect(TYPE_ID_TO_GFX_SHAPE_ID[15]).toEqual({ known: 299, undiscovered: 236 });
+describe('GFX_SHAPE_ID_BY_TYPE', () => {
+  it('maps type Mine to known=299 and undiscovered=236', () => {
+    expect(GFX_SHAPE_ID_BY_TYPE.Mine).toEqual({ known: 299, undiscovered: 236 });
   });
 
-  it('returns undefined for unmapped typeId', () => {
-    expect(TYPE_ID_TO_GFX_SHAPE_ID[999]).toBeUndefined();
+  it('returns undefined for unmapped type', () => {
+    expect(GFX_SHAPE_ID_BY_TYPE.Unknown).toBeUndefined();
   });
 });
 

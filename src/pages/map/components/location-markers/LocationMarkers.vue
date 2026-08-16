@@ -15,10 +15,10 @@
         <use
           class="hotspot-marker"
           :href="`#${iconSymbolByUrl[m.iconUrl]}`"
-          :x="-markerMaxHalf"
-          :y="-markerMaxSize"
-          :width="markerMaxSize"
-          :height="markerMaxSize"
+          :x="-markerHalf(m)"
+          :y="-markerWidth(m)"
+          :width="markerWidth(m)"
+          :height="markerWidth(m)"
           preserveAspectRatio="xMidYMax meet"
         />
       </g>
@@ -41,10 +41,10 @@
           <use
             class="hotspot-marker"
             :href="`#${iconSymbolByUrl[selectedMarker.iconUrl]}`"
-            :x="-markerMaxHalf"
-            :y="-markerMaxSize"
-            :width="markerMaxSize"
-            :height="markerMaxSize"
+            :x="-markerHalf(selectedMarker)"
+            :y="-markerWidth(selectedMarker)"
+            :width="markerWidth(selectedMarker)"
+            :height="markerWidth(selectedMarker)"
             preserveAspectRatio="xMidYMax meet"
           />
         </g>
@@ -59,8 +59,8 @@ import type { LocationProjectedMarker } from '../../lib/types';
 
 const props = defineProps<{
   markers: LocationProjectedMarker[];
-  markerMaxHalf: number;
-  markerMaxSize: number;
+  /** Selected (max) size per marker key, already zoom-adjusted. */
+  markerMaxSizeByKey: Record<string, number>;
   restScale: string;
   selectedMarkerKey: string | null;
   iconSymbolByUrl: Record<string, string>;
@@ -69,6 +69,15 @@ const props = defineProps<{
 const selectedMarker = computed<LocationProjectedMarker | null>(
   () => props.markers.find((m) => m.key === props.selectedMarkerKey) ?? null,
 );
+
+/** Selected (max) rendered width for a marker; 0 if the key is not sized yet. */
+function markerWidth(m: LocationProjectedMarker): number {
+  return props.markerMaxSizeByKey[m.key] ?? 0;
+}
+
+function markerHalf(m: LocationProjectedMarker): number {
+  return markerWidth(m) / 2;
+}
 </script>
 
 <style scoped lang="scss">

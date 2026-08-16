@@ -103,6 +103,8 @@ export interface BaseProjectedMarker {
 export interface LocationProjectedMarker extends BaseProjectedMarker {
   kind: 'location';
   type: MapHotspotType;
+  /** Numeric hotspot typeId from the game, used for per-type marker sizing. */
+  typeId: number;
 }
 
 export interface QuestProjectedMarker extends BaseProjectedMarker {
