@@ -238,7 +238,12 @@ function handleClickAt(imgX: number, imgY: number): boolean {
   for (let i = all.length - 1; i >= 0; i -= 1) {
     const m = all[i];
     const isSelected = m.key === selectedMarkerKey.value;
-    const baseSize = markerSizeByKey.value[m.key] ?? markerSize.value;
+    // Markers with a type modifier < 1 are drawn smaller, but their click
+    // target keeps the full base size so they stay easy to tap. Modifiers
+    // ≥ 1 (e.g. capital markers) keep using their enlarged rendered size.
+    const modifier = isLocationMarker(m) ? getMarkerSizeModifier(m.typeId) : 1;
+    const baseSize =
+      modifier < 1 ? markerSize.value : (markerSizeByKey.value[m.key] ?? markerSize.value);
     const renderedH = isSelected ? baseSize * MARKER_SELECTED_SCALE : baseSize;
     const renderedHalfW = renderedH / 2;
     const dx = imgX - m.x;
