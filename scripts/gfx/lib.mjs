@@ -226,8 +226,21 @@ export function parseStyles(buf, pos, shapeVersion) {
 
 /**
  * Parse shape records.
- * groupOnStyleChange: true — a new contour on every style change/MoveTo
- * (inspect.mjs behavior), false — only on MoveTo (generate.mjs behavior).
+ *
+ * Returns { contours, edges }:
+ * - contours: legacy structure grouped only on explicit MoveTo (used by
+ *   inspect.mjs for display purposes). Each contour has a SINGLE fill0/fill1
+ *   captured at MoveTo time — this is NOT reliable when a mid-contour
+ *   StyleChangeRecord changes fill0/fill1 without a MoveTo (Scaleform does
+ *   this). Do not use `contours` for fill rendering.
+ * - edges: a flat list of individual edges (straight/curved), each carrying
+ *   the fill0/fill1/line values that were active AT THE TIME the edge was
+ *   read. This correctly captures mid-contour fill changes and is the
+ *   correct input for path reconstruction in buildSvg (see
+ *   `buildFillPathsFromEdges`).
+ *
+ * groupOnStyleChange: legacy flag kept for inspect.mjs compatibility
+ * (affects only `contours`, not `edges`).
  */
 export function parseShapeRecords(buf, pos, numFillBits, numLineBits, shapeVersion, { groupOnStyleChange = false } = {}) {
     let r = new BitReader(buf, pos * 8);
@@ -236,7 +249,8 @@ export function parseShapeRecords(buf, pos, numFillBits, numLineBits, shapeVersi
     let fill0 = 0;
     let fill1 = 0;
     let line = 0;
-    const contours = []; // { fill0, fill1, line, segments }
+    const contours = []; // { fill0, fill1, line, segments } — legacy, display only
+    const edges = []; // { type: 'L'|'Q', x0, y0, x1, y1, cx?, cy?, fill0, fill1, line }
     let current = null;
 
     const beginContour = (moveX, moveY) => {
@@ -266,6 +280,7 @@ export function parseShapeRecords(buf, pos, numFillBits, numLineBits, shapeVersi
             if (groupOnStyleChange) {
                 if (sMove || sF0 || sF1 || sLine || sNew) beginContour(x, y);
             } else if (sMove) {
+                // Explicit MoveTo: always start a new contour (display only)
                 beginContour(x, y);
             }
 
@@ -283,6 +298,7 @@ export function parseShapeRecords(buf, pos, numFillBits, numLineBits, shapeVersi
             if (straightFlag === 1) {
                 const nBits = r.readBits(4) + 2;
                 const general = r.readBits(1);
+                const x0 = x, y0 = y;
                 if (general === 0) {
                     const vert = r.readBits(1);
                     if (vert) y += r.readSignedBits(nBits);
@@ -292,19 +308,22 @@ export function parseShapeRecords(buf, pos, numFillBits, numLineBits, shapeVersi
                     y += r.readSignedBits(nBits);
                 }
                 if (current) current.segments.push(['L', x, y]);
+                edges.push({ type: 'L', x0, y0, x1: x, y1: y, fill0, fill1, line });
             } else {
                 const nBits = r.readBits(4) + 2;
+                const x0 = x, y0 = y;
                 const cx = x + r.readSignedBits(nBits);
                 const cy = y + r.readSignedBits(nBits);
                 const ax = cx + r.readSignedBits(nBits);
                 const ay = cy + r.readSignedBits(nBits);
                 if (current) current.segments.push(['Q', cx, cy, ax, ay]);
+                edges.push({ type: 'Q', x0, y0, cx, cy, x1: ax, y1: ay, fill0, fill1, line });
                 x = ax;
                 y = ay;
             }
         }
     }
-    return contours;
+    return { contours, edges };
 }
 
 export const SHAPE_VERSION = { 2: 1, 22: 2, 32: 3, 83: 4 };
@@ -332,8 +351,8 @@ export function parseDefineShape(buf, pos, code, options) {
     const numLineBits = buf[pos] & 0x0f;
     pos += 1;
 
-    const contours = parseShapeRecords(buf, pos, numFillBits, numLineBits, version, options);
-    return { bounds, fills: styles.fills, lines: styles.lines, contours };
+    const { contours, edges } = parseShapeRecords(buf, pos, numFillBits, numLineBits, version, options);
+    return { bounds, fills: styles.fills, lines: styles.lines, contours, edges };
 }
 
 // ---------- SVG ----------
@@ -354,42 +373,162 @@ export function segmentsToD(segments, scale, ox, oy) {
     return d;
 }
 
+/**
+ * Reverse a single edge so it goes from x1,y1 back to x0,y0.
+ * For a curve, the control point stays the same — only the anchor
+ * endpoints (x0,y0)/(x1,y1) swap.
+ */
+function reverseEdge(e) {
+    if (e.type === 'Q') return { type: 'Q', x0: e.x1, y0: e.y1, cx: e.cx, cy: e.cy, x1: e.x0, y1: e.y0 };
+    return { type: 'L', x0: e.x1, y0: e.y1, x1: e.x0, y1: e.y0 };
+}
+
+function pointKey(x, y) {
+    return `${x},${y}`;
+}
+
+/**
+ * Reconstruct closed SVG subpaths from an unordered bag of edges by
+ * matching endpoints (JPEXS-style path reconstruction).
+ *
+ * SWF fill semantics: fill1 is the fill on the RIGHT of the edge direction,
+ * fill0 is on the LEFT. For a given fill index, we collect:
+ *   - every edge whose fill1 === index, as-is
+ *   - every edge whose fill0 === index, reversed (so that index ends up on
+ *     the right of the reversed edge, consistent with the fill1 edges)
+ * Because Scaleform allows the active fill to change mid-contour (without
+ * a MoveTo), edges belonging to the same fill index are not necessarily
+ * contiguous in the original record stream — but they always form closed
+ * loops geometrically (each edge endpoint is shared with exactly one other
+ * edge of the same fill bag, apart from possible touching points). We
+ * rebuild the loops by hashing edges on their start point and greedily
+ * walking chains until we return to the loop's start point.
+ */
+function reconstructPaths(edgeBag) {
+    // Map from "x0,y0" → queue of edge indices starting there (unused)
+    const byStart = new Map();
+    const used = new Array(edgeBag.length).fill(false);
+    for (let i = 0; i < edgeBag.length; i++) {
+        const key = pointKey(edgeBag[i].x0, edgeBag[i].y0);
+        if (!byStart.has(key)) byStart.set(key, []);
+        byStart.get(key).push(i);
+    }
+
+    const takeEdgeAt = (x, y) => {
+        const key = pointKey(x, y);
+        const queue = byStart.get(key);
+        if (!queue) return -1;
+        while (queue.length) {
+            const idx = queue.shift();
+            if (!used[idx]) return idx;
+        }
+        return -1;
+    };
+
+    const loops = []; // array of edge arrays (each a closed loop)
+    for (let i = 0; i < edgeBag.length; i++) {
+        if (used[i]) continue;
+        const startEdge = edgeBag[i];
+        used[i] = true;
+        const loop = [startEdge];
+        const startX = startEdge.x0;
+        const startY = startEdge.y0;
+        let curX = startEdge.x1;
+        let curY = startEdge.y1;
+
+        // Follow the chain until we return to the loop's start point,
+        // or no continuation edge is found (open end — shouldn't normally
+        // happen for well-formed closed shapes, but guard against it).
+        let guard = edgeBag.length + 1;
+        while (!(curX === startX && curY === startY) && guard-- > 0) {
+            const nextIdx = takeEdgeAt(curX, curY);
+            if (nextIdx < 0) break;
+            used[nextIdx] = true;
+            const e = edgeBag[nextIdx];
+            loop.push(e);
+            curX = e.x1;
+            curY = e.y1;
+        }
+        loops.push(loop);
+    }
+    return loops;
+}
+
+function loopToD(loop, scale, ox, oy) {
+    const px = (v) => (v * scale + ox).toFixed(2);
+    const py = (v) => (v * scale + oy).toFixed(2);
+    let d = `M${px(loop[0].x0)},${py(loop[0].y0)}`;
+    for (const e of loop) {
+        if (e.type === 'L') d += `L${px(e.x1)},${py(e.y1)}`;
+        else d += `Q${px(e.cx)},${py(e.cy)} ${px(e.x1)},${py(e.y1)}`;
+    }
+    return d;
+}
+
+/**
+ * Build per-fill-index path data ('d' strings) from the flat edge list,
+ * using endpoint-matching reconstruction (see reconstructPaths above).
+ * Returns Map<fillIndex, string> (the 'd' attribute for that fill).
+ */
+export function buildFillPathsFromEdges(edges, scale, ox, oy) {
+    const bags = new Map(); // fillIndex → edge[]
+    const addTo = (idx, edge) => {
+        if (!bags.has(idx)) bags.set(idx, []);
+        bags.get(idx).push(edge);
+    };
+    for (const e of edges) {
+        if (e.fill1 > 0) addTo(e.fill1, e);
+        if (e.fill0 > 0) addTo(e.fill0, reverseEdge(e));
+    }
+
+    const result = new Map();
+    for (const [fillIndex, bag] of bags) {
+        const loops = reconstructPaths(bag);
+        const d = loops.map((loop) => loopToD(loop, scale, ox, oy)).join('');
+        result.set(fillIndex, d);
+    }
+    return result;
+}
+
+/**
+ * Build per-line-index path data using the same endpoint-matching
+ * reconstruction (strokes don't need direction, but reconstruction still
+ * yields minimal, correctly joined subpaths).
+ */
+export function buildLinePathsFromEdges(edges, scale, ox, oy) {
+    const bags = new Map();
+    for (const e of edges) {
+        if (e.line > 0) {
+            if (!bags.has(e.line)) bags.set(e.line, []);
+            bags.get(e.line).push(e);
+        }
+    }
+    const result = new Map();
+    for (const [lineIndex, bag] of bags) {
+        const loops = reconstructPaths(bag);
+        const d = loops.map((loop) => loopToD(loop, scale, ox, oy)).join('');
+        result.set(lineIndex, d);
+    }
+    return result;
+}
+
 export function buildSvg(parsed, scale = 1 / 20) {
-    const { bounds, fills, lines, contours } = parsed;
+    const { bounds, fills, lines, edges } = parsed;
     const width = ((bounds.xmax - bounds.xmin) * scale).toFixed(2);
     const height = ((bounds.ymax - bounds.ymin) * scale).toFixed(2);
     const ox = -bounds.xmin * scale;
     const oy = -bounds.ymin * scale;
 
-    // Group contours by fill index (like JPEXS)
-    const fillGroups = new Map(); // key: fillIndex → { fillIndex, d }
-    const lineGroups = new Map(); // key: lineIndex → { lineIndex, d }
-
-    for (const c of contours) {
-        if (!c.segments.length) continue;
-        const d = segmentsToD(c.segments, scale, ox, oy);
-
-        if (c.fill0 > 0) {
-            const key = c.fill0;
-            if (!fillGroups.has(key)) fillGroups.set(key, { fillIndex: key, d: '' });
-            fillGroups.get(key).d += d;
-        }
-        if (c.fill1 > 0) {
-            const key = c.fill1;
-            if (!fillGroups.has(key)) fillGroups.set(key, { fillIndex: key, d: '' });
-            fillGroups.get(key).d += d;
-        }
-        if (c.line > 0) {
-            const key = c.line;
-            if (!lineGroups.has(key)) lineGroups.set(key, { lineIndex: key, d: '' });
-            lineGroups.get(key).d += d;
-        }
-    }
+    // JPEXS-style rendering: fill1 edges as-is + fill0 edges reversed,
+    // reconstructed into closed loops by endpoint matching. This correctly
+    // handles mid-contour fill changes (StyleChangeRecord without MoveTo).
+    const fillPaths = buildFillPathsFromEdges(edges, scale, ox, oy);
+    const linePaths = buildLinePathsFromEdges(edges, scale, ox, oy);
 
     const paths = [];
-    for (const { fillIndex, d } of fillGroups.values()) {
+    for (const [fillIndex, d] of fillPaths) {
         const f = fills[fillIndex - 1];
-        if (!f) continue;
+        if (!f || !d) continue;
         let fillAttr = 'fill="none"';
         if (f.type === 'solid' && f.color) {
             fillAttr = `fill="${colorToCss(f.color)}"`;
@@ -400,9 +539,9 @@ export function buildSvg(parsed, scale = 1 / 20) {
         }
         paths.push(`    <path d="${d}" ${fillAttr} fill-rule="evenodd" stroke="none"/>`);
     }
-    for (const { lineIndex, d } of lineGroups.values()) {
+    for (const [lineIndex, d] of linePaths) {
         const l = lines[lineIndex - 1];
-        if (!l) continue;
+        if (!l || !d) continue;
         paths.push(`    <path d="${d}" fill="none" stroke="${colorToCss(l.color)}" stroke-width="${(l.width * scale).toFixed(2)}"/>`);
     }
 

@@ -5,6 +5,11 @@
  *   - StyleChangeRecord, StraightEdgeRecord, CurvedEdgeRecord, EndShapeRecord
  *   - Important: the NumBits field stores (actual bit count - 2)
  *   - StateNewStyles adds new fill/line styles inside a contour
+ *
+ * Fill rendering is JPEXS-style: every edge carries the fill0/fill1/line
+ * values active at the time it was read, and closed subpaths are rebuilt by
+ * endpoint matching. This correctly handles Scaleform's mid-contour fill
+ * changes (a StyleChangeRecord that changes fill0/fill1 without a MoveTo).
  */
 
 // ---------- Types ----------
@@ -26,18 +31,43 @@ export interface LineStyle {
   color: RgbColor;
 }
 
-export interface ShapeGroup {
+/**
+ * Legacy contour structure grouped only on explicit MoveTo. Each contour has
+ * a SINGLE fill0/fill1 captured at MoveTo time — this is NOT reliable when a
+ * mid-contour StyleChangeRecord changes fill0/fill1 without a MoveTo. Do not
+ * use `contours` for fill rendering.
+ */
+export interface ShapeContour {
   fill0: number;
   fill1: number;
   line: number;
   segments: Array<[string, ...number[]]>;
 }
 
+/**
+ * A single straight/curved edge carrying the fill0/fill1/line values that
+ * were active AT THE TIME the edge was read. This is the correct input for
+ * path reconstruction in `shapeToSvg`.
+ */
+export interface ShapeEdge {
+  type: 'L' | 'Q';
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  cx?: number;
+  cy?: number;
+  fill0: number;
+  fill1: number;
+  line: number;
+}
+
 export interface ParsedShape {
   bounds: { xmin: number; xmax: number; ymin: number; ymax: number };
   fills: FillStyle[];
   lines: LineStyle[];
-  groups: ShapeGroup[];
+  contours: ShapeContour[];
+  edges: ShapeEdge[];
 }
 
 // ---------- BitReader ----------
@@ -130,9 +160,9 @@ export function parseShape(buf: Uint8Array, pos: number, code: number): ParsedSh
   const numLineBits = buf[p] & 0x0f;
   p += 1;
 
-  const groups = parseShapeRecords(buf, p, numFillBits, numLineBits, version);
+  const { contours, edges } = parseShapeRecords(buf, p, numFillBits, numLineBits, version);
 
-  return { bounds, fills: styles.fills, lines: styles.lines, groups };
+  return { bounds, fills: styles.fills, lines: styles.lines, contours, edges };
 }
 
 function parseStyles(
@@ -243,26 +273,39 @@ function skipMatrix(buf: Uint8Array, pos: number): number {
   return r.bytePos;
 }
 
+/**
+ * Parse shape records.
+ *
+ * Returns `{ contours, edges }`:
+ * - `contours`: legacy structure grouped only on explicit MoveTo (display
+ *   only). Each contour has a SINGLE fill0/fill1 captured at MoveTo time and
+ *   is NOT reliable for fill rendering.
+ * - `edges`: a flat list of individual edges (straight/curved), each carrying
+ *   the fill0/fill1/line values active AT THE TIME the edge was read. This
+ *   correctly captures mid-contour fill changes and is the correct input for
+ *   path reconstruction in `shapeToSvg`.
+ */
 function parseShapeRecords(
   buf: Uint8Array,
   pos: number,
   numFillBits: number,
   numLineBits: number,
   shapeVersion: number,
-): ShapeGroup[] {
+): { contours: ShapeContour[]; edges: ShapeEdge[] } {
   let r = new BitReader(buf, pos * 8);
   let x = 0;
   let y = 0;
   let fill0 = 0;
   let fill1 = 0;
   let line = 0;
-  const groups: ShapeGroup[] = [];
-  let current: ShapeGroup | null = null;
+  const contours: ShapeContour[] = [];
+  const edges: ShapeEdge[] = [];
+  let current: ShapeContour | null = null;
 
-  const startGroup = (moveX?: number, moveY?: number): ShapeGroup => {
-    const group: ShapeGroup = { fill0, fill1, line, segments: [['M', moveX ?? x, moveY ?? y]] };
-    groups.push(group);
-    return group;
+  const beginContour = (moveX?: number, moveY?: number): ShapeContour => {
+    const contour: ShapeContour = { fill0, fill1, line, segments: [['M', moveX ?? x, moveY ?? y]] };
+    contours.push(contour);
+    return contour;
   };
 
   while (true) {
@@ -284,7 +327,7 @@ function parseShapeRecords(
       if (sF1) fill1 = r.readBits(numFillBits);
       if (sLine) line = r.readBits(numLineBits);
 
-      if (sMove) current = startGroup(x, y);
+      if (sMove) current = beginContour(x, y);
 
       if (sNew) {
         r.alignByte();
@@ -300,6 +343,8 @@ function parseShapeRecords(
       if (straightFlag === 1) {
         const nBits = r.readBits(4) + 2;
         const general = r.readBits(1);
+        const x0 = x;
+        const y0 = y;
         if (general === 0) {
           const vert = r.readBits(1);
           if (vert) y += r.readSignedBits(nBits);
@@ -309,19 +354,23 @@ function parseShapeRecords(
           y += r.readSignedBits(nBits);
         }
         if (current) current.segments.push(['L', x, y]);
+        edges.push({ type: 'L', x0, y0, x1: x, y1: y, fill0, fill1, line });
       } else {
         const nBits = r.readBits(4) + 2;
+        const x0 = x;
+        const y0 = y;
         const cx = x + r.readSignedBits(nBits);
         const cy = y + r.readSignedBits(nBits);
         const ax = cx + r.readSignedBits(nBits);
         const ay = cy + r.readSignedBits(nBits);
         if (current) current.segments.push(['Q', cx, cy, ax, ay]);
+        edges.push({ type: 'Q', x0, y0, cx, cy, x1: ax, y1: ay, fill0, fill1, line });
         x = ax;
         y = ay;
       }
     }
   }
-  return groups;
+  return { contours, edges };
 }
 
 // ---------- SVG ----------
@@ -332,24 +381,145 @@ function colorToCss(c: RgbColor): string {
   return `rgba(${c.r},${c.g},${c.b},${(c.a / 255).toFixed(3)})`;
 }
 
-function segmentsToD(
-  segments: Array<[string, ...number[]]>,
+/** Edge geometry without fill/line attributes (used after reversing). */
+interface EdgeGeometry {
+  type: 'L' | 'Q';
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  cx?: number;
+  cy?: number;
+}
+
+/**
+ * Reverse a single edge so it goes from x1,y1 back to x0,y0.
+ * For a curve, the control point stays the same — only the anchor
+ * endpoints (x0,y0)/(x1,y1) swap.
+ */
+function reverseEdge(e: ShapeEdge): EdgeGeometry {
+  if (e.type === 'Q') return { type: 'Q', x0: e.x1, y0: e.y1, cx: e.cx, cy: e.cy, x1: e.x0, y1: e.y0 };
+  return { type: 'L', x0: e.x1, y0: e.y1, x1: e.x0, y1: e.y0 };
+}
+
+function pointKey(x: number, y: number): string {
+  return `${x},${y}`;
+}
+
+/**
+ * Reconstruct closed SVG subpaths from an unordered bag of edges by
+ * matching endpoints (JPEXS-style path reconstruction).
+ */
+function reconstructPaths(edgeBag: EdgeGeometry[]): EdgeGeometry[][] {
+  const byStart = new Map<string, number[]>();
+  const used = new Array<boolean>(edgeBag.length).fill(false);
+  for (let i = 0; i < edgeBag.length; i++) {
+    const key = pointKey(edgeBag[i].x0, edgeBag[i].y0);
+    if (!byStart.has(key)) byStart.set(key, []);
+    byStart.get(key)?.push(i);
+  }
+
+  const takeEdgeAt = (x: number, y: number): number => {
+    const key = pointKey(x, y);
+    const queue = byStart.get(key);
+    if (!queue) return -1;
+    while (queue.length) {
+      const idx = queue.shift();
+      if (idx !== undefined && !used[idx]) return idx;
+    }
+    return -1;
+  };
+
+  const loops: EdgeGeometry[][] = [];
+  for (let i = 0; i < edgeBag.length; i++) {
+    if (used[i]) continue;
+    const startEdge = edgeBag[i];
+    used[i] = true;
+    const loop: EdgeGeometry[] = [startEdge];
+    const startX = startEdge.x0;
+    const startY = startEdge.y0;
+    let curX = startEdge.x1;
+    let curY = startEdge.y1;
+
+    let guard = edgeBag.length + 1;
+    while (!(curX === startX && curY === startY) && guard-- > 0) {
+      const nextIdx = takeEdgeAt(curX, curY);
+      if (nextIdx < 0) break;
+      used[nextIdx] = true;
+      const e = edgeBag[nextIdx];
+      loop.push(e);
+      curX = e.x1;
+      curY = e.y1;
+    }
+    loops.push(loop);
+  }
+  return loops;
+}
+
+function loopToD(loop: EdgeGeometry[], scale: number, ox: number, oy: number): string {
+  const px = (v: number): string => (v * scale + ox).toFixed(2);
+  const py = (v: number): string => (v * scale + oy).toFixed(2);
+  let d = `M${px(loop[0].x0)},${py(loop[0].y0)}`;
+  for (const e of loop) {
+    if (e.type === 'L') d += `L${px(e.x1)},${py(e.y1)}`;
+    else d += `Q${px(e.cx ?? e.x0)},${py(e.cy ?? e.y0)} ${px(e.x1)},${py(e.y1)}`;
+  }
+  return d;
+}
+
+/**
+ * Build per-fill-index path data ('d' strings) from the flat edge list using
+ * endpoint-matching reconstruction. Returns Map<fillIndex, string>.
+ */
+function buildFillPathsFromEdges(
+  edges: ShapeEdge[],
   scale: number,
   ox: number,
   oy: number,
-): string {
-  let d = '';
-  for (const seg of segments) {
-    const [kind, ...args] = seg;
-    if (kind === 'M') {
-      d += `M${(args[0] * scale + ox).toFixed(2)},${(args[1] * scale + oy).toFixed(2)}`;
-    } else if (kind === 'L') {
-      d += `L${(args[0] * scale + ox).toFixed(2)},${(args[1] * scale + oy).toFixed(2)}`;
-    } else if (kind === 'Q') {
-      d += `Q${(args[0] * scale + ox).toFixed(2)},${(args[1] * scale + oy).toFixed(2)} ${(args[2] * scale + ox).toFixed(2)},${(args[3] * scale + oy).toFixed(2)}`;
+): Map<number, string> {
+  const bags = new Map<number, EdgeGeometry[]>();
+  const addTo = (idx: number, edge: EdgeGeometry): void => {
+    if (!bags.has(idx)) bags.set(idx, []);
+    bags.get(idx)?.push(edge);
+  };
+  for (const e of edges) {
+    if (e.fill1 > 0) addTo(e.fill1, e);
+    if (e.fill0 > 0) addTo(e.fill0, reverseEdge(e));
+  }
+
+  const result = new Map<number, string>();
+  for (const [fillIndex, bag] of bags) {
+    const loops = reconstructPaths(bag);
+    const d = loops.map((loop) => loopToD(loop, scale, ox, oy)).join('');
+    result.set(fillIndex, d);
+  }
+  return result;
+}
+
+/**
+ * Build per-line-index path data using the same endpoint-matching
+ * reconstruction.
+ */
+function buildLinePathsFromEdges(
+  edges: ShapeEdge[],
+  scale: number,
+  ox: number,
+  oy: number,
+): Map<number, string> {
+  const bags = new Map<number, EdgeGeometry[]>();
+  for (const e of edges) {
+    if (e.line > 0) {
+      if (!bags.has(e.line)) bags.set(e.line, []);
+      bags.get(e.line)?.push(e);
     }
   }
-  return d;
+  const result = new Map<number, string>();
+  for (const [lineIndex, bag] of bags) {
+    const loops = reconstructPaths(bag);
+    const d = loops.map((loop) => loopToD(loop, scale, ox, oy)).join('');
+    result.set(lineIndex, d);
+  }
+  return result;
 }
 
 /**
@@ -358,45 +528,22 @@ function segmentsToD(
  * @param scale - scale factor (twips → px, default 1/20)
  */
 export function shapeToSvg(shape: ParsedShape, scale = 1 / 20): string {
-  const { bounds, fills, lines, groups } = shape;
+  const { bounds, fills, lines, edges } = shape;
   const width = ((bounds.xmax - bounds.xmin) * scale).toFixed(2);
   const height = ((bounds.ymax - bounds.ymin) * scale).toFixed(2);
   const ox = -bounds.xmin * scale;
   const oy = -bounds.ymin * scale;
 
-  // Group contours by fill/line index (like JPEXS). A contour can carry both
-  // fill0 and fill1, so it is emitted into each corresponding fill group.
-  const fillGroups = new Map<number, { fillIndex: number; d: string }>();
-  const lineGroups = new Map<number, { lineIndex: number; d: string }>();
-
-  for (const g of groups) {
-    if (!g.segments.length) continue;
-    const d = segmentsToD(g.segments, scale, ox, oy);
-
-    if (g.fill0 > 0) {
-      const key = g.fill0;
-      const existing = fillGroups.get(key);
-      if (existing) existing.d += d;
-      else fillGroups.set(key, { fillIndex: key, d });
-    }
-    if (g.fill1 > 0) {
-      const key = g.fill1;
-      const existing = fillGroups.get(key);
-      if (existing) existing.d += d;
-      else fillGroups.set(key, { fillIndex: key, d });
-    }
-    if (g.line > 0) {
-      const key = g.line;
-      const existing = lineGroups.get(key);
-      if (existing) existing.d += d;
-      else lineGroups.set(key, { lineIndex: key, d });
-    }
-  }
+  // JPEXS-style rendering: fill1 edges as-is + fill0 edges reversed,
+  // reconstructed into closed loops by endpoint matching. This correctly
+  // handles mid-contour fill changes (StyleChangeRecord without MoveTo).
+  const fillPaths = buildFillPathsFromEdges(edges, scale, ox, oy);
+  const linePaths = buildLinePathsFromEdges(edges, scale, ox, oy);
 
   const paths: string[] = [];
-  for (const { fillIndex, d } of fillGroups.values()) {
+  for (const [fillIndex, d] of fillPaths) {
     const f = fills[fillIndex - 1];
-    if (!f) continue;
+    if (!f || !d) continue;
     let fillAttr = 'fill="none"';
     if (f.type === 'solid' && f.color) {
       fillAttr = `fill="${colorToCss(f.color)}"`;
@@ -407,9 +554,9 @@ export function shapeToSvg(shape: ParsedShape, scale = 1 / 20): string {
     }
     paths.push(`    <path d="${d}" ${fillAttr} fill-rule="evenodd" stroke="none"/>`);
   }
-  for (const { lineIndex, d } of lineGroups.values()) {
+  for (const [lineIndex, d] of linePaths) {
     const l = lines[lineIndex - 1];
-    if (!l) continue;
+    if (!l || !d) continue;
     paths.push(`    <path d="${d}" fill="none" stroke="${colorToCss(l.color)}" stroke-width="${(l.width * scale).toFixed(2)}"/>`);
   }
 

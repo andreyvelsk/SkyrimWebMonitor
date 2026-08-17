@@ -67,7 +67,12 @@ Returns `ParsedShape`:
 - `bounds` — { xmin, xmax, ymin, ymax } in twips
 - `fills` — array of `FillStyle[]`
 - `lines` — array of `LineStyle[]`
-- `groups` — array of groups with fill0/fill1/line and segments
+- `contours` — legacy structure grouped only on explicit MoveTo (display only, not used for rendering)
+- `edges` — flat list of individual edges (straight/curved), each carrying the `fill0`/`fill1`/`line` values active at the time the edge was read
+
+`edges` is the correct input for rendering: a mid-contour StyleChangeRecord that
+changes `fill0`/`fill1` without a MoveTo is captured per-edge, which the
+contour-only structure cannot represent.
 
 ### `shapeToSvg(shape: ParsedShape, scale?: number): string`
 
@@ -79,8 +84,11 @@ Converts a parsed shape into an SVG string.
 
 - **Gradients**: rendered with the middle color (not a full gradient)
 - **Bitmap fill**: not supported (2 shapes: 469, 711)
-- **Fill logic**: for contours with fill0 and fill1 at the same time, both are rendered (may create extra contours)
 - **LineStyle2**: the placeholder is read, but not all flags are interpreted
+
+Fill rendering is JPEXS-style: `fill1` edges are kept as-is and `fill0` edges are
+reversed, then closed subpaths are rebuilt by endpoint matching. This correctly
+handles mid-contour fill changes (StyleChangeRecord without MoveTo).
 
 ## Caching in the app
 

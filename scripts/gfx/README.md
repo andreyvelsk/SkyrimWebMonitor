@@ -241,8 +241,51 @@ Scaleform uses `StateNewStyles` in shape records (replacing fill/line styles ins
 The bit order is: TypeFlag, StateNewStyles, StateLineStyle, **StateFillStyle1, StateFillStyle0**, StateMoveTo.
 Fill0 and Fill1 are read in the order: **FillStyle1, FillStyle0** (not FillStyle0, FillStyle1).
 
-### 6. Contours and fill grouping
-JPEXS groups contours by fill index (fill0=k or fill1=k) into separate paths. Contours with the same geometry but different fill0/fill1 are rendered in different `<path>` elements.
+### 6. Fill rendering is edge-based, not contour-based
+The correct way to render fills is to work with a **flat list of edges**, not with
+"contours" grouped by MoveTo. `parseShapeRecords()` now returns both:
+
+```js
+const { contours, edges } = parseShapeRecords(...);
+```
+
+- `contours` — legacy structure grouped only on explicit MoveTo. Kept solely for
+  [`inspect.mjs`](scripts/gfx/inspect.mjs) display purposes. It captures fill0/fill1
+  once at MoveTo time, so it is **wrong** when a mid-contour StyleChangeRecord
+  changes the fill. Never use it for fill rendering.
+- `edges` — every straight/curved edge individually, with the fill0/fill1/line values
+  that were active **at the moment that edge was read**. This naturally captures
+  mid-contour fill changes (StyleChangeRecord with `sF0`/`sF1` but no MoveTo),
+  which Scaleform uses heavily (e.g. shapeId=267).
+
+### 7. Reconstructing paths from edges (JPEXS-style)
+`buildSvg()` does not emit one path per source contour. Instead, for each fill index
+`k` it collects a "bag" of edges:
+
+- every edge with `fill1 === k`, **as-is**;
+- every edge with `fill0 === k`, **reversed** (`reverseEdge()` — for a `Q` curve the
+  control point stays, only the start/end anchors swap).
+
+Then `reconstructPaths()` stitches those edges into **closed loops by matching
+endpoints** (hash edges by start point, greedily follow the chain until you return to
+the loop's start). This yields the same minimal subpath structure as JPEXS, even when
+the edges of one fill are interleaved with other fills in the original record stream.
+
+SWF fill semantics: `fill1` is the fill on the **right** of the edge direction, `fill0`
+is on the **left**. Reversing the `fill0` edges puts `k` on the right as well, so all
+edges in a bag are consistent and `fill-rule="evenodd"` works uniformly.
+
+```js
+// lib.mjs — buildFillPathsFromEdges():
+for (const e of edges) {
+    if (e.fill1 > 0) addTo(e.fill1, e);            // as-is
+    if (e.fill0 > 0) addTo(e.fill0, reverseEdge(e)); // reversed
+}
+// then reconstructPaths(bag) → closed loops → 'd' string
+```
+
+Line strokes use the same edge reconstruction (`buildLinePathsFromEdges()`), because
+strokes don't care about direction but still benefit from correct loop joining.
 
 ## Remaining errors
 
@@ -252,19 +295,47 @@ JPEXS groups contours by fill index (fill0=k or fill1=k) into separate paths. Co
 
 Both shapes use bitmap textures (bitmap fill) — references to embedded images, not vector fills.
 
-### Fill logic (imprecise match for ~6 shapes)
-For contours where StyleChange sets fill0 and fill1 simultaneously, JPEXS picks one fill based on winding direction. My parser emits both — which creates an extra contour.
+### Fill logic — FIXED ✓
 
-**Problem shapes:** 141, 171, 341, 365, 267, 269.
+**Problem shapes:** 141, 171, 267, 341, 365, 194 — now match the reference
+path structure (number of subpaths per fill) exactly.
 
-**What I tried:**
-1. **Winding-direction analysis** (signed area via shoelace) — didn't give the right result. Reason: Q-curves were approximated incorrectly and the winding convention didn't match.
-2. **Fill1-priority** (if fill1 is set, don't render fill0) — removed necessary contours, because some contours are rendered by JPEXS with both fills.
-3. **Fill0-priority** (fill0 || fill1) — created extra contours, but was closer to the reference.
+**What was wrong before**
 
-**Current solution:** render both fill0 and fill1 for every contour. The extra contours are visually minor (duplicated geometry with a different color).
+Rendering grouped edges by "contours" (MoveTo-delimited blocks). Two issues:
 
-**Next steps to fix:**
-1. Study the `SVGShapeExporter` sources in JPEXS to understand the exact fill logic
-2. Implement correct winding-direction analysis accounting for Q-curves
-3. Add bitmap fill support (parsing `bitmapMatrix`)
+1. **Missing reversal.** SWF semantics: `fill1` is the fill on the **right** of an
+   edge, `fill0` on the **left**. An edge with `fill0=k` must be **reversed** before
+   it can share a path with edges whose `fill1=k`. The old code emitted both fills
+   without reversing, producing duplicate geometry with wrong winding.
+2. **Mid-contour fill changes.** A `StyleChangeRecord` with `sF0`/`sF1` but **no
+   MoveTo** changes the active fill in the middle of a contour. Contour-based grouping
+   captured fill0/fill1 only once per contour, so edges after the change were assigned
+   to the wrong fill.
+
+**Final solution** (see nuances 6–7 above for the full explanation):
+
+1. `parseShapeRecords()` emits a flat `edges` array, where each edge carries the
+   fill0/fill1/line active at the moment it was read — mid-contour fill changes are
+   therefore captured exactly.
+2. `buildSvg()` uses `buildFillPathsFromEdges()`:
+   - `fill1 === k` edges go to bag `k` **as-is**;
+   - `fill0 === k` edges go to bag `k` **reversed** (`reverseEdge()`);
+   - `reconstructPaths()` stitches each bag into closed loops by endpoint matching.
+3. Line strokes use the same reconstruction (`buildLinePathsFromEdges()`).
+
+The legacy `contours` structure is retained only for [`inspect.mjs`](scripts/gfx/inspect.mjs)
+display output and is **not** used for rendering.
+
+**What didn't work (previous attempts):**
+1. **Winding-direction analysis** (signed area via shoelace) — Q-curves were approximated incorrectly.
+2. **Fill1-priority** (skip fill0 when fill1 is set) — removed necessary contours.
+3. **Fill0-priority** (fill0 || fill1 without reverse) — extra contours, wrong winding.
+4. **groupOnStyleChange=true** — split on every style change including `sLine`/`sNew`, broke evenodd fill for 22+ shapes.
+5. **Mid-contour split without reverse** — fixed fill attribution but still left
+   duplicate subpaths, because splitting alone doesn't reconnect edges into JPEXS's
+   minimal loop structure.
+
+### shapeId=269 — gradient fills (not yet implemented)
+JPEXS renders 4 paths (3 gradients + 1 solid). Our parser outputs only the solid fill.
+Gradient SVG rendering requires proper `<linearGradient>`/`<radialGradient>` elements with the gradient matrix — not yet implemented (currently approximated with the midpoint color).
