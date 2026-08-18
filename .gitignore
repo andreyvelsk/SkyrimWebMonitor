@@ -31,6 +31,7 @@ android/app/src/main/assets/capacitor.plugins.json
 # fetched as part of the build (or kept locally by developers).
 public/map-dzi/
 public/maps/
+public/hudmenu*
 
 # Editor directories and files
 .vscode/*
