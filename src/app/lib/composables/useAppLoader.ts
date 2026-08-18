@@ -3,6 +3,8 @@ import { storeToRefs } from 'pinia';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
+import { useSystemStore } from '@/stores/system/useSystemStore';
+import { useGfxIconsLoader } from '@/features/gfx-icons';
 import {
   getPageSubscriptions,
   getTabCategorySubscription,
@@ -23,6 +25,10 @@ export function useAppLoader() {
 
   const gameStatusStore = useGameStatusStore();
   const { canAct } = storeToRefs(gameStatusStore);
+
+  const systemStore = useSystemStore();
+  const { features } = storeToRefs(systemStore);
+  const gfxIconsLoader = useGfxIconsLoader();
 
   const startCategorySubscription = (tabId: string): void => {
     const config = getTabCategorySubscription(tabId);
@@ -102,6 +108,19 @@ export function useAppLoader() {
       }
     }
   });
+
+  // Background task: download/cache map icons once the system query returns
+  // the feature list. Runs regardless of canAct.
+  watch(
+    features,
+    (newFeatures) => {
+      if (isConnected.value && newFeatures.includes('file_download')) {
+        console.warn('file_download feature is available — ensuring gfx icons are loaded');
+        void gfxIconsLoader.ensureLoaded();
+      }
+    },
+    { immediate: true }
+  );
 
   // Gate ALL gameplay-data subscriptions on `canAct`. Before this is true,
   // queries for inventory/magic/stats return empty or invalid data

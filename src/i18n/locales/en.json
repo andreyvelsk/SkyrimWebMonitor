@@ -60,6 +60,13 @@
           "silver": "Silver",
           "gold": "Gold"
         }
+      },
+      "gfxIcons": {
+        "title": "Map Icons",
+        "hint": "Re-download the icon set from the game server and rebuild the cache.",
+        "reload": "Reload icons",
+        "reloading": "Reloading…",
+        "disableGfxIcons": "Disable game icons"
       }
     }
   },

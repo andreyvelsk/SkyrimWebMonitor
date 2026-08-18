@@ -6,7 +6,7 @@ import path from 'node:path';
 // Server payloads do not contain icon paths — every icon used in the app is
 // referenced from source code, so this static scan is exhaustive.
 
-const ICON_REGEX = /['"`]([a-z0-9-]+\/[a-z0-9-]+\.svg)['"`]/gi;
+const ICON_REGEX = /['"`]([a-z0-9-_]+\/[a-z0-9-_]+\.svg)['"`]/gi;
 
 function walk(dir, acc) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

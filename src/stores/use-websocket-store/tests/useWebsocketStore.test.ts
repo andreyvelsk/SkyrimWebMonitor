@@ -193,6 +193,46 @@ describe('useWebSocketStore', () => {
       store.sendCommand({ command: 'equip', formId: '0x123' });
       expect(mockWsClient.command).toHaveBeenCalled();
     });
+
+    it('passes path to the command message', async () => {
+      mockWsClient.isConnected.mockReturnValue(true);
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+      await store.connect();
+      store.sendCommand({ command: 'file_download', path: 'interface/exported/hudmenu.gfx' });
+      expect(mockWsClient.command).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ command: 'file_download', path: 'interface/exported/hudmenu.gfx' })
+      );
+    });
+  });
+
+  describe('downloadFile', () => {
+    it('rejects when not connected', async () => {
+      mockWsClient.isConnected.mockReturnValue(false);
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+      await expect(store.downloadFile('interface/exported/hudmenu.gfx')).rejects.toThrow('not connected');
+    });
+
+    it('sends file_download command with path when connected', async () => {
+      mockWsClient.isConnected.mockReturnValue(true);
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+      await store.connect();
+
+      const promise = store.downloadFile('interface/exported/hudmenu.gfx');
+      expect(mockWsClient.command).toHaveBeenCalledWith(
+        expect.any(String),
+        expect.objectContaining({ command: 'file_download', path: 'interface/exported/hudmenu.gfx' }),
+        false
+      );
+      // The pending promise is intentionally left unresolved in this mock.
+      promise.catch(() => {});
+    });
   });
 
   describe('updateEndpoint', () => {

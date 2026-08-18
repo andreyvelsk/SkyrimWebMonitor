@@ -1,5 +1,7 @@
-import type { MapHotspotType } from '@/stores/map/lib/types';
 import { buildIconPath } from '@/shared/lib/utils/iconPath';
+import { gfxIconsDisabled } from '@/shared/lib';
+import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
+import { getGfxShapeId } from '@/features/gfx-icons';
 
 // =============================================================
 // Map marker icons
@@ -11,27 +13,47 @@ import { buildIconPath } from '@/shared/lib/utils/iconPath';
 //
 // Icon URLs are built via {@link buildIconPath} so they resolve relative to
 // Vite's BASE_URL and work under any deploy base path.
+//
+// GFX icons (from hudmenu.gfx) take priority over the static icon map when
+// a typeId → shapeId mapping exists and the shape has been loaded into the
+// gfx-icons store.
 // =============================================================
 
 /** Default icon used when a hotspot type has no explicit mapping. */
-export const DEFAULT_MARKER_ICON = buildIconPath('map/location.svg');
-
-/**
- * Mapping from hotspot type → icon URL. Extend freely; values are plain
- * strings, so any path under /public/icons is acceptable.
- */
-export const MARKER_ICON_MAP: Partial<Record<MapHotspotType, string>> = {
-  // WhiterunCapitol: buildIconPath('delapouite/whiterun.svg'),
-  // SolitudeCapitol: buildIconPath('delapouite/solitude.svg'),
-  // RiftenCapitol: buildIconPath('delapouite/riften.svg'),
-  // NordicTower: buildIconPath('delapouite/nordic-tower.svg'),
-  // NordicRuin: buildIconPath('delapouite/nordic-ruin.svg'),
-};
+export const DEFAULT_MARKER_ICON = buildIconPath('map/location_known.svg');
+export const DEFAULT_UNDISCOVERED_MARKER_ICON = buildIconPath('map/location_undiscovered.svg');
 
 /**
  * Resolve the icon URL for a given hotspot type. Falls back to the default
  * marker if no mapping exists.
  */
-export function resolveMarkerIcon(type: MapHotspotType): string {
-  return MARKER_ICON_MAP[type] ?? DEFAULT_MARKER_ICON;
+export function resolveMarkerIcon(canFastTravel: boolean = true): string {
+  return canFastTravel ? DEFAULT_MARKER_ICON : DEFAULT_UNDISCOVERED_MARKER_ICON;
+}
+
+/**
+ * Resolve a GFX icon (SVG data URL) for the given typeId and fast-travel
+ * state. Returns null when the typeId is not mapped or the shape has not
+ * been loaded into the gfx-icons store.
+ */
+export function resolveGfxIconUrl(typeId: number, canFastTravel: boolean): string | null {
+  if (gfxIconsDisabled.value) return null;
+  const shapeId = getGfxShapeId(typeId, canFastTravel);
+  if (shapeId === null) return null;
+  return useGfxIconsStore().resolveIconUrl(shapeId);
+}
+
+/**
+ * Resolve the marker icon for a location hotspot.
+ *
+ * Priority:
+ * 1. GFX icon by typeId + canFastTravel (if mapped and loaded).
+ * 2. Static icon by hotspot type string.
+ * 3. Default marker icon.
+ */
+export function resolveLocationIcon(
+  typeId: number,
+  canFastTravel: boolean,
+): string {
+  return resolveGfxIconUrl(typeId, canFastTravel) ?? resolveMarkerIcon(canFastTravel);
 }

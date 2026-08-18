@@ -16,6 +16,7 @@ export {
   type CommandMessage,
   type CommandResultMessage,
   type CommandType,
+  type FileDownloadResultData,
   type EquipHand,
   type HotkeySlot,
   type SendCommandOptions,

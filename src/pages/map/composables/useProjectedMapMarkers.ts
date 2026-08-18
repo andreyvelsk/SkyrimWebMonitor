@@ -6,7 +6,7 @@ import type {
   QuestProjectedMarker,
   UseProjectedMapMarkersOptions,
 } from '../lib/types';
-import { resolveMarkerIcon } from './useMapMarkerIcons';
+import { resolveLocationIcon } from './useMapMarkerIcons';
 
 const EXCLUDED_HOTSPOT_TYPES: string[] = [
   // 'DLC02ToSkyrim'
@@ -33,11 +33,12 @@ export function useProjectedMapMarkers({
           kind: 'location',
           refId: h.refId,
           type: h.type,
+          typeId: h.typeId,
           label: h.name,
           canFastTravel: h.canFastTravel,
           x: projected.x,
           y: projected.y,
-          iconUrl: resolveMarkerIcon(h.type),
+          iconUrl: resolveLocationIcon(h.typeId, h.canFastTravel),
         } satisfies LocationProjectedMarker;
       })
       .filter(isProjectedMarker);

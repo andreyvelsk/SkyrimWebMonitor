@@ -23,7 +23,8 @@ export type CommandType =
   | 'player_marker_set'
   | 'player_marker_clear'
   | 'fast_travel'
-  | 'read_book';
+  | 'read_book'
+  | 'file_download';
 
 export type EquipHand = EquippedHand;
 
@@ -78,6 +79,7 @@ export interface CommandMessage extends BaseMessage {
   x?: number;
   y?: number;
   z?: number;
+  path?: string;
 }
 
 export interface SendCommandOptions {
@@ -90,6 +92,7 @@ export interface SendCommandOptions {
   x?: number;
   y?: number;
   z?: number;
+  path?: string;
 }
 
 export type ClientMessage =
@@ -121,11 +124,18 @@ export interface ErrorMessage extends BaseMessage {
   message: string;
 }
 
+export interface FileDownloadResultData {
+  mimeType: string;
+  size: number;
+  dataBase64: string;
+}
+
 export interface CommandResultMessage extends BaseMessage {
   type: 'commandResult';
   id: string;
   success: boolean;
   error?: string;
+  data?: FileDownloadResultData;
 }
 
 export type ServerMessage =
