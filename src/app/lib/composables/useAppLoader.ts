@@ -5,6 +5,8 @@ import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStor
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { useSystemStore } from '@/stores/system/useSystemStore';
 import { useGfxIconsLoader } from '@/features/gfx-icons';
+import { useGfxFontsLoader } from '@/features/gfx-fonts';
+import { gfxFontsDisabled } from '@/shared/lib/settings/gfxFontsPreference';
 import {
   getPageSubscriptions,
   getTabCategorySubscription,
@@ -29,6 +31,7 @@ export function useAppLoader() {
   const systemStore = useSystemStore();
   const { features } = storeToRefs(systemStore);
   const gfxIconsLoader = useGfxIconsLoader();
+  const gfxFontsLoader = useGfxFontsLoader();
 
   const startCategorySubscription = (tabId: string): void => {
     const config = getTabCategorySubscription(tabId);
@@ -117,6 +120,11 @@ export function useAppLoader() {
       if (isConnected.value && newFeatures.includes('file_download')) {
         console.warn('file_download feature is available — ensuring gfx icons are loaded');
         void gfxIconsLoader.ensureLoaded();
+        // Fonts are loaded on the same file_download capability, unless the
+        // user disabled game fonts in the settings.
+        if (!gfxFontsDisabled.value) {
+          void gfxFontsLoader.ensureLoaded();
+        }
       }
     },
     { immediate: true }

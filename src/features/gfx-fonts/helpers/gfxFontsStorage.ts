@@ -1,0 +1,1 @@
+export { readManifest, writeManifest, readFont, writeFont, clearAll } from './gfxFontsDb';
