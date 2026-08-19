@@ -13,13 +13,13 @@
         }
       },
       "inventory": {
-        "label": "Инвентарь",
+        "label": "Предметы",
         "subtabs": {
           "weapons": "Оружие",
           "apparel": "Одежда",
           "potions": "Зелья",
           "scrolls": "Свитки",
-          "food": "Еда",
+          "food": "Пища",
           "ingredients": "Ингредиенты",
           "books": "Книги",
           "keys": "Ключи",
@@ -114,7 +114,7 @@
         "waitingForData": "Ожидание данных одежды...",
         "unknown": "Неизвестно",
         "noDescription": "Нет описания",
-        "armorRating": "Броня",
+        "armorRating": "Доспехи",
         "weight": "Вес",
         "value": "Стоимость"
       },
