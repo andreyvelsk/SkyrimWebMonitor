@@ -33,6 +33,12 @@
   /* TYPOGRAPHY */
   --font-heading: 'Cinzel', serif;
   --font-body: 'Cormorant Garamond', serif;
+}
+
+/* Game fonts override — activated by .gfx-fonts-enabled on <html> */
+:root.gfx-fonts-enabled {
+  --font-heading: 'FuturaTCYLigCon', 'Cinzel', serif;
+  --font-body: 'FuturaTCYLigCon', 'Cormorant Garamond', serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
   --font-size-base: 1rem;

@@ -84,6 +84,13 @@ export function useAppLoader() {
     // game is not running), and we don't want that to delay map readiness.
     void prefetchMapTiles(getMapConfig(null).dziUrl);
 
+    // Attempt to hydrate game fonts from IndexedDB immediately, without
+    // waiting for a WebSocket connection. If fonts are already cached they
+    // will be injected and applied right away (unless disabled by the user).
+    if (!gfxFontsDisabled.value) {
+      void gfxFontsLoader.hydrateFromStorage();
+    }
+
     try {
       logger.log('App mounted - initializing WebSocket connection...');
       await connect();

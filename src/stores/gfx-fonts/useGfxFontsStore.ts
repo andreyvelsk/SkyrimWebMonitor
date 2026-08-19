@@ -2,9 +2,16 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { gfxFontsDisabled, persistGfxFontsDisabled } from '@/shared/lib/settings/gfxFontsPreference';
 
-// Original font CSS var values for restoring
-const ORIGINAL_FONT_HEADING = "'Cinzel', serif";
-const ORIGINAL_FONT_BODY = "'Cormorant Garamond', serif";
+/** CSS class added to <html> when game fonts are active. */
+const CSS_CLASS_ENABLED = 'gfx-fonts-enabled';
+/** CSS class added to <html> when game fonts are disabled. */
+const CSS_CLASS_DISABLED = 'gfx-fonts-disabled';
+
+function setRootClass(useGame: boolean): void {
+  const root = document.documentElement;
+  root.classList.toggle(CSS_CLASS_ENABLED, useGame);
+  root.classList.toggle(CSS_CLASS_DISABLED, !useGame);
+}
 
 export const useGfxFontsStore = defineStore('gfxFonts', () => {
   const isReady = ref(false);
@@ -16,21 +23,11 @@ export const useGfxFontsStore = defineStore('gfxFonts', () => {
   const useGameFonts = ref(!gfxFontsDisabled.value);
 
   function applyGameFonts(): void {
-    const primary = primaryFontName.value;
-    if (!primary) return;
-    document.documentElement.style.setProperty(
-      '--font-heading',
-      `'${primary}', ${ORIGINAL_FONT_HEADING}`
-    );
-    document.documentElement.style.setProperty(
-      '--font-body',
-      `'${primary}', ${ORIGINAL_FONT_BODY}`
-    );
+    setRootClass(true);
   }
 
   function restoreOriginalFonts(): void {
-    document.documentElement.style.setProperty('--font-heading', ORIGINAL_FONT_HEADING);
-    document.documentElement.style.setProperty('--font-body', ORIGINAL_FONT_BODY);
+    setRootClass(false);
   }
 
   function setFontsLoaded(fontNames: string[], primary: string): void {

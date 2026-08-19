@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { deflateSync } from 'node:zlib';
-import opentype from 'opentype.js';
+import { parse } from 'opentype.js';
 import {
   parseGlyphShape,
   glyphEdgesToPath,
@@ -186,9 +186,14 @@ function buildFontTag(opts: BuildFontOptions = {}): number[] {
 
   const glyphData = squareGlyphShape();
 
-  // Offset table: (numGlyphs + 1) entries. offsets[0] = 0, offsets[1] = glyph size.
-  body.push(...(useWideOffsets ? u32(0) : u16(0)));
-  body.push(...(useWideOffsets ? u32(glyphData.length) : u16(glyphData.length)));
+  // Offset table: (numGlyphs + 1) entries. Offsets are relative to the start
+  // of the offset table, so offsets[0] = offset-table size and
+  // offsets[numGlyphs] = offset-table size + glyph data size.
+  const numGlyphs = 1;
+  const offsetEntrySize = useWideOffsets ? 4 : 2;
+  const offsetTableSize = offsetEntrySize * (numGlyphs + 1);
+  body.push(...(useWideOffsets ? u32(offsetTableSize) : u16(offsetTableSize)));
+  body.push(...(useWideOffsets ? u32(offsetTableSize + glyphData.length) : u16(offsetTableSize + glyphData.length)));
 
   // Glyph shape data
   body.push(...glyphData);
@@ -227,6 +232,15 @@ function buildSwf(tags: number[][]): Uint8Array {
   const header = ['F'.charCodeAt(0), 'W'.charCodeAt(0), 'S'.charCodeAt(0), 8];
   const totalLength = 8 + body.length;
   return new Uint8Array([...header, ...u32(totalLength), ...body]);
+}
+
+/**
+ * buildSwf produces an uncompressed FWS file. `parseSwfFonts` expects the SWF
+ * body (after the 8-byte FWS header), so strip it here — mirroring what
+ * `decodeSwfInput` returns in the runtime loader.
+ */
+function fwsBody(swf: Uint8Array): Uint8Array {
+  return swf.subarray(8);
 }
 
 function bytesToBase64(bytes: Uint8Array): string {
@@ -412,7 +426,7 @@ describe('parseSwfFonts', () => {
 
   it('parses a DefineFont3 tag with layout into a GfxFont', () => {
     const swf = buildSwf([buildFontTag({ fontName: 'FuturaTest', codePoint: 0x41 })]);
-    const fonts = parseSwfFonts(swf);
+    const fonts = parseSwfFonts(fwsBody(swf));
 
     expect(fonts.length).toBe(1);
     const font = fonts[0];
@@ -431,7 +445,7 @@ describe('parseSwfFonts', () => {
       expect(font.layout.ascent).toBe(800);
       expect(font.layout.descent).toBe(200);
       expect(font.layout.advances).toEqual([518]);
-      expect(font.layout.bounds).toEqual([{ xmin: 0, xmax: 100, ymin: 0, ymax: 100 }]);
+      expect(font.layout.bounds).toEqual([{ nbits: 8, xmin: 0, xmax: 100, ymin: 0, ymax: 100 }]);
     }
   });
 
@@ -439,7 +453,7 @@ describe('parseSwfFonts', () => {
     const swf = buildSwf([
       buildFontTag({ code: 48, fontName: 'LegacyFont', hasLayout: false, wideOffsets: true }),
     ]);
-    const fonts = parseSwfFonts(swf);
+    const fonts = parseSwfFonts(fwsBody(swf));
 
     expect(fonts.length).toBe(1);
     const font = fonts[0];
@@ -456,7 +470,7 @@ describe('parseSwfFonts', () => {
       buildFontTag({ fontId: 1, fontName: 'FontOne' }),
       buildFontTag({ fontId: 2, fontName: 'FontTwo', codePoint: 0x42 }),
     ]);
-    const fonts = parseSwfFonts(swf);
+    const fonts = parseSwfFonts(fwsBody(swf));
 
     expect(fonts.length).toBe(2);
     expect(fonts[0].fontId).toBe(1);
@@ -473,13 +487,13 @@ describe('parseSwfFonts', () => {
 describe('convertFontToTTF', () => {
   it('produces a valid TTF with expected metrics', () => {
     const swf = buildSwf([buildFontTag({ fontName: 'FuturaTCYLigCon', codePoint: 0x41, advance: 518 })]);
-    const font = parseSwfFonts(swf)[0];
+    const font = parseSwfFonts(fwsBody(swf))[0];
 
     const buffer = convertFontToTTF(font);
     expect(buffer).toBeInstanceOf(ArrayBuffer);
     expect(buffer.byteLength).toBeGreaterThan(1000);
 
-    const parsed = opentype.parse(buffer);
+    const parsed = parse(buffer);
     expect(parsed.unitsPerEm).toBe(1024);
     // ascent = 800 / 20 = 40, descent = -(200 / 20) = -10
     expect(parsed.ascender).toBe(40);
@@ -490,16 +504,34 @@ describe('convertFontToTTF', () => {
     expect(glyphA.advanceWidth).toBe(26);
   });
 
+  it('does not double-scale glyph outlines (100 twips → 5 units, not 0.25)', () => {
+    const swf = buildSwf([buildFontTag({ fontName: 'ScaleCheck', codePoint: 0x41 })]);
+    const font = parseSwfFonts(fwsBody(swf))[0];
+
+    const buffer = convertFontToTTF(font);
+    const parsed = parse(buffer);
+    const glyphA = parsed.charToGlyph('A');
+
+    expect(glyphA).not.toBeNull();
+    // The synthetic square is 100×100 twips. glyphEdgesToPath already scales
+    // by 1/20 → 5×5 px, and the TTF converter must use pathScale = 1 so the
+    // outline stays 5×5 font units. A second 1/20 scale would make it 0.25×0.25
+    // (the "dots" bug).
+    const box = glyphA.getBoundingBox();
+    expect(box.x2 - box.x1).toBeCloseTo(5, 1);
+    expect(box.y2 - box.y1).toBeCloseTo(5, 1);
+  });
+
   it('maps a glyph code point to the .notdef placeholder when path is empty', () => {
     // Build a font whose glyph has no path data (empty shape) and verify the
     // TTF still contains the code point.
     const swf = buildSwf([buildFontTag({ fontName: 'EmptyGlyph' })]);
-    const font = parseSwfFonts(swf)[0];
+    const font = parseSwfFonts(fwsBody(swf))[0];
     // Overwrite the glyph with an empty path to simulate an unparseable glyph
     font.glyphs[0].svgPath = '';
 
     const buffer = convertFontToTTF(font);
-    const parsed = opentype.parse(buffer);
+    const parsed = parse(buffer);
     // Empty path → empty outline but the glyph must still exist
     expect(parsed.glyphs.length).toBeGreaterThan(0);
   });

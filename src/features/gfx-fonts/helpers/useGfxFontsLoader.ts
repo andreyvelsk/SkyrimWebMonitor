@@ -139,5 +139,5 @@ export function useGfxFontsLoader() {
     await ensureLoaded();
   }
 
-  return { ensureLoaded, reinitialize };
+  return { ensureLoaded, reinitialize, hydrateFromStorage };
 }

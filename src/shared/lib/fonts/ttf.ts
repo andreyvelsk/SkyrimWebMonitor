@@ -1,16 +1,18 @@
-import opentype from 'opentype.js';
+import { Font, Glyph, Path } from 'opentype.js';
 import type { GfxFont } from './types';
 
 /**
  * Convert a parsed SWF GfxFont to a TTF ArrayBuffer using opentype.js.
  *
  * - unitsPerEm = 1024 (matching Skyrim reference TTF)
- * - Path coordinates are scaled by 1/20 (twips → font units)
+ * - `svgPath` is already in px (twips/20 — see `glyphEdgesToPath`), so the
+ *   path scale is 1: applying another 1/20 here would shrink glyphs 20×
+ *   (matching scripts/gfx/fonts_swf_convert.mjs, which uses pathScale = 1)
  * - SVG font Y-axis is negated relative to OpenType
  */
 export function convertFontToTTF(font: GfxFont): ArrayBuffer {
   const unitsPerEm = 1024;
-  const pathScale = 1 / 20;
+  const pathScale = 1;
 
   // Ascender / descender from font layout (twips → font units)
   let ascent: number;
@@ -42,7 +44,7 @@ export function convertFontToTTF(font: GfxFont): ArrayBuffer {
     advanceMap.set(0, defaultAdv);
   }
 
-  const otGlyphs: opentype.Glyph[] = [];
+  const otGlyphs: Glyph[] = [];
   const unicodeMap: Record<number, number> = {};
 
   let glyphIndex = 0;
@@ -51,14 +53,14 @@ export function convertFontToTTF(font: GfxFont): ArrayBuffer {
     const svgPath = g.svgPath;
 
     if (!svgPath || svgPath.length === 0) {
-      const notDef = new opentype.Glyph({
+      const notDef = new Glyph({
         name: codePoint
           ? `uni${codePoint.toString(16).toUpperCase().padStart(4, '0')}`
           : '.notdef',
         unicode: codePoint || undefined,
         advanceWidth:
           advanceMap.get(codePoint) ?? advanceMap.get(0) ?? Math.round(unitsPerEm * 0.5),
-        path: new opentype.Path(),
+        path: new Path(),
       });
       otGlyphs.push(notDef);
       if (codePoint) unicodeMap[codePoint] = glyphIndex;
@@ -71,7 +73,7 @@ export function convertFontToTTF(font: GfxFont): ArrayBuffer {
     const advanceWidth =
       advanceMap.get(codePoint) ?? advanceMap.get(0) ?? Math.round(unitsPerEm * 0.6);
 
-    const otGlyph = new opentype.Glyph({
+    const otGlyph = new Glyph({
       name: codePoint
         ? `uni${codePoint.toString(16).toUpperCase().padStart(4, '0')}`
         : '.notdef',
@@ -86,7 +88,7 @@ export function convertFontToTTF(font: GfxFont): ArrayBuffer {
   }
 
   // Build the OpenType font and return as ArrayBuffer
-  const otFont = new opentype.Font({
+  const otFont = new Font({
     familyName: font.fontName,
     styleName: 'Regular',
     unitsPerEm,
@@ -108,8 +110,8 @@ export function convertFontToTTF(font: GfxFont): ArrayBuffer {
  * values are negated (and the scale factor is applied) to produce correct
  * OpenType glyphs.
  */
-export function parseSvgPathToOpenType(d: string, scale: number = 1): opentype.Path {
-  const path = new opentype.Path();
+export function parseSvgPathToOpenType(d: string, scale: number = 1): Path {
+  const path = new Path();
 
   // Tokenize: command character followed by optional numbers.
   const tokens = d.match(/[MmLlQqZz][-.\d,\s]*/g) || [];
