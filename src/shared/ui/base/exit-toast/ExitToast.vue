@@ -23,7 +23,7 @@ defineProps<{ visible: boolean }>();
   transform: translateX(-50%);
   max-width: calc(100% - 32px);
   padding: 10px 18px;
-  background: color-mix(in srgb, var(--skyrim-bg-medium) 92%, transparent);
+  background-color: var(--skyrim-bg-medium);
   color: var(--skyrim-text-accent);
   border: var(--border-thin) solid var(--skyrim-border-dark);
   border-radius: 999px;
