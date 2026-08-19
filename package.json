@@ -59,7 +59,6 @@
     "@capacitor/android": "^7.6.3",
     "@capacitor/app": "^7.1.2",
     "@capacitor/core": "^7.6.3",
-    "@rollup/rollup-darwin-arm64": "^4.62.4",
     "idb": "^7.1.1",
     "openseadragon": "^6.0.2",
     "opentype.js": "^2.0.0",
