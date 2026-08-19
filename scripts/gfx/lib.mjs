@@ -668,6 +668,249 @@ export async function generateSvg(input, { groupOnStyleChange = false } = {}) {
     return out;
 }
 
+// ---------- Font parsing (DefineFont2/3) ----------
+
+/**
+ * Parse a single glyph shape from a DefineFont2/3 glyph record.
+ * Glyph shapes are SWF ShapeWithoutStyle: 1 byte numFillBits|numLineBits
+ * followed by shape records (only edges — no fill/line style definitions).
+ *
+ * Returns { edges, segments } where each edge/segment uses SWF twip coordinates.
+ */
+export function parseGlyphShape(data) {
+    const numFillBits = data[0] >> 4;
+    const numLineBits = data[0] & 0x0f;
+
+    const r = new BitReader(data, 8); // skip the nibble byte
+    let x = 0, y = 0;
+    let fill0 = 0, fill1 = 0, line = 0;
+    const segments = [];
+    const edges = [];
+
+    while (true) {
+        const typeFlag = r.readBits(1);
+        if (typeFlag === 0) {
+            const sNew = r.readBits(1);
+            const sLine = r.readBits(1);
+            const sF1 = r.readBits(1);
+            const sF0 = r.readBits(1);
+            const sMove = r.readBits(1);
+
+            if (!sNew && !sLine && !sF1 && !sF0 && !sMove) break;
+
+            if (sMove) {
+                const moveBits = r.readBits(5);
+                x = r.readSignedBits(moveBits);
+                y = r.readSignedBits(moveBits);
+                segments.push(['M', x, y]);
+            }
+            if (sF0) fill0 = r.readBits(numFillBits);
+            if (sF1) fill1 = r.readBits(numFillBits);
+            if (sLine) line = r.readBits(numLineBits);
+            if (sNew) break; // no sub-shapes in glyph records
+        } else {
+            const straightFlag = r.readBits(1);
+            const x0 = x; const y0 = y;
+
+            if (straightFlag === 1) {
+                const nBits = r.readBits(4) + 2;
+                const general = r.readBits(1);
+                if (general === 0) {
+                    const vert = r.readBits(1);
+                    if (vert) y += r.readSignedBits(nBits);
+                    else x += r.readSignedBits(nBits);
+                } else {
+                    x += r.readSignedBits(nBits);
+                    y += r.readSignedBits(nBits);
+                }
+                segments.push(['L', x, y]);
+                edges.push({ type: 'L', x0, y0, x1: x, y1: y, fill0, fill1, line });
+            } else {
+                const nBits = r.readBits(4) + 2;
+                const cx = x + r.readSignedBits(nBits);
+                const cy = y + r.readSignedBits(nBits);
+                const ax = cx + r.readSignedBits(nBits);
+                const ay = cy + r.readSignedBits(nBits);
+                segments.push(['Q', cx, cy, ax, ay]);
+                edges.push({ type: 'Q', x0, y0, cx, cy, x1: ax, y1: ay, fill0, fill1, line });
+                x = ax;
+                y = ay;
+            }
+        }
+    }
+    return { edges, segments, numFillBits, numLineBits };
+}
+
+/**
+ * Convert a glyph's edge list to an SVG path 'd' string.
+ * Glyph shapes use fill=1 (which has no style in SWF — it means "fill with
+ * the font color"), so we collect all edges that have fill0>0 or fill1>0
+ * into a single bag and reconstruct closed loops via endpoint matching.
+ *
+ * @param {Array} edges - Array of edge objects from parseGlyphShape
+ * @param {number} scale - Scale factor (default 1/20 to convert twips to px)
+ * @param {number} ox - X offset
+ * @param {number} oy - Y offset
+ * @returns {string} SVG path 'd' string
+ */
+export function glyphEdgesToPath(edges, scale = 1 / 20, ox = 0, oy = 0) {
+    // Bag all edges that have any fill (fill0 or fill1 > 0)
+    // In glyph shapes, fill0/fill1 reference styles implicitly — any non-zero
+    // value means "this edge participates in the filled glyph outline".
+    const bag = [];
+    for (const e of edges) {
+        if (e.fill1 > 0) bag.push(e);
+        if (e.fill0 > 0) bag.push(reverseEdge(e));
+    }
+
+    if (bag.length === 0) return '';
+
+    const loops = reconstructPaths(bag);
+    return loops.map((loop) => loopToD(loop, scale, ox, oy)).join('');
+}
+
+/**
+ * Parse all DefineFont tags (code 48=DefineFont2, 75=DefineFont3) from an
+ * already decompressed SWF buffer.
+ *
+ * Returns an array of font objects:
+ * {
+ *   fontId,
+ *   fontName,
+ *   fontFlags,
+ *   language,
+ *   numGlyphs,
+ *   glyphs: [{ index, code, svgPath, edges, segments }],
+ * }
+ * The svgPath is already in px coordinates (twips/20).
+
+/**
+ * Generate an SVG font definition from parsed font data.
+ * Returns an SVG string containing a <font> element (SVG font format).
+ * This can be embedded in a webpage via @font-face with format('svg').
+ *
+ * SVG font coordinates: Y increases upward, baseline at Y=0.
+ * SWF coordinates: Y increases downward, baseline at Y=0.
+ * We build paths directly from raw SWF edges (twips), scaling them to
+ * font units and flipping Y.
+ *
+ * @param {Object} font - A font object from parseSwfFonts()
+ * @param {number} [emSize=2048] - Em size in font units
+ * @returns {string} SVG font definition as a string
+ */
+export function fontToSvgFont(font, emSize = 2048) {
+    // Determine the SWF ascender (max negative Y, i.e. how far above the
+    // baseline the glyphs extend) and descender (positive Y, below baseline).
+    let maxTop = 0;   // furthest above the baseline in SWF (negative Y)
+    let maxBottom = 0; // furthest below the baseline in SWF (positive Y)
+    for (const g of font.glyphs) {
+        if (g.edges.length === 0) continue;
+        let minY = Infinity, maxY = -Infinity;
+        for (const e of g.edges) {
+            for (const key of ['y0', 'y1', 'cy']) {
+                const v = e[key];
+                if (v !== undefined && v < minY) minY = v;
+                if (v !== undefined && v > maxY) maxY = v;
+            }
+        }
+        if (-minY > maxTop) maxTop = -minY;   // top → positive ascender
+        if (maxY > maxBottom) maxBottom = maxY; // bottom → positive descender
+    }
+
+    const unitsPerEm = emSize;
+    // Scale factor so the full glyph height fits in the em square.
+    const totalTwipHeight = maxTop + maxBottom;
+    const twipToFontUnit = totalTwipHeight > 0 ? unitsPerEm / totalTwipHeight : 1;
+
+    const ascent = Math.round(maxTop * twipToFontUnit);
+    const descent = Math.round(-maxBottom * twipToFontUnit);
+
+    // Helper: build a path 'd' string directly from edges in font units.
+    // SWF Y is negated so that "up" (negative SWF Y) becomes positive font Y.
+    // No pre-scaling is applied — this works on raw twip edges.
+    function edgesToFontPath(edges) {
+        if (!edges || edges.length === 0) return '';
+        // Like buildFillPathsFromEdges but for the single implicit fill (fill>0)
+        const bag = [];
+        for (const e of edges) {
+            if (e.fill1 > 0) bag.push(e);
+            if (e.fill0 > 0) bag.push(reverseEdge(e));
+        }
+        if (bag.length === 0) return '';
+        const loops = reconstructPaths(bag);
+        return loops.map((loop) => fontUnitLoopToD(loop, twipToFontUnit)).join('');
+    }
+
+    function fontUnitLoopToD(loop, scale) {
+        const fx = (v) => (v * scale).toFixed(2);
+        const fy = (v) => (-v * scale).toFixed(2); // flip Y: negate
+        let d = `M${fx(loop[0].x0)},${fy(loop[0].y0)}`;
+        for (const e of loop) {
+            if (e.type === 'L') d += `L${fx(e.x1)},${fy(e.y1)}`;
+            else d += `Q${fx(e.cx)},${fy(e.cy)} ${fx(e.x1)},${fy(e.y1)}`;
+        }
+        return d;
+    }
+
+    // Build glyph definitions
+    const glyphDefs = [];
+
+    for (const g of font.glyphs) {
+        const charCode = g.code;
+        const d = edgesToFontPath(g.edges);
+
+        if (!d) {
+            glyphDefs.push(`    <glyph unicode="&#x${charCode.toString(16)};" horiz-adv-x="${Math.round(unitsPerEm * 0.5)}"/>`);
+            continue;
+        }
+
+        // Estimate advance width from glyph bounds
+        let minX = Infinity;
+        let maxX = -Infinity;
+        for (const e of g.edges) {
+            for (const key of ['x0', 'x1', 'cx']) {
+                const v = e[key];
+                if (v !== undefined && v < minX) minX = v;
+                if (v !== undefined && v > maxX) maxX = v;
+            }
+        }
+        const advanceWidth = maxX > minX
+            ? Math.round(Math.max(maxX * twipToFontUnit + unitsPerEm * 0.15, unitsPerEm * 0.3))
+            : Math.round(unitsPerEm * 0.5);
+
+        let unicodeAttr;
+        if (charCode >= 32 && charCode <= 126) {
+            unicodeAttr = ` unicode="${escapeXml(String.fromCharCode(charCode))}"`;
+        } else {
+            unicodeAttr = ` unicode="&#x${charCode.toString(16)};"`;
+        }
+
+        glyphDefs.push(`    <glyph${unicodeAttr} horiz-adv-x="${advanceWidth}" d="${d}"/>`);
+    }
+
+    const svgFont = `<?xml version="1.0" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg">
+<defs>
+<font id="${font.fontName.replace(/\s+/g, '')}" horiz-adv-x="${Math.round(unitsPerEm * 0.6)}">
+  <font-face
+    font-family="${font.fontName}"
+    units-per-em="${unitsPerEm}"
+    ascent="${ascent}"
+    descent="${descent}"
+  />
+  <missing-glyph horiz-adv-x="${Math.round(unitsPerEm * 0.5)}"/>
+${glyphDefs.join('\n')}
+</font>
+</defs>
+</svg>`;
+
+    return svgFont;
+}
+
+function escapeXml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 /**
  * Extract the shapeId → Map<spriteId, name> mapping from an SWF buffer.
  * Analogous to extractNames from names.mjs, but works on an already

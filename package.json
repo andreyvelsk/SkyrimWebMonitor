@@ -61,6 +61,7 @@
     "@capacitor/core": "^7.6.3",
     "idb": "^7.1.1",
     "openseadragon": "^6.0.2",
+    "opentype.js": "^2.0.0",
     "pinia": "^3.0.4",
     "vite-plugin-pwa": "^1.2.0",
     "vue": "^3.5.32",
