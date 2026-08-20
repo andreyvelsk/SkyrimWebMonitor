@@ -632,7 +632,39 @@ The only exception is i18n locale files (`src/i18n/locales/ru.json`), which cont
 
 ---
 
-## 14. Review Checklist
+## 14. Feature System (MANDATORY)
+
+All server-gated capabilities are tracked via the [`FEATURES`](src/stores/system/lib/types.ts) constant map and the [`isFeatureProvided`](src/stores/system/useSystemStore.ts:38) store method.
+
+### 14.1 Rules
+
+- **Every feature check MUST use `isFeatureProvided(FEATURES.XXX)`** — never hardcode feature strings.
+- **Import `FEATURES` from `@/stores/system/lib/types`**, not from the store file.
+- **Feature strings are defined ONLY in [`FEATURES`](src/stores/system/lib/types.ts)** — do not add new feature strings anywhere else.
+- **Direct access to `features` array** (e.g. `features.value.includes(...)`) is forbidden — always use `isFeatureProvided`.
+
+```typescript
+// ✅ CORRECT
+import { useSystemStore } from '@/stores/system/useSystemStore';
+import { FEATURES } from '@/stores/system/lib/types';
+
+const systemStore = useSystemStore();
+if (systemStore.isFeatureProvided(FEATURES.FILE_DOWNLOAD)) { ... }
+
+// ❌ WRONG — hardcoded string
+if (features.value.includes('file_download')) { ... }
+if (systemStore.isFeatureProvided('file_download')) { ... }
+```
+
+### 14.2 Adding a New Feature
+
+1. Add the key to [`FEATURES`](src/stores/system/lib/types.ts) — the value must match the server-side feature string.
+2. The `Feature` type is derived automatically from `FEATURES` — no manual type update needed.
+3. Use `FEATURES.NEW_KEY` everywhere the feature is checked.
+
+---
+
+## 15. Review Checklist
 
 ### Verify before approval:
 
@@ -645,6 +677,7 @@ The only exception is i18n locale files (`src/i18n/locales/ru.json`), which cont
 - [ ] **Abstraction Level:** No leaky abstractions, no god objects
 - [ ] **Coupling:** No circular dependencies, low coupling between slices
 - [ ] **Scalability:** New features/pages/maps can be added without modifying existing code
+- [ ] **Feature System:** All feature checks use `isFeatureProvided(FEATURES.XXX)`, no hardcoded feature strings, no direct `features.value.includes(...)`
 
 #### TypeScript
 - [ ] **Types:** All types in `lib/types.ts`, no types in random places
@@ -687,7 +720,7 @@ The only exception is i18n locale files (`src/i18n/locales/ru.json`), which cont
 
 ---
 
-## 15. Automation (Recommendations)
+## 16. Automation (Recommendations)
 
 Recommended ESLint rules for enforcement:
 
@@ -724,9 +757,9 @@ Recommended ESLint rules for strict enforcement:
 
 ---
 
-## 16. Testing
+## 17. Testing
 
-### 16.1 Test File Placement
+### 17.1 Test File Placement
 
 **Tests live in a `tests/` folder inside the slice of the object being tested.**
 
@@ -745,7 +778,7 @@ Recommended ESLint rules for strict enforcement:
 - ✅ Global test setup: `src/tests/setup.ts`
 - ❌ NO `__tests__` folders — use `tests/`
 
-### 16.2 Running Tests
+### 17.2 Running Tests
 
 ```bash
 npm test            # Run all tests once
@@ -763,7 +796,7 @@ Uses [`scripts/test-ai.mjs`](../../scripts/test-ai.mjs) to produce minimal, toke
 
 **Always use `npm run test:ai` when running tests in an AI agent context** to minimize token consumption.
 
-### 16.3 Review Checklist — Tests
+### 17.3 Review Checklist — Tests
 
 - [ ] **Placement:** Test files are in `tests/` folder of the tested slice, not `__tests__/`
 - [ ] **Coverage:** All type guards tested with valid, invalid, and edge case data

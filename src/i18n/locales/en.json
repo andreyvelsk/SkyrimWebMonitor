@@ -74,7 +74,8 @@
         "reload": "Reload icons",
         "reloading": "Reloading…",
         "disableGfxIcons": "Disable game icons"
-      }
+      },
+      "updateDll": "Update SkyrimWebSocket.dll to use this feature"
     }
   },
   "pages": {

@@ -4,6 +4,7 @@ import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationS
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { useSystemStore } from '@/stores/system/useSystemStore';
+import { FEATURES } from '@/stores/system/lib/types';
 import { useGfxIconsLoader } from '@/features/gfx-icons';
 import { useGfxFontsLoader } from '@/features/gfx-fonts';
 import { gfxFontsDisabled } from '@/shared/lib/settings/gfxFontsPreference';
@@ -123,8 +124,8 @@ export function useAppLoader() {
   // the feature list. Runs regardless of canAct.
   watch(
     features,
-    (newFeatures) => {
-      if (isConnected.value && newFeatures.includes('file_download')) {
+    () => {
+      if (isConnected.value && systemStore.isFeatureProvided(FEATURES.FILE_DOWNLOAD)) {
         console.warn('file_download feature is available — ensuring gfx icons are loaded');
         void gfxIconsLoader.ensureLoaded();
         // Fonts are loaded on the same file_download capability, unless the
