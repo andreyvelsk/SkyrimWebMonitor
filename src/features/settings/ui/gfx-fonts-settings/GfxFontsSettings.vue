@@ -1,13 +1,13 @@
 <template>
   <section class="panel">
-    <h3 class="modal-title text-base m-0">{{ t('app.settings.gfxIcons.title') }}</h3>
+    <h3 class="modal-title text-base m-0">{{ t('app.settings.gfxFonts.title') }}</h3>
     <template v-if="isFileDownloadProvided">
       <div class="d-flex items-center justify-between gap-md">
-        <span class="text-sm">{{ t('app.settings.gfxIcons.disableGfxIcons') }}</span>
+        <span class="text-sm">{{ t('app.settings.gfxFonts.disableGfxFonts') }}</span>
         <base-switch
-          :model-value="gfxIconsDisabled"
-          :aria-label="t('app.settings.gfxIcons.disableGfxIcons')"
-          @update:model-value="persistGfxIconsDisabled"
+          :model-value="!gfxFontsStore.useGameFonts"
+          :aria-label="t('app.settings.gfxFonts.disableGfxFonts')"
+          @update:model-value="onToggleDisable"
         />
       </div>
       <div>
@@ -15,12 +15,12 @@
           type="button"
           class="btn self-start"
           :disabled="isLoading"
-          @click="reloadIcons"
+          @click="reloadFonts"
         >
-          <span v-if="isLoading">{{ t('app.settings.gfxIcons.reloading') }}</span>
-          <span v-else>{{ t('app.settings.gfxIcons.reload') }}</span>
+          <span v-if="isLoading">{{ t('app.settings.gfxFonts.reloading') }}</span>
+          <span v-else>{{ t('app.settings.gfxFonts.reload') }}</span>
         </button>
-        <p class="text-sm text-secondary m-0">{{ t('app.settings.gfxIcons.hint') }}</p>
+        <p class="text-sm text-secondary m-0">{{ t('app.settings.gfxFonts.hint') }}</p>
 
         <p
           v-if="error"
@@ -43,20 +43,23 @@
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { BaseSwitch } from '@/shared/ui';
-import { gfxIconsDisabled, persistGfxIconsDisabled } from '@/shared/lib';
-import { useGfxIconsLoader } from '@/features/gfx-icons';
-import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
+import { useGfxFontsLoader } from '@/features/gfx-fonts';
+import { useGfxFontsStore } from '@/stores/gfx-fonts/useGfxFontsStore';
 import { useSystemStore } from '@/stores/system/useSystemStore';
 import { FEATURES } from '@/stores/system/lib/types';
 
 const { t } = useI18n();
-const { reinitialize } = useGfxIconsLoader();
-const gfxIconsStore = useGfxIconsStore();
-const { isLoading, error } = storeToRefs(gfxIconsStore);
+const { reinitialize } = useGfxFontsLoader();
+const gfxFontsStore = useGfxFontsStore();
+const { isLoading, error } = storeToRefs(gfxFontsStore);
 const systemStore = useSystemStore();
 const isFileDownloadProvided = systemStore.isFeatureProvided(FEATURES.FILE_DOWNLOAD);
 
-async function reloadIcons(): Promise<void> {
+function onToggleDisable(disabled: boolean): void {
+  gfxFontsStore.updateUseGameFonts(!disabled);
+}
+
+async function reloadFonts(): Promise<void> {
   await reinitialize();
 }
 </script>

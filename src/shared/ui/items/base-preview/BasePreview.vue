@@ -114,6 +114,7 @@ const displayName = computed(() => {
       font-weight: var(--font-weight-semibold);
       font-size: var(--font-size-xl);
       margin-bottom: 0.25rem;
+      text-transform: uppercase;
     }
 
     .stat {

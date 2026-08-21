@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useSystemStore } from '../system/useSystemStore';
+import { FEATURES } from '../system/lib/types';
 import type { Tab, SubTab } from './lib/types';
 
 export const useNavigationStore = defineStore('navigation', () => {
@@ -42,7 +43,7 @@ export const useNavigationStore = defineStore('navigation', () => {
       label: t('app.tabs.magic.label'),
       subTabs: subTabsMap.value.magic,
     },
-    ...(systemStore.isFeatureProvided('player.quests')
+    ...(systemStore.isFeatureProvided(FEATURES.PLAYER_QUESTS)
       ? [
           {
             id: 'quests',
@@ -51,7 +52,7 @@ export const useNavigationStore = defineStore('navigation', () => {
           },
         ]
       : []),
-    ...(systemStore.isFeatureProvided('map')
+    ...(systemStore.isFeatureProvided(FEATURES.MAP)
       ? [
           {
             id: 'map',

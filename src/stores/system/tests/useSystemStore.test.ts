@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { useSystemStore } from '@/stores/system/useSystemStore';
+import { FEATURES } from '@/stores/system/lib/types';
 
 // =============================================================
 // useSystemStore tests
@@ -61,8 +62,8 @@ describe('useSystemStore', () => {
 
     it('sets features from fields.features array', () => {
       const store = useSystemStore();
-      store.handleQueryResponse({ features: ['player', 'inventory', 'map'] });
-      expect(store.features).toEqual(['player', 'inventory', 'map']);
+      store.handleQueryResponse({ features: [FEATURES.PLAYER, FEATURES.INVENTORY, FEATURES.MAP] });
+      expect(store.features).toEqual([FEATURES.PLAYER, FEATURES.INVENTORY, FEATURES.MAP]);
     });
 
     it('does not set features when not an array', () => {
@@ -82,15 +83,15 @@ describe('useSystemStore', () => {
   describe('isFeatureProvided', () => {
     it('returns true for existing feature', () => {
       const store = useSystemStore();
-      store.handleQueryResponse({ features: ['player', 'map'] });
-      expect(store.isFeatureProvided('player')).toBe(true);
-      expect(store.isFeatureProvided('map')).toBe(true);
+      store.handleQueryResponse({ features: [FEATURES.PLAYER, FEATURES.MAP] });
+      expect(store.isFeatureProvided(FEATURES.PLAYER)).toBe(true);
+      expect(store.isFeatureProvided(FEATURES.MAP)).toBe(true);
     });
 
     it('returns false for missing feature', () => {
       const store = useSystemStore();
-      store.handleQueryResponse({ features: ['player'] });
-      expect(store.isFeatureProvided('inventory')).toBe(false);
+      store.handleQueryResponse({ features: [FEATURES.PLAYER] });
+      expect(store.isFeatureProvided(FEATURES.INVENTORY)).toBe(false);
     });
   });
 
@@ -104,7 +105,7 @@ describe('useSystemStore', () => {
 
     it('resets features to empty array', () => {
       const store = useSystemStore();
-      store.handleQueryResponse({ features: ['player', 'map'] });
+      store.handleQueryResponse({ features: [FEATURES.PLAYER, FEATURES.MAP] });
       store.reset();
       expect(store.features).toEqual([]);
     });

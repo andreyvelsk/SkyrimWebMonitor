@@ -67,6 +67,7 @@
 <script setup lang="ts">
 import { computed, ref, type StyleValue } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useGfxFontsStore } from '@/stores/gfx-fonts/useGfxFontsStore';
 import { iconUrlToSymbolId } from '../composables/iconSprite';
 import type { MapProjectionFn } from '../composables/useMapProjection';
 import { useProjectedMapMarkers } from '../composables/useProjectedMapMarkers';
@@ -125,6 +126,8 @@ const props = defineProps<{
 // =============================================================
 // Data sources
 // =============================================================
+
+const gfxFontsStore = useGfxFontsStore();
 
 const hotspotsStore = useMapHotspotsStore();
 const { hotspots, questMarkers } = storeToRefs(hotspotsStore);
@@ -319,7 +322,13 @@ const restScale = computed(() => (1 / MARKER_SELECTED_SCALE).toFixed(4));
  * All sizes are derived from `markerSize` so the label scales together with
  * the icon as the user zooms.
  */
-const labelFontSize = computed(() => Math.max(10, markerSize.value * 0.35));
+const LABEL_FONT_SCALE_GFX = 0.45;
+const LABEL_FONT_SCALE_DEFAULT = 0.35;
+
+const labelFontSize = computed(() => {
+  const scale = gfxFontsStore.useGameFonts ? LABEL_FONT_SCALE_GFX : LABEL_FONT_SCALE_DEFAULT;
+  return Math.max(10, markerSize.value * scale);
+});
 const labelLineHeight = computed(() => labelFontSize.value * 1.2);
 const labelPaddingX = computed(() => labelFontSize.value * 0.6);
 const labelPaddingY = computed(() => labelFontSize.value * 0.18);

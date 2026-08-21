@@ -257,10 +257,10 @@ onUnmounted(() => {
   width: 2.75rem;
   height: 2.75rem;
   padding: 0;
-  border: 1px solid rgb(255 255 255 / 0.1);
+  border: 1px solid var(--skyrim-border-medium);
   border-radius: 6px;
-  background: rgb(0 0 0 / 0.3);
-  color: rgb(255 255 255 / 0.35);
+  background: var(--skyrim-bg-dark);
+  color: var(--skyrim-text-secondary);
   cursor: pointer;
   transition:
     color 0.15s ease,
@@ -274,9 +274,9 @@ onUnmounted(() => {
   }
 
   &:hover {
-    background: rgb(0 0 0 / 0.5);
-    border-color: rgb(255 255 255 / 0.2);
-    color: rgb(255 255 255 / 0.65);
+    background-color: var(--bg-accent-soft);
+    border-color: var(--skyrim-accent-main-dim);
+    color: var(--skyrim-text-accent);
   }
 
   &:active {

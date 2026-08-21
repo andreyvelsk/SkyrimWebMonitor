@@ -103,3 +103,9 @@
   --bg-overlay: rgb(0 0 0 / 75%);
   --bg-inset-dark: inset 0 0 60px rgb(0 0 0 / 30%);
 }
+
+/* Game fonts override — activated by .gfx-fonts-enabled on <html> */
+:root.gfx-fonts-enabled {
+  --font-heading: 'FuturaTCYLigCon', 'Cinzel', serif;
+  --font-body: 'FuturaTCYLigCon', 'Cormorant Garamond', serif;
+}

@@ -26,7 +26,10 @@
         :aria-label="$t('app.settings.open')"
         @click="openSettings"
       >
-        <base-icon icon-path="lorc/cog.svg" />
+        <base-icon 
+          icon-path="lorc/cog.svg"
+          :background-color="'var(--skyrim-text-secondary)'"
+        />
       </button>
     </div>
 

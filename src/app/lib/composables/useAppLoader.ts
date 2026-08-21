@@ -4,7 +4,10 @@ import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationS
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { useSystemStore } from '@/stores/system/useSystemStore';
+import { FEATURES } from '@/stores/system/lib/types';
 import { useGfxIconsLoader } from '@/features/gfx-icons';
+import { useGfxFontsLoader } from '@/features/gfx-fonts';
+import { gfxFontsDisabled } from '@/shared/lib/settings/gfxFontsPreference';
 import {
   getPageSubscriptions,
   getTabCategorySubscription,
@@ -29,6 +32,7 @@ export function useAppLoader() {
   const systemStore = useSystemStore();
   const { features } = storeToRefs(systemStore);
   const gfxIconsLoader = useGfxIconsLoader();
+  const gfxFontsLoader = useGfxFontsLoader();
 
   const startCategorySubscription = (tabId: string): void => {
     const config = getTabCategorySubscription(tabId);
@@ -81,6 +85,13 @@ export function useAppLoader() {
     // game is not running), and we don't want that to delay map readiness.
     void prefetchMapTiles(getMapConfig(null).dziUrl);
 
+    // Attempt to hydrate game fonts from IndexedDB immediately, without
+    // waiting for a WebSocket connection. If fonts are already cached they
+    // will be injected and applied right away (unless disabled by the user).
+    if (!gfxFontsDisabled.value) {
+      void gfxFontsLoader.hydrateFromStorage();
+    }
+
     try {
       logger.log('App mounted - initializing WebSocket connection...');
       await connect();
@@ -113,10 +124,15 @@ export function useAppLoader() {
   // the feature list. Runs regardless of canAct.
   watch(
     features,
-    (newFeatures) => {
-      if (isConnected.value && newFeatures.includes('file_download')) {
+    () => {
+      if (isConnected.value && systemStore.isFeatureProvided(FEATURES.FILE_DOWNLOAD)) {
         console.warn('file_download feature is available — ensuring gfx icons are loaded');
         void gfxIconsLoader.ensureLoaded();
+        // Fonts are loaded on the same file_download capability, unless the
+        // user disabled game fonts in the settings.
+        if (!gfxFontsDisabled.value) {
+          void gfxFontsLoader.ensureLoaded();
+        }
       }
     },
     { immediate: true }

@@ -61,13 +61,21 @@
           "gold": "Gold"
         }
       },
+      "gfxFonts": {
+        "title": "Game Fonts",
+        "hint": "Re-download the font set from the game server and rebuild the cache.",
+        "reload": "Reload fonts",
+        "reloading": "Reloading…",
+        "disableGfxFonts": "Disable game fonts"
+      },
       "gfxIcons": {
         "title": "Map Icons",
         "hint": "Re-download the icon set from the game server and rebuild the cache.",
         "reload": "Reload icons",
         "reloading": "Reloading…",
         "disableGfxIcons": "Disable game icons"
-      }
+      },
+      "updateDll": "Update SkyrimWebSocket.dll to use this feature"
     }
   },
   "pages": {
