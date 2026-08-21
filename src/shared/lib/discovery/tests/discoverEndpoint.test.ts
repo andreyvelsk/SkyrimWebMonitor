@@ -36,10 +36,36 @@ describe('discoverEndpoint', () => {
     expect(probeMock).toHaveBeenCalledWith('ws://192.168.1.10:8765');
   });
 
-  it('returns not-found when all candidates fail', async () => {
+  it('retries failed candidates in a second pass before giving up', async () => {
     probeMock.mockResolvedValue(false);
 
     const result = await discoverEndpoint({ concurrency: 8 });
+
+    expect(result).toEqual({ found: false, url: null });
+    // 256 candidates × 2 passes
+    expect(probeMock).toHaveBeenCalledTimes(512);
+  });
+
+  it('finds a busy server on the retry pass', async () => {
+    const attempts = new Map<string, number>();
+
+    probeMock.mockImplementation((url: string) => {
+      attempts.set(url, (attempts.get(url) ?? 0) + 1);
+      // Every endpoint fails on its first attempt, succeeds on the second.
+      return Promise.resolve((attempts.get(url) ?? 0) > 1);
+    });
+
+    const result = await discoverEndpoint({ concurrency: 4, ports: [8765] });
+
+    expect(result.found).toBe(true);
+    // localhost is retried first in the second pass
+    expect(result.url).toBe('ws://localhost:8765');
+  });
+
+  it('does not retry when passes is 1', async () => {
+    probeMock.mockResolvedValue(false);
+
+    const result = await discoverEndpoint({ concurrency: 8, passes: 1 });
 
     expect(result).toEqual({ found: false, url: null });
     expect(probeMock).toHaveBeenCalledTimes(256);

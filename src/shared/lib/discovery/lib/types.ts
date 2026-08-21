@@ -28,6 +28,8 @@ export interface DiscoveryOptions {
   concurrency?: number;
   /** Per-probe timeout in milliseconds. */
   probeTimeoutMs?: number;
+  /** Number of full passes over failed candidates (retry pass for busy servers). */
+  passes?: number;
   /** Progress callback invoked as candidates are probed. */
   onProgress?: (progress: DiscoveryProgress) => void;
   /** Cancellation signal. */

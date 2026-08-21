@@ -15,6 +15,8 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         registerPlugin(NetworkInfoPlugin.class);
         super.onCreate(savedInstanceState);
+        // Enable Chrome remote debugging (chrome://inspect) for any build type.
+        android.webkit.WebView.setWebContentsDebuggingEnabled(true);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getBridge().getWebView().setBackgroundColor(Color.parseColor("#0d0d0d"));

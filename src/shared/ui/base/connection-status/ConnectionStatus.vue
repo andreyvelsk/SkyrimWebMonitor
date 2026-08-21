@@ -24,6 +24,20 @@
         {{ subText }}
       </p>
 
+      <!-- TODO(debug): temporary discovery log overlay — remove after verification. -->
+      <div
+        v-if="discovery.status !== 'idle' && debugLines.length > 0"
+        class="debug-log"
+      >
+        <p
+          v-for="(line, index) in debugLines"
+          :key="debugLines.length - index"
+          class="debug-log__line"
+        >
+          {{ line }}
+        </p>
+      </div>
+
       <discovery-panel
         v-if="showDiscoveryPanel"
       />
@@ -87,13 +101,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { normalizeWsUrl } from '@/shared/lib/config/websocket';
 import { getLocalIp } from '@/shared/lib/discovery';
+import { subscribeDiscoveryDebugLog } from '@/shared/lib/discovery/lib/debugLog';
 import AttributionCredits from '../attribution-credits/AttributionCredits.vue';
 import DisplayControls from '../display-controls/DisplayControls.vue';
 import DiscoveryPanel from './components/discovery-panel/DiscoveryPanel.vue';
@@ -110,6 +125,14 @@ const wsStore = useWebSocketStore();
 const endpointDraft = ref(wsStore.endpointUrl);
 const endpointError = ref('');
 
+// TODO(debug): temporary discovery log overlay — remove after verification.
+const debugLines = ref<string[]>([]);
+let unsubscribeDebugLog: (() => void) | null = null;
+
+onUnmounted(() => {
+  unsubscribeDebugLog?.();
+});
+
 const { discovery } = storeToRefs(wsStore);
 
 // Discovery only makes sense when the device's LAN IP is known (Capacitor
@@ -119,6 +142,10 @@ const { discovery } = storeToRefs(wsStore);
 const showDiscoveryPanel = computed(() => discovery.value.status === 'running');
 
 onMounted(() => {
+  unsubscribeDebugLog = subscribeDiscoveryDebugLog((lines) => {
+    debugLines.value = lines.slice(-20);
+  });
+
   void getLocalIp().then((ip) => {
     if (
       ip &&
@@ -322,6 +349,28 @@ function handleReconnect(): void {
 
 .actions {
   margin-top: var(--spacing-sm);
+}
+
+.debug-log {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  max-width: 100%;
+  max-height: 40%;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  overflow-y: auto;
+  background-color: rgb(0 0 0 / 80%);
+  color: var(--color-success);
+  font-family: monospace;
+  font-size: 10px;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.debug-log__line {
+  margin: 0;
+  word-break: break-all;
 }
 
 @media (width <= 520px) {

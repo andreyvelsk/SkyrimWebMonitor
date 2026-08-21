@@ -6,6 +6,8 @@
  */
 
 import { Capacitor, registerPlugin } from '@capacitor/core';
+import { logger } from '@/shared/lib/utils/logger';
+import { pushDiscoveryDebugLog } from './lib/debugLog';
 import type { NetworkInfoPlugin } from './lib/types';
 
 const NetworkInfo = registerPlugin<NetworkInfoPlugin>('NetworkInfo');
@@ -29,14 +31,27 @@ export function isPrivateIpv4(ip: string): boolean {
 
 /** Returns the device's private LAN IPv4 address, or `null` if undetectable. */
 export async function getLocalIp(): Promise<string | null> {
+  // TODO(debug): remove logging together with the in-app debug overlay.
+  function debugLog(message: string): void {
+    logger.log(`[discovery] ${message}`);
+    pushDiscoveryDebugLog(message);
+  }
+
   if (!Capacitor.isNativePlatform()) {
+    debugLog('getLocalIp: not a native platform');
     return null;
   }
 
   try {
     const { ips } = await NetworkInfo.getLocalIps();
-    return ips.find((ip) => isPrivateIpv4(ip)) ?? null;
-  } catch {
+    debugLog(`getLocalIp: plugin reported [${ips.join(', ')}]`);
+
+    const ip = ips.find((candidate) => isPrivateIpv4(candidate)) ?? null;
+    debugLog(`getLocalIp: selected ${ip ?? 'none'}`);
+
+    return ip;
+  } catch (error) {
+    debugLog(`getLocalIp: plugin error: ${String(error)}`);
     return null;
   }
 }
