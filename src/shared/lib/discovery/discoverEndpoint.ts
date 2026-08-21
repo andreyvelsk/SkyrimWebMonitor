@@ -17,8 +17,12 @@ import { pushDiscoveryDebugLog } from './lib/debugLog';
 import type { DiscoveryOptions, DiscoveryProgress, DiscoveryResult } from './lib/types';
 
 const DEFAULT_PORTS: readonly number[] = [8765];
-const DEFAULT_CONCURRENCY = 8;
-const DEFAULT_PROBE_TIMEOUT_MS = 2000;
+const DEFAULT_CONCURRENCY = 32;
+// A real WS handshake on a LAN completes well under 100ms, so the first pass
+// uses a short timeout to sweep the whole /24 in a few seconds. Hosts that
+// miss it (busy server, slow radio) get a second pass with a long timeout.
+const DEFAULT_PROBE_TIMEOUT_MS = 400;
+const DEFAULT_RETRY_PROBE_TIMEOUT_MS = 1500;
 const DEFAULT_PASSES = 2;
 
 // TODO(debug): remove logging together with the in-app debug overlay.
@@ -37,6 +41,7 @@ export async function discoverEndpoint(
   const ports = options.ports ?? DEFAULT_PORTS;
   const concurrency = options.concurrency ?? DEFAULT_CONCURRENCY;
   const probeTimeoutMs = options.probeTimeoutMs ?? DEFAULT_PROBE_TIMEOUT_MS;
+  const retryProbeTimeoutMs = options.retryProbeTimeoutMs ?? DEFAULT_RETRY_PROBE_TIMEOUT_MS;
   const passes = options.passes ?? DEFAULT_PASSES;
   const signal = options.signal;
 
@@ -48,7 +53,7 @@ export async function discoverEndpoint(
   const candidates = buildCandidateUrls(localIp, ports);
 
   debugLog(
-    `start: localIp=${localIp ?? 'unknown'}, candidates=${candidates.length}, concurrency=${concurrency}, timeout=${probeTimeoutMs}ms, passes=${passes}`
+    `start: localIp=${localIp ?? 'unknown'}, candidates=${candidates.length}, concurrency=${concurrency}, timeout=${probeTimeoutMs}ms, retryTimeout=${retryProbeTimeoutMs}ms, passes=${passes}`
   );
 
   const progress = createProgress(candidates.length);
@@ -111,8 +116,9 @@ export async function discoverEndpoint(
       const url = queue[nextIndex];
       nextIndex += 1;
       const startedAt = Date.now();
+      const timeoutMs = pass === 1 ? probeTimeoutMs : retryProbeTimeoutMs;
 
-      void probeEndpoint(url, probeTimeoutMs, signal).then((reachable) => {
+      void probeEndpoint(url, timeoutMs, signal).then((reachable) => {
         probedInPass += 1;
         progress.probed = probedInPass;
 

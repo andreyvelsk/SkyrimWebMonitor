@@ -26,8 +26,10 @@ export interface DiscoveryOptions {
   ports?: readonly number[];
   /** Max parallel probes. */
   concurrency?: number;
-  /** Per-probe timeout in milliseconds. */
+  /** Per-probe timeout for the first pass in milliseconds. */
   probeTimeoutMs?: number;
+  /** Per-probe timeout for retry passes in milliseconds. */
+  retryProbeTimeoutMs?: number;
   /** Number of full passes over failed candidates (retry pass for busy servers). */
   passes?: number;
   /** Progress callback invoked as candidates are probed. */
