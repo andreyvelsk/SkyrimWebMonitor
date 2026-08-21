@@ -24,7 +24,12 @@
         {{ subText }}
       </p>
 
+      <discovery-panel
+        v-if="showDiscoveryPanel"
+      />
+
       <form
+        v-else
         class="endpoint-form"
         @submit.prevent="handleEndpointSubmit"
       >
@@ -82,13 +87,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { normalizeWsUrl } from '@/shared/lib/config/websocket';
+import { getLocalIp } from '@/shared/lib/discovery';
 import AttributionCredits from '../attribution-credits/AttributionCredits.vue';
 import DisplayControls from '../display-controls/DisplayControls.vue';
+import DiscoveryPanel from './components/discovery-panel/DiscoveryPanel.vue';
 
 type StatusState =
   | 'connected'
@@ -101,6 +109,26 @@ const { t } = useI18n();
 const wsStore = useWebSocketStore();
 const endpointDraft = ref(wsStore.endpointUrl);
 const endpointError = ref('');
+
+const { discovery } = storeToRefs(wsStore);
+
+// Discovery only makes sense when the device's LAN IP is known (Capacitor
+// native plugin). Without it the manual endpoint form is shown right away;
+// when the scan finishes without finding a server, the form is shown too
+// (`showDiscoveryPanel` covers only the running state).
+const showDiscoveryPanel = computed(() => discovery.value.status === 'running');
+
+onMounted(() => {
+  void getLocalIp().then((ip) => {
+    if (
+      ip &&
+      discovery.value.status === 'idle' &&
+      (wsStore.reconnectFailed || !wsStore.isConnected)
+    ) {
+      void wsStore.runDiscovery();
+    }
+  });
+});
 
 watch(
   () => wsStore.endpointUrl,
@@ -296,7 +324,7 @@ function handleReconnect(): void {
   margin-top: var(--spacing-sm);
 }
 
-@media (max-width: 520px) {
+@media (width <= 520px) {
   .endpoint-form__controls {
     flex-direction: column;
   }

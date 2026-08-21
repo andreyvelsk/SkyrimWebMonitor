@@ -75,7 +75,7 @@ const indicatorIconPath = computed(() =>
   bottom: 0;
   height: 180px;
   background-color: var(--bg-overlay);
-  -webkit-mask-image: radial-gradient(
+  mask-image: radial-gradient(
     ellipse 120% 100% at 50% 100%,
     #000 20%,
     transparent 70%

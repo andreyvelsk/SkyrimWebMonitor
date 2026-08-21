@@ -211,6 +211,14 @@
         "failed": "Connection failed",
         "failedHint": "Reconnect attempts exhausted. Try again manually.",
         "attempt": "Attempt {current} of {total}",
+        "discovery": {
+          "searching": "Searching for server...",
+          "progress": "{probed} / {total} addresses checked",
+          "notFound": "Server not found on the local network",
+          "searchAgain": "Search again",
+          "cancel": "Cancel search",
+          "httpsHint": "Automatic search is unavailable over HTTPS. Enter the address manually."
+        },
         "wsEndpoint": "WS address",
         "wsEndpointPlaceholder": "192.168.1.10:8765",
         "saveEndpoint": "Save",

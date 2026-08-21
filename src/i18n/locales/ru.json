@@ -212,6 +212,14 @@
         "failed": "Не удалось подключиться",
         "failedHint": "Попытки переподключения исчерпаны. Попробуйте вручную.",
         "attempt": "Попытка {current} из {total}",
+        "discovery": {
+          "searching": "Поиск сервера...",
+          "progress": "Проверено {probed} из {total} адресов",
+          "notFound": "Сервер в локальной сети не найден",
+          "searchAgain": "Искать снова",
+          "cancel": "Отменить поиск",
+          "httpsHint": "Автоматический поиск недоступен по HTTPS. Введите адрес вручную."
+        },
         "wsEndpoint": "Адрес WS",
         "wsEndpointPlaceholder": "192.168.1.10:8765",
         "saveEndpoint": "Сохранить",
