@@ -3,9 +3,10 @@ import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { saveConfiguredWsUrl } from '@/shared/lib/config/websocket';
+import { discoverEndpoint } from '@/shared/lib/discovery';
 import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions, FileDownloadResultData } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
-import type { Subscription } from './lib/types';
+import type { DiscoveryProgress, Subscription } from './lib/types';
 import { SYSTEM_QUERY_ID, SYSTEM_QUERY_FIELDS, useSystemStore } from '@/stores/system/useSystemStore';
 import { applyFixturesIfEnabled } from '@/stores/fixtures/fixtureLoader';
 import { logger } from '@/shared/lib/utils/logger';
@@ -252,6 +253,70 @@ export const useWebSocketStore = defineStore('websocket', () => {
     void reconnect();
   };
 
+  // --- Endpoint auto-discovery ---
+
+  const discovery = ref<DiscoveryProgress>({
+    status: 'idle',
+    probed: 0,
+    total: 0,
+    currentCandidate: null,
+  });
+  let discoveryAbort: AbortController | null = null;
+
+  const cancelDiscovery = (): void => {
+    if (!discoveryAbort) {
+      return;
+    }
+
+    discoveryAbort.abort();
+    discoveryAbort = null;
+    discovery.value = { ...discovery.value, status: 'idle' };
+  };
+
+  const runDiscovery = async (): Promise<void> => {
+    if (discovery.value.status === 'running') {
+      return;
+    }
+
+    cancelDiscovery();
+    const abortController = new AbortController();
+    discoveryAbort = abortController;
+
+    discovery.value = { status: 'running', probed: 0, total: 0, currentCandidate: null };
+
+    try {
+      const result = await discoverEndpoint({
+        signal: abortController.signal,
+        onProgress: (progress) => {
+          if (!abortController.signal.aborted) {
+            discovery.value = progress;
+          }
+        },
+      });
+
+      if (abortController.signal.aborted) {
+        discovery.value = { ...discovery.value, status: 'idle' };
+        return;
+      }
+
+      if (result.found && result.url) {
+        discovery.value = { ...discovery.value, status: 'found' };
+        endpointUrl.value = saveConfiguredWsUrl(result.url);
+        await reconnect();
+        return;
+      }
+
+      discovery.value = { ...discovery.value, status: 'not-found' };
+    } catch (error) {
+      console.error('Endpoint discovery failed', error);
+      discovery.value = { ...discovery.value, status: 'not-found' };
+    } finally {
+      if (discoveryAbort === abortController) {
+        discoveryAbort = null;
+      }
+    }
+  };
+
   const disconnect = (): void => {
     stopAllSubscriptions();
     failAllPendingCommands('WebSocket disconnected');
@@ -348,12 +413,15 @@ export const useWebSocketStore = defineStore('websocket', () => {
     reconnectAttempt,
     reconnectMaxAttempts,
     reconnectFailed,
+    discovery,
     isConnected,
     isConnecting,
     isReconnecting,
     connect,
     reconnect,
     updateEndpoint,
+    runDiscovery,
+    cancelDiscovery,
     disconnect,
     startSubscription,
     stopSubscription,

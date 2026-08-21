@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
+import type { DiscoveryResult } from '@/shared/lib/discovery';
 
 // =============================================================
 // useWebSocketStore tests
@@ -47,6 +48,14 @@ vi.mock('@/stores/system/useSystemStore', () => ({
 
 vi.mock('@/stores/fixtures/fixtureLoader', () => ({
   applyFixturesIfEnabled: vi.fn(() => Promise.resolve()),
+}));
+
+const mockDiscoverEndpoint = vi.fn<(options?: unknown) => Promise<DiscoveryResult>>(() =>
+  Promise.resolve({ found: false, url: null })
+);
+
+vi.mock('@/shared/lib/discovery', () => ({
+  discoverEndpoint: (options?: unknown) => mockDiscoverEndpoint(options),
 }));
 
 vi.mock('@/shared/lib/utils/logger', () => ({
@@ -263,6 +272,99 @@ describe('useWebSocketStore', () => {
       store.disconnect();
       await store.reconnect();
       expect(store.status).toBe(CONNECTION_STATUS.DISCONNECTED);
+    });
+  });
+
+  describe('runDiscovery', () => {
+    it('starts in idle state', async () => {
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      expect(store.discovery.status).toBe('idle');
+    });
+
+    it('saves found endpoint and reconnects', async () => {
+      mockDiscoverEndpoint.mockResolvedValue({ found: true, url: 'ws://192.168.1.10:8765' });
+      mockWsClient.reconnect.mockResolvedValue(undefined);
+      mockWsClient.isConnected.mockReturnValue(true);
+      mockWsClient.getUrl.mockReturnValue('ws://192.168.1.10:8765');
+
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+
+      await store.runDiscovery();
+
+      expect(store.endpointUrl).toBe('ws://192.168.1.10:8765');
+      expect(mockWsClient.reconnect).toHaveBeenCalled();
+      expect(store.discovery.status).toBe('found');
+    });
+
+    it('sets not-found status when nothing is reachable', async () => {
+      mockDiscoverEndpoint.mockResolvedValue({ found: false, url: null });
+
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+
+      await store.runDiscovery();
+
+      expect(store.discovery.status).toBe('not-found');
+      expect(mockWsClient.reconnect).not.toHaveBeenCalled();
+    });
+
+    it('ignores concurrent runs while discovery is running', async () => {
+      let resolveDiscovery: (result: DiscoveryResult) => void = () => {};
+      mockDiscoverEndpoint.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveDiscovery = resolve;
+          })
+      );
+
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+
+      const firstRun = store.runDiscovery();
+      const secondRun = store.runDiscovery(); // should be a no-op
+      await secondRun;
+
+      resolveDiscovery({ found: false, url: null });
+      await firstRun;
+
+      expect(mockDiscoverEndpoint).toHaveBeenCalledTimes(1);
+    });
+
+    it('cancelDiscovery aborts the running search', async () => {
+      const signals: AbortSignal[] = [];
+
+      function extractSignal(options: unknown): AbortSignal | null {
+        if (typeof options === 'object' && options !== null && 'signal' in options) {
+          const signal: unknown = options.signal;
+          return signal instanceof AbortSignal ? signal : null;
+        }
+        return null;
+      }
+
+      mockDiscoverEndpoint.mockImplementation((options?: unknown) => {
+        const signal = extractSignal(options);
+        if (signal) {
+          signals.push(signal);
+        }
+        return new Promise<DiscoveryResult>(() => {});
+      });
+
+      const { useWebSocketStore } = await import('@/stores/use-websocket-store/useWebsocketStore');
+      const store = useWebSocketStore();
+      store.disconnect();
+
+      void store.runDiscovery().catch(() => {});
+      store.cancelDiscovery();
+
+      await vi.waitFor(() => {
+        expect(store.discovery.status).toBe('idle');
+      });
+      expect(signals[0]?.aborted).toBe(true);
     });
   });
 });
