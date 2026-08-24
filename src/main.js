@@ -49,6 +49,21 @@ if (!IS_CAPACITOR_BUILD && !history.state?.pwaBackGuard) {
   history.pushState({ pwaBackGuard: true }, '');
 }
 
+// In Android WebView (Capacitor) a tapped button keeps its :focus state, so
+// it stays visually "pressed" after release. Blur the focused interactive
+// element on tap so it returns to its idle state. Form fields are excluded so
+// the keyboard and text editing keep working.
+document.addEventListener('touchend', () => {
+  const el = document.activeElement;
+  if (
+    el instanceof HTMLElement &&
+    el.matches('button, [role="button"], a[href], [tabindex]:not([tabindex="-1"])') &&
+    !el.matches('input, textarea, select, [contenteditable="true"]')
+  ) {
+    el.blur();
+  }
+});
+
 // Register service worker for PWA only in production (avoid dev caching).
 // The registration uses `updateViaCache: 'none'` so the browser always fetches
 // a fresh `sw.js` instead of reusing a stale HTTP-cached copy. This matters on
