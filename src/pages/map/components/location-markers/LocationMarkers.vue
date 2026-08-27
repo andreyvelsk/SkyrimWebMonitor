@@ -86,6 +86,7 @@ $marker-select-duration: 180ms;
 
 .hotspot-marker-group {
   pointer-events: none;
+
   // The resting copy reappears only after the enlarged overlay finishes its
   // leave animation, so the two never overlap on the way out.
   transition: opacity $marker-select-duration ease-out $marker-select-duration;

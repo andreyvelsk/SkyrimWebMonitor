@@ -280,7 +280,7 @@ onUnmounted(() => {
   }
 
   &:active {
-    background: rgb(255 255 255 / 0.08);
+    background: rgb(255 255 255 / 8%);
   }
 }
 </style>

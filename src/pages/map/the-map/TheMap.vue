@@ -576,14 +576,12 @@ onBeforeUnmount(() => {
   inset: 0;
   overflow: hidden;
   background-color: v-bind(BACKGROUND_COLOR);
-
   -webkit-mask-image: v-bind(TEAR_MASK_URL);
   mask-image: v-bind(TEAR_MASK_URL);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
-
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;

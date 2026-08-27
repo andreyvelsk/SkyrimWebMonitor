@@ -382,6 +382,7 @@ function clamp(v: number, lo: number, hi: number): number {
   position: absolute;
   top: 0;
   left: 0;
+
   // Make the SVG and every descendant transparent to pointer/touch events.
   // On iOS Safari `pointer-events: none` on the <svg> alone does NOT
   // propagate to <foreignObject> HTML children, so they keep stealing
@@ -390,6 +391,7 @@ function clamp(v: number, lo: number, hi: number): number {
   pointer-events: none;
   touch-action: none;
   will-change: transform;
+
   /* `overlayStyle` provides width/height inline; explicit dims here would
      override and break the transform sync with the map image. */
   overflow: visible;

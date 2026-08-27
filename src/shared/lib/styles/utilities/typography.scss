@@ -6,6 +6,7 @@
 .font-heading {
   font-family: var(--font-heading);
 }
+
 .font-body {
   font-family: var(--font-body);
 }
@@ -14,15 +15,19 @@
 .text-xs {
   font-size: var(--font-size-xs);
 }
+
 .text-sm {
   font-size: var(--font-size-sm);
 }
+
 .text-base {
   font-size: var(--font-size-base);
 }
+
 .text-lg {
   font-size: var(--font-size-lg);
 }
+
 .text-xl {
   font-size: var(--font-size-xl);
 }
@@ -31,12 +36,15 @@
 .font-normal {
   font-weight: var(--font-weight-normal);
 }
+
 .font-medium {
   font-weight: var(--font-weight-medium);
 }
+
 .font-semibold {
   font-weight: var(--font-weight-semibold);
 }
+
 .font-bold {
   font-weight: var(--font-weight-bold);
 }
@@ -45,12 +53,15 @@
 .text-left {
   text-align: left;
 }
+
 .text-center {
   text-align: center;
 }
+
 .text-right {
   text-align: right;
 }
+
 .text-justify {
   text-align: justify;
 }
@@ -59,12 +70,15 @@
 .uppercase {
   text-transform: uppercase;
 }
+
 .lowercase {
   text-transform: lowercase;
 }
+
 .capitalize {
   text-transform: capitalize;
 }
+
 .normal-case {
   text-transform: none;
 }
@@ -73,15 +87,19 @@
 .tracking-tight {
   letter-spacing: -0.02em;
 }
+
 .tracking-normal {
   letter-spacing: 0;
 }
+
 .tracking-wide {
   letter-spacing: 0.05em;
 }
+
 .tracking-wider {
   letter-spacing: 0.08em;
 }
+
 .tracking-widest {
   letter-spacing: 0.1em;
 }
@@ -90,15 +108,19 @@
 .leading-none {
   line-height: 1;
 }
+
 .leading-tight {
   line-height: 1.2;
 }
+
 .leading-snug {
   line-height: 1.35;
 }
+
 .leading-normal {
   line-height: 1.5;
 }
+
 .leading-relaxed {
   line-height: 1.7;
 }
@@ -109,12 +131,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 .whitespace-nowrap {
   white-space: nowrap;
 }
+
 .break-word {
   word-break: break-word;
 }
+
 .break-all {
   word-break: break-all;
 }
@@ -123,6 +148,7 @@
 .italic {
   font-style: italic;
 }
+
 .no-italic {
   font-style: normal;
 }

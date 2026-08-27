@@ -6,18 +6,23 @@
 .shadow-none {
   box-shadow: none;
 }
+
 .shadow-soft {
   box-shadow: var(--shadow-soft);
 }
+
 .shadow-medium {
   box-shadow: var(--shadow-medium);
 }
+
 .shadow-strong {
   box-shadow: var(--shadow-strong);
 }
+
 .shadow-glow {
   box-shadow: var(--glow-accent);
 }
+
 .shadow-inset {
   box-shadow: var(--bg-inset-dark);
 }
@@ -26,12 +31,15 @@
 .transition-none {
   transition: none;
 }
+
 .transition-fast {
   transition: all var(--transition-fast);
 }
+
 .transition-normal {
   transition: all var(--transition-normal);
 }
+
 .transition-slow {
   transition: all var(--transition-slow);
 }
@@ -40,18 +48,23 @@
 .opacity-0 {
   opacity: 0;
 }
+
 .opacity-25 {
   opacity: 0.25;
 }
+
 .opacity-40 {
   opacity: 0.4;
 }
+
 .opacity-55 {
   opacity: var(--opacity-disabled);
 }
+
 .opacity-70 {
   opacity: var(--opacity-muted);
 }
+
 .opacity-100 {
   opacity: 1;
 }

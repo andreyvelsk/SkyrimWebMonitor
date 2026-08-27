@@ -296,7 +296,7 @@ function handleReconnect(): void {
   margin-top: var(--spacing-sm);
 }
 
-@media (max-width: 520px) {
+@media (width <= 520px) {
   .endpoint-form__controls {
     flex-direction: column;
   }
