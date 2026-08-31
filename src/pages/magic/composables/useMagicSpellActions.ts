@@ -131,13 +131,43 @@ export function useMagicSpellActions(spellsList: () => SpellItem[]) {
     });
   }
 
-  // Automatically select the first spell when the spells list becomes available
+  // Automatically select the first spell when the list becomes available,
+  // or fall back to the previous neighbour when the active spell disappears.
+  let previousList: SpellItem[] = [];
   watch(
     () => spellsList(),
     (newList) => {
-      if (!activeSpell.value && newList && newList.length > 0) {
-        activeSpell.value = newList[0].formId;
+      const list = newList || [];
+
+      if (list.length === 0) {
+        previousList = [];
+        return;
       }
+
+      if (!activeSpell.value) {
+        activeSpell.value = list[0].formId;
+        previousList = list.slice();
+        return;
+      }
+
+      const stillExists = list.some(spell => spell.formId === activeSpell.value);
+      if (!stillExists) {
+        // Fall back to the previous neighbour in the old list that still exists.
+        const oldIndex = previousList.findIndex(spell => spell.formId === activeSpell.value);
+        let fallback: string | null = null;
+        if (oldIndex > 0) {
+          for (let i = oldIndex - 1; i >= 0; i--) {
+            const candidate = previousList[i].formId;
+            if (list.some(spell => spell.formId === candidate)) {
+              fallback = candidate;
+              break;
+            }
+          }
+        }
+        activeSpell.value = fallback ?? list[0].formId;
+      }
+
+      previousList = list.slice();
     },
     { immediate: true }
   );
