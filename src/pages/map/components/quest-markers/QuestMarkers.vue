@@ -12,7 +12,7 @@
         :class="{ 'hotspot-marker-scale--selected': m.key === selectedMarkerKey }"
       >
         <use
-          class="hotspot-marker"
+          class="hotspot-marker hotspot-marker--blink"
           :href="`#${iconSymbolByUrl[m.iconUrl]}`"
           :x="-markerMaxHalf"
           :y="-markerMaxSize"
@@ -39,6 +39,8 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
+// Quest markers blink in / out smoothly to draw the player's eye.
+// The selected marker stops blinking so the user can read it.
 .hotspot-marker-group {
   pointer-events: none;
 }
@@ -60,5 +62,28 @@ defineProps<{
 .hotspot-marker {
   transform-box: fill-box;
   transform-origin: center bottom;
+}
+
+.hotspot-marker--blink {
+  animation: quest-marker-blink 1000ms ease-in-out infinite;
+}
+
+.hotspot-marker-group--selected .hotspot-marker--blink {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes quest-marker-blink {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 </style>

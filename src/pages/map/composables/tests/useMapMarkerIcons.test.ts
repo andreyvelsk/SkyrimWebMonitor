@@ -4,8 +4,11 @@ import {
   resolveMarkerIcon,
   resolveGfxIconUrl,
   resolveLocationIcon,
+  resolveQuestIconUrl,
   DEFAULT_MARKER_ICON,
-  DEFAULT_UNDISCOVERED_MARKER_ICON
+  DEFAULT_UNDISCOVERED_MARKER_ICON,
+  QUEST_MARKER_EXTERIOR_SHAPE_ID,
+  QUEST_MARKER_INTERIOR_SHAPE_ID,
 } from '@/pages/map/composables/useMapMarkerIcons';
 import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
 import { GFX_SHAPE_ID_BY_TYPE } from '@/features/gfx-icons/config/typeIdToGfxId';
@@ -93,5 +96,43 @@ describe('resolveLocationIcon', () => {
     // Store is empty
     const url = resolveLocationIcon(15, true);
     expect(url).toBe(DEFAULT_MARKER_ICON);
+  });
+});
+
+describe('resolveQuestIconUrl', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
+
+  it('returns exterior shape (139) when isInterior is false', () => {
+    expect(QUEST_MARKER_EXTERIOR_SHAPE_ID).toBe(139);
+  });
+
+  it('returns interior shape (141) when isInterior is true', () => {
+    expect(QUEST_MARKER_INTERIOR_SHAPE_ID).toBe(141);
+  });
+
+  it('returns a data URL for exterior quest marker when shape is loaded', () => {
+    const store = useGfxIconsStore();
+    store.setIcons({ 139: '<svg xmlns="http://www.w3.org/2000/svg"/>' });
+
+    const url = resolveQuestIconUrl(false);
+    expect(url).toContain('data:image/svg+xml,');
+  });
+
+  it('returns a data URL for interior quest marker when shape is loaded', () => {
+    const store = useGfxIconsStore();
+    store.setIcons({ 141: '<svg xmlns="http://www.w3.org/2000/svg"/>' });
+
+    const url = resolveQuestIconUrl(true);
+    expect(url).toContain('data:image/svg+xml,');
+  });
+
+  it('returns null when the shape is not loaded', () => {
+    // Store is empty — neither 139 nor 141 is loaded
+    const exteriorUrl = resolveQuestIconUrl(false);
+    const interiorUrl = resolveQuestIconUrl(true);
+    expect(exteriorUrl).toBeNull();
+    expect(interiorUrl).toBeNull();
   });
 });

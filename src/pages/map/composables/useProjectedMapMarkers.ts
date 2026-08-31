@@ -6,7 +6,7 @@ import type {
   QuestProjectedMarker,
   UseProjectedMapMarkersOptions,
 } from '../lib/types';
-import { resolveLocationIcon } from './useMapMarkerIcons';
+import { resolveLocationIcon, resolveQuestIconUrl } from './useMapMarkerIcons';
 
 const EXCLUDED_HOTSPOT_TYPES: string[] = [
   // 'DLC02ToSkyrim'
@@ -24,7 +24,7 @@ export function useProjectedMapMarkers({
       .filter((h) =>
         h.isVisible
         && EXCLUDED_HOTSPOT_TYPES.indexOf(h.type) === -1
-    )
+      )
       .map((h) => {
         const projected = projectWorldToImage(h);
         if (!projected) return null;
@@ -55,6 +55,9 @@ export function useProjectedMapMarkers({
       .map((marker) => {
         const projected = projectWorldToImage(marker);
         if (!projected) return null;
+        // Try to get GFX icon (139 for exterior, 141 for interior)
+        // Fall back to static quest icon if GFX is not available
+        const gfxIconUrl = resolveQuestIconUrl(marker.isInterior);
         return {
           key: `quest:${marker.questFormId}:${marker.objectiveIndex}:${marker.aliasId}:${marker.refId}`,
           kind: 'quest',
@@ -64,7 +67,8 @@ export function useProjectedMapMarkers({
           canFastTravel: false,
           x: projected.x,
           y: projected.y,
-          iconUrl: questIconUrl,
+          iconUrl: gfxIconUrl ?? questIconUrl,
+          isInterior: marker.isInterior,
         } satisfies QuestProjectedMarker;
       })
       .filter(isProjectedMarker);
@@ -93,7 +97,6 @@ function isProjectedMarker<T extends ProjectedMarker>(marker: T | null): marker 
  */
 function isRenderableQuestMarker(marker: MapQuestMarker, mapWorldspace: string): boolean {
   return (
-    !marker.isInterior &&
     marker.worldspace === mapWorldspace &&
     (marker.parentWorldspace === null || marker.parentWorldspace === mapWorldspace)
   );
