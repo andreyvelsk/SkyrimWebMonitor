@@ -52,6 +52,13 @@ function formatEffectHtml(e: ItemEnchantmentEffect, isSurvivalMode: boolean): st
     return key;
   });
 
+  // Word tags like <здоровье> -> <strong>здоровье</strong>
+  tpl = tpl.replace(/<([^<>]+)>/g, (_match, word: string) => {
+    const key = `___PL_WORD_${idx++}___`;
+    placeholders[key] = `<strong>${escapeHtml(word)}</strong>`;
+    return key;
+  });
+
   // Escape remaining content to avoid injecting unintended HTML
   tpl = escapeHtml(tpl);
 
