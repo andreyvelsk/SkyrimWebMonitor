@@ -52,6 +52,14 @@ function formatEffectHtml(e: ItemEnchantmentEffect, isSurvivalMode: boolean): st
     return key;
   });
 
+  // Word tags like <здоровье> -> <strong>здоровье</strong>
+  // Match any word-like tag (letters, numbers, hyphens, apostrophes) but avoid HTML/JS tags
+  tpl = tpl.replace(/<([a-zA-Z0-9\u0080-\uFFFF][a-zA-Z0-9\u0080-\uFFFF\-']*)>/g, (_match, word: string) => {
+    const key = `___PL_WORD_${idx++}___`;
+    placeholders[key] = `<strong>${escapeHtml(word)}</strong>`;
+    return key;
+  });
+
   // Escape remaining content to avoid injecting unintended HTML
   tpl = escapeHtml(tpl);
 

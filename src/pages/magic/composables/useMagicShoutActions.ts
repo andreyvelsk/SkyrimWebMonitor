@@ -65,13 +65,43 @@ export function useMagicShoutActions(shoutsList: () => ShoutItem[]) {
     });
   }
 
-  // Automatically select the first shout when the list becomes available
+  // Automatically select the first shout when the list becomes available,
+  // or fall back to the previous neighbour when the active shout disappears.
+  let previousList: ShoutItem[] = [];
   watch(
     () => shoutsList(),
     (newList) => {
-      if (!activeShout.value && newList && newList.length > 0) {
-        activeShout.value = newList[0].formId;
+      const list = newList || [];
+
+      if (list.length === 0) {
+        previousList = [];
+        return;
       }
+
+      if (!activeShout.value) {
+        activeShout.value = list[0].formId;
+        previousList = list.slice();
+        return;
+      }
+
+      const stillExists = list.some(shout => shout.formId === activeShout.value);
+      if (!stillExists) {
+        // Fall back to the previous neighbour in the old list that still exists.
+        const oldIndex = previousList.findIndex(shout => shout.formId === activeShout.value);
+        let fallback: string | null = null;
+        if (oldIndex > 0) {
+          for (let i = oldIndex - 1; i >= 0; i--) {
+            const candidate = previousList[i].formId;
+            if (list.some(shout => shout.formId === candidate)) {
+              fallback = candidate;
+              break;
+            }
+          }
+        }
+        activeShout.value = fallback ?? list[0].formId;
+      }
+
+      previousList = list.slice();
     },
     { immediate: true }
   );

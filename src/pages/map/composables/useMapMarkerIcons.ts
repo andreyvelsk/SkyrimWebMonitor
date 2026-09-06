@@ -3,6 +3,10 @@ import { gfxIconsDisabled } from '@/shared/lib';
 import { useGfxIconsStore } from '@/stores/gfx-icons/useGfxIconsStore';
 import { getGfxShapeId } from '@/features/gfx-icons';
 
+/** Quest marker GFX shape IDs. */
+export const QUEST_MARKER_EXTERIOR_SHAPE_ID = 139;
+export const QUEST_MARKER_INTERIOR_SHAPE_ID = 141;
+
 // =============================================================
 // Map marker icons
 // =============================================================
@@ -56,4 +60,19 @@ export function resolveLocationIcon(
   canFastTravel: boolean,
 ): string {
   return resolveGfxIconUrl(typeId, canFastTravel) ?? resolveMarkerIcon(canFastTravel);
+}
+
+/**
+ * Resolve the quest marker icon URL based on whether the quest is interior.
+ * - If isInterior: returns GFX shape id 141
+ * - If !isInterior: returns GFX shape id 139
+ */
+export function resolveQuestIconUrl(
+  isInterior: boolean,
+): string | null {
+  if (gfxIconsDisabled.value) return null;
+  const shapeId = isInterior
+    ? QUEST_MARKER_INTERIOR_SHAPE_ID
+    : QUEST_MARKER_EXTERIOR_SHAPE_ID;
+  return useGfxIconsStore().resolveIconUrl(shapeId);
 }

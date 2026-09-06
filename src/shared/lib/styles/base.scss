@@ -6,10 +6,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
   /* Disable text selection and context menu interactions */
   -webkit-user-select: none;
   user-select: none;
   -webkit-touch-callout: none;
+
   /* Remove tap highlight on mobile */
   -webkit-tap-highlight-color: transparent;
   outline: none;
@@ -31,17 +33,20 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   /* Disable callout menu on long tap */
-  -webkit-user-select: none;
   user-select: none;
+
   /* Remove default touch highlight */
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+
   /* Disable pull-to-refresh gesture and prevent scrolling */
   overscroll-behavior: none;
   -webkit-user-select: none;
   -ms-touch-action: none;
   touch-action: none;
+
   /* Prevent scrolling on iOS */
   position: fixed;
   width: 100%;

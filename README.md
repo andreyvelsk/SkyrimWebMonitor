@@ -88,9 +88,7 @@ npm run preview         # serve the production build
 npm run tsc             # type-check
 npm run release         # bump patch, create git commit+tag, push main + tags
 npm run release -- minor
-npm run lint            # ESLint with --fix
-npm run lint:css        # Stylelint with --fix
-npm run format          # Prettier + Stylelint
+npm run lint            # type-check + ESLint + Stylelint, all with --fix (canonical)
 ```
 
 ## Releases
@@ -146,7 +144,7 @@ The bug-report requirements mirror those of the [SkyrimWebSocket](https://github
 - [Pinia](https://pinia.vuejs.org/) state management
 - [vue-i18n](https://vue-i18n.intlify.dev/) internationalization
 - [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) (Workbox) PWA support
-- ESLint, Stylelint, Prettier
+- ESLint, Stylelint, Prettier (Stylelint runs through `npm run lint`; Prettier configured for editor formatting)
 
 ## Credits
 

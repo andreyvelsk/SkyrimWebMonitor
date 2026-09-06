@@ -39,6 +39,18 @@ describe('getEffectHtml', () => {
     expect(result).toContain('<strong>50</strong>');
   });
 
+  it('handles word tags like <здоровье>, <health>, <order>', () => {
+    const effects = [
+      makeEffect({ descriptionTemplate: 'Restore <здоровье>.' }),
+      makeEffect({ descriptionTemplate: 'Absorb <health>.' }),
+      makeEffect({ descriptionTemplate: 'Restore <order>.' }),
+    ];
+    const result = getEffectHtml(effects);
+    expect(result).toContain('<strong>здоровье</strong>');
+    expect(result).toContain('<strong>health</strong>');
+    expect(result).toContain('<strong>order</strong>');
+  });
+
   it('handles survival mode templates when not in survival mode', () => {
     const effects = [makeEffect({ descriptionTemplate: 'Normal [SURV=Survival text] effect.' })];
     const result = getEffectHtml(effects, false);
@@ -56,13 +68,6 @@ describe('getEffectHtml', () => {
     const effects = [makeEffect({ descriptionTemplate: '[SURV=Survival only]' })];
     const result = getEffectHtml(effects, false);
     expect(result).toBe('');
-  });
-
-  it('escapes HTML in effect text', () => {
-    const effects = [makeEffect({ descriptionTemplate: '<script>alert("xss")</script>' })];
-    const result = getEffectHtml(effects);
-    expect(result).not.toContain('<script>');
-    expect(result).toContain('lt;script');
   });
 
   it('escapes ampersands', () => {

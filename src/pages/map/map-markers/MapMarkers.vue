@@ -25,18 +25,18 @@
       </symbol>
     </defs>
 
-    <quest-markers
-      :markers="questObjectiveMarkers"
-      :marker-max-half="markerMaxHalf"
-      :marker-max-size="markerMaxSize"
+    <location-markers
+      :markers="locationMarkers"
+      :marker-max-size-by-key="markerMaxSizeByKey"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
       :icon-symbol-by-url="iconSymbolByUrl"
     />
 
-    <location-markers
-      :markers="locationMarkers"
-      :marker-max-size-by-key="markerMaxSizeByKey"
+    <quest-markers
+      :markers="questObjectiveMarkers"
+      :marker-max-half="markerMaxHalf"
+      :marker-max-size="markerMaxSize"
       :rest-scale="restScale"
       :selected-marker-key="selectedMarkerKey"
       :icon-symbol-by-url="iconSymbolByUrl"
@@ -91,11 +91,7 @@ import LocationMarkers from '../components/location-markers/LocationMarkers.vue'
 import QuestMarkers from '../components/quest-markers/QuestMarkers.vue';
 import PlayerMarker from '../components/player-marker/PlayerMarker.vue';
 import SelectedMarkerLabel from '../components/selected-marker-label/SelectedMarkerLabel.vue';
-import {
-  isLocationMarker,
-  isQuestMarker,
-  type ProjectedMarker,
-} from '../lib/types';
+import { isLocationMarker, isQuestMarker, type ProjectedMarker } from '../lib/types';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
@@ -382,6 +378,7 @@ function clamp(v: number, lo: number, hi: number): number {
   position: absolute;
   top: 0;
   left: 0;
+
   // Make the SVG and every descendant transparent to pointer/touch events.
   // On iOS Safari `pointer-events: none` on the <svg> alone does NOT
   // propagate to <foreignObject> HTML children, so they keep stealing
@@ -390,6 +387,7 @@ function clamp(v: number, lo: number, hi: number): number {
   pointer-events: none;
   touch-action: none;
   will-change: transform;
+
   /* `overlayStyle` provides width/height inline; explicit dims here would
      override and break the transform sync with the map image. */
   overflow: visible;

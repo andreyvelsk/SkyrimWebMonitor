@@ -51,9 +51,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:ai": "node scripts/test-ai.mjs",
-    "lint": "vue-tsc --noEmit && eslint . --fix",
-    "lint:css": "stylelint \"src/**/*.{vue,css,scss}\" --fix",
-    "format": "prettier --write \"src/**/*.{vue,js,jsx,json,css,scss}\" && npm run lint:css"
+    "lint": "vue-tsc --noEmit && eslint . --fix && stylelint \"src/**/*.{vue,css,scss}\" --fix"
   },
   "dependencies": {
     "@capacitor/android": "^7.6.3",

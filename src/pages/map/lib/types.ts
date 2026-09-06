@@ -110,6 +110,8 @@ export interface LocationProjectedMarker extends BaseProjectedMarker {
 export interface QuestProjectedMarker extends BaseProjectedMarker {
   kind: 'quest';
   type: 'QuestObjective';
+  /** Whether the quest marker is located in an interior cell. */
+  isInterior: boolean;
 }
 
 export interface PlayerOverlayPosition {
