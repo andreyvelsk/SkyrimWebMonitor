@@ -39,9 +39,9 @@
         }
       },
       "quests": {
-        "label": "Квесты",
+        "label": "Журнал",
         "subtabs": {
-          "questsList": "Журнал"
+          "questsList": "Квесты"
         }
       },
       "map": {

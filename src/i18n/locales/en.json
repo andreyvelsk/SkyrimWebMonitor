@@ -39,9 +39,9 @@
         }
       },
       "quests": {
-        "label": "Quests",
+        "label": "Journal",
         "subtabs": {
-          "questsList": "Journal"
+          "questsList": "Quests"
         }
       },
       "map": {
