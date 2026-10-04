@@ -1,0 +1,137 @@
+name: Build Android APK (shared)
+
+on:
+  workflow_call:
+    inputs:
+      git_ref:
+        description: 'Git ref to checkout (empty = default trigger ref)'
+        required: false
+        type: string
+        default: ''
+      build_type:
+        description: 'APK build type: debug or release'
+        required: true
+        type: string
+      artifact_name:
+        description: 'Name of the uploaded artifact'
+        required: true
+        type: string
+    secrets:
+      ANDROID_KEYSTORE_BASE64:
+        description: 'Base64-encoded Android signing keystore (release only)'
+        required: false
+      ANDROID_KEYSTORE_PASSWORD:
+        description: 'Keystore password (release only)'
+        required: false
+      ANDROID_KEY_ALIAS:
+        description: 'Signing key alias (release only)'
+        required: false
+      ANDROID_KEY_PASSWORD:
+        description: 'Signing key password (release only)'
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git_ref || github.sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download pre-built map tiles
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p public
+          gh release download map-assets \
+            --pattern 'map-dzi.tar.gz' \
+            --output map-dzi.tar.gz
+          tar -xzf map-dzi.tar.gz -C public
+          rm map-dzi.tar.gz
+          for dzi in tamriel vyn vyn_ru; do
+            test -f "public/map-dzi/${dzi}.dzi" || {
+              echo "ERROR: Missing expected DZI: ${dzi}.dzi"
+              exit 1
+            }
+          done
+          echo "Tiles extracted: $(find public/map-dzi -name '*.webp' | wc -l) webp files"
+
+      - name: Build and sync Capacitor Android assets
+        run: npm run cap:sync:android
+
+      - name: Decode Android keystore
+        if: inputs.build_type == 'release'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            mkdir -p .ci
+            echo "$KEYSTORE_BASE64" | base64 --decode > .ci/release.keystore
+          fi
+
+      - name: Build debug APK
+        if: inputs.build_type == 'debug'
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew assembleDebug
+
+      - name: Build release APK
+        if: inputs.build_type == 'release'
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/.ci/release.keystore
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          chmod +x android/gradlew
+          cd android
+          ./gradlew assembleRelease
+
+      - name: Prepare debug APK artifact
+        if: inputs.build_type == 'debug'
+        run: |
+          mkdir -p release-assets
+          cp android/app/build/outputs/apk/debug/app-debug.apk release-assets/
+
+      - name: Prepare release APK artifact
+        if: inputs.build_type == 'release'
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          mkdir -p release-assets
+          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
+            cp android/app/build/outputs/apk/release/app-release.apk "release-assets/SkyrimWebMonitor-${VERSION}-android.apk"
+          else
+            cp android/app/build/outputs/apk/release/app-release-unsigned.apk "release-assets/SkyrimWebMonitor-${VERSION}-android-unsigned.apk"
+          fi
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: release-assets/
+          if-no-files-found: error
