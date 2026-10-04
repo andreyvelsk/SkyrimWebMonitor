@@ -69,7 +69,7 @@
         />
         <span
           v-if="nav.activeSubTab === sub.id"
-          class="cat-strip__label"
+          class="cat-strip__label cat-strip__label__subtab"
         >{{ getSubtabLabel(sub) }}</span>
       </button>
     </nav>
@@ -209,12 +209,16 @@ function openSettings(): void {
 .cat-strip__label {
   overflow: hidden;
   font-family: var(--font-heading);
-  font-size: 0.72rem;
+  font-size: 1rem;
   letter-spacing: 0.08em;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
   color: var(--skyrim-text-primary);
+
+  &__subtab {
+    font-size: 0.85rem;
+  }
 }
 
 .settings-button {
