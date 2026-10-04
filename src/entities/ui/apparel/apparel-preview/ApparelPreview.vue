@@ -5,10 +5,15 @@
     :effects="data?.enchantment?.effects"
   >
     <template #icon>
-      <apparel-icon
+      <item-thumbnail
         v-if="data"
-        :body-slots="data.bodySlots"
-        :size="48"
+        :fallback-icon-path="getApparelIconPath(data.bodySlots?.[0] ?? null)"
+        :model-path="data.modelPath"
+        :keywords="data.keywords"
+        :size="ITEM_PREVIEW_THUMBNAIL_SIZE"
+        expandable
+        :name="data.name"
+        framing="upright"
       />
     </template>
   </base-preview>
@@ -18,7 +23,9 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { BasePreview } from '@/shared/ui/items';
-import { ApparelIcon } from '@/entities/ui';
+import { ItemThumbnail } from '@/entities/ui/icons';
+import { ITEM_PREVIEW_THUMBNAIL_SIZE } from '@/shared/lib/constants/itemThumbnails';
+import { getApparelIconPath } from '@/shared/lib/constants/apparelIcons';
 import { getRoundValue } from '@/shared/lib/utils/getDescriptionValues';
 import type { ApparelItem } from '@/stores/inventory/lib/types';
 

@@ -9,3 +9,8 @@ export { THEME_GAMUTS, DEFAULT_THEME_GAMUT_ID } from './themes/gamuts';
 export { currentThemeGamutId, applyThemeGamut, initThemeGamut, THEME_GAMUT_KEY, THEME_GAMUT_ATTRIBUTE } from './themes/applyTheme';
 export { gfxIconsDisabled, persistGfxIconsDisabled, GFX_ICONS_DISABLED_KEY } from './settings/gfxIconsPreference';
 export { gfxFontsDisabled, persistGfxFontsDisabled, GFX_FONTS_DISABLED_KEY } from './settings/gfxFontsPreference';
+export {
+  itemThumbnailsDisabled,
+  persistItemThumbnailsDisabled,
+  ITEM_THUMBNAILS_DISABLED_KEY,
+} from './settings/itemThumbnailsPreference';

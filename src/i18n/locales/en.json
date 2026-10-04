@@ -75,6 +75,18 @@
         "reloading": "Reloading…",
         "disableGfxIcons": "Disable game icons"
       },
+      "itemThumbnails": {
+        "title": "Item thumbnails",
+        "disable": "Use icons instead of 3D thumbnails",
+        "hint": "Items are rendered from the game's own models the first time you see them, then cached on this device.",
+        "clear": "Clear thumbnail cache",
+        "clearing": "Clearing…",
+        "count": "Rendered this session: {count}",
+        "prefetch": "Download icons for the whole inventory",
+        "prefetchHint": "Renders every item once and keeps it on this device. Runs in the background while you play.",
+        "prefetchProgress": "Rendering… {count} left",
+        "prefetchDone": "Done: {count} items checked."
+      },
       "updateDll": "Update SkyrimWebSocket.dll to use this feature"
     }
   },

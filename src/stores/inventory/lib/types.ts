@@ -112,6 +112,10 @@ export interface BaseItem {
   name: string;
   value: number;
   weight: number;
+  /** Game model path for 3D thumbnails (feature "inventory.models"). */
+  modelPath?: string;
+  /** Material/keyword tags used to tint 3D thumbnails. */
+  keywords?: string[];
 }
 
 export interface WeaponItem extends BaseItem {

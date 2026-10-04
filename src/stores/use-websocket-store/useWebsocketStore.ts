@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { getWebSocketClient } from '@/api/websocket';
 import { CONNECTION_STATUS } from '@/shared/lib/constants/connection';
 import { saveConfiguredWsUrl } from '@/shared/lib/config/websocket';
-import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions, FileDownloadResultData } from '@/api/websocket';
+import type { DataMessage, ServerMessage, CommandResultMessage, SendCommandOptions, FileDownloadResultData, TexturePreviewResultData } from '@/api/websocket';
 import { DataRouter } from '@/stores/adapters/dataRouter';
 import type { Subscription } from './lib/types';
 import { SYSTEM_QUERY_ID, SYSTEM_QUERY_FIELDS, useSystemStore } from '@/stores/system/useSystemStore';
@@ -11,6 +11,14 @@ import { applyFixturesIfEnabled } from '@/stores/fixtures/fixtureLoader';
 import { logger } from '@/shared/lib/utils/logger';
 
 const WS_UPDATE_FREQUENCY = 100; // milliseconds
+
+function isFileDownloadResult(data: unknown): data is FileDownloadResultData {
+  return typeof data === 'object' && data !== null && 'dataBase64' in data && typeof data.dataBase64 === 'string';
+}
+
+function isTexturePreviewResult(data: unknown): data is TexturePreviewResultData {
+  return typeof data === 'object' && data !== null && 'imageBase64' in data && typeof data.imageBase64 === 'string';
+}
 
 export const useWebSocketStore = defineStore('websocket', () => {
   // State
@@ -172,22 +180,33 @@ export const useWebSocketStore = defineStore('websocket', () => {
     wsClient.command(commandId, options);
   };
 
-  const downloadFile = (path: string): Promise<FileDownloadResultData> => {
+  let backgroundCommandCounter = 0;
+
+  /**
+   * Send a read-only background command and resolve with its `data` payload.
+   * Bypasses the commands gate (canAct) so it works before the player is
+   * in-game.
+   */
+  const runBackgroundCommand = <T,>(
+    options: SendCommandOptions,
+    isExpectedData: (data: unknown) => data is T,
+  ): Promise<T> => {
     return new Promise((resolve, reject) => {
+      const { command } = options;
       if (!wsClient.isConnected()) {
-        reject(new Error('WebSocket is not connected, cannot download file'));
+        reject(new Error(`WebSocket is not connected, cannot run ${command}`));
         return;
       }
 
-      const commandId = `cmd-file_download-${Date.now()}`;
+      const commandId = `cmd-${command}-${Date.now()}-${++backgroundCommandCounter}`;
       pendingCommands.set(commandId, {
         onResult: (result) => {
           if (!result.success) {
-            reject(new Error(result.error ?? 'file_download failed'));
+            reject(new Error(result.error ?? `${command} failed`));
             return;
           }
-          if (!result.data) {
-            reject(new Error('file_download response is missing data'));
+          if (!isExpectedData(result.data)) {
+            reject(new Error(`${command} response is missing data`));
             return;
           }
           resolve(result.data);
@@ -195,15 +214,27 @@ export const useWebSocketStore = defineStore('websocket', () => {
         onFail: (error) => reject(error),
       });
 
-      // file_download is a background read-only task: bypass the commands gate
-      // (canAct) so it works even before the player is in-game.
-      const sent = wsClient.command(commandId, { command: 'file_download', path }, false);
+      const sent = wsClient.command(commandId, options, false);
       if (!sent) {
         pendingCommands.delete(commandId);
-        reject(new Error('Failed to send file_download command'));
+        reject(new Error(`Failed to send ${command} command`));
       }
     });
   };
+
+  const downloadFile = (path: string): Promise<FileDownloadResultData> =>
+    runBackgroundCommand({ command: 'file_download', path }, isFileDownloadResult);
+
+  /** Decode a DDS texture to PNG on the game side; maxSize caps the longest edge. */
+  const texturePreview = (path: string, maxSize?: number): Promise<TexturePreviewResultData> =>
+    runBackgroundCommand(
+      {
+        command: 'texture_preview',
+        path,
+        ...(maxSize !== undefined && { maxSize }),
+      },
+      isTexturePreviewResult,
+    );
 
   const connect = async (): Promise<void> => {
     const requestId = ++connectionRequestId;
@@ -360,6 +391,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     sendQuery,
     sendCommand,
     downloadFile,
+    texturePreview,
     setCommandsEnabled,
     $dispose: cleanup,
   };

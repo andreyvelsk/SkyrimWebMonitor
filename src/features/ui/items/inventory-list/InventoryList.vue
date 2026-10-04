@@ -91,7 +91,18 @@
           :effects="previewEffects"
         >
           <template #icon>
+            <item-thumbnail
+              v-if="activeInventoryItem"
+              :fallback-icon-path="previewIconPath"
+              :model-path="activeInventoryItem.modelPath"
+              :keywords="activeInventoryItem.keywords"
+              :framing="getItemFraming(activeInventoryItem)"
+              :size="ITEM_PREVIEW_THUMBNAIL_SIZE"
+              expandable
+              :name="activeInventoryItem.name"
+            />
             <base-icon
+              v-else
               :icon-path="previewIconPath"
               :size="48"
             />
@@ -106,6 +117,10 @@
 import { computed } from 'vue';
 import { BaseIcon } from '@/shared/ui';
 import { InventoryItem, BasePreview  } from '@/shared/ui/items';
+import { ItemThumbnail } from '@/entities/ui/icons';
+import { ITEM_PREVIEW_THUMBNAIL_SIZE } from '@/shared/lib/constants/itemThumbnails';
+import { getItemFraming } from '@/shared/lib/utils/itemVisual';
+import type { InventoryItem as InventoryItemData } from '@/stores/inventory/lib/types';
 import type { ItemEnchantmentEffect, ListItem } from '@/shared/lib/types';
 import type { PreviewStats } from '@/shared/ui/items/lib/types';
 
@@ -170,6 +185,15 @@ const emit = defineEmits<{
 const activeItemData = computed(() => {
   if (!props.modelValue) return null;
   return props.items?.find((item) => item.formId === props.modelValue) || null;
+});
+
+function isInventoryItem(item: ListItem): item is InventoryItemData {
+  return 'categoryType' in item && 'count' in item && 'value' in item && 'weight' in item;
+}
+
+const activeInventoryItem = computed<InventoryItemData | null>(() => {
+  const item = activeItemData.value;
+  return item && isInventoryItem(item) ? item : null;
 });
 
 const isActiveItemFavorite = computed(() => {

@@ -15,6 +15,7 @@
     </template>
 
     <connection-status v-else />
+    <model-viewer-overlay />
     <skyrim-modal />
     <game-status-backdrop />
     <combat-indicator />
@@ -32,6 +33,7 @@ import {
   GameStatusBackdrop,
   CombatIndicator,
 } from '@/shared/ui';
+import { ModelViewerOverlay } from '@/entities/ui/icons';
 import { useNavigationStore } from '@/stores/use-navigation-store/useNavigationStore';
 import { useWebSocketStore } from '@/stores/use-websocket-store/useWebsocketStore';
 import { useAppLoader } from '@/app/lib/composables/useAppLoader';
