@@ -95,9 +95,9 @@ const visibleSubTabs = computed(() => nav.getVisibleSubTabs());
 /** Icons for the main sections (top strip). */
 const TAB_ICONS: Record<string, string> = {
   character: 'delapouite/person.svg',
-  inventory: 'delapouite/backpack.svg',
+  inventory: 'lorc/knapsack.svg',
   magic: 'lorc/magic-swirl.svg',
-  quests: 'lorc/scroll-unfurled.svg',
+  quests: 'delapouite/newspaper.svg',
   map: 'lorc/treasure-map.svg',
 };
 
@@ -105,7 +105,7 @@ const TAB_ICONS: Record<string, string> = {
 const SUBTAB_ICONS: Record<string, string> = {
   // Character
   stats: 'delapouite/histogram.svg',
-  hotkeys: 'delapouite/keyring.svg',
+  hotkeys: 'delapouite/keyboard.svg',
   // Inventory
   weapons: 'lorc/crossed-swords.svg',
   apparel: 'lorc/lamellar.svg',
@@ -127,7 +127,7 @@ const SUBTAB_ICONS: Record<string, string> = {
   spellbook: 'lorc/book-aura.svg',
   powers: 'lorc/embrassed-energy.svg',
   // Quests
-  questsList: 'lorc/scroll-unfurled.svg',
+  questslist: 'lorc/scroll-unfurled.svg',
 };
 
 function getSubtabLabel(sub: SubTab) {
