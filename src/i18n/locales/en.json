@@ -257,6 +257,18 @@
         "inDialogue": "You are in a conversation.",
         "dead": "You have died.",
         "controlsDisabled": "Controls are disabled."
+      },
+      "viewer": {
+        "open": "View {name} in 3D",
+        "close": "Close",
+        "hint": "Drag to turn · pinch to zoom · double-tap to reset",
+        "loading": "Loading model…",
+        "empty": "This model has nothing to show.",
+        "failed": "Could not load the model: {reason}",
+        "details": "Model details",
+        "noTexture": "no texture",
+        "textureOk": "texture loaded",
+        "notLoaded": "not loaded (limit)"
       }
     }
   },
