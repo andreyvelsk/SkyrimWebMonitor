@@ -45,7 +45,7 @@ const transitionName = computed(() => {
 });
 
 const touchStartX = ref<number | null>(null);
-const THRESHOLD = 50;
+const THRESHOLD = 200;
 
 const onTouchStart = (e: TouchEvent) => {
   touchStartX.value = e.touches?.[0]?.clientX ?? null;

@@ -39,9 +39,9 @@
         }
       },
       "quests": {
-        "label": "Quests",
+        "label": "Journal",
         "subtabs": {
-          "questsList": "Journal"
+          "questsList": "Quests"
         }
       },
       "map": {
@@ -74,6 +74,18 @@
         "reload": "Reload icons",
         "reloading": "Reloading…",
         "disableGfxIcons": "Disable game icons"
+      },
+      "itemThumbnails": {
+        "title": "Item thumbnails",
+        "disable": "Use icons instead of 3D thumbnails",
+        "hint": "Items are rendered from the game's own models the first time you see them, then cached on this device.",
+        "clear": "Clear thumbnail cache",
+        "clearing": "Clearing…",
+        "count": "Rendered this session: {count}",
+        "prefetch": "Download icons for the whole inventory",
+        "prefetchHint": "Renders every item once and keeps it on this device. Runs in the background while you play.",
+        "prefetchProgress": "Rendering… {count} left",
+        "prefetchDone": "Done: {count} items checked."
       },
       "updateDll": "Update SkyrimWebSocket.dll to use this feature"
     }
@@ -245,6 +257,18 @@
         "inDialogue": "You are in a conversation.",
         "dead": "You have died.",
         "controlsDisabled": "Controls are disabled."
+      },
+      "viewer": {
+        "open": "View {name} in 3D",
+        "close": "Close",
+        "hint": "Drag to turn · pinch to zoom · double-tap to reset",
+        "loading": "Loading model…",
+        "empty": "This model has nothing to show.",
+        "failed": "Could not load the model: {reason}",
+        "details": "Model details",
+        "noTexture": "no texture",
+        "textureOk": "texture loaded",
+        "notLoaded": "not loaded (limit)"
       }
     }
   },

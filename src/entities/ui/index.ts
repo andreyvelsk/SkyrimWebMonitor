@@ -1,5 +1,5 @@
 // Icons
-export { WeaponIcon, ApparelIcon, MagicIcon } from './icons';
+export { WeaponIcon, ApparelIcon, MagicIcon, ItemThumbnail } from './icons';
 
 // Items
 export { WeaponItem, WeaponPreview, AmmoItem, AmmoPreview } from './weapon';

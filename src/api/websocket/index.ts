@@ -17,6 +17,7 @@ export {
   type CommandResultMessage,
   type CommandType,
   type FileDownloadResultData,
+  type TexturePreviewResultData,
   type EquipHand,
   type HotkeySlot,
   type SendCommandOptions,

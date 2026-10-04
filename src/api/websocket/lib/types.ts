@@ -24,7 +24,8 @@ export type CommandType =
   | 'player_marker_clear'
   | 'fast_travel'
   | 'read_book'
-  | 'file_download';
+  | 'file_download'
+  | 'texture_preview';
 
 export type EquipHand = EquippedHand;
 
@@ -80,6 +81,7 @@ export interface CommandMessage extends BaseMessage {
   y?: number;
   z?: number;
   path?: string;
+ maxSize?: number;
 }
 
 export interface SendCommandOptions {
@@ -93,6 +95,8 @@ export interface SendCommandOptions {
   y?: number;
   z?: number;
   path?: string;
+ /** texture_preview: cap the longest side of the returned image. */
+ maxSize?: number;
 }
 
 export type ClientMessage =
@@ -130,12 +134,21 @@ export interface FileDownloadResultData {
   dataBase64: string;
 }
 
+export interface TexturePreviewResultData {
+ mimeType: string;
+ width: number;
+ height: number;
+ imageBase64: string;
+}
+
 export interface CommandResultMessage extends BaseMessage {
   type: 'commandResult';
   id: string;
   success: boolean;
   error?: string;
-  data?: FileDownloadResultData;
+  data?:
+    | FileDownloadResultData
+    | TexturePreviewResultData;
 }
 
 export type ServerMessage =
