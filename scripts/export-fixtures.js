@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import WebSocket from 'ws';
 
-const WS_URL = process.env.VITE_WS_URL || process.env.WS_URL || 'ws://10.14.211.14:8765';
+const WS_URL = process.env.VITE_WS_SERVER_URL || process.env.WS_URL;
 const TIMEOUT_MS = parseInt(process.env.EXPORT_FIXTURES_TIMEOUT_MS || '8000', 10);
+const OUTPUT_PATH = process.env.EXPORT_FIXTURES_PATH || path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../public/fixtures.json');
 
 // Subscriptions and fields (mirrors app pageRegistry)
 const SUBSCRIPTIONS = {
@@ -45,13 +49,25 @@ const SUBSCRIPTIONS = {
     // Character / hotkeys
     'hotkeys.items': { items: 'Hotkey::Items' },
 
+    // Quests
+    'quests.questsList': { quests: 'Player::Quests' },
+
     // Map
     'map.player': { position: 'Player::Position' },
     'map.hotspots': { hot: 'Map::Markers::Locations' },
+    'map.questMarkers': { marker: 'Map::Markers::Quests' },
+
+    // Dynamic system data (language and server-provided features)
+    system: {
+        language: 'Game::Language',
+        features: 'App::Features',
+    },
 
     // Global subscriptions
     'game.status': { status: 'Game::Status' },
 };
+
+const EXPECTED_SUBSCRIPTION_COUNT = Object.keys(SUBSCRIPTIONS).length;
 
 function buildQueryMessage(id, fields) {
     return JSON.stringify({ type: 'query', id, fields });
@@ -63,16 +79,20 @@ async function run() {
     const results = {};
     let finished = false;
 
-    const finish = () => {
+    const finish = async () => {
         if (finished) return;
         finished = true;
         try {
-            console.log(JSON.stringify(results, null, 2));
+            const fixtureJson = `${JSON.stringify(results, null, 4)}\n`;
+            await fs.writeFile(OUTPUT_PATH, fixtureJson, 'utf8');
+            const receivedCount = Object.keys(results).length;
+            console.log(`Fixtures written to ${OUTPUT_PATH}`);
+            console.log(`Updated at ${new Date().toISOString()}; received ${receivedCount}/${EXPECTED_SUBSCRIPTION_COUNT} subscriptions`);
         } catch (err) {
-            console.error('Failed to stringify results', err);
+            console.error('Failed to write fixtures', err);
+            process.exitCode = 1;
         }
         ws.close();
-        process.exit(0);
     };
 
     ws.on('open', () => {
@@ -83,7 +103,7 @@ async function run() {
         // safety timeout
         setTimeout(() => {
             console.warn('Export timeout reached, finishing with partial results');
-            finish('timeout');
+            void finish();
         }, TIMEOUT_MS);
     });
 
@@ -95,7 +115,7 @@ async function run() {
                 pending.delete(msg.id);
                 if (pending.size === 0) {
                     console.log('All queries answered');
-                    finish('complete');
+                    void finish();
                 }
             }
         } catch (err) {
@@ -105,13 +125,13 @@ async function run() {
 
     ws.on('error', (err) => {
         console.error('WebSocket error:', err);
-        finish('error');
+        void finish();
     });
 
     ws.on('close', () => {
         if (!finished) {
             console.warn('Connection closed before all data received');
-            finish('closed');
+            void finish();
         }
     });
 }

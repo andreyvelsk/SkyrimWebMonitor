@@ -1,62 +1,141 @@
 {
     "character.stats": {
-        "carryWeight": 300,
-        "gold": 106,
-        "health": 100,
-        "healthBase": 100,
-        "inventoryWeight": 143.39999389648438,
-        "level": 1,
+        "carryWeight": 320,
+        "gold": 1207,
+        "health": 130,
+        "healthBase": 110,
+        "inventoryWeight": 296.89996337890625,
+        "level": 6,
         "magicka": 100,
         "magickaBase": 100,
-        "stamina": 100,
-        "staminaBase": 100,
-        "xp": 148,
-        "xpNext": 100
+        "stamina": 6.98675537109375,
+        "staminaBase": 140,
+        "xp": 78,
+        "xpNext": 225
     },
     "inventory.weapons": {
         "ammo": [
             {
-                "baseDamage": 0,
+                "baseDamage": 8,
                 "categoryType": "Ammo",
-                "count": 1,
-                "damage": 0,
+                "count": 13,
+                "damage": 8,
                 "formId": "0x0001397D",
                 "isEquipped": false,
                 "isFavorite": false,
                 "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/weapons/iron/ironarrow.nif",
                 "name": "Железная стрела",
                 "value": 1,
+                "weight": -1
+            },
+            {
+                "baseDamage": 10,
+                "categoryType": "Ammo",
+                "count": 35,
+                "damage": 10,
+                "formId": "0x0001397F",
+                "isEquipped": true,
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/weapons/steel/steelarrow.nif",
+                "name": "Стальная стрела",
+                "value": 2,
                 "weight": -1
             }
         ],
         "items": [
             {
-                "baseDamage": 9,
+                "baseDamage": 11,
                 "categoryType": "Weapon",
                 "count": 1,
-                "damage": 9,
-                "enchantment": null,
-                "enchantmentCharge": null,
+                "damage": 18.094999313354492,
+                "enchantment": {
+                    "effects": [
+                        {
+                            "description": "Наносит цели 5 ед. урона холодом и такой же урон запасу сил.",
+                            "descriptionTemplate": "Наносит цели <mag> ед. урона холодом и такой же урон запасу сил.",
+                            "duration": 0,
+                            "magnitude": 5,
+                            "name": "Урон холодом"
+                        },
+                        {
+                            "description": "",
+                            "descriptionTemplate": "",
+                            "duration": 3,
+                            "magnitude": 50,
+                            "name": "Замедление"
+                        }
+                    ],
+                    "name": "Урон холодом"
+                },
+                "enchantmentCharge": 44.07271728515625,
                 "equipSlots": [
                     "right",
                     "left"
                 ],
                 "equippedHand": "right",
-                "formId": "0x00013982",
+                "formId": "0x000DDD6A",
                 "isEquipped": true,
-                "isFavorite": true,
+                "isFavorite": false,
                 "isStolen": false,
                 "isTwoHanded": false,
-                "name": "Железная булава",
-                "value": 35,
-                "weaponType": "OneHandMace",
-                "weight": 13
+                "keywords": [
+                    "WeapTypeSword",
+                    "VendorItemWeapon",
+                    "WeapMaterialDraugrHoned"
+                ],
+                "modelPath": "meshes/weapons/draugr/draugrsword.nif",
+                "name": "Хороший древний нордский меч холода",
+                "value": 134,
+                "weaponType": "OneHandSword",
+                "weight": 15
             },
             {
                 "baseDamage": 18,
                 "categoryType": "Weapon",
                 "count": 1,
-                "damage": 18,
+                "damage": 19.889999389648438,
+                "enchantment": {
+                    "effects": [
+                        {
+                            "description": "Нежить уровня 3 и ниже обращается в бегство на 30 с.",
+                            "descriptionTemplate": "Нежить уровня <mag> и ниже обращается в бегство на <dur> с.",
+                            "duration": 30,
+                            "magnitude": 3,
+                            "name": "Отпугивание нежити"
+                        }
+                    ],
+                    "name": "Отпугивание нежити"
+                },
+                "enchantmentCharge": 100,
+                "equipSlots": [
+                    "right"
+                ],
+                "equippedHand": null,
+                "formId": "0x000A6987",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "isTwoHanded": true,
+                "keywords": [
+                    "WeapMaterialSteel",
+                    "WeapTypeBattleaxe",
+                    "VendorItemWeapon"
+                ],
+                "modelPath": "meshes/weapons/steel/steelbattleaxe.nif",
+                "name": "Осененная стальная секира",
+                "value": 186,
+                "weaponType": "TwoHandAxe",
+                "weight": 21
+            },
+            {
+                "baseDamage": 18,
+                "categoryType": "Weapon",
+                "count": 1,
+                "damage": 19.889999389648438,
                 "enchantment": null,
                 "enchantmentCharge": null,
                 "equipSlots": [
@@ -68,6 +147,12 @@
                 "isFavorite": false,
                 "isStolen": false,
                 "isTwoHanded": true,
+                "keywords": [
+                    "WeapMaterialIron",
+                    "WeapTypeWarhammer",
+                    "VendorItemWeapon"
+                ],
+                "modelPath": "meshes/weapons/iron/warhammer.nif",
                 "name": "Железный боевой молот",
                 "value": 60,
                 "weaponType": "TwoHandAxe",
@@ -77,7 +162,7 @@
                 "baseDamage": 16,
                 "categoryType": "Weapon",
                 "count": 1,
-                "damage": 16,
+                "damage": 17.68000030517578,
                 "enchantment": null,
                 "enchantmentCharge": null,
                 "equipSlots": [
@@ -89,6 +174,12 @@
                 "isFavorite": false,
                 "isStolen": false,
                 "isTwoHanded": true,
+                "keywords": [
+                    "WeapTypeBattleaxe",
+                    "WeapMaterialIron",
+                    "VendorItemWeapon"
+                ],
+                "modelPath": "meshes/weapons/iron/ironbattleaxe.nif",
                 "name": "Железная секира",
                 "value": 55,
                 "weaponType": "TwoHandAxe",
@@ -98,7 +189,7 @@
                 "baseDamage": 7,
                 "categoryType": "Weapon",
                 "count": 2,
-                "damage": 7,
+                "damage": 11.514999389648438,
                 "enchantment": null,
                 "enchantmentCharge": null,
                 "equipSlots": [
@@ -111,36 +202,113 @@
                 "isFavorite": false,
                 "isStolen": false,
                 "isTwoHanded": false,
+                "keywords": [
+                    "WeapMaterialIron",
+                    "WeapTypeSword",
+                    "VendorItemWeapon"
+                ],
+                "modelPath": "meshes/weapons/iron/longsword.nif",
                 "name": "Железный меч",
                 "value": 25,
                 "weaponType": "OneHandSword",
                 "weight": 9
+            },
+            {
+                "baseDamage": 10,
+                "categoryType": "Weapon",
+                "count": 1,
+                "damage": 16.44999885559082,
+                "enchantment": null,
+                "enchantmentCharge": null,
+                "equipSlots": [
+                    "right",
+                    "left"
+                ],
+                "equippedHand": null,
+                "formId": "0x06000E46",
+                "isEquipped": false,
+                "isFavorite": true,
+                "isStolen": false,
+                "isTwoHanded": false,
+                "keywords": [
+                    "VendorItemWeapon",
+                    "WeapTypeMace",
+                    "WeapMaterialDraugr"
+                ],
+                "modelPath": "meshes/creationclub/bgssse001/weapons/draugr/draugrmace.nif",
+                "name": "Древняя нордская булава",
+                "value": 17,
+                "weaponType": "OneHandMace",
+                "weight": 16
             }
         ]
     },
     "inventory.apparel": {
         "items": [
             {
-                "armorRating": 31,
+                "armorRating": 28,
                 "armorType": "Heavy",
                 "armorTypeId": "Heavy",
-                "baseArmorRating": 31,
+                "baseArmorRating": 25,
                 "bodySlots": [
                     "Body"
                 ],
                 "categoryType": "Apparel",
                 "count": 1,
-                "enchantment": null,
-                "formId": "0x00013952",
+                "enchantment": {
+                    "effects": [
+                        {
+                            "description": "Увеличивает здоровье на 20 ед.",
+                            "descriptionTemplate": "Увеличивает здоровье на <mag> ед.",
+                            "duration": 0,
+                            "magnitude": 20,
+                            "name": "Повышение здоровья"
+                        }
+                    ],
+                    "name": "Повышение здоровья"
+                },
+                "formId": "0x0004950E",
                 "isEquipped": true,
                 "isFavorite": false,
                 "isStolen": false,
-                "name": "Стальная броня",
-                "value": 275,
-                "weight": 35
+                "keywords": [
+                    "ArmorHeavy",
+                    "ArmorMaterialIron",
+                    "ArmorCuirass",
+                    "VendorItemArmor"
+                ],
+                "modelPath": "meshes/armor/iron/male/cuirasslightgnd.nif",
+                "name": "Железная броня малого здоровья",
+                "value": 327,
+                "weight": 30
             },
             {
-                "armorRating": 22,
+                "armorRating": 0,
+                "armorType": "Clothing",
+                "armorTypeId": "Clothing",
+                "baseArmorRating": 0,
+                "bodySlots": [
+                    "Ring"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0x0003B97C",
+                "isEquipped": true,
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "ArmorJewelry",
+                    "VendorItemJewelry",
+                    "ClothingRing"
+                ],
+                "modelPath": "meshes/armor/amuletsandrings/silverringgo.nif",
+                "name": "Серебряное кольцо",
+                "value": 30,
+                "weight": 0.25
+            },
+            {
+                "armorRating": 25,
                 "armorType": "Clothing",
                 "armorTypeId": "Clothing",
                 "baseArmorRating": 22,
@@ -151,15 +319,21 @@
                 "count": 1,
                 "enchantment": null,
                 "formId": "0x0001394B",
-                "isEquipped": false,
+                "isEquipped": true,
                 "isFavorite": true,
                 "isStolen": false,
+                "keywords": [
+                    "ArmorMaterialIronBanded",
+                    "VendorItemArmor",
+                    "ArmorShield"
+                ],
+                "modelPath": "meshes/armor/iron/shieldheavy.nif",
                 "name": "Прочный железный щит",
                 "value": 100,
                 "weight": 12
             },
             {
-                "armorRating": 15,
+                "armorRating": 17,
                 "armorType": "Heavy",
                 "armorTypeId": "Heavy",
                 "baseArmorRating": 15,
@@ -174,12 +348,19 @@
                 "isEquipped": true,
                 "isFavorite": false,
                 "isStolen": false,
+                "keywords": [
+                    "ArmorHeavy",
+                    "ArmorMaterialIron",
+                    "ArmorHelmet",
+                    "VendorItemArmor"
+                ],
+                "modelPath": "meshes/armor/iron/male/helmetgnd.nif",
                 "name": "Железный шлем",
                 "value": 60,
                 "weight": 5
             },
             {
-                "armorRating": 10,
+                "armorRating": 12,
                 "armorType": "Heavy",
                 "armorTypeId": "Heavy",
                 "baseArmorRating": 10,
@@ -193,12 +374,19 @@
                 "isEquipped": true,
                 "isFavorite": false,
                 "isStolen": false,
+                "keywords": [
+                    "ArmorHeavy",
+                    "ArmorMaterialIron",
+                    "ArmorBoots",
+                    "VendorItemArmor"
+                ],
+                "modelPath": "meshes/armor/iron/male/bootsgnd.nif",
                 "name": "Железные сапоги",
                 "value": 25,
                 "weight": 6
             },
             {
-                "armorRating": 10,
+                "armorRating": 12,
                 "armorType": "Heavy",
                 "armorTypeId": "Heavy",
                 "baseArmorRating": 10,
@@ -212,9 +400,117 @@
                 "isEquipped": true,
                 "isFavorite": false,
                 "isStolen": false,
+                "keywords": [
+                    "ArmorHeavy",
+                    "ArmorMaterialIron",
+                    "ArmorGauntlets",
+                    "PerkFistsIron",
+                    "VendorItemArmor"
+                ],
+                "modelPath": "meshes/armor/iron/male/gauntletsgnd.nif",
                 "name": "Железные перчатки",
                 "value": 25,
                 "weight": 5
+            },
+            {
+                "armorRating": 0,
+                "armorType": "Clothing",
+                "armorTypeId": "Clothing",
+                "baseArmorRating": 0,
+                "bodySlots": [
+                    "Body"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": {
+                    "effects": [
+                        {
+                            "description": "Магия восстанавливается на 75% быстрее.",
+                            "descriptionTemplate": "Магия восстанавливается на <mag>% быстрее.",
+                            "duration": 0,
+                            "magnitude": 75,
+                            "name": "Регенерация магии"
+                        }
+                    ],
+                    "name": "Повышение скорости восполнения магии"
+                },
+                "formId": "0x04037B8A",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "ArmorClothing",
+                    "VendorItemClothing",
+                    "ClothingBody"
+                ],
+                "modelPath": "meshes/dlc02/clothes/cultist/m/go_torso.nif",
+                "name": "Одеяние члена культа",
+                "value": 331,
+                "weight": 1
+            },
+            {
+                "armorRating": 14,
+                "armorType": "Light",
+                "armorTypeId": "Light",
+                "baseArmorRating": 13,
+                "bodySlots": [
+                    "Hair",
+                    "Circlet"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": null,
+                "formId": "0xFE031803",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "ArmorMaterialLeather",
+                    "ArmorHelmet",
+                    "VendorItemArmor",
+                    "ArmorLight"
+                ],
+                "modelPath": "meshes/creationclub/bgssse053/armor/leather/leatherhoodgo.nif",
+                "name": "Кожаный шлем разведчика",
+                "value": 75,
+                "weight": 2
+            },
+            {
+                "armorRating": 28,
+                "armorType": "Heavy",
+                "armorTypeId": "Heavy",
+                "baseArmorRating": 25,
+                "bodySlots": [
+                    "Body"
+                ],
+                "categoryType": "Apparel",
+                "count": 1,
+                "enchantment": {
+                    "effects": [
+                        {
+                            "description": "Заклинания иллюзии расходуют на 12% меньше магии.",
+                            "descriptionTemplate": "Заклинания иллюзии расходуют на <mag>% меньше магии.",
+                            "duration": 0,
+                            "magnitude": 12,
+                            "name": "Повышение навыка: иллюзия"
+                        }
+                    ],
+                    "name": "Повышение навыка: иллюзия"
+                },
+                "formId": "0x0010CFC2",
+                "isEquipped": false,
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "ArmorHeavy",
+                    "ArmorMaterialIron",
+                    "ArmorCuirass",
+                    "VendorItemArmor"
+                ],
+                "modelPath": "meshes/armor/iron/male/cuirasslightgnd.nif",
+                "name": "Железная броня малой иллюзии",
+                "value": 479,
+                "weight": 30
             }
         ]
     },
@@ -232,37 +528,34 @@
                         "name": "Восстановление здоровья"
                     },
                     {
-                        "description": "[SURV=Восстановление на <2> ед. от голода.]",
-                        "descriptionTemplate": "[SURV=Восстановление на <2> ед. от голода.]",
+                        "description": "[SURV=Восстановление на <18> ед. от голода.]",
+                        "descriptionTemplate": "[SURV=Восстановление на <18> ед. от голода.]",
                         "duration": 0,
                         "magnitude": 0,
-                        "name": "Восстановление от очень малого голода"
+                        "name": "Восстановление от малого голода"
                     }
                 ],
-                "formId": "0x00065C98",
+                "formId": "0x00065C9A",
                 "isFavorite": false,
                 "isStolen": false,
-                "name": "Хлеб",
-                "value": 2,
-                "weight": 0.20000000298023224
+                "keywords": [
+                    "VendorItemFood"
+                ],
+                "modelPath": "meshes/clutter/ingredients/goatmeat.nif",
+                "name": "Козий окорок",
+                "value": 3,
+                "weight": 1
             },
             {
                 "categoryType": "Food",
                 "count": 1,
                 "effects": [
                     {
-                        "description": "Восстанавливает 15 ед. запаса сил.",
-                        "descriptionTemplate": "Восстанавливает <mag> ед. запаса сил.",
+                        "description": "Восстановление 1 ед. здоровья.",
+                        "descriptionTemplate": "Восстановление <mag> ед. здоровья.",
                         "duration": 0,
-                        "magnitude": 15,
-                        "name": "Восстановление запаса сил"
-                    },
-                    {
-                        "description": "Запас сил восстанавливается на 30% медленнее в течение 30 с.",
-                        "descriptionTemplate": "Запас сил восстанавливается на <mag>% медленнее в течение <dur> с.",
-                        "duration": 30,
-                        "magnitude": 30,
-                        "name": "Повреждение регенерации запаса сил"
+                        "magnitude": 1,
+                        "name": "Восстановление здоровья"
                     },
                     {
                         "description": "[SURV=Восстановление на <2> ед. от голода.]",
@@ -272,12 +565,17 @@
                         "name": "Восстановление от очень малого голода"
                     }
                 ],
-                "formId": "0x0003133C",
+                "formId": "0x00064B40",
                 "isFavorite": false,
                 "isStolen": false,
-                "name": "Вино",
-                "value": 7,
-                "weight": 0.5
+                "keywords": [
+                    "VendorItemFood",
+                    "GiftChildSpecial"
+                ],
+                "modelPath": "meshes/clutter/ingredients/carrot01.nif",
+                "name": "Морковь",
+                "value": 1,
+                "weight": 0.10000000149011612
             }
         ]
     },
@@ -285,26 +583,97 @@
         "items": [
             {
                 "categoryType": "Potion",
-                "count": 5,
+                "count": 1,
                 "effects": [
                     {
-                        "description": "Восстанавливает 25 ед. здоровья.",
-                        "descriptionTemplate": "Восстанавливает <mag> ед. здоровья.",
-                        "duration": 0,
-                        "magnitude": 25,
-                        "name": "Восстановление здоровья"
+                        "description": "Замораживает кровь в жилах, нанося 5 ед. урона здоровью и запасу сил в течение 4 с.",
+                        "descriptionTemplate": "Замораживает кровь в жилах, нанося <mag> ед. урона здоровью и запасу сил в течение <dur> с.",
+                        "duration": 4,
+                        "magnitude": 5,
+                        "name": "Яд обморожения"
                     }
                 ],
-                "formId": "0x0003EADD",
+                "formId": "0x000E41B8",
                 "isFavorite": false,
                 "isStolen": false,
-                "name": "Слабое зелье лечения",
-                "value": 17,
+                "keywords": [],
+                "modelPath": "meshes/clutter/ingredients/frostbitevenom01.nif",
+                "name": "Яд обморожения",
+                "value": 21,
                 "weight": 0.5
             },
             {
                 "categoryType": "Potion",
-                "count": 3,
+                "count": 1,
+                "effects": [
+                    {
+                        "description": "Наносит противнику 1 ед. урона ядом в течение 10 с.",
+                        "descriptionTemplate": "Наносит противнику <mag> ед. урона ядом в течение <dur> с.",
+                        "duration": 10,
+                        "magnitude": 1,
+                        "name": "Затяжной урон здоровью"
+                    }
+                ],
+                "formId": "0x00065A6F",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemPoison"
+                ],
+                "modelPath": "meshes/clutter/potions/poisondamagehealthlinger01.nif",
+                "name": "Слабая отрава",
+                "value": 12,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Potion",
+                "count": 1,
+                "effects": [
+                    {
+                        "description": "Заклинания иллюзии сильнее на 25% в течение 60 с.",
+                        "descriptionTemplate": "Заклинания иллюзии сильнее на <mag>% в течение <dur> с.",
+                        "duration": 60,
+                        "magnitude": 25,
+                        "name": "Повышение навыка: иллюзия"
+                    }
+                ],
+                "formId": "0x0003EB39",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemPotion"
+                ],
+                "modelPath": "meshes/clutter/potions/potionfortifyskill01.nif",
+                "name": "Зелье иллюзии",
+                "value": 99,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Potion",
+                "count": 1,
+                "effects": [
+                    {
+                        "description": "Восстанавливает 50 ед. здоровья.",
+                        "descriptionTemplate": "Восстанавливает <mag> ед. здоровья.",
+                        "duration": 0,
+                        "magnitude": 50,
+                        "name": "Восстановление здоровья"
+                    }
+                ],
+                "formId": "0x0003EADE",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemPotion"
+                ],
+                "modelPath": "meshes/clutter/potions/potionhealthgreat.nif",
+                "name": "Зелье лечения",
+                "value": 36,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Potion",
+                "count": 5,
                 "effects": [
                     {
                         "description": "Восстанавливает 25 ед. магии.",
@@ -317,13 +686,17 @@
                 "formId": "0x0003EAE0",
                 "isFavorite": false,
                 "isStolen": false,
+                "keywords": [
+                    "VendorItemPotion"
+                ],
+                "modelPath": "meshes/clutter/potions/potionmagickalesser.nif",
                 "name": "Слабое зелье магии",
                 "value": 20,
                 "weight": 0.5
             },
             {
                 "categoryType": "Potion",
-                "count": 1,
+                "count": 4,
                 "effects": [
                     {
                         "description": "Восстанавливает 25 ед. запаса сил.",
@@ -334,8 +707,12 @@
                     }
                 ],
                 "formId": "0x0003EAE5",
-                "isFavorite": false,
+                "isFavorite": true,
                 "isStolen": false,
+                "keywords": [
+                    "VendorItemPotion"
+                ],
+                "modelPath": "meshes/clutter/potions/potionstaminalesser.nif",
                 "name": "Слабое зелье запаса сил",
                 "value": 20,
                 "weight": 0.5
@@ -349,12 +726,72 @@
                 "count": 1,
                 "effects": [
                     {
-                        "known": true,
-                        "name": "Уязвимость к магии"
+                        "known": false,
+                        "name": "Восстановление запаса сил"
                     },
                     {
                         "known": false,
-                        "name": "Повышение навыка: восстановление"
+                        "name": "Опустошение магии"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: карманные кражи"
+                    },
+                    {
+                        "known": false,
+                        "name": "Затяжной урон здоровью"
+                    }
+                ],
+                "formId": "0x000BB956",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/clutter/ingredients/dragonflyorange.nif",
+                "name": "Оранжевая стрекоза",
+                "value": 1,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 1,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Восстановление запаса сил"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение здоровья"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: одноручное оружие"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повреждение регенерации магии"
+                    }
+                ],
+                "formId": "0x0006BC02",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/clutter/ingredients/bearclaws.nif",
+                "name": "Медвежьи когти",
+                "value": 2,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 7,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Урон здоровью"
+                    },
+                    {
+                        "known": false,
+                        "name": "Опустошение запаса сил"
                     },
                     {
                         "known": false,
@@ -362,15 +799,246 @@
                     },
                     {
                         "known": false,
+                        "name": "Уязвимость к яду"
+                    }
+                ],
+                "formId": "0x000516C8",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemIngredient"
+                ],
+                "modelPath": "meshes/plants/deathbell01.nif",
+                "name": "Ядовитый колокольчик",
+                "value": 4,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 1,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Восстановление запаса сил"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: скрытность"
+                    },
+                    {
+                        "known": false,
+                        "name": "Затяжной урон магии"
+                    },
+                    {
+                        "known": false,
+                        "name": "Сопротивление холоду"
+                    }
+                ],
+                "formId": "0x00077E1E",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemIngredient",
+                    "GiftFlower"
+                ],
+                "modelPath": "meshes/plants/mountainflower01purple.nif",
+                "name": "Лиловый горноцвет",
+                "value": 2,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 1,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Сопротивление электричеству"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: разрушение"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: кузнечное дело"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение здоровья"
+                    }
+                ],
+                "formId": "0x0007EE01",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemIngredient"
+                ],
+                "modelPath": "meshes/plants/glowingmushroom01.nif",
+                "name": "Светящийся гриб",
+                "value": 5,
+                "weight": 0.20000000298023224
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 5,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Сопротивление огню"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение искусства торговли"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: иллюзия"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: двуручное оружие"
+                    }
+                ],
+                "formId": "0x000889A2",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemIngredient",
+                    "GiftFlower"
+                ],
+                "modelPath": "meshes/plants/dragonstongue01.nif",
+                "name": "Язык дракона",
+                "value": 5,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 1,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Уязвимость к холоду"
+                    },
+                    {
+                        "known": false,
+                        "name": "Сопротивление огню"
+                    },
+                    {
+                        "known": false,
+                        "name": "Восстановление магии"
+                    },
+                    {
+                        "known": false,
                         "name": "Регенерация магии"
                     }
                 ],
-                "formId": "0x00034CDF",
+                "formId": "0x0003AD5E",
                 "isFavorite": false,
                 "isStolen": false,
-                "name": "Соль",
-                "value": 2,
-                "weight": 0.20000000298023224
+                "keywords": [
+                    "VendorItemIngredient"
+                ],
+                "modelPath": "meshes/clutter/ingredients/firesaltpile.nif",
+                "name": "Огненная соль",
+                "value": 50,
+                "weight": 0.25
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 2,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Сопротивление холоду"
+                    },
+                    {
+                        "known": false,
+                        "name": "Опустошение запаса сил"
+                    },
+                    {
+                        "known": false,
+                        "name": "Сопротивление ядам"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: тяжелая броня"
+                    }
+                ],
+                "formId": "0x000134AA",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemIngredient"
+                ],
+                "modelPath": "meshes/plants/thistle01.nif",
+                "name": "Ветка чертополоха",
+                "value": 1,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 6,
+                "effects": [
+                    {
+                        "known": false,
+                        "name": "Сопротивление огню"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: зачарование"
+                    },
+                    {
+                        "known": false,
+                        "name": "Сопротивление холоду"
+                    },
+                    {
+                        "known": false,
+                        "name": "Сопротивление электричеству"
+                    }
+                ],
+                "formId": "0x0001B3BD",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemFood",
+                    "GiftFlower"
+                ],
+                "modelPath": "meshes/plants/snowberry.nif",
+                "name": "Снежные ягоды",
+                "value": 4,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Ingredient",
+                "count": 1,
+                "effects": [
+                    {
+                        "known": true,
+                        "name": "Урон запасу сил"
+                    },
+                    {
+                        "known": false,
+                        "name": "Сопротивление огню"
+                    },
+                    {
+                        "known": false,
+                        "name": "Повышение навыка: колдовство"
+                    },
+                    {
+                        "known": false,
+                        "name": "Опустошение запаса сил"
+                    }
+                ],
+                "formId": "0x00034CDD",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemIngredient"
+                ],
+                "modelPath": "meshes/clutter/ingredients/bonemeal01.nif",
+                "name": "Костная мука",
+                "value": 5,
+                "weight": 0.5
             }
         ]
     },
@@ -378,25 +1046,169 @@
         "items": []
     },
     "inventory.keys": {
+        "items": []
+    },
+    "inventory.books": {
         "items": [
             {
-                "categoryType": "Key",
+                "categoryType": "Book",
                 "count": 1,
-                "formId": "0x000B5178",
-                "isEquipped": false,
+                "description": "\r\n    <img src='img://Textures/Interface/Books/dunIlinaltasDeepTreasMap.png' width='290' height='389'>",
+                "formId": "0x000F33E0",
                 "isFavorite": false,
                 "isStolen": false,
-                "name": "Ключ от крепости Хелген",
+                "keywords": [
+                    "VendorItemBook"
+                ],
+                "modelPath": "meshes/clutter/books/note01.nif",
+                "name": "Карта сокровищ X",
+                "value": 0,
+                "weight": 0
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "<font face=\"$HandwrittenFont\">\r\n\r\n<Alias=Player>!\r\n\r\n<Alias=Location> до сих пор гудит. Вы на всех произвели впечатление, когда показали силу своего Ту'ума. Надо признать, не всех приводит в восторг явление Довакина.\r\n\r\nЯ лично желаю вам преумножить и развить свои таланты. Скайрим ныне нуждается в настоящем герое.\r\n\r\nВам следует обратить внимание на место под названием \"<Alias=Dungeon>\". Как я понимаю, там находится загадочный источник силы, доступный лишь драконорожденному.\r\n\r\nС уважением,\r\n\r\nДруг\r\n</font>",
+                "formId": "0x00023EE5",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemBook"
+                ],
+                "modelPath": "meshes/clutter/books/note03.nif",
+                "name": "Письмо от друга",
+                "value": 0,
+                "weight": 0
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "<font face=\"$HandwrittenFont\" size=\"20\">\r\nХельги, дорогая, не нужно сомнений! Ты же чувствуешь силу в своей крови! Достаточно только протянуть руку и ее принять! Брось своего мальчишку, приходи ко мне в лес. Скоро здесь будет и моя сестра. Вместе мы создадим настоящий ковен, как подобает, и начнем твое обучение.\r\n</font>",
+                "formId": "0x000DDFB6",
+                "isFavorite": false,
+                "isStolen": true,
+                "keywords": [
+                    "VendorItemBook"
+                ],
+                "modelPath": "meshes/clutter/books/notetornpaper.nif",
+                "name": "Письмо Анис",
+                "value": 0,
+                "weight": 0
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "<font face'$HandwrittenFont'><font size='40'><p align='center'>\r\nЛечение\r\n\r\n<font size='40'>Вы вспоминаете, как выглядели, когда были совершенно здоровы, сосредотачиваетесь - и ваше тело начинает излечиваться.",
+                "formId": "0x0009E2AF",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemBook",
+                    "VendorItemSpellTome"
+                ],
+                "modelPath": "meshes/clutter/books/spelltomerestorationlowpoly.nif",
+                "name": "Том заклинаний: Лечение",
+                "value": 50,
+                "weight": 1
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "<font face='$HandwrittenFont'><font size='24'><font kerning='1'> <font letterspacing='-1'>Мои пальцы дрожат. Золотой Коготь наконец-то у меня в руках, а с ним и сила древних нордских героев. Этот болван, Лукан Валерий, даже и не представлял, что любимое украшение его лавки на самом деле - ключ к Ветреному пику.\r\n\r\nТеперь мне осталось лишь добраться до Зала историй и отпереть дверь. В легенде говорится о неком испытании, устроенном нордами для острастки недостойных, но еще сказано, что \"если у тебя есть золотой коготь, решение - у тебя на ладони\".",
+                "formId": "0x00039654",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemBook"
+                ],
+                "modelPath": "meshes/clutter/books/journallowpoly01.nif",
+                "name": "Дневник Арвела",
+                "value": 5,
+                "weight": 1
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "[pagebreak]\r\n<p align=\"center\">\r\n\r\nМесяц Огня очага\r\n2920, книга девятая\r\nПоследний год Первой эры\r\n\r\n\r\nКарловак Таунвей</p>\r\n[pagebreak]\r\n[pagebreak]\r\n<p align=\"left\">\r\n2, месяц Огня очага, год 2920-й\r\nГидеон, Чернотопье\r\n\r\nИмператрица Тавия лежала на кровати, теплый ветер бился о ставни ее камеры, прикрывающие железные прутья. В горле у нее горело, но она все еще рыдала, сжимая в руках свой последний гобелен. Ее рыдания эхом разносились по залам замка Джиовез: никто в замке был не в силах заниматься чем-либо еще, кроме как слушать плач несчастной женщины. Одна из ее служанок спустилась по прямой лестнице, чтобы зайти к своей госпоже, но глава стражи Зуук, стоявший в дверях, покачал головой.\r\n\r\n\"Она только что узнала о смерти сына\", - тихо произнес он.\r\n\r\n[pagebreak]\r\n5, месяц Огня очага, год 2920-й\r\nИмперский город, Сиродил\r\n\r\n\"Ваше императорское величество, - сказал потентат Версидью-Шайе через дверь. - Вы можете открыть дверь. Уверяю вас. Вы в полной безопасности. Никто не собирается убивать вас\".\r\n\r\n\"Кровь Мары! - это был голос императора Ремана III, приглушенный, истеричный, даже безумный. - Кто-то убил принца, а у него был мой щит! Они наверняка думали, что это я!\"\r\n\r\n\"Вы безусловно правы, ваше императорское величество, - ответил потентат, старательно изгоняя из голоса всякую иронию, хотя его черные блестящие глаза были полны презрения. - Мы должны найти и покарать негодяя, ответственного за смерть вашего сына. Но мы не можем сделать это без вас. Вы должны сохранять присутствие духа ради Империи\".\r\n\r\nОтвета не последовало.\r\n\r\n\"В конце концов, вы должны подписать приказ о казни леди Риджи, - крикнул потентат. - Давайте покончим с изменницей и убийцей, о которой мы все знаем\".\r\n\r\nКороткая пауза, потом звук отодвигаемой от двери мебели. Реман открыл лишь узенькую щелку, но потентат видел его испуганное, сердитое лицо, и ужасную красную опухоль, которая когда-то была его правым глазом. Несмотря на усилия лучших лекарей Империи, она оставалась напоминанием о работе леди Риджи в крепости Турзо.\r\n\r\n\"Дайте мне приказ, - прорычал император. - Я с удовольствием подпишу его\".\r\n\r\n[pagebreak]\r\n6, месяц Огня очага, год 2920-й\r\nГидеон, Сиродил\r\n\r\nСтранное голубое сияние блуждающих огоньков, как ей говорили, комбинация болотного газа и спиритической энергии, всегда пугало Тавию, когда она выглядывала из своего окна. Сейчас оно казалось странно успокаивающим. За болотом был город Гидеон. Как смешно, подумала она, что ей никогда не приходилось бродить по его улицам, хотя она видит их каждый день вот уже семнадцать лет.\r\n\r\n\"Может быть я о чем-то забыла?\" - спросила она, поворачиваясь, чтобы взглянуть на преданного котринги Зуука.\r\n\r\n\"Я точно знаю, что делать\", - уверенно сказал он. Казалось, стражник улыбнулся, но императрица поняла, что это лишь отражение ее лица на его серебристой коже. Она улыбалась, даже не осознавая этого.\r\n\r\n\"Убедись в том, что за тобой нет слежки, - предупредила она. - Я не хочу, чтобы мой муж узнал, где все эти годы хранились мои деньги. И возьми свою долю. Ты был хорошим другом\".\r\n\r\nИмператрица Тавия шагнула вперед и упала в туман. Зуук вставил на место прутья в окне башни, и укрыл одеялом несколько подушек на ее кровати. Если ему повезет, они не найдут ее тела до утра, а к тому времени он уже проедет половину пути в Морровинд.\r\n\r\n[pagebreak]\r\n9, месяц Огня очага, год 2920-й\r\nФригиас, Хай Рок\r\n\r\nСтранные деревья всех размеров были похожи на погребальные костры, увенчанные вспышками красного, желтого и оранжевого. На Ротгарианские горы спустился туманный вечер. Турала дивилась этому зрелищу, такому чужому, такому непохожему на Морровинд, направляя лошадь вперед, к открытому лугу. У нее за спиной, свесив голову на грудь, спал Кассир, укачивая Босриэль. На мгновение Турале захотелось заставить лошадь перепрыгнуть через низкую крашеную ограду, пересекавшую поле, но она удержалась. Пусть Кассир поспит еще несколько часов, прежде чем править.\r\n\r\nПока лошадь шла через поле, Турала увидела маленький зеленый домик у следующего холма, наполовину спрятавшийся в лесу. Вид был такой живописный, что она чувствовала, что сама находится в полусонном состоянии. Звук рога вывел ее из сонного забытья. Кассир открыл глаза.\r\n\r\n\"Где мы?\" - прошипел он.\r\n\r\n\"Я не знаю, - запиналась Турала, широко раскрыв глаза. - Что это за звук?\"\r\n\r\n\"Орки, -прошептал он. - Охотничий отряд. Быстрее в укрытие\".\r\n\r\nТурала направила лошадь к небольшой группе деревьев. Кассир передал ей ребенка и спешился. Потом начал снимать седельные сумки и бросать их в кусты. Звук раздался снова, далекий топот шагов, становящийся все ближе и все громче. Турала осторожно подошла и помогла Кассиру разгрузить лошадь. Все это время Босриэль следила за ними непонимающими глазами. Иногда Туралу беспокоило то, что ее малыш никогда не плачет. Сейчас она была благодарна за это. Сняв последнюю сумку, Кассир шлепнул лошадь по крупу, и она галопом вылетела на поле. Он взял Туралу за руку и потянул в кусты.\r\n\r\n\"Если повезет, - прошептал он. - Они подумают, что она дикая или сбежала с фермы, и не станут искать седока\".\r\n\r\nПока он говорил, под громкие звуки рога на поле появилась толпа орков. Турале уже случалось видеть их, но никогда в таких количествах, и по-звериному уверенных в своих силах. Заорав от радости при виде удивленной лошади, они промчались мимо зарослей, где притаились Кассир, Турала и Босриэль. Из под ног у них разлетались семена диких цветов. Турала изо всех сил старалась не чихнуть и думала, что ей это удалось. Однако один из орков что-то услышал, и позвал еще одного выяснить, в чем дело.\r\n\r\nКассир тихо вытащим меч, стараясь выглядеть как можно увереннее. Он был разведчиком, не бойцом, но он поклялся защищать Туралу и ее ребенка до последней капли крови. Возможно, ему удастся убить этих двоих, но вряд ли он сделает это настолько бесшумно, чтобы не привлечь внимание остальных.\r\n\r\nВнезапно что-то невидимое словно ветер пронеслось через заросли. Орки бросились назад, но поздно - мертвые, они рухнули на землю. Турала повернулась и увидела морщинистую старуху с ярко рыжими волосами, выглядывающую из ближайшего куста.\r\n\r\n\"Я думала, вы собираетесь привести их прямо ко мне, - прошептала она, улыбаясь. - Лучше пойдемте со мной\".\r\n\r\nТроица последовала за старой женщиной по проходу в кустах, который вел через поле прямо к дому на холме. Когда они оказались на другой стороне, женщина повернулась, чтобы взглянуть на орков, пирующих над останками лошади, кровавая оргия под звуки охотничьих рогов.\r\n\r\n\"Это ваша лошадь? - спросила она. Когда Кассир кивнул, она громко рассмеялась. - Мяса в ней много, что есть - то есть. Утром у этих тварей здорово животы разболятся. Хорошую службу она им сослужит\".\r\n\r\n\"Может, мы пойдем дальше?\" - прошептала Турала, испуганная смехом старухи.\r\n\r\n\"Они наверх не пойдут, - улыбнулась она, взглянув на Босриэль, а та улыбнулась ей в ответ. - Они слишком боятся нас\".\r\n\r\nТурала повернулась к Кассиру, он покачал головой: \"Ведьмы. Если я не ошибаюсь, это ферма старой Барбин, место Скеффингтонского ковена?\"\r\n\r\n\"Точно, цыпленочек, - старая женщина хихикнула, радуясь своей известности. - Я Министа Скеффингтон\".\r\n\r\n\"Что вы сделали с этими орками? - спросила Турала. - Там, в зарослях?\"\r\n\r\n\"Призрачный кулак прямо по башке, - ответила Министа, продолжая взбираться вверх по холму. Перед ними был двор фермы, колодец, курятник, пруд. Женщины всех возрастов работали по хозяйству, смеялись играющие дети. Старая женщина повернулась и заметила недоумение Туралы. - Разве там, откуда вы приехали, нет ведьм, детка?\"\r\n\r\n\"По крайней мере, я о них не слышала\", - сказала она.\r\n\r\n\"В Тамриэле множество людей, владеющих магией, - объяснила старуха. - Псиджики изучают магию, как будто это их неприятная обязанность. Для боевых магов в армии заклинания - то же самое, что и стрелы. Мы же, ведьмы, объединяемся, колдуем и празднуем. Чтобы справиться с орками, я просто воззвала к духам воздуха, Амаро, Пине, Таллате, пальцам Кинарет и дыханию мира, с которыми я близко знакома, чтобы они убили этих ублюдков. Видишь ли, колдовство не похоже на власть, или разгадывание загадок, или возню со старыми пыльными свитками. Это просто связи. Главное быть дружелюбным, можно сказать\".\r\n\r\n\"Что ж, по отношению к нам вы очень дружелюбны\", - сказал Кассир.\r\n\r\n\"Вы тоже, - согласилась Министа. - Ваш род уничтожил родину орков две тысячи лет назад. До того они никогда нас не беспокоили. А сейчас вам надо помыться и поесть\".\r\n\r\nС этими словами Министа отвела их на ферму, где Турала познакомилась с семьей Скеффингтонского ковена.\r\n\r\n[pagebreak]\r\n11, месяц Огня очага, год 2920-й\r\nИмперский город, Сиродил\r\n\r\nРиджа даже не пыталась спать в прошедшую ночь, и мрачная музыка, игравшая во время ее казни, усыпляла ее. Было похоже, что она потеряет сознание еще до удара топора. Глаза ей завязали, так что она не могла видеть своего бывшего любовника, императора, сидевшего перед ней и пожиравшего ее здоровым глазом. Она не могла видеть потентата Версидью-Шайе, завернувшегося в мантию, и выражение триумфа на его золотом лице. Она почувствовала, как рука палача коснулась ее спины, она вздрогнула, словно человек, пытающийся проснуться. \r\n\r\nПервый удар пришелся по затылку и она закричала. Второй разрубил шею. Она была мертва.\r\n\r\nИмператор устало повернулся к потентату: \"Итак, с этим покончено. Вы говорили, что у нее есть хорошенькая сестра в Хаммерфелле, Корда, кажется?\"\r\n\r\n\r\n18, месяц Огня очага, год 2920-й\r\nДвиннен, Хай Рок\r\n\r\nКассир решил, что лошадь, которую ему продали ведьмы, не так хороша, как прежняя. Поклонение духам, жертвы и сестринство очень хороши для вызова духов, но вьючных животных они не балуют. Впрочем, жаловаться было не на что. Теперь, когда с ним больше нет женщины и ребенка, он отлично проведет время. Впереди виднелись стены, окружавшие его родной город. Вскоре он оказался в кругу семьи и старых друзей.\r\n\r\n\"Как идет война? - закричала его кузина. Выбегая на дорогу. - Правда, что Вивек подписал мир с принцем, но император отказался утвердить его?\"\r\n\r\n\"Все было не так, верно? - спросил друг, присоединяясь к ним. - Я слышал, что данмеры убили принца, а потом выдумали историю про договор, но доказательств никаких нет\".\r\n\r\n\"Разве тут не происходит ничего интересного? - засмеялся Кассир. - Мне совершенно не хочется обсуждать войну или Вивека\".\r\n\r\n\"Ты пропустил процессию леди Корды, - сказал его друг. - Она приехала через залив и направилась на восток, в Имперский город\".\r\n\r\n\"Глупости все это. Как же выглядит Вивек? - спросила кузина с нескрываемым любопытством. - Говорят, он - живой бог\".\r\n\r\n\"Если Шеогорат подаст в отставку и им нужен будет новый Бог Безумия, Вивек как раз подойдет\", - сказал Кассир.\r\n\r\n\"А женщина?\" - спросил парень, которому редко случалось видеть данмерских женщин.\r\n\r\nКассир просто улыбнулся. На мгновение в его памяти возник образ Туралы Скеффингтон, потом он испарился. Она будет счастлива с ведьмами, за ее ребенком будут хорошо ухаживать. Но теперь они часть его прошлого, а он хочет навсегда забыть о том месте и о войне. Спешившись, он пошел к городу, болтая о последних новостях у залива Илиак.",
+                "formId": "0x0001AFE9",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemBook",
+                    "GiftWizardSpecial"
+                ],
+                "modelPath": "meshes/clutter/books/spelltomeconjurationlowpoly.nif",
+                "name": "2920, Месяц Огня очага (т. 9)",
+                "value": 50,
+                "weight": 1
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "<font face=\"$HandwrittenFont\">\r\nСадитесь на корабль \"Северная дева\", что пришвартован в Вороньей Скале. Отправляйтесь в Виндхельм и начинайте поиски. Ваша цель - Ложный Драконорожденный, известный под именем <Alias=Player>. Убейте эту тварь, пока она не попала на Солстейм.\r\nСделайте это, и Мирак будет вами доволен.",
+                "formId": "0x040331C2",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemBook"
+                ],
+                "modelPath": "meshes/clutter/books/note01.nif",
+                "name": "Распоряжения членам культа",
+                "value": 0,
+                "weight": 0
+            },
+            {
+                "categoryType": "Book",
+                "count": 1,
+                "description": "<font face=\"$HandwrittenFont\" size=\"17\">\r\n\r\nКто-нибудь, помогите! Группа некромантов экспериментирует с поднятием зомби при помощи древней и опасной магии, которая может иметь непредвиденные и необратимые последствия. Меня они изгнали из своего круга, поскольку их амбиции переросли в откровенное сумасбродство, хотя я их об этом предупреждал.\r\n\r\nПрямо сейчас они проводят ритуал призыва большого количества этих отвратительных, не поддающихся контролю существ в самой южной части Скайрима. Нужно остановить их, пока не поздно!",
+                "formId": "0xFE001883",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemBook"
+                ],
+                "modelPath": "meshes/clutter/books/note01.nif",
+                "name": "Анонимное письмо",
                 "value": 0,
                 "weight": 0
             }
         ]
     },
-    "inventory.books": {
-        "items": []
-    },
     "inventory.misc": {
-        "gems": [],
+        "gems": [
+            {
+                "capacity": "Common",
+                "categoryType": "SoulGem",
+                "containedSoul": "None",
+                "count": 1,
+                "formId": "0x0002E4E6",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemSoulGem"
+                ],
+                "modelPath": "meshes/clutter/soulgem/soulgemcommon01.nif",
+                "name": "Обычный камень душ",
+                "value": 50,
+                "weight": 0.30000001192092896
+            },
+            {
+                "capacity": "Petty",
+                "categoryType": "SoulGem",
+                "containedSoul": "None",
+                "count": 2,
+                "formId": "0x0002E4E2",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemSoulGem"
+                ],
+                "modelPath": "meshes/clutter/soulgem/soulgempetty01.nif",
+                "name": "Крохотный камень душ",
+                "value": 10,
+                "weight": 0.10000000149011612
+            }
+        ],
         "items": [
             {
                 "categoryType": "Misc",
@@ -404,57 +1216,202 @@
                 "formId": "0x0000000A",
                 "isFavorite": false,
                 "isStolen": false,
+                "keywords": [
+                    "VendorItemTool",
+                    "GiftThiefSpecial"
+                ],
+                "modelPath": "meshes/clutter/common/lockpick.nif",
                 "name": "Отмычка",
                 "value": 2,
                 "weight": -1
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x000DABAB",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/clutter/common/lute01.nif",
+                "name": "Лютня",
+                "value": 25,
+                "weight": 4
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x0009DFBB",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/clutter/quest/barenziahsjewelrybox.nif",
+                "name": "Необычный камень",
+                "value": 200,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Misc",
+                "count": 2,
+                "formId": "0x00063B45",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemGem"
+                ],
+                "modelPath": "meshes/clutter/gemstones/garnetflawed.nif",
+                "name": "Гранат",
+                "value": 100,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x00063B46",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemGem"
+                ],
+                "modelPath": "meshes/clutter/gemstones/amethystflawed.nif",
+                "name": "Аметист",
+                "value": 120,
+                "weight": 0.10000000149011612
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x00039647",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemClutter",
+                    "MS13ClawKeyword"
+                ],
+                "modelPath": "meshes/clutter/ruins/ruinsdragonclaw02.nif",
+                "name": "Золотой коготь",
+                "value": 100,
+                "weight": 0.5
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x0003AD8E",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemAnimalHide"
+                ],
+                "modelPath": "meshes/clutter/goatskin/goatpelt.nif",
+                "name": "Козья шкура",
+                "value": 5,
+                "weight": 1
+            },
+            {
+                "categoryType": "Misc",
+                "count": 3,
+                "formId": "0x0003ADA3",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemAnimalPart"
+                ],
+                "modelPath": "meshes/clutter/dragon/dragonscales.nif",
+                "name": "Драконья чешуя",
+                "value": 250,
+                "weight": 10
+            },
+            {
+                "categoryType": "Misc",
+                "count": 3,
+                "formId": "0x0003ADA4",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorItemAnimalPart"
+                ],
+                "modelPath": "meshes/clutter/dragon/dragonbones.nif",
+                "name": "Драконья кость",
+                "value": 500,
+                "weight": 15
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x0201433D",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [
+                    "VendorNoSale"
+                ],
+                "modelPath": "meshes/dlc01/dungeons/dwemer/animated/dwespecialforge01/aetheriumshard04.nif",
+                "name": "Осколок светящегося кристалла",
+                "value": 100,
+                "weight": 0.25
+            },
+            {
+                "categoryType": "Misc",
+                "count": 1,
+                "formId": "0x0300303F",
+                "isFavorite": false,
+                "isStolen": false,
+                "keywords": [],
+                "modelPath": "meshes/_byoh/clutter/resources/horn01.nif",
+                "name": "Козьи рога",
+                "value": 5,
+                "weight": 1
             }
         ]
     },
     "inventory.categories": {
         "categories": [
             {
+                "categoryId": "Weapons",
+                "count": 7,
+                "name": "Weapons"
+            },
+            {
+                "categoryId": "Apparel",
+                "count": 9,
+                "name": "Apparel"
+            },
+            {
                 "categoryId": "Food",
                 "count": 2,
                 "name": "Food"
             },
             {
+                "categoryId": "Books",
+                "count": 8,
+                "name": "Books"
+            },
+            {
                 "categoryId": "Misc",
-                "count": 13,
+                "count": 28,
                 "name": "Misc"
             },
             {
                 "categoryId": "Ammo",
-                "count": 1,
+                "count": 48,
                 "name": "Ammo"
             },
             {
                 "categoryId": "Ingredients",
-                "count": 1,
+                "count": 26,
                 "name": "Ingredients"
             },
             {
-                "categoryId": "Keys",
-                "count": 1,
-                "name": "Keys"
+                "categoryId": "SoulGems",
+                "count": 3,
+                "name": "SoulGems"
             },
             {
                 "categoryId": "Potions",
-                "count": 9,
+                "count": 13,
                 "name": "Potions"
             },
             {
-                "categoryId": "Weapons",
-                "count": 5,
-                "name": "Weapons"
-            },
-            {
-                "categoryId": "Apparel",
-                "count": 5,
-                "name": "Apparel"
-            },
-            {
                 "categoryId": "Favorites",
-                "count": 2,
+                "count": 3,
                 "name": "Favorites"
             }
         ]
@@ -464,17 +1421,27 @@
             {
                 "categoryId": "Destruction",
                 "count": 1,
-                "name": "Destruction"
+                "name": "Разрушение"
             },
             {
                 "categoryId": "Restoration",
                 "count": 1,
-                "name": "Restoration"
+                "name": "Восстановление"
+            },
+            {
+                "categoryId": "Alteration",
+                "count": 1,
+                "name": "Изменение"
             },
             {
                 "categoryId": "Shouts",
                 "count": 2,
-                "name": "Shouts"
+                "name": "КРИКИ"
+            },
+            {
+                "categoryId": "Powers",
+                "count": 1,
+                "name": "ТАЛАНТЫ"
             }
         ]
     },
@@ -484,7 +1451,7 @@
                 "castingType": "Concentration",
                 "categoryType": "Destruction",
                 "chargeTime": 0,
-                "cost": 13,
+                "cost": 12,
                 "costValue": 14,
                 "delivery": "Aimed",
                 "effects": [
@@ -518,7 +1485,34 @@
         ]
     },
     "magic.alteration": {
-        "items": []
+        "items": [
+            {
+                "castingType": "FireAndForget",
+                "categoryType": "Alteration",
+                "chargeTime": 0.5,
+                "cost": 0,
+                "costValue": 0,
+                "delivery": "Self",
+                "effects": [
+                    {
+                        "description": "Телепортирует кролика Чертополоха",
+                        "descriptionTemplate": "Телепортирует кролика Чертополоха",
+                        "duration": 1,
+                        "magnitude": 0,
+                        "name": "Телепортировать Чертополоха"
+                    }
+                ],
+                "equippedHand": null,
+                "formId": "0xFE01591E",
+                "hotkeys": [],
+                "isActive": false,
+                "isEquipped": false,
+                "isFavorite": false,
+                "level": 0,
+                "name": "Телепортировать питомца: Чертополох",
+                "range": 0
+            }
+        ]
     },
     "magic.conjuration": {
         "items": []
@@ -532,7 +1526,7 @@
                 "castingType": "Concentration",
                 "categoryType": "Restoration",
                 "chargeTime": 0,
-                "cost": 11,
+                "cost": 10,
                 "costValue": 12,
                 "delivery": "Self",
                 "effects": [
@@ -551,14 +1545,14 @@
                         "name": "Восстановление запаса сил"
                     }
                 ],
-                "equippedHand": "left",
+                "equippedHand": null,
                 "formId": "0x00012FCC",
                 "hotkeys": [
                     0
                 ],
                 "isActive": false,
-                "isEquipped": true,
-                "isFavorite": true,
+                "isEquipped": false,
+                "isFavorite": false,
                 "level": 0,
                 "name": "Лечение",
                 "range": 0
@@ -571,58 +1565,58 @@
     "magic.shouts": {
         "items": [
             {
-                "description": "Thu'um unbalances the very force of gravity, sending your hapless target flying.",
-                "formId": "0x00013E08",
+                "description": "Ваш Голос - средоточие силы, на своем пути он отталкивает все и вся.",
+                "formId": "0x00013E07",
                 "hotkeys": [],
                 "isEquipped": true,
-                "isFavorite": true,
-                "name": "Unrelenting Force",
+                "isFavorite": false,
+                "name": "Безжалостная сила",
                 "words": [
                     {
-                        "formId": "0x0001362A",
+                        "formId": "0x00013E22",
                         "isKnown": true,
                         "name": "FUS",
-                        "recoveryTime": 15.0
+                        "recoveryTime": 15
                     },
                     {
-                        "formId": "0x00017E22",
+                        "formId": "0x00013E23",
                         "isKnown": true,
                         "name": "RO",
-                        "recoveryTime": 20.0
+                        "recoveryTime": 20
                     },
                     {
-                        "formId": "0x00017E23",
+                        "formId": "0x00013E24",
                         "isKnown": false,
-                        "name": "DAH",
-                        "recoveryTime": 45.0
+                        "name": "D4",
+                        "recoveryTime": 45
                     }
                 ]
             },
             {
-                "description": "Inhale air, exhale flame, and behold the Thu'um as inferno.",
-                "formId": "0x00013F06",
+                "description": "Ту'ум рвется вперед, унося вас с собой со скоростью вихря.",
+                "formId": "0x0002F7BA",
                 "hotkeys": [],
                 "isEquipped": false,
                 "isFavorite": false,
-                "name": "Fire Breath",
+                "name": "Стремительный рывок",
                 "words": [
                     {
-                        "formId": "0x0004DD79",
+                        "formId": "0x0002F7BB",
                         "isKnown": true,
-                        "name": "YOL",
-                        "recoveryTime": 30.0
+                        "name": "WULD",
+                        "recoveryTime": 20
                     },
                     {
-                        "formId": "0x0004DD7A",
+                        "formId": "0x0002F7BC",
                         "isKnown": false,
-                        "name": "TOR",
-                        "recoveryTime": 50.0
+                        "name": "N4",
+                        "recoveryTime": 25
                     },
                     {
-                        "formId": "0x0004DD7B",
+                        "formId": "0x0002F7BD",
                         "isKnown": false,
-                        "name": "SHUL",
-                        "recoveryTime": 100.0
+                        "name": "KEST",
+                        "recoveryTime": 35
                     }
                 ]
             }
@@ -633,7 +1627,7 @@
             {
                 "bound": true,
                 "chargeTime": 0,
-                "cost": 11,
+                "cost": 10,
                 "formId": "0x00012FCC",
                 "kind": "spell",
                 "level": 0,
@@ -647,21 +1641,29 @@
                 "slot": 2
             },
             {
-                "bound": false,
-                "slot": 3
+                "bound": true,
+                "categoryType": "Potion",
+                "count": -1,
+                "formId": "0x0003EAE5",
+                "isFavorite": true,
+                "kind": "item",
+                "name": "Слабое зелье запаса сил",
+                "slot": 3,
+                "value": 20,
+                "weight": 0.5
             },
             {
                 "bound": true,
                 "categoryType": "Weapon",
                 "count": 1,
-                "formId": "0x00013982",
+                "formId": "0x06000E46",
                 "isFavorite": true,
                 "kind": "item",
-                "name": "Железная булава",
+                "name": "Древняя нордская булава",
                 "slot": 4,
-                "value": 35,
+                "value": 17,
                 "weaponType": "OneHandMace",
-                "weight": 13
+                "weight": 16
             },
             {
                 "bodySlot": "Shield",
@@ -687,7 +1689,7 @@
             {
                 "bound": true,
                 "chargeTime": 0,
-                "cost": 13,
+                "cost": 12,
                 "formId": "0x00012FCD",
                 "kind": "spell",
                 "level": 0,
@@ -698,23 +1700,977 @@
             }
         ]
     },
+    "quests.questsList": {
+        "quests": [
+            {
+                "currentInstanceId": 1,
+                "currentStage": 200,
+                "description": "Фаренгар Тайный Огонь, придворный маг ярла Балгруфа, попросил меня добыть из храма Ветреного пика Драконий камень - каменную скрижаль, на которой указаны места древних захоронений драконов. Он надеется, что это позволит ему понять, как и зачем драконы возвращаются в Тамриэль. Мой успех его порадовал, и он пообещал, что ярл вознаградит меня за труды.",
+                "descriptionRaw": "Фаренгар Тайный Огонь, придворный маг ярла Балгруфа, попросил меня добыть из храма Ветреного пика Драконий камень - каменную скрижаль, на которой указаны места древних захоронений драконов. Он надеется, что это позволит ему понять, как и зачем драконы возвращаются в Тамриэль. Мой успех его порадовал, и он пообещал, что ярл вознаградит меня за труды.",
+                "descriptionStage": 190,
+                "isActive": false,
+                "isCompleted": true,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Ветреный пик",
+                "nameRaw": "Ветреный пик",
+                "questEditorId": "MQ103",
+                "questFormId": "0x000D0800",
+                "questType": "MainQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Поговорить с Фаренгаром",
+                        "textRaw": "Поговорить с Фаренгаром"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 50,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Забрать Драконий камень",
+                        "textRaw": "Забрать Драконий камень"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 80,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Отнести Драконий камень Фаренгару",
+                        "textRaw": "Отнести Драконий камень Фаренгару"
+                    }
+                ],
+                "type": "MainQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 200,
+                "description": "Со сторожевой башни близ Вайтрана заметили дракона. Ярл Балгруф послал туда меня и своего хускарла Айрилет с подкреплением. Дракон напал на нас, и мы его убили. Стоило мне приблизиться к трупу дракона, как меня окутала загадочная сила, исходящая от него. По возвращении в Вайтран ярл наградил меня за службу. Теперь я тан Вайтрана, и у меня есть собственный хускарл.",
+                "descriptionRaw": "Со сторожевой башни близ Вайтрана заметили дракона. Ярл Балгруф послал туда меня и своего хускарла Айрилет с подкреплением. Дракон напал на нас, и мы его убили. Стоило мне приблизиться к трупу дракона, как меня окутала загадочная сила, исходящая от него. По возвращении в Вайтран ярл наградил меня за службу. Теперь я тан Вайтрана, и у меня есть собственный хускарл.",
+                "descriptionStage": 160,
+                "isActive": false,
+                "isCompleted": true,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Дракон в небе",
+                "nameRaw": "Дракон в небе",
+                "questEditorId": "MQ104",
+                "questFormId": "0x0002610C",
+                "questType": "MainQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 5,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Поговорить с ярлом Балгруфом",
+                        "textRaw": "Поговорить с ярлом Балгруфом"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 15,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Встретиться с Айрилет около Западной дозорной башни",
+                        "textRaw": "Встретиться с Айрилет около Западной дозорной башни"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 20,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Убить дракона",
+                        "textRaw": "Убить дракона"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 30,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Осмотреть труп дракона",
+                        "textRaw": "Осмотреть труп дракона"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 40,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Вернуться к ярлу Балгруфу",
+                        "textRaw": "Вернуться к ярлу Балгруфу"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 50,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "(Дополнительно) Опробовать Крик",
+                        "textRaw": "(Дополнительно) Опробовать Крик"
+                    }
+                ],
+                "type": "MainQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 10,
+                "description": "Какой-то Мирак подослал ко мне убийц. Мне нужно выяснить, зачем он на меня охотится. Для начала я попробую разыскать корабль, на котором его подручные приплыли в Виндхельм из Солстейма.",
+                "descriptionRaw": "Какой-то Мирак подослал ко мне убийц. Мне нужно выяснить, зачем он на меня охотится. Для начала я попробую разыскать корабль, на котором его подручные приплыли в Виндхельм из Солстейма.",
+                "descriptionStage": 10,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Драконорожденный",
+                "nameRaw": "Драконорожденный",
+                "questEditorId": "DLC2MQ01",
+                "questFormId": "0x04017F8E",
+                "questType": "DLC02_Dragonborn",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 5,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Выяснить, кто подослал убийц",
+                        "textRaw": "Выяснить, кто подослал убийц"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 7,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Прочесть распоряжения членам культа",
+                        "textRaw": "Прочесть распоряжения членам культа"
+                    },
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Отправиться на Солстейм",
+                        "textRaw": "Отправиться на Солстейм"
+                    }
+                ],
+                "type": "DLC02_Dragonborn"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 20,
+                "description": "Я получил анонимное письмо, в котором меня просят остановить группу некромантов, собирающихся поднять орду зомби. Надо осмотреть место ритуала.",
+                "descriptionRaw": "Я получил анонимное письмо, в котором меня просят остановить группу некромантов, собирающихся поднять орду зомби. Надо осмотреть место ритуала.",
+                "descriptionStage": 20,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Живые мертвецы",
+                "nameRaw": "Живые мертвецы",
+                "questEditorId": "ccBGSSSE003_ZombieQuestStartEncounter",
+                "questFormId": "0xFE00183D",
+                "questType": "None",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Осмотреть место ритуала",
+                        "textRaw": "Осмотреть место ритуала"
+                    }
+                ],
+                "type": "None"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 60,
+                "description": "Мне удалось подслушать, как некие разбойники говорили о золотом когте, который они недавно украли. Кажется, кто-то из бандитов унес коготь в глубины кургана на Ветреном пике.",
+                "descriptionRaw": "Мне удалось подслушать, как некие разбойники говорили о золотом когте, который они недавно украли. Кажется, кто-то из бандитов унес коготь в глубины кургана на Ветреном пике.",
+                "descriptionStage": 12,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Золотой коготь",
+                "nameRaw": "Золотой коготь",
+                "questEditorId": "MS13",
+                "questFormId": "0x00039645",
+                "questType": "SideQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Найти золотой коготь",
+                        "textRaw": "Найти золотой коготь"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 15,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Освободить Арвела из паутины",
+                        "textRaw": "Освободить Арвела из паутины"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 30,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Раскрыть тайну Ветреного пика",
+                        "textRaw": "Раскрыть тайну Ветреного пика"
+                    },
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 35,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Найти владельца золотого когтя",
+                        "textRaw": "Найти владельца золотого когтя"
+                    },
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 40,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Отнести коготь Лукану",
+                        "textRaw": "Отнести коготь Лукану"
+                    }
+                ],
+                "type": "SideQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 1000,
+                "description": "Мне удалось избежать казни и спастись от дракона, напавшего на Хелген. Теперь я на свободе и могу идти, куда захочу.",
+                "descriptionRaw": "Мне удалось избежать казни и спастись от дракона, напавшего на Хелген. Теперь я на свободе и могу идти, куда захочу.",
+                "descriptionStage": 900,
+                "isActive": false,
+                "isCompleted": true,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "На свободу!",
+                "nameRaw": "На свободу!",
+                "questEditorId": "MQ101",
+                "questFormId": "0x0003372B",
+                "questType": "MainQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 30,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Добраться до крепости",
+                        "textRaw": "Добраться до крепости"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 50,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Войти в крепость с Хадваром или Ралофом",
+                        "textRaw": "Войти в крепость с Хадваром или Ралофом"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 60,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Найти снаряжение",
+                        "textRaw": "Найти снаряжение"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 100,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Сбежать из Хелгена",
+                        "textRaw": "Сбежать из Хелгена"
+                    }
+                ],
+                "type": "MainQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 200,
+                "description": "Дядя Хадвара, Алвор, попросил меня сообщить о нападении дракона на Хелген ярлу Вайтрана, чтобы ярл прислал солдат для охраны Ривервуда. Мне удалось доставить вести ярлу Балгруфу в Вайтран, и он наградил меня за помощь.",
+                "descriptionRaw": "Дядя Хадвара, Алвор, попросил меня сообщить о нападении дракона на Хелген ярлу Вайтрана, чтобы ярл прислал солдат для охраны Ривервуда. Мне удалось доставить вести ярлу Балгруфу в Вайтран, и он наградил меня за помощь.",
+                "descriptionStage": 160,
+                "isActive": false,
+                "isCompleted": true,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Перед бурей",
+                "nameRaw": "Перед бурей",
+                "questEditorId": "MQ102",
+                "questFormId": "0x0004E50D",
+                "questType": "MainQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 30,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Поговорить с ярлом Вайтрана",
+                        "textRaw": "Поговорить с ярлом Вайтрана"
+                    }
+                ],
+                "type": "MainQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 1000,
+                "description": "Мой путь по Скайриму может быть долгим и трудным, и хорошо будет иметь при себе животное в качестве верного спутника. Надо порасспрашивать, не продает ли кто в городе прирученных животных.",
+                "descriptionRaw": "Мой путь по Скайриму может быть долгим и трудным, и хорошо будет иметь при себе животное в качестве верного спутника. Надо порасспрашивать, не продает ли кто в городе прирученных животных.",
+                "descriptionStage": 1000,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Питомцы Скайрима",
+                "nameRaw": "Питомцы Скайрима",
+                "questEditorId": "ccVSVSSE002_MainQuest",
+                "questFormId": "0xFE0158C8",
+                "questType": "SideQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 110,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Угостить Чертополох морковью",
+                        "textRaw": "Угостить <Alias=AliasRabbit> морковью"
+                    }
+                ],
+                "type": "SideQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 160,
+                "description": "Седобородые призвали меня в свой монастырь, Высокий Хротгар, на склонах Глотки мира. Их старейшина Арнгейр признал во мне \"Довакина\" и обучил владению даром Голоса. После нескольких проверок они послали меня на решающее испытание - отыскать легендарный рог Юргена Призыватель Ветра.",
+                "descriptionRaw": "Седобородые призвали меня в свой монастырь, Высокий Хротгар, на склонах Глотки мира. Их старейшина Арнгейр признал во мне \"Довакина\" и обучил владению даром Голоса. После нескольких проверок они послали меня на решающее испытание - отыскать легендарный рог Юргена Призыватель Ветра.",
+                "descriptionStage": 160,
+                "isActive": false,
+                "isCompleted": true,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Путь Голоса",
+                "nameRaw": "Путь Голоса",
+                "questEditorId": "MQ105",
+                "questFormId": "0x000242BA",
+                "questType": "MainQuest",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Поговорить с Седобородыми",
+                        "textRaw": "Поговорить с Седобородыми"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 20,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Продемонстрировать \"Безжалостную силу\"",
+                        "textRaw": "Продемонстрировать \"Безжалостную силу\""
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 25,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Поговорить с Арнгейром",
+                        "textRaw": "Поговорить с Арнгейром"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 30,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Узнать у Эйнарта Слово Силы",
+                        "textRaw": "Узнать у Эйнарта Слово Силы"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 40,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Продемонстрировать \"Безжалостную силу\" (3/3)",
+                        "textRaw": "Продемонстрировать \"Безжалостную силу\" (<Global=MQ105TargetsHit>/<Global=MQ105TargetsTotal>)"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 50,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Узнать у Борри Слово Силы",
+                        "textRaw": "Узнать у Борри Слово Силы"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 60,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Продемонстрировать \"Стремительный рывок\"",
+                        "textRaw": "Продемонстрировать \"Стремительный рывок\""
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 70,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Поговорить с Арнгейром о дальнейшем обучении",
+                        "textRaw": "Поговорить с Арнгейром о дальнейшем обучении"
+                    }
+                ],
+                "type": "MainQuest"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 10,
+                "description": "Проверив мои способности в изучении Слов Силы и Крике, старейшина Седобородых Арнгейр отправил меня на последнее испытание - добыть рог Юргена Призыватель Ветра из его гробницы в Устенгреве, что в болотах Хьялмарка.",
+                "descriptionRaw": "Проверив мои способности в изучении Слов Силы и Крике, старейшина Седобородых Арнгейр отправил меня на последнее испытание - добыть рог Юргена Призыватель Ветра из его гробницы в Устенгреве, что в болотах Хьялмарка.",
+                "descriptionStage": 10,
+                "isActive": true,
+                "isCompleted": false,
+                "isMisc": false,
+                "isRunning": true,
+                "name": "Рог Юргена",
+                "nameRaw": "Рог Юргена",
+                "questEditorId": "MQ105Ustengrav",
+                "questFormId": "0x000713DC",
+                "questType": "MainQuest",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Добыть рог Юргена Призыватель Ветра",
+                        "textRaw": "Добыть рог Юргена Призыватель Ветра"
+                    }
+                ],
+                "type": "MainQuest"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 50,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Выяснить, что представляет из себя осколок кристалла",
+                "nameRaw": "",
+                "questEditorId": "DLC1LD_Misc",
+                "questFormId": "0x0200B639",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 20,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Выяснить, что представляет из себя осколок кристалла",
+                        "textRaw": "Выяснить, что представляет из себя осколок кристалла"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 200,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": true,
+                "isCompleted": true,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Жестокий правитель",
+                "nameRaw": "Жестокий правитель",
+                "questEditorId": "FreeformShipsWindhelm",
+                "questFormId": "0x00094158",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Пещера Каменный Ручей: нужно убить главаря",
+                        "textRaw": "<Alias=BanditCamp>: нужно убить главаря"
+                    },
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 15,
+                        "instanceId": 1,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Кьяр ждет моего отчета",
+                        "textRaw": "<Alias.ShortName=Questgiver> ждет моего отчета"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 10,
+                "description": "Мне попался необычный драгоценный камень, который проявляет магические свойства. Нужно отнести его кому-то сведущему в таких делах для оценки.",
+                "descriptionRaw": "Мне попался необычный драгоценный камень, который проявляет магические свойства. Нужно отнести его кому-то сведущему в таких делах для оценки.",
+                "descriptionStage": 10,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Заглянуть под каждый камень",
+                "nameRaw": "Заглянуть под каждый камень",
+                "questEditorId": "TGCrownMisc",
+                "questFormId": "0x0006D585",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Отнести необычный камень оценщику",
+                        "textRaw": "Отнести необычный камень оценщику"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 1,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Империя - первое знакомство",
+                "nameRaw": "Империя - первое знакомство",
+                "questEditorId": "CW00A",
+                "questFormId": "0x000D3C5F",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 1,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Вступить в Имперский легион",
+                        "textRaw": "Вступить в Имперский легион"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 10,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Крик - изучение стен Слов",
+                "nameRaw": "Крик - изучение стен Слов",
+                "questEditorId": "WICastMagic04",
+                "questFormId": "0x00023EE4",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Найти источник силы в месте под названием Скелетный гребень",
+                        "textRaw": "Найти источник силы в месте под названием <Alias=Dungeon>"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 1,
+                "currentStage": 20,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Медвежья услуга",
+                "nameRaw": "Медвежья услуга",
+                "questEditorId": "FreeformIvarstead03",
+                "questFormId": "0x000D9B65",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 1,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Добыть 10 медвежьих шкур для Тембы Широкая Рука (0/10)",
+                        "textRaw": "Добыть 10 медвежьих шкур для Тембы Широкая Рука (<Global=FFI03BearCount>/<Global=FFI03BearTotal>)"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 20,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "По ступенькам",
+                "nameRaw": "По ступенькам",
+                "questEditorId": "FreeformIvarstead04",
+                "questFormId": "0x000D9B66",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": true,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 0,
+                        "state": "CompletedDisplayed",
+                        "stateRaw": 3,
+                        "text": "Отнести припасы на Высокий Хротгар",
+                        "textRaw": "Отнести припасы на Высокий Хротгар"
+                    },
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 20,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Вернуться к Климмеку",
+                        "textRaw": "Вернуться к Климмеку"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 10,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Поговорить с Авентусом Аретино",
+                "nameRaw": "",
+                "questEditorId": "DB01Objective",
+                "questFormId": "0x000BC8B7",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Поговорить с Авентусом Аретино",
+                        "textRaw": "Поговорить с Авентусом Аретино"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 10,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Поговорить с предводителем Соратников",
+                "nameRaw": "",
+                "questEditorId": "CompanionsMiscObjective",
+                "questFormId": "0x000D19B9",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Поговорить с предводителем Соратников",
+                        "textRaw": "Поговорить с предводителем Соратников"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 20,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Погребальные тайны",
+                "nameRaw": "Погребальные тайны",
+                "questEditorId": "FreeformIvarstead01",
+                "questFormId": "0x000D9B63",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Исследовать курган Погребальный огонь",
+                        "textRaw": "Исследовать курган Погребальный огонь"
+                    }
+                ],
+                "type": "Miscellaneous"
+            },
+            {
+                "currentInstanceId": 0,
+                "currentStage": 10,
+                "description": "",
+                "descriptionRaw": "",
+                "descriptionStage": 0,
+                "isActive": false,
+                "isCompleted": false,
+                "isMisc": true,
+                "isRunning": true,
+                "name": "Посетить храм Азуры",
+                "nameRaw": "",
+                "questEditorId": "DA01Intro",
+                "questFormId": "0x00092E25",
+                "questType": "Miscellaneous",
+                "steps": [
+                    {
+                        "completed": false,
+                        "failed": false,
+                        "index": 10,
+                        "instanceId": 0,
+                        "state": "Displayed",
+                        "stateRaw": 1,
+                        "text": "Посетить храм Азуры",
+                        "textRaw": "Посетить храм Азуры"
+                    }
+                ],
+                "type": "Miscellaneous"
+            }
+        ]
+    },
     "map.player": {
         "position": {
-            "angle": 4.774328231811523,
-            "cell": "Пустоши",
-            "cellFormId": "0x00009BB4",
+            "angle": 1.7538396120071411,
+            "cell": "WhiterunExterior17",
+            "cellFormId": "0x00009639",
+            "cellName": "",
             "isInterior": false,
             "parentWorldspace": "Tamriel",
             "parentWorldspaceFormId": "0x0000003C",
             "worldspace": "Tamriel",
             "worldspaceFormId": "0x0000003C",
-            "x": -7371.52978515625,
-            "y": -63319.64453125,
-            "z": 818.838623046875
+            "x": 23426.91796875,
+            "y": -15192.0771484375,
+            "z": -4601.318359375
         }
     },
     "map.hotspots": {
         "hot": [
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Высокий Хротгар",
+                "refId": "0x00016352",
+                "type": "Fort",
+                "typeId": 6,
+                "x": 52070.7890625,
+                "y": -36267.07421875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Данстар",
+                "refId": "0x0001773A",
+                "type": "DawnstarCapitol",
+                "typeId": 52,
+                "x": 30808.154296875,
+                "y": 106138.28125
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Вайтран - Конюшни",
+                "refId": "0x00072879",
+                "type": "Stable",
+                "typeId": 21,
+                "x": 18312.81640625,
+                "y": -10665.4560546875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Южный Ноголомный проход",
+                "refId": "0x00082213",
+                "type": "Cave",
+                "typeId": 4,
+                "x": -19772.92578125,
+                "y": -50326.62890625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Камни-хранители",
+                "refId": "0x0001BABD",
+                "type": "Doomstone",
+                "typeId": 18,
+                "x": 2806.979736328125,
+                "y": -59215.84765625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Хижина алхимика",
+                "refId": "0x000D3931",
+                "type": "Shack",
+                "typeId": 30,
+                "x": 71488,
+                "y": -84160
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Медоварня Хоннинга",
+                "refId": "0x00038593",
+                "type": "Settlement",
+                "typeId": 3,
+                "x": 30929.93359375,
+                "y": -17710.779296875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Айварстед",
+                "refId": "0x00017791",
+                "type": "Town",
+                "typeId": 2,
+                "x": 76374.609375,
+                "y": -64262.7890625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Медовая пещера",
+                "refId": "0x00016267",
+                "type": "Cave",
+                "typeId": 4,
+                "x": 79467.5,
+                "y": -76043.8828125
+            },
             {
                 "canFastTravel": true,
                 "isVisible": true,
@@ -736,94 +2692,14 @@
                 "y": -86283.8984375
             },
             {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Пещера Каменный Ручей",
-                "refId": "0x00080F13",
-                "type": "Cave",
-                "typeId": 4,
-                "x": 174741.984375,
-                "y": -24827.77734375
-            },
-            {
                 "canFastTravel": true,
                 "isVisible": true,
-                "name": "Вайтран - Конюшни",
-                "refId": "0x00072879",
-                "type": "Stable",
-                "typeId": 21,
-                "x": 18312.81640625,
-                "y": -10665.4560546875
-            },
-            {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Данстар",
-                "refId": "0x0001773A",
-                "type": "DawnstarCapitol",
-                "typeId": 52,
-                "x": 30808.154296875,
-                "y": 106138.28125
-            },
-            {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Могила чемпиона",
-                "refId": "0x0900CD93",
-                "type": "NordicRuin",
-                "typeId": 7,
-                "x": 191825.21875,
-                "y": -65998.8203125
-            },
-            {
-                "canFastTravel": true,
-                "isVisible": true,
-                "name": "Медоварня Хоннинга",
-                "refId": "0x00038593",
-                "type": "Settlement",
-                "typeId": 3,
-                "x": 30929.93359375,
-                "y": -17710.779296875
-            },
-            {
-                "canFastTravel": true,
-                "isVisible": true,
-                "name": "Камни-хранители",
-                "refId": "0x0001BABD",
-                "type": "Doomstone",
-                "typeId": 18,
-                "x": 2806.979736328125,
-                "y": -59215.84765625
-            },
-            {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Винтерхолд",
-                "refId": "0x000177EF",
-                "type": "WinterholdCapitol",
-                "typeId": 46,
-                "x": 109207.53125,
-                "y": 102864.0390625
-            },
-            {
-                "canFastTravel": true,
-                "isVisible": true,
-                "name": "Факельная шахта",
-                "refId": "0x000B6CDF",
-                "type": "Mine",
-                "typeId": 15,
-                "x": 8248.990234375,
-                "y": -57382.9375
-            },
-            {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Пещеры слива",
-                "refId": "0x070038D6",
-                "type": "Cave",
-                "typeId": 4,
-                "x": -103703.328125,
-                "y": -35798.7109375
+                "name": "Мзулфт",
+                "refId": "0x0001628C",
+                "type": "DwemerRuin",
+                "typeId": 8,
+                "x": 167807.671875,
+                "y": -13281.935546875
             },
             {
                 "canFastTravel": true,
@@ -834,36 +2710,6 @@
                 "typeId": 2,
                 "x": 21941.015625,
                 "y": -44792.43359375
-            },
-            {
-                "canFastTravel": true,
-                "isVisible": true,
-                "name": "Ферма Пелагио",
-                "refId": "0x00016373",
-                "type": "WheatMill",
-                "typeId": 19,
-                "x": 19263.994140625,
-                "y": -16976.1953125
-            },
-            {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Морфал",
-                "refId": "0x000177B0",
-                "type": "MorthalCapitol",
-                "typeId": 48,
-                "x": -38639.7421875,
-                "y": 66734.296875
-            },
-            {
-                "canFastTravel": false,
-                "isVisible": true,
-                "name": "Мирвотч",
-                "refId": "0xFE013FA2",
-                "type": "NordicTower",
-                "typeId": 31,
-                "x": -24536.19140625,
-                "y": 63564.9921875
             },
             {
                 "canFastTravel": false,
@@ -878,6 +2724,206 @@
             {
                 "canFastTravel": true,
                 "isVisible": true,
+                "name": "Роща Кин",
+                "refId": "0x000177A1",
+                "type": "Settlement",
+                "typeId": 3,
+                "x": 134946.921875,
+                "y": 11395.2373046875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Истмарк - Имперский лагерь",
+                "refId": "0x00095A08",
+                "type": "ImperialCamp",
+                "typeId": 16,
+                "x": 174721.75,
+                "y": -19865.078125
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Мирвотч",
+                "refId": "0xFE013FA2",
+                "type": "NordicTower",
+                "typeId": 31,
+                "x": -24536.19140625,
+                "y": 63564.9921875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Форт Нойград",
+                "refId": "0x00016250",
+                "type": "Fort",
+                "typeId": 6,
+                "x": 33279.23828125,
+                "y": -91842
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Виндхельм - Конюшни",
+                "refId": "0x0009846F",
+                "type": "Stable",
+                "typeId": 21,
+                "x": 135885.875,
+                "y": 26101.390625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Хижина Анис",
+                "refId": "0x000D9531",
+                "type": "Shack",
+                "typeId": 30,
+                "x": 667.692626953125,
+                "y": -52576.49609375
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Картвастен",
+                "refId": "0x0001779A",
+                "type": "Town",
+                "typeId": 2,
+                "x": -132747.609375,
+                "y": 38548.57421875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Сосновая застава",
+                "refId": "0x00016295",
+                "type": "Shack",
+                "typeId": 30,
+                "x": -9403.505859375,
+                "y": -76356.9921875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Пещера Каменный Ручей",
+                "refId": "0x00080F13",
+                "type": "Cave",
+                "typeId": 4,
+                "x": 174741.984375,
+                "y": -24827.77734375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Факельная шахта",
+                "refId": "0x000B6CDF",
+                "type": "Mine",
+                "typeId": 15,
+                "x": 8248.990234375,
+                "y": -57382.9375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Южное святилище",
+                "refId": "0x00016217",
+                "type": "Cave",
+                "typeId": 4,
+                "x": 31992.091796875,
+                "y": -105983.984375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Пещера Хеймара",
+                "refId": "0x0001625D",
+                "type": "Cave",
+                "typeId": 4,
+                "x": 54739.7109375,
+                "y": -81395.796875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Западная сторожевая башня",
+                "refId": "0x000DB889",
+                "type": "Fort",
+                "typeId": 6,
+                "x": 1659.7783203125,
+                "y": -14699.412109375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Логово Моварта",
+                "refId": "0x00016256",
+                "type": "Cave",
+                "typeId": 4,
+                "x": -31903.548828125,
+                "y": 77294.6875
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Морфал",
+                "refId": "0x000177B0",
+                "type": "MorthalCapitol",
+                "typeId": 48,
+                "x": -38639.7421875,
+                "y": 66734.296875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Могила чемпиона",
+                "refId": "0x0900CD93",
+                "type": "NordicRuin",
+                "typeId": 7,
+                "x": 191825.21875,
+                "y": -65998.8203125
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Паровой лагерь",
+                "refId": "0x0001623A",
+                "type": "GiantCamp",
+                "typeId": 29,
+                "x": 143525.109375,
+                "y": -9970.845703125
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Пещеры слива",
+                "refId": "0x070038D6",
+                "type": "Cave",
+                "typeId": 4,
+                "x": -103703.328125,
+                "y": -35798.7109375
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Ферма Пелагио",
+                "refId": "0x00016373",
+                "type": "WheatMill",
+                "typeId": 19,
+                "x": 19263.994140625,
+                "y": -16976.1953125
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Грот Серая Вода",
+                "refId": "0x0001625A",
+                "type": "Cave",
+                "typeId": 4,
+                "x": 14989.25,
+                "y": -90292.4140625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
                 "name": "Ветреный пик",
                 "refId": "0x00016232",
                 "type": "NordicRuin",
@@ -887,6 +2933,36 @@
             },
             {
                 "canFastTravel": false,
+                "isVisible": true,
+                "name": "Устенгрев",
+                "refId": "0x0001621F",
+                "type": "NordicRuin",
+                "typeId": 7,
+                "x": -23079.791015625,
+                "y": 88176.7421875
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Курган Погребальный Огонь",
+                "refId": "0x0006CCC8",
+                "type": "NordicRuin",
+                "typeId": 7,
+                "x": 79475.8671875,
+                "y": -62330.43359375
+            },
+            {
+                "canFastTravel": false,
+                "isVisible": true,
+                "name": "Винтерхолд",
+                "refId": "0x000177EF",
+                "type": "WinterholdCapitol",
+                "typeId": 46,
+                "x": 109207.53125,
+                "y": 102864.0390625
+            },
+            {
+                "canFastTravel": true,
                 "isVisible": true,
                 "name": "Виндхельм",
                 "refId": "0x00038436",
@@ -918,22 +2994,22 @@
             {
                 "canFastTravel": true,
                 "isVisible": true,
-                "name": "Драконий Предел",
-                "refId": "0x000C44AD",
-                "type": "WhiterunCastle",
-                "typeId": 39,
-                "x": 26871.640625,
-                "y": 209.0516357421875
-            },
-            {
-                "canFastTravel": true,
-                "isVisible": true,
                 "name": "Вайтран",
                 "refId": "0x000162CE",
                 "type": "WhiterunCapitol",
                 "typeId": 40,
                 "x": 19855.2265625,
                 "y": -7422.51025390625
+            },
+            {
+                "canFastTravel": true,
+                "isVisible": true,
+                "name": "Драконий Предел",
+                "refId": "0x000C44AD",
+                "type": "WhiterunCastle",
+                "typeId": 39,
+                "x": 26871.640625,
+                "y": 209.0516357421875
             },
             {
                 "canFastTravel": false,
@@ -944,18 +3020,73 @@
                 "typeId": 42,
                 "x": -64942.99609375,
                 "y": 104648
-            },
-            {
-                "canFastTravel": true,
-                "isVisible": true,
-                "name": "Скайрим",
-                "refId": "0x04016FE6",
-                "type": "DLC02ToSkyrim",
-                "typeId": 57,
-                "x": 13982.345703125,
-                "y": 23713.3984375
             }
         ]
+    },
+    "map.questMarkers": {
+        "marker": [
+            {
+                "aliasId": 0,
+                "cell": null,
+                "cellFormId": null,
+                "coordinateRefId": "0x0001621F",
+                "coordinateRefName": "",
+                "coordinateSource": "BGSLocation::worldLocMarker",
+                "isActive": true,
+                "isDeleted": false,
+                "isInterior": false,
+                "isMiscellaneous": false,
+                "localCell": "Ustengrav02",
+                "localCellFormId": "0x000152AA",
+                "localIsInterior": true,
+                "localParentWorldspace": null,
+                "localParentWorldspaceFormId": null,
+                "localWorldspace": null,
+                "localWorldspaceFormId": null,
+                "localX": 10729.2255859375,
+                "localY": 3113.246337890625,
+                "localZ": -980.648681640625,
+                "locationEditorId": "",
+                "locationFormId": "0x000192BF",
+                "locationName": "Устенгрев",
+                "name": "Рог Юргена Призыватель Ветра",
+                "objectiveIndex": 10,
+                "objectiveText": "Добыть рог Юргена Призыватель Ветра",
+                "objectiveTextResolved": "Добыть рог Юргена Призыватель Ветра",
+                "parentWorldspace": "Tamriel",
+                "parentWorldspaceFormId": "0x0000003C",
+                "questEditorId": "MQ105Ustengrav",
+                "questFormId": "0x000713DC",
+                "questName": "Рог Юргена",
+                "questType": "MainQuest",
+                "refId": "0x000C65AC",
+                "worldspace": "Tamriel",
+                "worldspaceFormId": "0x0000003C",
+                "x": -23079.791015625,
+                "y": 88176.7421875,
+                "z": -13778.17578125
+            }
+        ]
+    },
+    "system": {
+        "features": [
+            "player",
+            "player.hotkeys",
+            "player.quests",
+            "inventory",
+            "magic",
+            "map",
+            "texture_preview",
+            "file_download",
+            "inventory.models",
+            "texture_preview.maxSize",
+            "screenshots",
+            "player.records",
+            "debug.timings",
+            "player.discoveries",
+            "map.local"
+        ],
+        "language": "RUSSIAN"
     },
     "game.status": {
         "status": {

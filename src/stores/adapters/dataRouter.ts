@@ -7,15 +7,27 @@ import { useGameStatusStore } from '@/stores/game/useGameStatusStore';
 import { useMapHotspotsStore } from '@/stores/map/useMapHotspotsStore';
 import { useMapPlayerStore } from '@/stores/map/useMapPlayerStore';
 import { useQuestStore } from '@/stores/quests/useQuestStore';
+import { useSystemStore } from '@/stores/system/useSystemStore';
 import type { RouterResult } from './lib/types';
 import { isCharacterStatsData, isWeaponsData, isApparelData, isFoodData, isPotionsData, isScrollsData, isKeysData, isBooksData, isInventoryCategories, isIngredientsData, isMiscData, isMagicCategoriesData, isDestructionData, isAlterationData, isConjurationData, isIllusionData, isRestorationData, isEnchantingData, isShoutsData, isHotkeyItemsData, isQuestsData, isGameStatusData, isMapHotspotsData, isMapQuestMarkersData, isPlayerPositionData } from './typeGuards';
 import { logger } from '@/shared/lib/utils/logger';
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
 
 export class DataRouter {
   static routeDataById(subscriptionId: string, data: unknown): RouterResult {
     const characterStore = useCharacterStore();
     const inventoryStore = useInventoryStore();
     try {
+      if (subscriptionId === 'system') {
+        if (!isRecord(data)) {
+          return { success: false, message: 'Invalid system data' };
+        }
+        useSystemStore().handleQueryResponse(data);
+        return { success: true, message: 'Data routed to system store' };
+      }
       if (isCharacterStatsData(data, subscriptionId)) {
         logger.log('[DataRouter] Routing character stats to character store');
         characterStore.setStats(data);

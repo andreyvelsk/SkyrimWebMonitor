@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { SkyrimNavigation, SkyrimContent } from '@/app/ui';
 import {
@@ -43,7 +44,9 @@ const navigationStore = useNavigationStore();
 const { activeTab, activeSubTab } = storeToRefs(navigationStore);
 
 const websocketStore = useWebSocketStore();
-const { isConnected } = storeToRefs(websocketStore);
+const isConnected = computed(
+  () => import.meta.env.VITE_USE_FIXTURES === 'true' || websocketStore.isConnected,
+);
 
 useAppLoader();
 const { showToast } = useBackGuard();
